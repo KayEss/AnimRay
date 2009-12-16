@@ -1,0 +1,14 @@
+#!/bin/bash
+cd `dirname $0`/animray
+
+export LD_LIBRARY_PATH=../dist/lib
+export VARIANTS=$1
+
+if ../bjam -j`grep -c ^processor /proc/cpuinfo` toolset=gcc $VARIANTS
+then {
+    echo animray $* OK
+    exit 0
+} else {
+    exit 1
+}
+fi

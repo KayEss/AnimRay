@@ -1,0 +1,10 @@
+path-constant TOP : . ;
+include $(TOP)/../boost-version.jam ;
+include ../fost-base/fost.jam ;
+
+use-project fost-base : ../fost-base/ ;
+fost-project animray ;
+
+alias animray :
+        Cpp/animray-base
+    ;
