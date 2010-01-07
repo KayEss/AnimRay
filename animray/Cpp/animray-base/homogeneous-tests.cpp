@@ -22,19 +22,29 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 }
 
 
-FSL_TEST_FUNCTION( constructors ) {
-    animray::homogeneous< int > h1;
-    FSL_CHECK_EQ( h1.coords()[0], 0.);
-    FSL_CHECK_EQ( h1.coords()[1], 0.);
-    FSL_CHECK_EQ( h1.coords()[2], 0.);
-    FSL_CHECK_EQ( h1.coords()[3], 1.);
-    FSL_CHECK_EQ( h1.x(), 0.);
-    FSL_CHECK_EQ( h1.y(), 0.);
-    FSL_CHECK_EQ( h1.z(), 0.);
+namespace {
+    template< typename D >
+    inline void constructor_tests() {
+        animray::homogeneous< D > h1;
+        FSL_CHECK_EQ( h1.coords()[0], 0.);
+        FSL_CHECK_EQ( h1.coords()[1], 0.);
+        FSL_CHECK_EQ( h1.coords()[2], 0.);
+        FSL_CHECK_EQ( h1.coords()[3], 1.);
+        FSL_CHECK_EQ( h1.x(), 0.);
+        FSL_CHECK_EQ( h1.y(), 0.);
+        FSL_CHECK_EQ( h1.z(), 0.);
 
-    animray::homogeneous< float > h2( 1, 2, 3 );
-    FSL_CHECK_EQ( h2.x(), 1 );
-    FSL_CHECK_EQ( h2.y(), 2 );
-    FSL_CHECK_EQ( h2.z(), 3 );
+        animray::homogeneous< D > h2( 1, 2, 3 );
+        FSL_CHECK_EQ( h2.x(), 1 );
+        FSL_CHECK_EQ( h2.y(), 2 );
+        FSL_CHECK_EQ( h2.z(), 3 );
+    }
+}
+FSL_TEST_FUNCTION( constructors ) {
+    constructor_tests< int >();
+    constructor_tests< int64_t >();
+    constructor_tests< float >();
+    constructor_tests< double >();
+    constructor_tests< long double >();
 }
 
