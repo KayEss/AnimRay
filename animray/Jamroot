@@ -3,7 +3,9 @@ include $(TOP)/../boost-version.jam ;
 include ../fost-base/fost.jam ;
 
 use-project fost-base : ../fost-base/ ;
+
 fost-project animray ;
+
 
 alias fost :
         ../fost-base/Cpp/fost-cli
