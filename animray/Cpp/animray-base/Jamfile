@@ -1,5 +1,7 @@
-fost-smoke-test fost-core-test
+import path ;
+
+fost-smoke-test animray-base-test-smoke
     :
     :
-        homogeneous-tests.cpp
+        [ path.glob $(TOP)/Cpp/animray-base : *-tests.cpp ]
     ;
