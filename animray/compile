@@ -1,5 +1,5 @@
 #!/bin/bash
-cd `dirname $0`/animray
+cd `dirname $0`
 
 export LD_LIBRARY_PATH=../dist/lib
 export VARIANTS=$1

@@ -5,6 +5,12 @@ include ../fost-base/fost.jam ;
 use-project fost-base : ../fost-base/ ;
 fost-project animray ;
 
+alias fost :
+        ../fost-base/Cpp/fost-cli
+        ../fost-base/Cpp/fost-core
+    ;
+explicit fost ;
+
 alias animray :
         Cpp/animray-base
     ;
