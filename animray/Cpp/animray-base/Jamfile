@@ -1,5 +1,5 @@
-
-fost-lib-autotest animray-base
-    : Cpp/animray-base
+fost-smoke-test fost-core-test
     :
+    :
+        homogeneous-tests.cpp
     ;
