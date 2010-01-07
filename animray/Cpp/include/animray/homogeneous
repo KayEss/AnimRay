@@ -56,6 +56,15 @@ namespace animray {
                 value[3] = 1;
             }
 
+            /// Compare for equality
+            bool operator == ( const homogeneous &r ) const {
+                return value == r.value;
+            }
+            /// Compare for inequality
+            bool operator != ( const homogeneous &r ) const {
+                return value != r.value;
+            }
+
         private:
             value_type value;
     };
