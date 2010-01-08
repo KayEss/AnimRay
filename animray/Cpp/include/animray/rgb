@@ -1,0 +1,51 @@
+/*
+    Copyright 1995-2010, Kirit Saelensminde. http://www.kirit.com/AnimRay
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#ifndef ANIMRAY_RGB_HPP
+#define ANIMRAY_RGB_HPP
+#pragma once
+
+
+#include <animray/detail/array_based>
+
+
+namespace animray {
+
+
+    /// Represents the normal 3 channel RGB colour space
+    template< typename D >
+    class rgb : private detail::array_based< D, 3 > {
+        typedef detail::array_based< D, 3 > superclass;
+        public:
+            typedef typename superclass::value_type value_type;
+            typedef typename superclass::array_type array_type;
+            typedef typename
+                superclass::const_value_parameter_type
+                const_value_parameter_type
+            ;
+
+            /// Compare for equality
+            bool operator == ( const rgb &r ) const {
+                return superclass::array == r.array;
+            }
+            /// Compare for inequality
+            bool operator != ( const rgb &r ) const {
+                return superclass::array != r.array;
+            }
+
+            template< typename T >
+            friend fostlib::json fostlib::coercer<
+                fostlib::json, T
+            >::coerce( const T & );
+    };
+
+
+}
+
+
+#endif // ANIMRAY_RGB_HPP
