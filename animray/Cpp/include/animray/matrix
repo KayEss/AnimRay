@@ -29,6 +29,7 @@ namespace animray {
             /// Construct a transform matrix that does nothing
             matrix()
             : value() {
+                // Set the values on the leading diaganol to 1
                 value[0] = 1; value[5] = 1; value[10] = 1; value[15] = 1;
             }
 

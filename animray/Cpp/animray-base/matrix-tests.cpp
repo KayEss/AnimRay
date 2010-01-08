@@ -14,9 +14,9 @@ FSL_TEST_SUITE( matrix );
 
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::homogeneous< int > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< float > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< double > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< long double > >();
+    fostlib::test::default_copy_constructable< animray::matrix< int > >();
+    fostlib::test::default_copy_constructable< animray::matrix< int64_t > >();
+    fostlib::test::default_copy_constructable< animray::matrix< float > >();
+    fostlib::test::default_copy_constructable< animray::matrix< double > >();
+    fostlib::test::default_copy_constructable< animray::matrix< long double > >();
 }
