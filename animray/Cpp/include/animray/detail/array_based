@@ -1,0 +1,49 @@
+/*
+    Copyright 2010, Kirit Saelensminde. http://www.kirit.com/AnimRay
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#ifndef ANIMRAY_DETAIL_ARRAY_BASED
+#define ANIMRAY_DETAIL_ARRAY_BASED
+#pragma once
+
+
+#include <fost/core>
+#include <boost/array.hpp>
+
+
+namespace animray {
+
+
+    namespace detail {
+
+
+        /// Used for implementations that are actually just a vector
+        template< typename D, std::size_t S, typename CR >
+        class array_based {
+            protected:
+                /// The type of the values
+                typedef D value_type;
+                /// The type of the array
+                typedef boost::array< D, S > array_type;
+
+                /// The actual data
+                array_type array;
+
+                /// Default construct the array members
+                array_based()
+                : array() {
+                }
+        };
+
+
+    }
+
+
+}
+
+
+#endif // ANIMRAY_DETAIL_ARRAY_BASED

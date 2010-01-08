@@ -11,8 +11,7 @@
 #pragma once
 
 
-#include <fost/core>
-#include <boost/array.hpp>
+#include <animray/detail/array_based>
 
 
 namespace animray {
@@ -20,29 +19,27 @@ namespace animray {
 
     /// Homogenous coordinates store a location or a vector
     template < typename D, typename CR = const D & >
-    class homogeneous {
+    class homogeneous : private detail::array_based< D, 4, CR > {
+        typedef detail::array_based< D, 4, CR > superclass;
         public:
-            /// The type of the coordinates stored
-            typedef D coord_type;
-            /// Four coordinates are stored for a 3D location
-            typedef boost::array< D, 4 > value_type;
+            typedef typename superclass::value_type value_type;
+            typedef typename superclass::array_type array_type;
             /// Type to use as a parameter
             typedef CR const_coord_parameter_type;
 
             /// Return the 4 underlying coordinates
-            const value_type &coords() const { return value; }
+            const array_type &coords() const { return superclass::array; }
 
             /// The x coordinate
-            coord_type x() const { return value[0] / value[3]; }
+            value_type x() const { return coords()[0] / coords()[3]; }
             /// The y coordinate
-            coord_type y() const { return value[1] / value[3]; }
+            value_type y() const { return coords()[1] / coords()[3]; }
             /// The z coordinate
-            coord_type z() const { return value[2] / value[3]; }
+            value_type z() const { return coords()[2] / coords()[3]; }
 
             /// Constructor makes a point at the origin
-            homogeneous()
-            : value() {
-                value.c_array()[3] = 1;
+            homogeneous() {
+                superclass::array.c_array()[3] = 1;
             }
             /// Constructor for making a point at a given location
             homogeneous(
@@ -50,20 +47,20 @@ namespace animray {
                 const_coord_parameter_type y,
                 const_coord_parameter_type z
             ) {
-                value[0] = x; value[1] = y; value[2] = z; value[3] = 1;
+                superclass::array.c_array()[0] = x;
+                superclass::array.c_array()[1] = y;
+                superclass::array.c_array()[2] = z;
+                superclass::array.c_array()[3] = 1;
             }
 
             /// Compare for equality
             bool operator == ( const homogeneous &r ) const {
-                return value == r.value;
+                return coords() == r.coords();
             }
             /// Compare for inequality
             bool operator != ( const homogeneous &r ) const {
-                return value != r.value;
+                return coords() != r.coords();
             }
-
-        private:
-            value_type value;
     };
 
 
