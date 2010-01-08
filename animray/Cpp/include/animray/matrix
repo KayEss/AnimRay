@@ -18,31 +18,34 @@ namespace animray {
 
 
     /// This 4D matrix class represents transformations in 3D space
-    template< typename D >
-    class matrix {
+    template< typename D, typename CR = const D & >
+    class matrix : private detail::array_based< D, 16, CR > {
+        typedef detail::array_based< D, 16, CR > superclass;
         public:
-            /// The type of the matrix values
-            typedef D coord_type;
-            /// The full matrix
-            typedef boost::array< coord_type, 16 > value_type;
+            typedef typename superclass::value_type value_type;
+            typedef typename superclass::array_type array_type;
+            typedef typename
+                superclass::const_value_parameter_type
+                const_value_parameter_type
+            ;
 
             /// Construct a transform matrix that does nothing
-            matrix()
-            : value() {
+            matrix() {
                 // Set the values on the leading diaganol to 1
-                value[0] = 1; value[5] = 1; value[10] = 1; value[15] = 1;
+                superclass::array.c_array()[0] = 1;
+                superclass::array.c_array()[5] = 1;
+                superclass::array.c_array()[10] = 1;
+                superclass::array.c_array()[15] = 1;
             }
 
             /// Compare for equality
             bool operator == ( const matrix &r ) const {
-                return value == r.value;
+                return superclass::array == r.array;
             }
             /// Compare for inequality
             bool operator != ( const matrix &r ) const {
-                return value != r.value;
+                return superclass::array != r.array;
             }
-        private:
-            value_type value;
     };
 
 
