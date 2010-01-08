@@ -15,6 +15,15 @@
 #include <boost/array.hpp>
 
 
+namespace fostlib {
+    template< typename T >
+    struct coercer<
+        fostlib::json, T
+    > {
+        fostlib::json coerce( const T & );
+    };
+}
+
 namespace animray {
 
 
@@ -23,28 +32,40 @@ namespace animray {
 
         /// Used for implementations that are actually just a vector
         template< typename D, std::size_t S, typename CR >
-        class array_based {
-            protected:
-                /// The type of the values
-                typedef D value_type;
-                /// Type to use as a parameter
-                typedef CR const_value_parameter_type;
-                /// The type of the array
-                typedef boost::array< D, S > array_type;
+        struct array_based {
+            /// The type of the values
+            typedef D value_type;
+            /// Type to use as a parameter
+            typedef CR const_value_parameter_type;
+            /// The type of the array
+            typedef boost::array< D, S > array_type;
 
-                /// The actual data
-                array_type array;
+            /// The actual data
+            array_type array;
 
-                /// Default construct the array members
-                array_based()
-                : array() {
-                }
+            /// Default construct the array members
+            array_based()
+            : array() {
+            }
         };
 
 
     }
 
 
+}
+
+
+template< typename T >
+inline fostlib::json fostlib::coercer<
+    fostlib::json, T
+>::coerce( const T &a ) {
+    fostlib::json r;
+    for ( std::size_t i = 0; i < a.array.size(); ++i )
+        fostlib::jcursor().push_back( r,
+            fostlib::coerce< fostlib::json >( a.array[i] )
+        );
+    return r;
 }
 
 

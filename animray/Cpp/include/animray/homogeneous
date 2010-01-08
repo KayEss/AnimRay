@@ -63,25 +63,11 @@ namespace animray {
             bool operator != ( const homogeneous &r ) const {
                 return coords() != r.coords();
             }
-    };
 
-
-}
-
-
-namespace fostlib {
-
-
-    template< typename D, typename CR >
-    struct coercer< fostlib::json, animray::homogeneous< D, CR > > {
-        fostlib::json coerce( const animray::homogeneous< D, CR > &h ) {
-            fostlib::json r;
-            for ( std::size_t i = 0; i < 4; ++i )
-                fostlib::jcursor().push_back( r,
-                    fostlib::coerce< fostlib::json >( h.coords()[i] )
-                );
-            return r;
-        }
+            template< typename T >
+            friend fostlib::json fostlib::coercer<
+                fostlib::json, T
+            >::coerce( const T & );
     };
 
 

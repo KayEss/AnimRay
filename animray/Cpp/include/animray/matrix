@@ -46,6 +46,11 @@ namespace animray {
             bool operator != ( const matrix &r ) const {
                 return superclass::array != r.array;
             }
+
+            template< typename T >
+            friend fostlib::json fostlib::coercer<
+                fostlib::json, T
+            >::coerce( const T & );
     };
 
 
