@@ -30,8 +30,13 @@ namespace animray {
                 return false;
             }
 
-            bool hit_by( const line< D > &by ) {
-                return false;
+            bool occludes( const line< D > &by ) {
+                // This algorithm has been adapted from 'An Introduction to Ray
+                // Tracing' p39.
+                /*line< D > oc( by.from(), homogeneous<D>() );
+                D l2oc( oc.length_squared() );
+                if ( l2oc <= 1 ) return false; // Starts inside the sphere*/
+                return true;
             }
     };
 

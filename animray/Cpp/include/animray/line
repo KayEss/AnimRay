@@ -21,8 +21,21 @@ namespace animray {
     template< typename D >
     class line {
         public:
+            /// The value type of the line
+            typedef D value_type;
+            /// The type of the end points
+            typedef homogeneous< value_type > end_type;
+
+            /// Construct a null line
+            line() {
+            }
+            /// Construct a line between two locations
+            line( const end_type &from, const end_type &to )
+            : from( from ), to( to ) {
+            }
+
             /// The start and end of the line. It is directional
-            fostlib::accessors< homogeneous< D > > to, from;
+            fostlib::accessors< end_type > from, to;
 
             /// Compare for equality
             bool operator == ( const line &r ) const {
@@ -31,6 +44,15 @@ namespace animray {
             /// Compare for inequality
             bool operator != ( const line &r ) const {
                 return ! ( *this == r );
+            }
+
+            /// Returns the square of the length of the line
+            value_type length_squared() const {
+                double  dx, dy, dz;
+                dx  = to().x() - from().x();
+                dy  = to().y() - from().y();
+                dz  = to().z() - from().z();
+                return dx * dx + dy * dy + dz * dz;
             }
     };
 
