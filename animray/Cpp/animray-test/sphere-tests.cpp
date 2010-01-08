@@ -20,3 +20,7 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
     fostlib::test::default_copy_constructable< animray::sphere< double > >();
     fostlib::test::default_copy_constructable< animray::sphere< long double > >();
 }
+
+
+FSL_TEST_FUNCTION( intersection ) {
+}

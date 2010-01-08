@@ -11,7 +11,7 @@
 #pragma once
 
 
-#include <animray/matrix>
+#include <animray/line>
 
 
 namespace animray {
@@ -27,6 +27,10 @@ namespace animray {
             }
             /// Check for inequality
             bool operator != ( const sphere &r ) const {
+                return false;
+            }
+
+            bool hit_by( const line< D > &by ) {
                 return false;
             }
     };

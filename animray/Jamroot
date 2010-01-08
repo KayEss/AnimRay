@@ -14,5 +14,5 @@ alias fost :
 explicit fost ;
 
 alias animray :
-        Cpp/animray-base
+        Cpp/animray-test
     ;
