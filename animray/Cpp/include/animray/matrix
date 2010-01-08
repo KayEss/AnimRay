@@ -18,9 +18,9 @@ namespace animray {
 
 
     /// This 4D matrix class represents transformations in 3D space
-    template< typename D, typename CR = const D & >
-    class matrix : private detail::array_based< D, 16, CR > {
-        typedef detail::array_based< D, 16, CR > superclass;
+    template< typename D >
+    class matrix : private detail::array_based< D, 16 > {
+        typedef detail::array_based< D, 16 > superclass;
         public:
             typedef typename superclass::value_type value_type;
             typedef typename superclass::array_type array_type;

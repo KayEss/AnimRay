@@ -18,9 +18,9 @@ namespace animray {
 
 
     /// Homogenous coordinates store a location or a vector
-    template < typename D, typename CR = const D & >
-    class homogeneous : private detail::array_based< D, 4, CR > {
-        typedef detail::array_based< D, 4, CR > superclass;
+    template < typename D >
+    class homogeneous : private detail::array_based< D, 4 > {
+        typedef detail::array_based< D, 4 > superclass;
         public:
             typedef typename superclass::value_type value_type;
             typedef typename superclass::array_type array_type;

@@ -22,12 +22,12 @@ namespace animray {
 
 
         /// Used for implementations that are actually just a vector
-        template< typename D, std::size_t S, typename CR >
+        template< typename D, std::size_t S >
         struct array_based {
             /// The type of the values
             typedef D value_type;
             /// Type to use as a parameter
-            typedef CR const_value_parameter_type;
+            typedef const D &const_value_parameter_type;
             /// The type of the array
             typedef boost::array< D, S > array_type;
 
