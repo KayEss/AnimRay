@@ -1,0 +1,41 @@
+/*
+    Copyright 1995-2010, Kirit Saelensminde. http://www.kirit.com/AnimRay
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#ifndef ANIMRAY_LINE_HPP
+#define ANIMRAY_LINE_HPP
+#pragma once
+
+
+#include <animray/homogeneous>
+
+
+namespace animray {
+
+
+    /// Represents part of a line through 3D space
+    template< typename D >
+    class line {
+        public:
+            /// The start and end of the line. It is directional
+            fostlib::accessors< homogeneous< D > > to, from;
+
+            /// Compare for equality
+            bool operator == ( const line &r ) const {
+                return to() == r.to() && from() == r.from();
+            }
+            /// Compare for inequality
+            bool operator != ( const line &r ) const {
+                return ! ( *this == r );
+            }
+    };
+
+
+}
+
+
+#endif // ANIMRAY_LINE_HPP
