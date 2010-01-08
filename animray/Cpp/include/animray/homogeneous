@@ -70,4 +70,23 @@ namespace animray {
 }
 
 
+namespace fostlib {
+
+
+    template< typename D, typename CR >
+    struct coercer< fostlib::json, animray::homogeneous< D, CR > > {
+        fostlib::json coerce( const animray::homogeneous< D, CR > &h ) {
+            fostlib::json r;
+            for ( std::size_t i = 0; i < 4; ++i )
+                fostlib::jcursor().push_back( r,
+                    fostlib::coerce< fostlib::json >( h.coords()[i] )
+                );
+            return r;
+        }
+    };
+
+
+}
+
+
 #endif // ANIMRAY_HOMOGENEOUS_HPP

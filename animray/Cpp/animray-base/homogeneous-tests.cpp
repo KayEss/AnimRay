@@ -14,11 +14,12 @@ FSL_TEST_SUITE( homogeneous );
 
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::homogeneous< int > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< float > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< double > >();
-    fostlib::test::default_copy_constructable< animray::homogeneous< long double > >();
+    using fostlib::test::default_copy_constructable;
+    default_copy_constructable< animray::homogeneous< int > >();
+    default_copy_constructable< animray::homogeneous< int64_t > >();
+    default_copy_constructable< animray::homogeneous< float > >();
+    default_copy_constructable< animray::homogeneous< double > >();
+    default_copy_constructable< animray::homogeneous< long double > >();
 }
 
 
@@ -46,5 +47,13 @@ FSL_TEST_FUNCTION( constructors ) {
     constructor_tests< float >();
     constructor_tests< double >();
     constructor_tests< long double >();
+}
+
+
+FSL_TEST_FUNCTION( json ) {
+    FSL_CHECK_EQ(
+        fostlib::coerce< fostlib::json >( animray::homogeneous< int64_t >() ),
+        fostlib::json::parse(L"[0, 0, 0, 1]")
+    );
 }
 
