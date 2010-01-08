@@ -1,0 +1,38 @@
+/*
+    Copyright 1995-2010, Kirit Saelensminde. http://www.kirit.com/AnimRay
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#ifndef ANIMRAY_SPHERE_HPP
+#define ANIMRAY_SPHERE_HPP
+#pragma once
+
+
+#include <animray/matrix>
+
+
+namespace animray {
+
+
+    /// A simple 3D unit sphere primitive at the origin
+    template< typename D >
+    class sphere {
+        public:
+            /// Check for equality
+            bool operator == ( const sphere &r ) const {
+                return true;
+            }
+            /// Check for inequality
+            bool operator != ( const sphere &r ) const {
+                return false;
+            }
+    };
+
+
+}
+
+
+#endif // ANIMRAY_SPHERE_HPP
