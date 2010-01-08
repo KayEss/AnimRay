@@ -27,6 +27,8 @@ namespace animray {
             protected:
                 /// The type of the values
                 typedef D value_type;
+                /// Type to use as a parameter
+                typedef CR const_value_parameter_type;
                 /// The type of the array
                 typedef boost::array< D, S > array_type;
 

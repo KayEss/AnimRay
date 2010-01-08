@@ -24,8 +24,10 @@ namespace animray {
         public:
             typedef typename superclass::value_type value_type;
             typedef typename superclass::array_type array_type;
-            /// Type to use as a parameter
-            typedef CR const_coord_parameter_type;
+            typedef typename
+                superclass::const_value_parameter_type
+                const_value_parameter_type
+            ;
 
             /// Return the 4 underlying coordinates
             const array_type &coords() const { return superclass::array; }
@@ -43,9 +45,9 @@ namespace animray {
             }
             /// Constructor for making a point at a given location
             homogeneous(
-                const_coord_parameter_type x,
-                const_coord_parameter_type y,
-                const_coord_parameter_type z
+                const_value_parameter_type x,
+                const_value_parameter_type y,
+                const_value_parameter_type z
             ) {
                 superclass::array.c_array()[0] = x;
                 superclass::array.c_array()[1] = y;
