@@ -1,0 +1,55 @@
+/*
+    Copyright 1995-2010, Kirit Saelensminde. http://www.kirit.com/AnimRay
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#ifndef ANIMRAY_RAY_HPP
+#define ANIMRAY_RAY_HPP
+#pragma once
+
+
+#include <animray/homogeneous>
+
+
+namespace animray {
+
+
+    /// Represents a ray starting at a point and going to infinity in a direction
+    /// in 3D space
+    template< typename D >
+    class ray {
+        public:
+            /// The value type of the line
+            typedef D value_type;
+            /// The type of the end points
+            typedef homogeneous< value_type > end_type;
+
+            /// Construct a null line
+            ray() {
+            }
+            /// Construct a line between two locations
+            ray( const end_type &from, const end_type &to )
+            : from( from ), direction( to ) {
+            }
+
+            /// The start and end of the line. It is directional
+            fostlib::accessors< end_type > from, direction;
+
+            /// Compare for equality
+            bool operator == ( const ray &r ) const {
+                return direction() == r.direction() && from() == r.from();
+            }
+            /// Compare for inequality
+            bool operator != ( const ray &r ) const {
+                return ! ( *this == r );
+            }
+    };
+
+
+}
+
+
+#endif // ANIMRAY_RAY_HPP

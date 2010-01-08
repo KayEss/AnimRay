@@ -29,4 +29,10 @@ FSL_TEST_FUNCTION( intersection ) {
             animray::line< double >::end_type()
         ) )
     );
+    FSL_CHECK( not animray::sphere< double >()
+        .occludes( animray::line< double >(
+            animray::line< double >::end_type(),
+            animray::line< double >::end_type( 0, 0, 10 )
+        ) )
+    );
 }
