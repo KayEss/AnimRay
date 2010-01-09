@@ -22,6 +22,7 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <animray/targa>
+#include <boost/random.hpp>
 
 
 namespace {
@@ -34,10 +35,44 @@ namespace {
         typename F::size_type y,
         const typename F::color_type &current
     ) {
-        if ( (px-x) * (px-x) + (py-y) * (py-y) < r * r )
+        if ( current < 0xff && (px-x) * (px-x) + (py-y) * (py-y) < r * r )
             return current + 1;
         else
             return current;
+    }
+
+    template< typename F >
+    class do_elevation {
+        F &film;
+        boost::mt19937 rng;
+        boost::uniform_int< typename F::size_type > uix, uiy;
+        boost::variate_generator<boost::mt19937&, boost::uniform_int<typename F::size_type> > rx, ry;
+        void operator () (
+            typename F::size_type x, typename F::size_type y,
+            typename F::size_type radius
+        ) {
+            film.for_each( boost::lambda::bind(
+                &circle< F >,
+                x, y, radius,
+                boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
+            ) );
+            if ( radius > 2 )
+                for ( std::size_t s = 0; s < 4; ++s )
+                    (*this)(rx(), ry(), radius / 2 );
+        }
+        public:
+            do_elevation( F &film )
+            : film( film ),
+                uix(0, film.width()), uiy(0, film.height()),
+                rx( rng, uix ), ry( rng, uiy )
+            {
+                (*this)(rx(), ry(), std::max(film.width(), film.height()) / 2);
+            }
+    };
+
+    template< typename F >
+    void elevate( F &film ) {
+        do_elevation< F > functor(film);
     }
 }
 
@@ -57,11 +92,8 @@ FSL_MAIN(
 
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height, 0x80);
-    output.for_each( boost::lambda::bind(
-        &circle< film_type >,
-        175, 25, 10,
-        boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
-    ) );
+
+    elevate(output);
 
     animray::targa(output_filename, output);
 
