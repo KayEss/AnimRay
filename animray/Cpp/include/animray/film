@@ -24,37 +24,11 @@
 #pragma once
 
 
-#include <animray/rgb>
-#include <animray/rgba>
+#include <animray/point2d>
 
 
 namespace animray {
 
-
-    /// A 2d point
-    template< typename C >
-    class point2d {
-        public:
-            /// The location
-            fostlib::accessors< C > x, y;
-
-            /// Construct an empty point
-            point2d() {
-            }
-            /// Construct a point from a pair of co-ordinates
-            point2d( const C &x, const C &y )
-            : x(x), y(y) {
-            }
-
-            /// Check for equality
-            bool operator == ( const point2d &r ) const {
-                return x() == r.x() && y() == r.y();
-            }
-            /// Check for inequality
-            bool operator != ( const point2d &r ) const {
-                return x() != r.x() || y() != r.y();
-            }
-    };
 
     /// A film has extents which can be used to section it
     template< typename S >
