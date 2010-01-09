@@ -42,7 +42,7 @@ FSL_MAIN(
 
     using namespace boost::gil;
     rgb8_image_t output(100, 100);
-    png_write_view("out.png", view(output));
+    //png_write_view("out.png", view(output));
 
     return 0;
 }
