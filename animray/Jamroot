@@ -16,3 +16,15 @@ explicit fost ;
 alias animray :
         Cpp/animray-test
     ;
+
+alias examples :
+        Examples/landmaker
+    ;
+explicit examples ;
+
+
+alias all :
+        animray
+        examples
+        fost
+    ;
