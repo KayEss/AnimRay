@@ -71,9 +71,7 @@ namespace animray {
                     color_type, size_type, size_type, const color_type &
                 > fn
             ) {
-                for ( size_type r = 0; r < height(); ++r )
-                    for ( size_type c = 0; c < width(); ++c )
-                        rows[r][c] = fn( c, r, rows[r][c] );
+                for_each( fn, size() );
             }
             /// Iterate the given function across the image and allow it to mutate the image
             void for_each(
