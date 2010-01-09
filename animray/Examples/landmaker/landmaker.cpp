@@ -21,6 +21,7 @@
 
 #include <fost/unicode>
 #include <fost/main>
+#include <animray/targa>
 
 
 FSL_MAIN(
@@ -28,13 +29,16 @@ FSL_MAIN(
     L"LandMaker, Copyright 2010 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.jpeg"))
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"))
     ;
     int width = fostlib::coerce< int >( args[2].value("100") );
     int height = fostlib::coerce< int >( args[3].value("100") );
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height << std::endl
     ;
+
+    animray::targa< unsigned char > output(width, height);
+    output.save(output_filename);
 
     return 0;
 }
