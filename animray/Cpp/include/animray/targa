@@ -83,6 +83,7 @@ namespace animray {
         // Footer (for Targa 2)
         file.put(0); file.put(0); // Targa 2 extension data size
         file << "TRUEVISION-XFILE.";
+        file.put(0);
     }
 
 
