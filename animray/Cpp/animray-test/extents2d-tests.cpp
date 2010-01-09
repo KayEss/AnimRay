@@ -19,19 +19,15 @@
 */
 
 
-#include <animray/film>
+#include <animray/extents2d>
 #include <fost/test>
 
 
-FSL_TEST_SUITE( film );
+FSL_TEST_SUITE( extents2d );
 
 
 FSL_TEST_FUNCTION( extents_construct ) {
-    fostlib::test::default_copy_constructable< animray::point2d< char > >();
-}
-
-
-FSL_TEST_FUNCTION( film_construction ) {
-    animray::film< uint8_t > film( 10, 100 );
-    FSL_CHECK_EQ( film.size(), animray::film< uint8_t >::extents_type(0, 0, 9, 99) );
+    fostlib::test::default_copy_constructable< animray::extents2d< char > >();
+    fostlib::test::default_copy_constructable< animray::extents2d< int > >();
+    fostlib::test::default_copy_constructable< animray::extents2d< double > >();
 }
