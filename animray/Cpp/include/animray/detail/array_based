@@ -67,10 +67,11 @@ namespace fostlib {
         // TODO Should check the type of T with enable_if
     > {
         fostlib::json coerce( const T &a ) {
+            typedef typename T::superclass superclass;
             fostlib::json r;
-            for ( std::size_t i = 0; i < a.array().size(); ++i )
+            for ( std::size_t i = 0; i < a.superclass::array.size(); ++i )
                 fostlib::jcursor().push_back( r,
-                    fostlib::coerce< fostlib::json >( a.array()[i] )
+                    fostlib::coerce< fostlib::json >( a.superclass::array[i] )
                 );
             return r;
         }
