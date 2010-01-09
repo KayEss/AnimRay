@@ -56,4 +56,10 @@ FSL_TEST_FUNCTION( length_squared ) {
             animray::line< int >::end_type( 0, 2, 0 )
         ).length_squared(), 4
     );
+    FSL_CHECK_EQ(
+        animray::line< int >(
+            animray::line< int >::end_type(),
+            animray::line< int >::end_type( 3, 0, 4 )
+        ).length_squared(), 25
+    );
 }
