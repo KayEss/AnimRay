@@ -37,8 +37,9 @@ FSL_MAIN(
         <<", size " << width << " x " << height << std::endl
     ;
 
-    animray::targa< uint8_t > output(width, height);
-    output.save(output_filename);
+    animray::film< uint8_t > output(width, height, 0x80);
+
+    animray::targa(output_filename, output);
 
     return 0;
 }

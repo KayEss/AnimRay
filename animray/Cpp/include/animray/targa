@@ -24,8 +24,7 @@
 #pragma once
 
 
-#include <animray/rgb>
-#include <animray/rgba>
+#include <animray/film>
 
 #include <boost/filesystem/fstream.hpp>
 
@@ -33,35 +32,14 @@
 namespace animray {
 
 
-    /// A Targa file input/output handler templated on the colour pixel type
     template< typename C >
-    class targa {
-        typedef std::vector< C > row_type;
-        typedef std::vector< row_type > rows_type;
-        rows_type rows;
-        public:
-            /// Construct an empty targa of the given size
-            targa( uint16_t width, uint16_t height, const C &colour = C() )
-            : rows( height, row_type(width, colour)), width( width ), height( height ) {
-            }
-
-            /// The width and height of the image
-            fostlib::accessors< const uint16_t > width, height;
-
-            /// Save the image, returns the number of bytes written
-            void save( const boost::filesystem::wpath &filename ) const;
-
-            /// Return a mutable row
-            row_type &operator [] ( typename rows_type::size_type r ) {
-                return rows[r];
-            }
-    };
+    void targa( const boost::filesystem::wpath &filename, const film< C > & );
 
 
     template<>
-    void targa< uint8_t >::save(
-        const boost::filesystem::wpath &filename
-    ) const {
+    void targa< uint8_t >(
+        const boost::filesystem::wpath &filename, const film< uint8_t > &image
+    ) {
         boost::filesystem::ofstream file( filename, std::ios::binary );
         // Header
         file.put(0); // 0 identsize
@@ -72,14 +50,14 @@ namespace animray {
         file.put(0); // Colour map bits per pixel
         file.put(0); file.put(0); // X origin
         file.put(0); file.put(0); // Y origin
-        file.write(reinterpret_cast< const char * >(&width()), 2);
-        file.write(reinterpret_cast< const char * >(&height()), 2);
+        file.write(reinterpret_cast< const char * >(&image.width()), 2);
+        file.write(reinterpret_cast< const char * >(&image.height()), 2);
         file.put(8); // 8 bit pixels
         file.put(0); // Image data starts bottom left with zero alpha channel
         // Image data
-        for ( rows_type::const_iterator r(rows.begin()), re(rows.end()); r != re; ++r )
-            for ( row_type::const_iterator c(r->begin()), ce(r->end()); c != ce; ++c )
-                file.put(*c);
+        for ( film< uint8_t >::size_type r = 0; r < image.height(); ++r )
+            for ( film< uint8_t >::size_type c = 0; c < image.width(); ++c )
+                file.put(image[r][c]);
         // Footer (for Targa 2)
         file.put(0); file.put(0); // Targa 2 extension data size
         file << "TRUEVISION-XFILE.";
