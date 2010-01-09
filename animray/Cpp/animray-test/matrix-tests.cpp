@@ -25,7 +25,7 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 FSL_TEST_FUNCTION( json ) {
     FSL_CHECK_EQ(
         fostlib::coerce< fostlib::json >( animray::matrix< int64_t >() ),
-        fostlib::json::parse(L"[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]")
+        fostlib::json::parse(L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]")
     );
 }
 

@@ -29,13 +29,18 @@ namespace animray {
                 const_value_parameter_type
             ;
 
+            /// Return the channel values
+            const array_type &array() const {
+                return superclass::array;
+            }
+
             /// Compare for equality
             bool operator == ( const rgb &r ) const {
-                return superclass::array == r.array;
+                return superclass::array == r.superclass::array;
             }
             /// Compare for inequality
             bool operator != ( const rgb &r ) const {
-                return superclass::array != r.array;
+                return superclass::array != r.superclass::array;
             }
 
             template< typename T >

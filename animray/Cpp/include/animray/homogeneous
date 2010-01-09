@@ -44,14 +44,22 @@ namespace animray {
             ;
 
             /// Return the 4 underlying coordinates
-            const array_type &coords() const { return superclass::array; }
+            const array_type &array() const {
+                return superclass::array;
+            }
 
             /// The x coordinate
-            value_type x() const { return coords()[0] / coords()[3]; }
+            value_type x() const {
+                return superclass::array[0] / superclass::array[3];
+            }
             /// The y coordinate
-            value_type y() const { return coords()[1] / coords()[3]; }
+            value_type y() const {
+                return superclass::array[1] / superclass::array[3];
+            }
             /// The z coordinate
-            value_type z() const { return coords()[2] / coords()[3]; }
+            value_type z() const {
+                return superclass::array[2] / superclass::array[3];
+            }
 
             /// Constructor makes a point at the origin
             homogeneous() {
@@ -72,11 +80,11 @@ namespace animray {
 
             /// Compare for equality
             bool operator == ( const homogeneous &r ) const {
-                return coords() == r.coords();
+                return superclass::array == r.superclass::array;
             }
             /// Compare for inequality
             bool operator != ( const homogeneous &r ) const {
-                return coords() != r.coords();
+                return superclass::array != r.superclass::array;
             }
 
             /// Binary subtraction

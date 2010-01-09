@@ -27,10 +27,10 @@ namespace {
     template< typename D >
     inline void constructor_tests() {
         animray::homogeneous< D > h1;
-        FSL_CHECK_EQ( h1.coords()[0], 0.);
-        FSL_CHECK_EQ( h1.coords()[1], 0.);
-        FSL_CHECK_EQ( h1.coords()[2], 0.);
-        FSL_CHECK_EQ( h1.coords()[3], 1.);
+        FSL_CHECK_EQ( h1.array()[0], 0.);
+        FSL_CHECK_EQ( h1.array()[1], 0.);
+        FSL_CHECK_EQ( h1.array()[2], 0.);
+        FSL_CHECK_EQ( h1.array()[3], 1.);
         FSL_CHECK_EQ( h1.x(), 0.);
         FSL_CHECK_EQ( h1.y(), 0.);
         FSL_CHECK_EQ( h1.z(), 0.);

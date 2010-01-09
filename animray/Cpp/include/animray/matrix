@@ -47,10 +47,33 @@ namespace animray {
                 return superclass::array != r.array;
             }
 
-            template< typename T >
             friend fostlib::json fostlib::coercer<
-                fostlib::json, T
-            >::coerce( const T & );
+                fostlib::json, matrix
+            >::coerce( const matrix & );
+    };
+
+
+}
+
+
+namespace fostlib {
+
+
+    template< typename D >
+    struct coercer< fostlib::json, animray::matrix< D > > {
+        fostlib::json coerce( const animray::matrix< D > &m ) {
+            fostlib::json ret, line;
+            for ( std::size_t i = 0; i < 16; ++ i ) {
+                fostlib::jcursor().push_back( line,
+                    m.animray::matrix< D >::superclass::array[i]
+                );
+                if ( ( i + 1 ) % 4 == 0 ) {
+                    fostlib::jcursor().push_back(ret, line);
+                    line = fostlib::json();
+                }
+            }
+            return ret;
+        }
     };
 
 

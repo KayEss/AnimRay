@@ -55,9 +55,9 @@ namespace fostlib {
     > {
         fostlib::json coerce( const T &a ) {
             fostlib::json r;
-            for ( std::size_t i = 0; i < a.array.size(); ++i )
+            for ( std::size_t i = 0; i < a.array().size(); ++i )
                 fostlib::jcursor().push_back( r,
-                    fostlib::coerce< fostlib::json >( a.array[i] )
+                    fostlib::coerce< fostlib::json >( a.array()[i] )
                 );
             return r;
         }
