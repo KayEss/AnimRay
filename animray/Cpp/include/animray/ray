@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/homogeneous>
+#include <animray/point3d>
 
 
 namespace animray {
@@ -38,7 +38,7 @@ namespace animray {
             /// The value type of the line
             typedef D value_type;
             /// The type of the end points
-            typedef homogeneous< value_type > end_type;
+            typedef point3d< value_type > end_type;
 
             /// Construct a null line
             ray() {

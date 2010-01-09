@@ -19,27 +19,27 @@
 */
 
 
-#include <animray/homogeneous>
+#include <animray/point3d>
 #include <fost/test>
 
 
-FSL_TEST_SUITE( homogeneous );
+FSL_TEST_SUITE( point3d );
 
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
     using fostlib::test::default_copy_constructable;
-    default_copy_constructable< animray::homogeneous< int > >();
-    default_copy_constructable< animray::homogeneous< int64_t > >();
-    default_copy_constructable< animray::homogeneous< float > >();
-    default_copy_constructable< animray::homogeneous< double > >();
-    default_copy_constructable< animray::homogeneous< long double > >();
+    default_copy_constructable< animray::point3d< int > >();
+    default_copy_constructable< animray::point3d< int64_t > >();
+    default_copy_constructable< animray::point3d< float > >();
+    default_copy_constructable< animray::point3d< double > >();
+    default_copy_constructable< animray::point3d< long double > >();
 }
 
 
 namespace {
     template< typename D >
     inline void constructor_tests() {
-        animray::homogeneous< D > h1;
+        animray::point3d< D > h1;
         FSL_CHECK_EQ( h1.array()[0], 0.);
         FSL_CHECK_EQ( h1.array()[1], 0.);
         FSL_CHECK_EQ( h1.array()[2], 0.);
@@ -48,7 +48,7 @@ namespace {
         FSL_CHECK_EQ( h1.y(), 0.);
         FSL_CHECK_EQ( h1.z(), 0.);
 
-        animray::homogeneous< D > h2( 1, 2, 3 );
+        animray::point3d< D > h2( 1, 2, 3 );
         FSL_CHECK_EQ( h2.x(), 1 );
         FSL_CHECK_EQ( h2.y(), 2 );
         FSL_CHECK_EQ( h2.z(), 3 );
@@ -65,14 +65,14 @@ FSL_TEST_FUNCTION( constructors ) {
 
 FSL_TEST_FUNCTION( json ) {
     FSL_CHECK_EQ(
-        fostlib::coerce< fostlib::json >( animray::homogeneous< int64_t >() ),
+        fostlib::coerce< fostlib::json >( animray::point3d< int64_t >() ),
         fostlib::json::parse(L"[0, 0, 0, 1]")
     );
 }
 
 
 FSL_TEST_FUNCTION( minus ) {
-    animray::homogeneous< int >
+    animray::point3d< int >
         h0,
         h1( 1, 0, 0 ),
         h2( -1, 0, 0 )

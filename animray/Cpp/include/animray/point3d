@@ -29,14 +29,14 @@
 
 namespace animray {
     template< typename D >
-    class homogeneous;
+    class point3d;
 }
 
 
 namespace std {
     template< typename D >
     fostlib::ostream &operator << (
-        fostlib::ostream &o, const animray::homogeneous< D > &h
+        fostlib::ostream &o, const animray::point3d< D > &h
     );
 }
 
@@ -46,7 +46,7 @@ namespace animray {
 
     /// Homogenous coordinates store a location or a vector
     template < typename D >
-    class homogeneous : private detail::array_based< D, 4 > {
+    class point3d : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;
         public:
             typedef typename superclass::value_type value_type;
@@ -75,11 +75,11 @@ namespace animray {
             }
 
             /// Constructor makes a point at the origin
-            homogeneous() {
+            point3d() {
                 superclass::array.c_array()[3] = 1;
             }
             /// Constructor for making a point at a given location
-            homogeneous(
+            point3d(
                 const_value_parameter_type x,
                 const_value_parameter_type y,
                 const_value_parameter_type z,
@@ -92,29 +92,29 @@ namespace animray {
             }
 
             /// Compare for equality
-            bool operator == ( const homogeneous &r ) const {
+            bool operator == ( const point3d &r ) const {
                 return superclass::array == r.superclass::array;
             }
             /// Compare for inequality
-            bool operator != ( const homogeneous &r ) const {
+            bool operator != ( const point3d &r ) const {
                 return superclass::array != r.superclass::array;
             }
 
             /// Binary subtraction
-            homogeneous operator - ( const homogeneous &r ) const {
-                return homogeneous( x() - r.x(), y() - r.y(), z() - r.z() );
+            point3d operator - ( const point3d &r ) const {
+                return point3d( x() - r.x(), y() - r.y(), z() - r.z() );
             }
 
             /// Return the homogeneous with unit length
-            homogeneous unit() const {
-                return homogeneous(
+            point3d unit() const {
+                return point3d(
                     superclass::array[0], superclass::array[1], superclass::array[2],
                     std::sqrt( dot(*this) )
                 );
             }
 
             /// The dot product of two homogeneous co-ordinates
-            D dot( const homogeneous &r ) const {
+            D dot( const point3d &r ) const {
                 return (
                     superclass::array[0] * r.superclass::array[0]
                     + superclass::array[1] * r.superclass::array[1]
@@ -127,7 +127,7 @@ namespace animray {
                 fostlib::json, T
             >::coerce( const T & );
             friend fostlib::ostream &std::operator << <> (
-                fostlib::ostream &, const homogeneous &
+                fostlib::ostream &, const point3d &
             );
     };
 
@@ -138,9 +138,9 @@ namespace animray {
 namespace std {
     template< typename D >
     fostlib::ostream &operator << (
-        fostlib::ostream &o, const animray::homogeneous< D > &h
+        fostlib::ostream &o, const animray::point3d< D > &h
     ) {
-        return o << typename animray::homogeneous< D >::superclass( h );
+        return o << typename animray::point3d< D >::superclass( h );
     }
 }
 

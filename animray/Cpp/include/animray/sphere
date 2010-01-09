@@ -49,7 +49,7 @@ namespace animray {
             bool occludes( const ray< D > &by ) {
                 // This algorithm has been adapted from 'An Introduction to Ray
                 // Tracing' p39.
-                line< D > oc( by.from(), homogeneous<D>() );
+                line< D > oc( by.from(), point3d<D>() );
                 D l2oc( oc.length_squared() );
                 if ( l2oc <= 1 ) return false; // Starts inside the sphere
                 D tca( ( oc.to() - oc.from() ).dot( by.direction().unit() ) );
