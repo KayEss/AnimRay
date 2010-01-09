@@ -22,7 +22,6 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <animray/targa>
-#include <boost/lambda/bind.hpp>
 
 
 namespace {
@@ -36,7 +35,7 @@ namespace {
         const typename F::color_type &current
     ) {
         if ( (px-x) * (px-x) + (py-y) * (py-y) < r * r )
-            return 0xff;
+            return current + 1;
         else
             return current;
     }
@@ -60,7 +59,7 @@ FSL_MAIN(
     film_type output(width, height, 0x80);
     output.for_each( boost::lambda::bind(
         &circle< film_type >,
-        50, 25, 10,
+        175, 25, 10,
         boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
     ) );
 

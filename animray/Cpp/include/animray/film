@@ -60,15 +60,25 @@ namespace animray {
                 return rows[r];
             }
 
-            /// Iterate the given function across the image
+            /// Iterate the given function across the image and allow it to mutate the image
             void for_each(
-                boost::function<
-                    color_type ( size_type, size_type, const color_type & )
+                boost::function3<
+                    color_type, size_type, size_type, const color_type &
                 > fn
             ) {
                 for ( size_type r = 0; r < height(); ++r )
                     for ( size_type c = 0; c < width(); ++c )
                         rows[r][c] = fn( c, r, rows[r][c] );
+            }
+            /// Iterate the function across the image rows/columns
+            void for_each(
+                boost::function1<
+                    void, const color_type &
+                > fn
+            ) const {
+                for ( size_type r = 0; r < height(); ++r )
+                    for ( size_type c = 0; c < width(); ++c )
+                        fn( rows[r][c] );
             }
     };
 
