@@ -57,3 +57,15 @@ FSL_TEST_FUNCTION( json ) {
     );
 }
 
+
+FSL_TEST_FUNCTION( minus ) {
+    animray::homogeneous< int >
+        h0,
+        h1( 1, 0, 0 ),
+        h2( -1, 0, 0 )
+    ;
+    FSL_CHECK_EQ( h0 - h0, h0 );
+    FSL_CHECK_EQ( h1 - h0, h1 );
+    FSL_CHECK_EQ( h0 - h1, h2 );
+    FSL_CHECK_EQ( h1 - h1, h0 );
+}

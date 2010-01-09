@@ -49,8 +49,11 @@ namespace animray {
 
 namespace fostlib {
     template< typename T >
-    struct coercer<fostlib::json, T > {
-        fostlib::json coerce( const T &a ){
+    struct coercer<
+        fostlib::json, T
+        // TODO Should check the type of T with enable_if
+    > {
+        fostlib::json coerce( const T &a ) {
             fostlib::json r;
             for ( std::size_t i = 0; i < a.array.size(); ++i )
                 fostlib::jcursor().push_back( r,
@@ -59,6 +62,22 @@ namespace fostlib {
             return r;
         }
     };
+}
+
+
+namespace std {
+    template< typename D, std::size_t S >
+    fostlib::ostream &operator << (
+        fostlib::ostream &o, const animray::detail::array_based< D, S > &a
+    ) {
+        o << "(";
+        for ( std::size_t i = 0; i < a.array.size(); ++i ) {
+            if ( i != 0 )
+                o << ", ";
+            o << a.array[i];
+        }
+        return o << ")";
+    }
 }
 
 

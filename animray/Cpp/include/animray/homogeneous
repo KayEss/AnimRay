@@ -15,6 +15,20 @@
 
 
 namespace animray {
+    template< typename D >
+    class homogeneous;
+}
+
+
+namespace std {
+    template< typename D >
+    fostlib::ostream &operator << (
+        fostlib::ostream &o, const animray::homogeneous< D > &h
+    );
+}
+
+
+namespace animray {
 
 
     /// Homogenous coordinates store a location or a vector
@@ -47,12 +61,13 @@ namespace animray {
             homogeneous(
                 const_value_parameter_type x,
                 const_value_parameter_type y,
-                const_value_parameter_type z
+                const_value_parameter_type z,
+                const_value_parameter_type h = 1
             ) {
                 superclass::array.c_array()[0] = x;
                 superclass::array.c_array()[1] = y;
                 superclass::array.c_array()[2] = z;
-                superclass::array.c_array()[3] = 1;
+                superclass::array.c_array()[3] = h;
             }
 
             /// Compare for equality
@@ -64,13 +79,48 @@ namespace animray {
                 return coords() != r.coords();
             }
 
+            /// Binary subtraction
+            homogeneous operator - ( const homogeneous &r ) const {
+                return homogeneous( x() - r.x(), y() - r.y(), z() - r.z() );
+            }
+
+            /// Return the homogeneous with unit length
+            homogeneous unit() const {
+                return homogeneous(
+                    superclass::array[0], superclass::array[1], superclass::array[2],
+                    std::sqrt( dot(*this) )
+                );
+            }
+
+            /// The dot product of two homogeneous co-ordinates
+            D dot( const homogeneous &r ) const {
+                return (
+                    superclass::array[0] * r.superclass::array[0]
+                    + superclass::array[1] * r.superclass::array[1]
+                    + superclass::array[2] * r.superclass::array[2]
+                ) / superclass::array[3] * r.superclass::array[3];
+            }
+
             template< typename T >
             friend fostlib::json fostlib::coercer<
                 fostlib::json, T
             >::coerce( const T & );
+            friend fostlib::ostream &std::operator << <> (
+                fostlib::ostream &, const homogeneous &
+            );
     };
 
 
+}
+
+
+namespace std {
+    template< typename D >
+    fostlib::ostream &operator << (
+        fostlib::ostream &o, const animray::homogeneous< D > &h
+    ) {
+        return o << typename animray::homogeneous< D >::superclass( h );
+    }
 }
 
 

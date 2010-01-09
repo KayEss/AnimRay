@@ -24,14 +24,20 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 
 FSL_TEST_FUNCTION( intersection ) {
     FSL_CHECK( animray::sphere< double >()
-        .occludes( animray::line< double >(
+        .occludes( animray::ray< double >(
             animray::line< double >::end_type( 0, 0, 10 ),
             animray::line< double >::end_type()
         ) )
     );
     FSL_CHECK( not animray::sphere< double >()
-        .occludes( animray::line< double >(
+        .occludes( animray::ray< double >(
             animray::line< double >::end_type(),
+            animray::line< double >::end_type( 0, 0, 10 )
+        ) )
+    );
+    FSL_CHECK( not animray::sphere< double >()
+        .occludes( animray::ray< double >(
+            animray::line< double >::end_type( 0, 0, 5 ),
             animray::line< double >::end_type( 0, 0, 10 )
         ) )
     );

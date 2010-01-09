@@ -11,13 +11,15 @@
 #pragma once
 
 
+#include <animray/ray>
 #include <animray/line>
 
 
 namespace animray {
 
 
-    /// A simple 3D unit sphere primitive at the origin
+    /// A simple 3D unit sphere primitive at the origin.
+    /// Its surface only occludes from the outside.
     template< typename D >
     class sphere {
         public:
@@ -31,12 +33,14 @@ namespace animray {
             }
 
             /// Returns true if the line hits the sphere from the outside
-            bool occludes( const line< D > &by ) {
+            bool occludes( const ray< D > &by ) {
                 // This algorithm has been adapted from 'An Introduction to Ray
                 // Tracing' p39.
                 line< D > oc( by.from(), homogeneous<D>() );
                 D l2oc( oc.length_squared() );
                 if ( l2oc <= 1 ) return false; // Starts inside the sphere
+                D tca( ( oc.to() - oc.from() ).dot( by.direction().unit() ) );
+                if ( tca < 0 ) return false; // Outside and points away
                 return true;
             }
     };
