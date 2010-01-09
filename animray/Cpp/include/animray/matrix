@@ -31,7 +31,7 @@ namespace animray {
 
             /// Construct a transform matrix that does nothing
             matrix() {
-                // Set the values on the leading diaganol to 1
+                // Set the values on the leading diagonal to 1
                 superclass::array.c_array()[0] = 1;
                 superclass::array.c_array()[5] = 1;
                 superclass::array.c_array()[10] = 1;
