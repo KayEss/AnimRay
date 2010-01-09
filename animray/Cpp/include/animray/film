@@ -24,40 +24,11 @@
 #pragma once
 
 
-#include <animray/point2d>
+#include <animray/extents2d>
 
 
 namespace animray {
 
-
-    /// A film has extents which can be used to section it
-    template< typename S >
-    class extents {
-        public:
-            /// The size type of the extents
-            typedef S size_type;
-
-            /// The corners of the extents
-            fostlib::accessors< point2d< size_type > > lower_left, top_right;
-
-            /// Construct an empty extents
-            extents()
-            : lower_left(), top_right() {
-            }
-            /// Construct an extents from the
-            extents( size_type sx, size_type sy, size_type ex, size_type ey )
-            : lower_left( sx, sy ), top_right( ex, ey ) {
-            }
-
-            /// Check for equality
-            bool operator == ( const extents &r ) const {
-                return lower_left() == r.lower_left() && top_right() == r.top_right();
-            }
-            /// Check for inequality
-            bool operator != ( const extents &r ) const {
-                return lower_left() != r.lower_left() || top_right() != r.top_right();
-            }
-    };
 
     /// A film represents a raster of pixel data
     template< typename C >
@@ -69,7 +40,7 @@ namespace animray {
             /// The colour type
             typedef C color_type;
             /// The extents type
-            typedef extents< uint16_t > extents_type;
+            typedef extents2d< uint16_t > extents_type;
             /// The extents size type
             typedef typename extents_type::size_type size_type;
 
@@ -82,7 +53,7 @@ namespace animray {
             fostlib::accessors< const size_type > width, height;
             /// Return the extents of the image
             extents_type size() const {
-                return extents_type( 0, width() - 1, 0, height() - 1 );
+                return extents_type( 0, 0, width() - 1, height() - 1 );
             }
 
             /// Return a mutable row

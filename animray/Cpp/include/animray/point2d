@@ -59,4 +59,14 @@ namespace animray {
 }
 
 
+namespace std {
+    template< typename C >
+    inline fostlib::ostream &operator << (
+        fostlib::ostream &o, const animray::point2d< C > &p
+    ) {
+        return o << "(" << p.x() << ", " << p.y() << ")";
+    }
+}
+
+
 #endif // ANIMRAY_POINT2D_HPP

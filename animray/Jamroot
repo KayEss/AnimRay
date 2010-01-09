@@ -28,3 +28,4 @@ alias all :
         examples
         fost
     ;
+explicit all ;

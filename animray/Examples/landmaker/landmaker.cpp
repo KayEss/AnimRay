@@ -21,6 +21,7 @@
 
 #include <fost/unicode>
 #include <fost/main>
+#include <fost/coerce/ints.hpp>
 #include <animray/targa>
 #include <boost/random.hpp>
 
@@ -45,28 +46,44 @@ namespace {
     class do_elevation {
         F &film;
         boost::mt19937 rng;
-        boost::uniform_int< typename F::size_type > uix, uiy;
-        boost::variate_generator<boost::mt19937&, boost::uniform_int<typename F::size_type> > rx, ry;
         void operator () (
-            typename F::size_type x, typename F::size_type y,
+            const animray::extents2d< int > &size,
             typename F::size_type radius
         ) {
+            // Create a random number handler across the range we need
+            boost::uniform_int<>
+                uix(size.lower_left().x(), size.top_right().x()),
+                uiy(size.lower_left().y(), size.top_right().y())
+            ;
+            boost::variate_generator<boost::mt19937&,
+                boost::uniform_int<>
+            > rx( rng, uix ), ry( rng, uiy );
+
+            // Calculate the position and extents of the circle
+            typename F::size_type x(rx()), y(ry());
+            animray::extents2d< int > location(
+                x - radius/2, y - radius/2,
+                x + radius/2, y + radius/2
+            );
+
+            // Raise the land covered by the circle
             film.for_each( boost::lambda::bind(
-                &circle< F >,
-                x, y, radius,
+                &circle< F >, x, y, radius,
                 boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
             ) );
+
+            // Now recursivley do some more
             if ( radius > 2 )
-                for ( std::size_t s = 0; s < 4; ++s )
-                    (*this)(rx(), ry(), radius / 2 );
+                for ( std::size_t s = 0; s < 3; ++s )
+                    (*this)(location, radius / 2 );
         }
         public:
             do_elevation( F &film )
-            : film( film ),
-                uix(0, film.width()), uiy(0, film.height()),
-                rx( rng, uix ), ry( rng, uiy )
-            {
-                (*this)(rx(), ry(), std::max(film.width(), film.height()) / 2);
+            : film( film ) {
+                (*this)(
+                    fostlib::coerce< animray::extents2d< int > >(film.size()),
+                    std::max(film.width(), film.height()) / 2
+                );
             }
     };
 
@@ -91,7 +108,7 @@ FSL_MAIN(
     ;
 
     typedef animray::film< uint8_t > film_type;
-    film_type output(width, height, 0x80);
+    film_type output(width, height);
 
     elevate(output);
 
