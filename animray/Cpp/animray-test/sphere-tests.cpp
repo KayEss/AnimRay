@@ -42,13 +42,13 @@ FSL_TEST_FUNCTION( intersection ) {
             animray::line< double >::end_type()
         ) )
     );
-    FSL_CHECK( not animray::sphere< double >()
+    FSL_CHECK( !!! animray::sphere< double >()
         .occludes( animray::ray< double >(
             animray::line< double >::end_type(),
             animray::line< double >::end_type( 0, 0, 10 )
         ) )
     );
-    FSL_CHECK( not animray::sphere< double >()
+    FSL_CHECK( !!! animray::sphere< double >()
         .occludes( animray::ray< double >(
             animray::line< double >::end_type( 0, 0, 5 ),
             animray::line< double >::end_type( 0, 0, 10 )
