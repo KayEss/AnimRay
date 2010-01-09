@@ -22,6 +22,25 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <animray/targa>
+#include <boost/lambda/bind.hpp>
+
+
+namespace {
+    template< typename F >
+    typename F::color_type circle(
+        typename F::size_type px,
+        typename F::size_type py,
+        typename F::size_type r,
+        typename F::size_type x,
+        typename F::size_type y,
+        const typename F::color_type &current
+    ) {
+        if ( (px-x) * (px-x) + (py-y) * (py-y) < r * r )
+            return 0xff;
+        else
+            return current;
+    }
+}
 
 
 FSL_MAIN(
@@ -37,7 +56,13 @@ FSL_MAIN(
         <<", size " << width << " x " << height << std::endl
     ;
 
-    animray::film< uint8_t > output(width, height, 0x80);
+    typedef animray::film< uint8_t > film_type;
+    film_type output(width, height, 0x80);
+    output.for_each( boost::lambda::bind(
+        &circle< film_type >,
+        50, 25, 10,
+        boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
+    ) );
 
     animray::targa(output_filename, output);
 

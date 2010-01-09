@@ -40,6 +40,8 @@ namespace animray {
         public:
             /// The extents type
             typedef uint16_t size_type;
+            /// The colour type
+            typedef C color_type;
 
             /// Construct an empty targa of the given size
             film( size_type width, size_type height, const C &colour = C() )
@@ -56,6 +58,17 @@ namespace animray {
             /// Return a non-mutable row
             const row_type &operator [] ( size_type r ) const {
                 return rows[r];
+            }
+
+            /// Iterate the given function across the image
+            void for_each(
+                boost::function<
+                    color_type ( size_type, size_type, const color_type & )
+                > fn
+            ) {
+                for ( size_type r = 0; r < height(); ++r )
+                    for ( size_type c = 0; c < width(); ++c )
+                        rows[r][c] = fn( c, r, rows[r][c] );
             }
     };
 
