@@ -59,14 +59,14 @@ namespace animray {
 
 
     template<>
-    void targa< unsigned char >::save(
+    void targa< uint8_t >::save(
         const boost::filesystem::wpath &filename
     ) const {
         boost::filesystem::ofstream file( filename, std::ios::binary );
         // Header
         file.put(0); // 0 identsize
         file.put(0); // Has no colour map
-        file.put(3); // Uncompressed grayscale image (as this is unsigned char)
+        file.put(3); // Uncompressed grayscale image (as this is uint8_t)
         file.put(0); file.put(0); // Colour map offset
         file.put(0); file.put(0); // Colour map indexes
         file.put(0); // Colour map bits per pixel
