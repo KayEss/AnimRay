@@ -31,6 +31,60 @@
 namespace animray {
 
 
+    /// A 2d point
+    template< typename C >
+    class point2d {
+        public:
+            /// The location
+            fostlib::accessors< C > x, y;
+
+            /// Construct an empty point
+            point2d() {
+            }
+            /// Construct a point from a pair of co-ordinates
+            point2d( const C &x, const C &y )
+            : x(x), y(y) {
+            }
+
+            /// Check for equality
+            bool operator == ( const point2d &r ) const {
+                return x() == r.x() && y() == r.y();
+            }
+            /// Check for inequality
+            bool operator != ( const point2d &r ) const {
+                return x() != r.x() || y() != r.y();
+            }
+    };
+
+    /// A film has extents which can be used to section it
+    template< typename S >
+    class extents {
+        public:
+            /// The size type of the extents
+            typedef S size_type;
+
+            /// The corners of the extents
+            fostlib::accessors< point2d< size_type > > lower_left, top_right;
+
+            /// Construct an empty extents
+            extents()
+            : lower_left(), top_right() {
+            }
+            /// Construct an extents from the
+            extents( size_type sx, size_type sy, size_type ex, size_type ey )
+            : lower_left( sx, sy ), top_right( ex, ey ) {
+            }
+
+            /// Check for equality
+            bool operator == ( const extents &r ) const {
+                return lower_left() == r.lower_left() && top_right() == r.top_right();
+            }
+            /// Check for inequality
+            bool operator != ( const extents &r ) const {
+                return lower_left() != r.lower_left() || top_right() != r.top_right();
+            }
+    };
+
     /// A film represents a raster of pixel data
     template< typename C >
     class film {
@@ -38,10 +92,12 @@ namespace animray {
         typedef std::vector< row_type > rows_type;
         rows_type rows;
         public:
-            /// The extents type
-            typedef uint16_t size_type;
             /// The colour type
             typedef C color_type;
+            /// The extents type
+            typedef extents< uint16_t > extents_type;
+            /// The extents size type
+            typedef typename extents_type::size_type size_type;
 
             /// Construct an empty targa of the given size
             film( size_type width, size_type height, const C &colour = C() )
@@ -50,6 +106,10 @@ namespace animray {
 
             /// The width and height of the image
             fostlib::accessors< const size_type > width, height;
+            /// Return the extents of the image
+            extents_type size() const {
+                return extents_type( 0, width() - 1, 0, height() - 1 );
+            }
 
             /// Return a mutable row
             row_type &operator [] ( size_type r ) {
@@ -68,6 +128,16 @@ namespace animray {
             ) {
                 for ( size_type r = 0; r < height(); ++r )
                     for ( size_type c = 0; c < width(); ++c )
+                        rows[r][c] = fn( c, r, rows[r][c] );
+            }
+            /// Iterate the given function across the image and allow it to mutate the image
+            void for_each(
+                boost::function3<
+                    color_type, size_type, size_type, const color_type &
+                > fn, const extents_type &area
+            ) {
+                for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
+                    for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c )
                         rows[r][c] = fn( c, r, rows[r][c] );
             }
             /// Iterate the function across the image rows/columns
