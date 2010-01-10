@@ -83,7 +83,7 @@ namespace {
                 );
 
             // Now recursivley do some more
-            if ( radius > 2 )
+            if ( radius > 0 )
                 for ( std::size_t s = 0; s < 4; ++s )
                     (*this)( location, radius / 2 );
         }
