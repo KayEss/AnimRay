@@ -44,8 +44,8 @@ namespace {
 
     template< typename F >
     class do_elevation {
-        F &film;
-        boost::mt19937 rng;
+        F &film; boost::mt19937 &rng;
+
         void operator () (
             const animray::extents2d< int > &size,
             typename F::size_type radius
@@ -87,18 +87,18 @@ namespace {
                     (*this)(location, radius / 2 );
         }
         public:
-            do_elevation( F &film )
-            : film( film ) {
+            do_elevation( F &film, boost::mt19937 &rng )
+            : film( film ), rng( rng ) {
                 (*this)(
                     fostlib::coerce< animray::extents2d< int > >(film.size()),
-                    std::max(film.width(), film.height()) / 2
+                    std::max(film.width(), film.height())
                 );
             }
     };
 
     template< typename F >
-    void elevate( F &film ) {
-        do_elevation< F > functor(film);
+    void elevate( F &film, boost::mt19937 &rng ) {
+        do_elevation< F > functor(film, rng);
     }
 }
 
@@ -119,10 +119,9 @@ FSL_MAIN(
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height);
 
-    elevate(output);
-    elevate(output);
-    elevate(output);
-    elevate(output);
+    boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
+    for ( std::size_t i = 0; i < 10; ++i )
+        elevate(output, rng);
 
     animray::targa(output_filename, output);
 
