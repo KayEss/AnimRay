@@ -31,12 +31,12 @@ namespace {
     typename F::color_type circle(
         typename F::size_type px,
         typename F::size_type py,
-        typename F::size_type r,
+        typename F::size_type r2,
         typename F::size_type x,
         typename F::size_type y,
         const typename F::color_type &current
     ) {
-        if ( current < 0xff && (px-x) * (px-x) + (py-y) * (py-y) < r * r )
+        if ( current < 0xff && (px-x) * (px-x) + (py-y) * (py-y) < r2 )
             return current + 1;
         else
             return current;
@@ -62,8 +62,8 @@ namespace {
             // Calculate the position and extents of the circle
             typename F::size_type x(rx()), y(ry());
             animray::extents2d< int > location(
-                x - radius/2, y - radius/2,
-                x + radius/2, y + radius/2
+                x - radius, y - radius,
+                x + radius, y + radius
             );
             fostlib::nullable< animray::extents2d< int > > intersect(
                 fostlib::coerce< animray::extents2d< int > >( film.size() )
@@ -74,7 +74,7 @@ namespace {
             if ( !intersect.isnull() )
                 film.for_each(
                     boost::lambda::bind(
-                        &circle< F >, x, y, radius,
+                        &circle< F >, x, y, radius * radius,
                         boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
                     ), fostlib::coerce< typename F::extents_type >(
                         intersect
@@ -84,7 +84,7 @@ namespace {
             // Now recursivley do some more
             if ( radius > 2 )
                 for ( std::size_t s = 0; s < 4; ++s )
-                    (*this)(location, radius / 2 );
+                    (*this)( location, radius / 2 );
         }
         public:
             do_elevation( F &film, boost::mt19937 &rng )
