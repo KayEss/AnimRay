@@ -55,7 +55,8 @@ namespace {
                 uix(size.lower_left().x(), size.top_right().x()),
                 uiy(size.lower_left().y(), size.top_right().y())
             ;
-            boost::variate_generator<boost::mt19937&,
+            boost::variate_generator<
+                boost::mt19937&,
                 boost::uniform_int<>
             > rx( rng, uix ), ry( rng, uiy );
 
