@@ -65,16 +65,25 @@ namespace {
                 x - radius/2, y - radius/2,
                 x + radius/2, y + radius/2
             );
+            fostlib::nullable< animray::extents2d< int > > intersect(
+                fostlib::coerce< animray::extents2d< int > >( film.size() )
+                    .intersection(location)
+            );
 
             // Raise the land covered by the circle
-            film.for_each( boost::lambda::bind(
-                &circle< F >, x, y, radius,
-                boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
-            ) );
+            if ( !intersect.isnull() )
+                film.for_each(
+                    boost::lambda::bind(
+                        &circle< F >, x, y, radius,
+                        boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
+                    ), fostlib::coerce< typename F::extents_type >(
+                        intersect
+                    )
+                );
 
             // Now recursivley do some more
             if ( radius > 2 )
-                for ( std::size_t s = 0; s < 3; ++s )
+                for ( std::size_t s = 0; s < 4; ++s )
                     (*this)(location, radius / 2 );
         }
         public:
@@ -110,6 +119,9 @@ FSL_MAIN(
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height);
 
+    elevate(output);
+    elevate(output);
+    elevate(output);
     elevate(output);
 
     animray::targa(output_filename, output);

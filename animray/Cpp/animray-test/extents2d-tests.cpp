@@ -31,3 +31,17 @@ FSL_TEST_FUNCTION( extents_construct ) {
     fostlib::test::default_copy_constructable< animray::extents2d< int > >();
     fostlib::test::default_copy_constructable< animray::extents2d< double > >();
 }
+
+
+FSL_TEST_FUNCTION( intersection ) {
+    animray::extents2d< char >
+        e1( 0, 0, 10, 10 ),
+        e2( 20, 20, 30, 30 ),
+        e3( 5, 5, 15, 15 ),
+        e4( 5, 5, 10, 10 )
+    ;
+    FSL_CHECK_EQ( e1.intersection( e1 ).value(), e1 );
+    FSL_CHECK( e1.intersection( e2 ).isnull() );
+    FSL_CHECK_EQ( e1.intersection( e3 ).value(), e4 );
+    FSL_CHECK_EQ( e1.intersection( e3 ).value(), e4 );
+}
