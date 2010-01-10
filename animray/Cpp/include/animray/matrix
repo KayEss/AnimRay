@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/homogeneous>
+#include <animray/point3d>
 
 
 namespace animray {
