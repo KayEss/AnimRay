@@ -61,10 +61,10 @@ namespace animray {
 
             /// Returns the square of the length of the line
             value_type length_squared() const {
-                double  dx, dy, dz;
-                dx  = to().x() - from().x();
-                dy  = to().y() - from().y();
-                dz  = to().z() - from().z();
+                value_type
+                    dx = to().x() - from().x(),
+                    dy = to().y() - from().y(),
+                    dz = to().z() - from().z();
                 return dx * dx + dy * dy + dz * dz;
             }
     };
