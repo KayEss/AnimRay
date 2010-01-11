@@ -43,6 +43,21 @@ FSL_TEST_FUNCTION( constructor_simple ) {
 }
 
 
+FSL_TEST_FUNCTION( to_json ) {
+    FSL_CHECK_EQ(
+        fostlib::coerce< fostlib::json >(
+            animray::line< int >(
+                animray::line< int >::end_type( -1, -2, -3 ),
+                animray::line< int >::end_type( 1, 2, 3 )
+            )
+        ),
+        fostlib::json::parse(
+            "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}"
+        )
+    );
+}
+
+
 FSL_TEST_FUNCTION( length_squared ) {
     FSL_CHECK_EQ(
         animray::line< int >(
