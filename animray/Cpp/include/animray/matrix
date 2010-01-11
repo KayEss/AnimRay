@@ -77,18 +77,4 @@ namespace animray {
 }
 
 
-namespace fostlib {
-
-
-    template< typename D >
-    struct coercer< fostlib::json, animray::matrix< D > > {
-        fostlib::json coerce( const animray::matrix< D > &m ) {
-            return m.to_json();
-        }
-    };
-
-
-}
-
-
 #endif // ANIMRAY_MATRIX_HPP

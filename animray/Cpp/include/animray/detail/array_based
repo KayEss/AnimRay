@@ -34,9 +34,12 @@ namespace animray {
     namespace detail {
 
 
+        /// Non-templated base class used for matching
+        struct array_based_base_class {};
+
         /// Used for implementations that are actually just a vector
         template< typename D, std::size_t S >
-        struct array_based {
+        struct array_based : array_based_base_class {
             /// The type of the values
             typedef D value_type;
             /// Type to use as a parameter
@@ -51,6 +54,16 @@ namespace animray {
             array_based()
             : array() {
             }
+
+            /// Turn the array into a JSON array
+            fostlib::json to_json() const {
+                fostlib::json r;
+                for ( std::size_t i = 0; i < array.size(); ++i )
+                    fostlib::jcursor().push_back( r,
+                        fostlib::coerce< fostlib::json >( array[i] )
+                    );
+                return r;
+            }
         };
 
 
@@ -63,17 +76,13 @@ namespace animray {
 namespace fostlib {
     template< typename T >
     struct coercer<
-        fostlib::json, T
-        // TODO Should check the type of T with enable_if
+        fostlib::json, T,
+        typename boost::enable_if<
+            boost::is_base_of< animray::detail::array_based_base_class, T >
+        >::type
     > {
         fostlib::json coerce( const T &a ) {
-            typedef typename T::superclass superclass;
-            fostlib::json r;
-            for ( std::size_t i = 0; i < a.superclass::array.size(); ++i )
-                fostlib::jcursor().push_back( r,
-                    fostlib::coerce< fostlib::json >( a.superclass::array[i] )
-                );
-            return r;
+            return a.to_json();
         }
     };
 }

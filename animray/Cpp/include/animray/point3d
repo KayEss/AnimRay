@@ -55,6 +55,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+            using superclass::to_json;
 
             /// Return the 4 underlying coordinates
             const array_type &array() const {
@@ -122,10 +123,6 @@ namespace animray {
                 ) / superclass::array[3] * r.superclass::array[3];
             }
 
-            template< typename T >
-            friend fostlib::json fostlib::coercer<
-                fostlib::json, T
-            >::coerce( const T & );
             friend fostlib::ostream &std::operator << <> (
                 fostlib::ostream &, const point3d &
             );

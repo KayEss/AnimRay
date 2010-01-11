@@ -41,6 +41,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+            using superclass::to_json;
 
             /// Return the channel values
             const array_type &array() const {
@@ -55,11 +56,6 @@ namespace animray {
             bool operator != ( const rgb &r ) const {
                 return superclass::array != r.superclass::array;
             }
-
-            template< typename T >
-            friend fostlib::json fostlib::coercer<
-                fostlib::json, T
-            >::coerce( const T & );
     };
 
 
