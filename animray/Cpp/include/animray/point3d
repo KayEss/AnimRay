@@ -28,20 +28,6 @@
 
 
 namespace animray {
-    template< typename D >
-    class point3d;
-}
-
-
-namespace std {
-    template< typename D >
-    fostlib::ostream &operator << (
-        fostlib::ostream &o, const animray::point3d< D > &h
-    );
-}
-
-
-namespace animray {
 
 
     /// Homogenous coordinates store a location or a vector
@@ -56,6 +42,7 @@ namespace animray {
                 const_value_parameter_type
             ;
             using superclass::to_json;
+            using superclass::print_on;
 
             /// Return the 4 underlying coordinates
             const array_type &array() const {
@@ -122,23 +109,9 @@ namespace animray {
                     + superclass::array[2] * r.superclass::array[2]
                 ) / superclass::array[3] * r.superclass::array[3];
             }
-
-            friend fostlib::ostream &std::operator << <> (
-                fostlib::ostream &, const point3d &
-            );
     };
 
 
-}
-
-
-namespace std {
-    template< typename D >
-    fostlib::ostream &operator << (
-        fostlib::ostream &o, const animray::point3d< D > &h
-    ) {
-        return o << typename animray::point3d< D >::superclass( h );
-    }
 }
 
 
