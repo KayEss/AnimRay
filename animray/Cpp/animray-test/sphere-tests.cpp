@@ -35,23 +35,27 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 }
 
 
-FSL_TEST_FUNCTION( intersection ) {
-    FSL_CHECK( animray::sphere< double >()
-        .occludes( animray::ray< double >(
-            animray::line< double >::end_type( 0, 0, 10 ),
-            animray::line< double >::end_type()
-        ) )
-    );
-    FSL_CHECK( !!! animray::sphere< double >()
-        .occludes( animray::ray< double >(
-            animray::line< double >::end_type(),
-            animray::line< double >::end_type( 0, 0, 10 )
-        ) )
-    );
-    FSL_CHECK( !!! animray::sphere< double >()
-        .occludes( animray::ray< double >(
-            animray::line< double >::end_type( 0, 0, 5 ),
-            animray::line< double >::end_type( 0, 0, 10 )
-        ) )
-    );
+namespace {
+    template< typename D >
+    void sphere_occlude() {
+        typedef typename animray::line< D >::end_type end_type;
+        typedef animray::ray< D > ray;
+        animray::sphere< D > s;
+        FSL_CHECK( s.occludes(
+            ray( end_type( 0, 0, 10 ), end_type() ) )
+        );
+        FSL_CHECK( !!! s.occludes(
+            ray( end_type(), end_type( 0, 0, 10 ) ) )
+        );
+        FSL_CHECK( !!! s.occludes(
+            ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) ) )
+        );
+    }
+}
+FSL_TEST_FUNCTION( occlusion ) {
+    sphere_occlude< int >();
+    sphere_occlude< int64_t >();
+    sphere_occlude< float >();
+    sphere_occlude< double >();
+    sphere_occlude< long double >();
 }
