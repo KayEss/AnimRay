@@ -57,7 +57,7 @@ namespace animray {
                 // Outside and points away
                 if ( tca < D(0) ) return false;
                 // Closest approach squared is negative
-                if ( D(1) - l2oc + tca * tca < D(0) ) return false;
+                //if ( D(1) - l2oc + tca * tca < D(0) ) return false;
                 // Hit
                 return true;
             }
