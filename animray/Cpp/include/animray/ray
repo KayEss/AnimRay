@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/point3d>
+#include <animray/unit-vector>
 
 
 namespace animray {
@@ -39,17 +39,20 @@ namespace animray {
             typedef D value_type;
             /// The type of the end points
             typedef point3d< value_type > end_type;
+            typedef unit_vector< value_type > direction_type;
 
             /// Construct a null line
             ray() {
             }
             /// Construct a line between two locations
             ray( const end_type &from, const end_type &to )
-            : from( from ), direction( to ) {
+            : from( from ), direction( to - from ) {
             }
 
-            /// The start and end of the line. It is directional
-            fostlib::accessors< end_type > from, direction;
+            /// The start of the ray
+            fostlib::accessors< end_type > from;
+            /// A unit direction vector
+            fostlib::accessors< direction_type > direction;
 
             /// Compare for equality
             bool operator == ( const ray &r ) const {
