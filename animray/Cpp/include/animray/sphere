@@ -45,15 +45,20 @@ namespace animray {
                 return false;
             }
 
-            /// Returns true if the line hits the sphere from the outside
-            bool occludes( const ray< D > &by ) {
+            /// Returns true if the ray hits the sphere from the outside
+            bool occludes( const ray< D > &by ) const {
                 // This algorithm has been adapted from 'An Introduction to Ray
                 // Tracing' p39.
                 line< D > oc( by.from(), point3d<D>() );
                 D l2oc( oc.length_squared() );
-                if ( l2oc <= 1 ) return false; // Starts inside the sphere
+                // Starts inside the sphere
+                if ( l2oc <= D(1) ) return false;
                 D tca( ( oc.to() - oc.from() ).dot( by.direction().unit() ) );
-                if ( tca < 0 ) return false; // Outside and points away
+                // Outside and points away
+                if ( tca < D(0) ) return false;
+                // Closest approach squared is negative
+                if ( D(1) - l2oc + tca * tca < D(0) ) return false;
+                // Hit
                 return true;
             }
     };

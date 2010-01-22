@@ -38,18 +38,27 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 namespace {
     template< typename D >
     void sphere_occlude() {
-        typedef typename animray::line< D >::end_type end_type;
-        typedef animray::ray< D > ray;
-        animray::sphere< D > s;
-        FSL_CHECK( s.occludes(
-            ray( end_type( 0, 0, 10 ), end_type() ) )
-        );
-        FSL_CHECK( !!! s.occludes(
-            ray( end_type(), end_type( 0, 0, 10 ) ) )
-        );
-        FSL_CHECK( !!! s.occludes(
-            ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) ) )
-        );
+        try {
+            typedef typename animray::line< D >::end_type end_type;
+            typedef animray::ray< D > ray;
+            animray::sphere< D > s;
+            FSL_CHECK( s.occludes(
+                ray( end_type( 0, 0, 10 ), end_type() )
+            ) );
+            FSL_CHECK( !!! s.occludes(
+                ray( end_type(), end_type( 0, 0, 10 ) )
+            ) );
+            FSL_CHECK( !!! s.occludes(
+                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) )
+            ) );
+            /*FSL_CHECK( s.occludes(
+                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) )
+            ) );*/
+        } catch ( fostlib::exceptions::exception &e ) {
+            e.info() << "Type under test " <<
+                fostlib::coerce< fostlib::string >(typeid(D).name()) << "\n";
+            throw;
+        }
     }
 }
 FSL_TEST_FUNCTION( occlusion ) {
