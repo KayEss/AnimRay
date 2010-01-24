@@ -48,9 +48,14 @@ namespace animray {
             bool operator == ( const unit_vector &v ) const {
                 return this->superclass_type::operator == ( v );
             }
+            /// Compare for inequality
             bool operator !=( const unit_vector &v ) const {
                 return this->superclass_type::operator != ( v );
             }
+
+            using superclass_type::x;
+            using superclass_type::y;
+            using superclass_type::z;
     };
 
 
