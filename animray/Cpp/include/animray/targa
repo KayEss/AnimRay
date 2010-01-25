@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/film>
+#include <animray/film.hpp>
 
 #include <boost/lambda/bind.hpp>
 #include <boost/filesystem/fstream.hpp>

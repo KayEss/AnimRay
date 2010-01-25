@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/film>
+#include <animray/film.hpp>
 #include <fost/test>
 
 
