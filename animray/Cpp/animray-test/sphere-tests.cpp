@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/sphere>
+#include <animray/sphere.hpp>
 #include <fost/test>
 
 
