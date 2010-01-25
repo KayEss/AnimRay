@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/extents2d>
+#include <animray/extents2d.hpp>
 #include <fost/test>
 
 
