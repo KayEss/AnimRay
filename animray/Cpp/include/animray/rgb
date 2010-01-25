@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/detail/array_based>
+#include <animray/detail/array_based.hpp>
 
 
 namespace animray {
