@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/unit-vector>
+#include <animray/unit-vector.hpp>
 
 
 namespace animray {
