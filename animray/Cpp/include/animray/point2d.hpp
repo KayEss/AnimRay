@@ -60,6 +60,7 @@ namespace animray {
 
 
 namespace std {
+    /// Allow 2d points to be displayed on a stream
     template< typename C >
     inline fostlib::ostream &operator << (
         fostlib::ostream &o, const animray::point2d< C > &p
