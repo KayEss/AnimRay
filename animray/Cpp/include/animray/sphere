@@ -25,7 +25,7 @@
 
 
 #include <animray/ray>
-#include <animray/line>
+#include <animray/line.hpp>
 
 
 namespace animray {

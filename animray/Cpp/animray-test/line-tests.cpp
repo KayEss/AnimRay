@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/line>
+#include <animray/line.hpp>
 #include <fost/test>
 
 
