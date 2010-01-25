@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/point3d>
+#include <animray/point3d.hpp>
 #include <fost/test>
 
 

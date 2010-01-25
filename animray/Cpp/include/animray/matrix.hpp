@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/point3d>
+#include <animray/point3d.hpp>
 
 
 namespace animray {
