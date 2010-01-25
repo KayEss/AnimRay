@@ -45,10 +45,10 @@ namespace animray {
             /// Construct a transform matrix that does nothing
             matrix() {
                 // Set the values on the leading diagonal to 1
-                superclass::array.c_array()[0] = 1;
-                superclass::array.c_array()[5] = 1;
-                superclass::array.c_array()[10] = 1;
-                superclass::array.c_array()[15] = 1;
+                superclass::array[0] = 1;
+                superclass::array[5] = 1;
+                superclass::array[10] = 1;
+                superclass::array[15] = 1;
             }
 
             /// Compare for equality
