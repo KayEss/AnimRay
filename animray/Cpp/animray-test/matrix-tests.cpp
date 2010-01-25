@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/matrix>
+#include <animray/matrix.hpp>
 #include <fost/test>
 
 
