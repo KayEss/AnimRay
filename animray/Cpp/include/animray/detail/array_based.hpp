@@ -84,6 +84,7 @@ namespace animray {
 
 
 namespace fostlib {
+    /// Allows coercion from array types to JSON
     template< typename T >
     struct coercer<
         fostlib::json, T,

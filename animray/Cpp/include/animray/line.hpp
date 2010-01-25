@@ -47,8 +47,10 @@ namespace animray {
             : from( from ), to( to ) {
             }
 
-            /// The start and end of the line. It is directional
-            fostlib::accessors< end_type > from, to;
+            /// The start of the line
+            fostlib::accessors< end_type > from;
+            /// The end of the line
+            fostlib::accessors< end_type > to;
 
             /// Compare for equality
             bool operator == ( const line &r ) const {
@@ -74,8 +76,7 @@ namespace animray {
 
 
 namespace fostlib {
-
-
+    /// Coerce a line to JSON
     template< typename D >
     struct coercer< json, animray::line<D> > {
         json coerce( const animray::line<D> &l ) {
@@ -85,8 +86,6 @@ namespace fostlib {
             return r;
         }
     };
-
-
 }
 
 

@@ -30,7 +30,7 @@
 namespace animray {
 
 
-    /// Represents the normal 3 channel RGB colour space
+    /// Represents the normal 3 channel RGB colour space with alpha channel
     template< typename D >
     class rgba : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;

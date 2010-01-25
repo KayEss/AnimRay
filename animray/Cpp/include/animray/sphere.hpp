@@ -31,7 +31,6 @@ namespace animray {
 
 
     /// A simple 3D unit sphere primitive at the origin.
-    /// Its surface only occludes from the outside.
     template< typename D >
     class sphere {
         public:

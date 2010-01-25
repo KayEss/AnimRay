@@ -30,7 +30,7 @@
 namespace animray {
 
 
-    /// A film has extents which can be used to section it
+    /// Extents that describe part of the area of a film
     template< typename S >
     class extents2d {
         public:
@@ -39,8 +39,10 @@ namespace animray {
             /// The corner type
             typedef point2d< size_type > corner_type;
 
-            /// The corners of the extents
-            fostlib::accessors< corner_type > lower_left, top_right;
+            /// A corner of the extents
+            fostlib::accessors< corner_type > lower_left;
+            /// A corner of the extents
+            fostlib::accessors< corner_type > top_right;
 
             /// Construct an empty extents
             extents2d()
@@ -90,6 +92,7 @@ namespace animray {
 
 
 namespace fostlib {
+    /// Allow extents to be coerced between different numeric types
     template< typename T, typename F >
     struct coercer< animray::extents2d< T >, animray::extents2d< F > > {
         animray::extents2d< T > coerce( const animray::extents2d< F > &e ) {
@@ -105,6 +108,7 @@ namespace fostlib {
 
 
 namespace std {
+    /// Output an extents to a stream
     template< typename S >
     inline fostlib::ostream &operator << (
         fostlib::ostream &o, const animray::extents2d< S > &e

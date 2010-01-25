@@ -34,8 +34,10 @@ namespace animray {
     template< typename C >
     class point2d {
         public:
-            /// The location
-            fostlib::accessors< C > x, y;
+            /// The x location
+            fostlib::accessors< C > x;
+            /// The y location
+            fostlib::accessors< C > y;
 
             /// Construct an empty point
             point2d() {
