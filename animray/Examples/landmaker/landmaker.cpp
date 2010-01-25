@@ -22,7 +22,7 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
-#include <animray/targa>
+#include <animray/targa.hpp>
 #include <boost/random.hpp>
 
 
