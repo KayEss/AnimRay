@@ -1,0 +1,19 @@
+using doxygen ;
+import doxygen ;
+import path ;
+
+doxygen index.html
+    :
+        [ path.glob-tree $(TOP)/Docs : *.hpp *.cpp ]
+        [ path.glob-tree $(TOP)/Cpp : *.hpp *.cpp ]
+
+        [ path.glob-tree $(TOP)/../fost-base/Cpp/include : *.hpp ]
+        [ path.glob-tree $(TOP)/../fost-base/Docs : *.hpp *.cpp : fost-base.hpp ]
+    :
+        -<threading>multi # Works around a bug in boost.build
+        <location>../../../dist/usr/share/animray/ # Relative to the location in build.tmp
+
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=Cpp/include
+        <doxygen:param>SHOW_INCLUDE_FILES=YES
+    ;

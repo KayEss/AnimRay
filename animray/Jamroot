@@ -17,6 +17,11 @@ alias animray :
         Cpp/animray-test
     ;
 
+alias docs :
+        Docs
+    ;
+explicit docs ;
+
 alias examples :
         Examples/landmaker
     ;
@@ -25,6 +30,7 @@ explicit examples ;
 
 alias all :
         animray
+        docs
         examples
         fost
     ;
