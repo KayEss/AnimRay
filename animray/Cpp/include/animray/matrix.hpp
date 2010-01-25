@@ -42,7 +42,7 @@ namespace animray {
                 const_value_parameter_type
             ;
 
-            /// Construct a transform matrix that does nothing
+            /// Construct an identity transform matrix
             matrix() {
                 // Set the values on the leading diagonal to 1
                 superclass::array[0] = 1;
