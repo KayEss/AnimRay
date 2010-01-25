@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/rgba>
+#include <animray/rgba.hpp>
 #include <fost/test>
 
 
