@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/ray>
+#include <animray/ray.hpp>
 #include <fost/test>
 
 

@@ -39,7 +39,7 @@ namespace {
     template< typename D >
     void sphere_occlude() {
         try {
-            typedef typename animray::line< D >::end_type end_type;
+            typedef typename animray::ray< D >::end_type end_type;
             typedef animray::ray< D > ray;
             animray::sphere< D > s;
             FSL_CHECK( s.occludes(

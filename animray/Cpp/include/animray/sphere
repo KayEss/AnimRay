@@ -24,8 +24,7 @@
 #pragma once
 
 
-#include <animray/ray>
-#include <animray/line.hpp>
+#include <animray/ray.hpp>
 
 
 namespace animray {
