@@ -24,6 +24,7 @@ explicit docs ;
 
 alias examples :
         Examples/landmaker
+        Examples/mandelbrot
     ;
 explicit examples ;
 
