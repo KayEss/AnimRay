@@ -72,21 +72,21 @@ namespace animray {
             /// Iterate the given function across the image and allow it to mutate the image
             template< typename F >
             void transform( const F &fn ) {
-                for_each( fn, size() );
+                transform( fn, size() );
             }
             /// Iterate the given function across the image and allow it to mutate the image
             template< typename F >
             void transform( const F &fn, const extents_type &area ) {
                 for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
                     for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c )
-                        rows[r][c] = fn( c, r, rows[r][c] );
+                        rows[r][c] = fn( *this, c, r, rows[r][c] );
             }
             /// Iterate the function across the image rows/columns
             template< typename F >
             void for_each( const F &fn ) const {
                 for ( size_type r = 0; r < height(); ++r )
                     for ( size_type c = 0; c < width(); ++c )
-                        fn( rows[r][c] );
+                        fn( *this, rows[r][c] );
             }
     };
 

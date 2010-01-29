@@ -33,13 +33,17 @@
 namespace animray {
 
 
-    template< typename C >
-    void targa( const boost::filesystem::wpath &filename, const film< C > & );
+    template< typename C, typename E >
+    void targa(
+        const boost::filesystem::wpath &filename,
+        const film< C, E > &
+    );
 
 
     template<>
     void targa< uint8_t >(
-        const boost::filesystem::wpath &filename, const film< uint8_t > &image
+        const boost::filesystem::wpath &filename,
+        const film< uint8_t, uint16_t > &image
     ) {
         boost::filesystem::ofstream file( filename, std::ios::binary );
         // Header
@@ -57,7 +61,7 @@ namespace animray {
         file.put(0); // Image data starts bottom left with zero alpha channel
         // Image data
         image.for_each(boost::lambda::bind(
-            &boost::filesystem::ofstream::put, boost::ref(file), boost::lambda::_1
+            &boost::filesystem::ofstream::put, boost::ref(file), boost::lambda::_2
         ));
         // Footer (for Targa 2)
         file.put(0); file.put(0); // Targa 2 extension data size

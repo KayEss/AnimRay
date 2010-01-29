@@ -24,8 +24,19 @@
 #include <fost/coerce/ints.hpp>
 #include <animray/targa.hpp>
 
+#include <complex>
+
 
 namespace {
+    template< typename F >
+    typename F::color_type iterations(
+        const F &film,
+        const typename F::extents_value_type x,
+        const typename F::extents_value_type y,
+        const typename F::color_type &
+    ) {
+        return 0;
+    }
 }
 
 

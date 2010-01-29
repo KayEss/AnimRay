@@ -76,7 +76,7 @@ namespace {
                 film.transform(
                     boost::lambda::bind(
                         &circle< F >, x, y, radius * radius,
-                        boost::lambda::_1, boost::lambda::_2, boost::lambda::_3
+                        boost::lambda::_2, boost::lambda::_3, boost::lambda::_4
                     ), fostlib::coerce< typename F::extents_type >(
                         intersect
                     )
