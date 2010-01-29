@@ -28,8 +28,9 @@
 
 
 namespace {
-    template< typename F, typename D >
+    template< typename F, typename D, std::size_t B = 8 >
     struct iterations {
+        static const unsigned int mask = ( 0x1 << B ) - 1;
         const typename F::extents_type size;
         const D weight;
         const D ox, oy, sz;
@@ -37,6 +38,11 @@ namespace {
         : size( film.size() ),
                 weight( D(1) / std::max( size.width(), size.height() ) ),
                 ox(x - s), oy(y - s), sz( s * D(2) ) {
+        }
+        typename F::color_type scale( unsigned int v ) const {
+            if ( B < 8 ) return v << (8-B);
+            else if ( B == 8 ) return v;
+            else /* B > 8 */ return v >> (B-8);
         }
         typename F::color_type operator () (
             const F &,
@@ -48,12 +54,12 @@ namespace {
             const D x = proportion_x * sz + ox;
             const D y = proportion_y * sz + oy;
             const std::complex< D > position( x, y );
-            typename F::color_type counter = 1;
+            unsigned int counter = 1;
             for ( std::complex< D > current( position );
                 std::norm(current) < D(4) && counter > 0;
                 current = current * current + position
-            ) ++counter;
-            return counter;
+            ) counter = ( counter + 1 ) & mask;
+            return scale(counter);
         }
     };
 }
@@ -90,7 +96,7 @@ FSL_MAIN(
         " with radius of " << radius << std::endl
     ;
 
-    output.transform( iterations< film_type, precision >(
+    output.transform( iterations< film_type, precision, 10 >(
         output, centre_x, centre_y, radius
     ) );
 
