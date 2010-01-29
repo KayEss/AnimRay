@@ -70,29 +70,20 @@ namespace animray {
             }
 
             /// Iterate the given function across the image and allow it to mutate the image
-            void transform(
-                boost::function3<
-                    color_type, size_type, size_type, const color_type &
-                > fn
-            ) {
+            template< typename F >
+            void transform( const F &fn ) {
                 for_each( fn, size() );
             }
             /// Iterate the given function across the image and allow it to mutate the image
-            void transform(
-                boost::function3<
-                    color_type, size_type, size_type, const color_type &
-                > fn, const extents_type &area
-            ) {
+            template< typename F >
+            void transform( const F &fn, const extents_type &area ) {
                 for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
                     for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c )
                         rows[r][c] = fn( c, r, rows[r][c] );
             }
             /// Iterate the function across the image rows/columns
-            void for_each(
-                boost::function1<
-                    void, const color_type &
-                > fn
-            ) const {
+            template< typename F >
+            void for_each( const F &fn ) const {
                 for ( size_type r = 0; r < height(); ++r )
                     for ( size_type c = 0; c < width(); ++c )
                         fn( rows[r][c] );
