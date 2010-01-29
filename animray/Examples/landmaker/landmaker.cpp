@@ -73,7 +73,7 @@ namespace {
 
             // Raise the land covered by the circle
             if ( !intersect.isnull() )
-                film.for_each(
+                film.transform(
                     boost::lambda::bind(
                         &circle< F >, x, y, radius * radius,
                         boost::lambda::_1, boost::lambda::_2, boost::lambda::_3

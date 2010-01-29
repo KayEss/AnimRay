@@ -31,7 +31,7 @@ namespace animray {
 
 
     /// A film represents a raster of pixel data
-    template< typename C >
+    template< typename C, typename E = uint16_t >
     class film : boost::noncopyable {
         typedef std::vector< C > row_type;
         typedef std::vector< row_type > rows_type;
@@ -39,8 +39,10 @@ namespace animray {
         public:
             /// The colour type
             typedef C color_type;
+            /// The type of the extents co-ordinates
+            typedef E extents_value_type;
             /// The extents type
-            typedef extents2d< uint16_t > extents_type;
+            typedef extents2d< extents_value_type > extents_type;
             /// The extents size type
             typedef typename extents_type::size_type size_type;
 
@@ -68,7 +70,7 @@ namespace animray {
             }
 
             /// Iterate the given function across the image and allow it to mutate the image
-            void for_each(
+            void transform(
                 boost::function3<
                     color_type, size_type, size_type, const color_type &
                 > fn
@@ -76,7 +78,7 @@ namespace animray {
                 for_each( fn, size() );
             }
             /// Iterate the given function across the image and allow it to mutate the image
-            void for_each(
+            void transform(
                 boost::function3<
                     color_type, size_type, size_type, const color_type &
                 > fn, const extents_type &area
