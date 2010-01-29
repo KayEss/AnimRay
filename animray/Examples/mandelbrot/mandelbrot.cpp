@@ -31,18 +31,22 @@ namespace {
     template< typename F, typename D >
     struct iterations {
         const typename F::extents_type size;
-        iterations( const F &film )
-        : size( film.size() ) {
+        const D weight;
+        const D ox, oy, sz;
+        iterations( const F &film, D x, D y, D s )
+        : size( film.size() ),
+                weight( D(1) / std::max( size.width(), size.height() ) ),
+                ox(x - s), oy(y - s), sz( s * D(2) ) {
         }
         typename F::color_type operator () (
             const F &,
             const typename F::extents_type::corner_type &loc,
             const typename F::color_type &
         ) const {
-            const D proportion_x = D( loc.x() ) / D( size.width() );
-            const D proportion_y = D( loc.y() ) / D( size.height() );
-            const D x = proportion_x * D(4) - D(2);
-            const D y = proportion_y * D(4) - D(2);
+            const D proportion_x = D( loc.x() ) * weight;
+            const D proportion_y = D( loc.y() ) * weight;
+            const D x = proportion_x * sz + ox;
+            const D y = proportion_y * sz + oy;
             const std::complex< D > position( x, y );
             typename F::color_type counter = 1;
             for ( std::complex< D > current( position );
@@ -71,7 +75,24 @@ FSL_MAIN(
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height);
 
-    output.transform( iterations< film_type, double >(output) );
+    typedef double precision;
+    precision centre_x = fostlib::coerce< double >(
+        args.commandSwitch("cx").value("0")
+    );
+    precision centre_y = fostlib::coerce< double >(
+        args.commandSwitch("cy").value("0")
+    );
+    precision radius = fostlib::coerce< double >(
+        args.commandSwitch("r").value("2")
+    );
+
+    out << "Centre image at " << centre_x << ", " << centre_y <<
+        " with radius of " << radius << std::endl
+    ;
+
+    output.transform( iterations< film_type, precision >(
+        output, centre_x, centre_y, radius
+    ) );
 
     animray::targa(output_filename, output);
 
