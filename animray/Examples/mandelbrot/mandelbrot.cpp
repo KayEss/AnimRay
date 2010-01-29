@@ -28,21 +28,36 @@
 
 
 namespace {
-    template< typename F >
-    typename F::color_type iterations(
-        const F &film,
-        const typename F::extents_value_type x,
-        const typename F::extents_value_type y,
-        const typename F::color_type &
-    ) {
-        return 0;
-    }
+    template< typename F, typename D >
+    struct iterations {
+        const typename F::extents_type size;
+        iterations( const F &film )
+        : size( film.size() ) {
+        }
+        typename F::color_type operator () (
+            const F &,
+            const typename F::extents_type::corner_type &loc,
+            const typename F::color_type &
+        ) const {
+            const D proportion_x = D( loc.x() ) / D( size.width() );
+            const D proportion_y = D( loc.y() ) / D( size.height() );
+            const D x = proportion_x * D(4) - D(2);
+            const D y = proportion_y * D(4) - D(2);
+            const std::complex< D > position( x, y );
+            typename F::color_type counter = 1;
+            for ( std::complex< D > current( position );
+                std::norm(current) < D(4) && counter > 0;
+                current = current * current + position
+            ) ++counter;
+            return counter;
+        }
+    };
 }
 
 
 FSL_MAIN(
-    L"landmaker",
-    L"LandMaker, Copyright 2010 Kirit Saelensminde"
+    L"mandelbrot",
+    L"Mandelbrot, Copyright 2010 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"))
@@ -56,7 +71,7 @@ FSL_MAIN(
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height);
 
-    // Calculation to go here
+    output.transform( iterations< film_type, double >(output) );
 
     animray::targa(output_filename, output);
 

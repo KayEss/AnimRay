@@ -65,6 +65,15 @@ namespace animray {
                     );
             }
 
+            /// Calculate the height of the extents
+            size_type width() const {
+                return top_right().x() - lower_left().x() + 1;
+            }
+            /// Calculate the width of the extents
+            size_type height() const {
+                return top_right().y() - lower_left().y() + 1;
+            }
+
             /// Check for equality
             bool operator == ( const extents2d &r ) const {
                 return lower_left() == r.lower_left() && top_right() == r.top_right();
