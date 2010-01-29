@@ -79,7 +79,10 @@ namespace animray {
             void transform( const F &fn, const extents_type &area ) {
                 for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
                     for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c )
-                        rows[r][c] = fn( *this, c, r, rows[r][c] );
+                        rows[r][c] = fn( *this,
+                            typename extents_type::corner_type(c, r),
+                            rows[r][c]
+                        );
             }
             /// Iterate the function across the image rows/columns
             template< typename F >

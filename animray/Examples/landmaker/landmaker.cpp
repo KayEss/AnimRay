@@ -28,19 +28,27 @@
 
 namespace {
     template< typename F >
-    typename F::color_type circle(
-        typename F::size_type px,
-        typename F::size_type py,
-        typename F::size_type r2,
-        typename F::size_type x,
-        typename F::size_type y,
-        const typename F::color_type &current
-    ) {
-        if ( current < 0xff && (px-x) * (px-x) + (py-y) * (py-y) < r2 )
-            return current + 1;
-        else
-            return current;
-    }
+    struct circle {
+        typename F::size_type px, py, r2;
+        circle(
+            typename F::size_type px,
+            typename F::size_type py,
+            typename F::size_type r2
+        ) : px(px), py(py), r2(r2) {
+        }
+
+        typename F::color_type operator () (
+            const F &film,
+            const typename F::extents_type::corner_type &loc,
+            const typename F::color_type &current
+        ) const {
+            if ( current < 0xff
+                    && (px-loc.x()) * (px-loc.x()) + (py-loc.y()) * (py-loc.y()) < r2 )
+                return current + 1;
+            else
+                return current;
+        }
+    };
 
     template< typename F >
     class do_elevation {
@@ -74,12 +82,8 @@ namespace {
             // Raise the land covered by the circle
             if ( !intersect.isnull() )
                 film.transform(
-                    boost::lambda::bind(
-                        &circle< F >, x, y, radius * radius,
-                        boost::lambda::_2, boost::lambda::_3, boost::lambda::_4
-                    ), fostlib::coerce< typename F::extents_type >(
-                        intersect
-                    )
+                    circle< F >(x, y, radius * radius),
+                    fostlib::coerce< typename F::extents_type >(intersect)
                 );
 
             // Now recursivley do some more
