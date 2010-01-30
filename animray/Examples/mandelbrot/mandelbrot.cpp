@@ -28,21 +28,23 @@
 
 
 namespace {
-    template< typename F, typename D, std::size_t B = 8 >
+    template< typename F, typename D >
     struct iterations {
-        static const unsigned int mask = ( 0x1 << B ) - 1;
         const typename F::extents_type size;
         const D weight;
         const D ox, oy, sz;
-        iterations( const F &film, D x, D y, D s )
+        const std::size_t bits;
+        const unsigned int mask;
+        iterations( const F &film, D x, D y, D s, std::size_t bits )
         : size( film.size() ),
                 weight( D(1) / std::max( size.width(), size.height() ) ),
-                ox(x - s), oy(y - s), sz( s * D(2) ) {
+                ox(x - s), oy(y - s), sz( s * D(2) ),
+                bits( bits ), mask(  ( 0x1 << bits ) - 1 ) {
         }
         typename F::color_type scale( unsigned int v ) const {
-            if ( B < 8 ) return v << (8-B);
-            else if ( B == 8 ) return v;
-            else /* B > 8 */ return v >> (B-8);
+            if ( bits < 8 ) return v << (8-bits);
+            //else if ( bits = 8 ) return v;
+            else /* bits >= 8 */ return v >> (bits-8);
         }
         typename F::color_type operator () (
             const F &,
@@ -91,13 +93,17 @@ FSL_MAIN(
     precision radius = fostlib::coerce< double >(
         args.commandSwitch("r").value("2")
     );
+    std::size_t bits = fostlib::coerce< int >(
+        args.commandSwitch("bits").value("8")
+    );
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
-        " with radius of " << radius << std::endl
-    ;
+        " with radius of " << radius <<
+        " to " << bits << " bits" <<
+    std::endl;
 
-    output.transform( iterations< film_type, precision, 10 >(
-        output, centre_x, centre_y, radius
+    output.transform( iterations< film_type, precision >(
+        output, centre_x, centre_y, radius, bits
     ) );
 
     animray::targa(output_filename, output);
