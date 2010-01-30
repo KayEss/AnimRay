@@ -45,9 +45,10 @@ namespace {
                 bits( bits ), mask(  ( 0x1 << bits ) - 1 ) {
         }
         typename F::color_type scale( unsigned int v ) const {
-            if ( bits < 8 ) return v << (8-bits);
-            //else if ( bits = 8 ) return v;
-            else /* bits >= 8 */ return v >> (bits-8);
+            if ( bits < 8 )
+                return v << (8-bits);
+            else
+                return v >> (bits-8);
         }
         typename F::color_type operator () (
             const F &,
