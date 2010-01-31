@@ -28,11 +28,15 @@ alias examples :
     ;
 explicit examples ;
 
+alias tests :
+        ../fost-base//tests
+    ;
 
 alias all :
         animray
         docs
         examples
         fost
+        tests
     ;
 explicit all ;
