@@ -23,8 +23,8 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="bjam"
-				ReBuildCommandLine="bjam clean &amp;&amp; bjam"
+				BuildCommandLine="..\bjam"
+				ReBuildCommandLine="..\bjam clean &amp;&amp; ..\bjam"
 				CleanCommandLine=""
 				Output=""
 				PreprocessorDefinitions="WIN32;_DEBUG;"
@@ -65,11 +65,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\accessors.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\detail\accessors.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\detail\accessors.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\accessors.hpp"
 				>
 			</File>
 			<File
@@ -97,11 +97,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\coerce.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\detail\coerce.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\detail\coerce.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\coerce.hpp"
 				>
 			</File>
 			<File
@@ -153,11 +153,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\fost-core\fost-core-test.hpp"
+				RelativePath=".\fost-base\cpp\fost-core-test\fost-core-test.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\fost-core-test\fost-core-test.hpp"
+				RelativePath=".\fost-base\cpp\fost-core\fost-core-test.hpp"
 				>
 			</File>
 			<File
@@ -241,11 +241,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\null.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\exception\null.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\exception\null.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\null.hpp"
 				>
 			</File>
 			<File
@@ -393,11 +393,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\coerce\win.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\exception\win.hpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\include\fost\exception\win.hpp"
+				RelativePath=".\fost-base\cpp\include\fost\coerce\win.hpp"
 				>
 			</File>
 			<File
@@ -685,11 +685,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\fost-core\thread.cpp"
+				RelativePath=".\fost-base\cpp\fost-core-test\thread.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\fost-base\cpp\fost-core-test\thread.cpp"
+				RelativePath=".\fost-base\cpp\fost-core\thread.cpp"
 				>
 			</File>
 			<File
