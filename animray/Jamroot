@@ -30,6 +30,7 @@ explicit fost ;
 alias tests :
         ../fost-base//tests
     ;
+explicit tests ;
 
 alias all :
         animray
