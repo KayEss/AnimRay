@@ -20,7 +20,7 @@
 
 
 #include <animray/rgb.hpp>
-#include <fost/test>
+#include "test-json.hpp"
 
 
 FSL_TEST_SUITE( rgb );
@@ -36,9 +36,7 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 
 
 FSL_TEST_FUNCTION( json ) {
-    FSL_CHECK_EQ(
-        fostlib::coerce< fostlib::json >( animray::rgb< int64_t >() ),
-        fostlib::json::parse(L"[0, 0, 0]")
-    );
+    json_roundtrip( animray::rgb< int64_t >(), "[0, 0, 0]" );
+    json_roundtrip( animray::rgb< uint8_t >( 1, 2, 3 ), "[1,2,3]" );
 }
 

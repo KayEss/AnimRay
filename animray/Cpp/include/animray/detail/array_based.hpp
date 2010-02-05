@@ -116,6 +116,24 @@ namespace fostlib {
         typename boost::enable_if<
             boost::mpl::and_<
                 boost::is_base_of< animray::detail::array_based_base_class, T >,
+                boost::mpl::bool_< ( T::c_array_size == 3 ) >
+            >
+        >::type
+    > {
+        T coerce( const json &j ) {
+            return T(
+                fostlib::coerce< typename T::value_type >(j[0]),
+                fostlib::coerce< typename T::value_type >(j[1]),
+                fostlib::coerce< typename T::value_type >(j[2])
+            );
+        }
+    };
+    template< typename T >
+    struct coercer<
+        T, fostlib::json,
+        typename boost::enable_if<
+            boost::mpl::and_<
+                boost::is_base_of< animray::detail::array_based_base_class, T >,
                 boost::mpl::bool_< ( T::c_array_size == 4 ) >
             >
         >::type

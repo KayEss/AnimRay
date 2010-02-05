@@ -41,7 +41,19 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+            using superclass::c_array_size;
+            using superclass::print_on;
             using superclass::to_json;
+
+            /// Default construct an RGB colour with all channels at zero
+            rgb() {
+            }
+            /// Construct an RGB colour with the specified channel values
+            rgb( value_type r, value_type g, value_type b ) {
+                superclass::array[0] = r;
+                superclass::array[1] = g;
+                superclass::array[2] = b;
+            }
 
             /// Return the channel values
             const array_type &array() const {
