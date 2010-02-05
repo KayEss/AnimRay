@@ -7,12 +7,6 @@ use-project fost-base : ../fost-base/ ;
 fost-project animray ;
 
 
-alias fost :
-        ../fost-base/Cpp/fost-cli
-        ../fost-base/Cpp/fost-core
-    ;
-explicit fost ;
-
 alias animray :
         Cpp/animray-test
     ;
@@ -27,6 +21,11 @@ alias examples :
         Examples/mandelbrot
     ;
 explicit examples ;
+
+alias fost :
+        ../fost-base//fost
+    ;
+explicit fost ;
 
 alias tests :
         ../fost-base//tests
