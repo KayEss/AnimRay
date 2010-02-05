@@ -68,6 +68,14 @@ FSL_TEST_FUNCTION( json ) {
         fostlib::coerce< fostlib::json >( animray::point3d< int64_t >() ),
         fostlib::json::parse(L"[0, 0, 0, 1]")
     );
+    FSL_CHECK_EQ(
+        fostlib::coerce< fostlib::json >( animray::point3d< int >(1,2,3,4) ),
+        fostlib::json::parse(L"[1,2,3,4]")
+    );
+    FSL_CHECK_EQ(
+        fostlib::coerce< fostlib::json >( animray::point3d< int >(1,2,3) ),
+        fostlib::json::parse(L"[1,2,3,1]")
+    );
 }
 
 
