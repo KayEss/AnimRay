@@ -63,22 +63,45 @@ namespace animray {
     };
 
 
+    /// Location mapping functor that throws away the location
+    template< typename F, typename L >
+    struct location_mapper_no_arguments {
+        typedef typename F::color_type color_type;
+        color_type operator() ( const F &f, const L & ) const {
+            return f();
+        }
+    };
+    /// A location mapper that splits the x and y for a binary functor
+    template< typename F, typename L >
+    struct location_mapper_binary_op {
+        typename F::color_type operator () ( const F &f, const L &l ) const {
+            return f( l.x(), l.y() );
+        }
+    };
+
+
     /** \brief Handles a texture by managing a binary function
     */
     template<
-        typename C,
+        typename C, typename L,
         typename F = solid_color_texture< C >,
+        typename LM = location_mapper_no_arguments< F, L >,
         typename CC = color_coercer< C, typename F::color_type >
     > class texture {
         F function;
         CC color_converter;
+        LM location_converter;
         public:
+            /// The location type used externally to the texture
+            typedef L location_type;
             /// The type of the functor
             typedef F functor_type;
             /// The colour type that is returned by the texture
             typedef C color_type;
             /// The type of color conversion functor
             typedef CC color_conversion_functor_type;
+            /// The type of the location conversion functor
+            typedef LM location_mapping_functor_type;
 
             /// Construct a texture from a function
             texture( functor_type f )
@@ -86,8 +109,8 @@ namespace animray {
             }
 
             /// Return the color at the specified location
-            color_type operator () () const {
-                return color_converter(function());
+            color_type operator () ( const location_type &location ) const {
+                return color_converter(location_converter(function, location));
             }
     };
 
@@ -105,6 +128,10 @@ namespace animray {
 
             texture_binop_wrapper( function_type f )
             : function( f ) {
+            }
+
+            R operator () ( A x, A y ) const {
+                return function(x, y);
             }
     };
 }

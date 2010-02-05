@@ -27,9 +27,14 @@ FSL_TEST_SUITE( texture );
 
 
 FSL_TEST_FUNCTION( basic_color ) {
-    typedef animray::texture< uint8_t > texture_type;
+    typedef animray::texture<
+        uint8_t, animray::point2d< int >
+    > texture_type;
     texture_type t( 123 );
-    FSL_CHECK_EQ( t(), texture_type::color_type(123) );
+    FSL_CHECK_EQ(
+        t( texture_type::location_type() ),
+        texture_type::color_type(123)
+    );
 }
 
 
@@ -42,7 +47,17 @@ namespace {
     }
 }
 FSL_TEST_FUNCTION( square_texture ) {
-    animray::texture<
-        uint8_t, animray::texture_binop_wrapper< int, double >
-    > t( square );
+    typedef animray::point2d< double > location_type;
+    typedef animray::texture_binop_wrapper< int, double > tx_fn_type;
+    typedef animray::texture<
+        uint8_t, location_type,
+        tx_fn_type,
+        animray::location_mapper_binary_op<
+            tx_fn_type,
+            location_type
+        >
+    > texture_type;
+    texture_type t( square );
+    FSL_CHECK_EQ( t( location_type() ), 1 );
+    FSL_CHECK_EQ( t( location_type(2, 2) ), 0 );
 }
