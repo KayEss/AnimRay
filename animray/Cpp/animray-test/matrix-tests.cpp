@@ -20,7 +20,7 @@
 
 
 #include <animray/matrix.hpp>
-#include <fost/test>
+#include "test-json.hpp"
 
 
 FSL_TEST_SUITE( matrix );
@@ -36,9 +36,16 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 
 
 FSL_TEST_FUNCTION( json ) {
-    FSL_CHECK_EQ(
-        fostlib::coerce< fostlib::json >( animray::matrix< int64_t >() ),
-        fostlib::json::parse(L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]")
+    json_roundtrip(
+        animray::matrix< int64_t >(),
+        L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]"
     );
+    animray::matrix< int64_t > m( fostlib::json::parse(
+        L"[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]"
+    ) );
+    FSL_CHECK_EQ( m[0][0], 1 );
+    FSL_CHECK_EQ( m[0][2], 3 );
+    FSL_CHECK_EQ( m[3][3], 16 );
+    FSL_CHECK_EXCEPTION( m[4][0], fostlib::exceptions::out_of_range<std::size_t>& );
 }
 

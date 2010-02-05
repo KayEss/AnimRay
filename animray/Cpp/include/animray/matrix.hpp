@@ -41,6 +41,8 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+            using superclass::at;
+            using superclass::c_array_size;
 
             /// Construct an identity transform matrix
             matrix() {
@@ -49,6 +51,28 @@ namespace animray {
                 superclass::array[5] = 1;
                 superclass::array[10] = 1;
                 superclass::array[15] = 1;
+            }
+            /// Construct a matrix from its JSON representation
+            matrix( const fostlib::json &js ) {
+                for ( std::size_t c = 0; c < 4; ++c )
+                    for ( std::size_t r = 0; r < 4; ++r )
+                        superclass::array[ r * 4 + c ] = fostlib::coerce< value_type >( js[r][c] );
+            }
+
+            /// Allows us to fetch values from rows then columns
+            class row_proxy {
+                friend class matrix;
+                const matrix &m; const std::size_t r;
+                row_proxy( const matrix &m, std::size_t r )
+                : m(m), r(r) {
+                }
+                public:
+                    value_type operator [] ( std::size_t c ) const {
+                        return m.at( r * 4 + c );
+                    }
+            };
+            row_proxy operator [] ( std::size_t r ) const {
+                return row_proxy( *this, r );
             }
 
             /// Compare for equality
@@ -60,6 +84,7 @@ namespace animray {
                 return superclass::array != r.array;
             }
 
+            /// The matrix has a special JSON representation
             fostlib::json to_json() const {
                 fostlib::json ret, line;
                 for ( std::size_t i = 0; i < 16; ++ i ) {
@@ -70,6 +95,13 @@ namespace animray {
                     }
                 }
                 return ret;
+            }
+
+            /// Just print out the (pretty printed) JSON for now
+            fostlib::ostream &print_on( fostlib::ostream &o ) const {
+                return o << fostlib::json::unparse(
+                    fostlib::coerce< fostlib::json >( *this ), true
+                );
             }
     };
 

@@ -57,6 +57,18 @@ namespace animray {
             : array() {
             }
 
+            /// Fetch a value from the array with bounds checking
+            value_type at( std::size_t p ) const {
+                try {
+                    return array.at(p);
+                } catch ( std::out_of_range & ) {
+                    throw fostlib::exceptions::out_of_range< std::size_t >(
+                        "Array index was out of bounds",
+                        0, c_array_size, p
+                    );
+                }
+            }
+
             /// Turn the array into a JSON array
             fostlib::json to_json() const {
                 fostlib::json r;
@@ -115,6 +127,20 @@ namespace fostlib {
                 fostlib::coerce< typename T::value_type >(j[2]),
                 fostlib::coerce< typename T::value_type >(j[3])
             );
+        }
+    };
+    template< typename T >
+    struct coercer<
+        T, fostlib::json,
+        typename boost::enable_if<
+            boost::mpl::and_<
+                boost::is_base_of< animray::detail::array_based_base_class, T >,
+                boost::mpl::bool_< ( T::c_array_size > 4 ) >
+            >
+        >::type
+    > {
+        T coerce( const json &j ) {
+            return T( j );
         }
     };
 }
