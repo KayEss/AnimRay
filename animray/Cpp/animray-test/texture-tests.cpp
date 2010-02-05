@@ -26,6 +26,13 @@
 FSL_TEST_SUITE( texture );
 
 
+FSL_TEST_FUNCTION( basic_color ) {
+    typedef animray::texture< uint8_t > texture_type;
+    texture_type t( 123 );
+    FSL_CHECK_EQ( t(), texture_type::color_type(123) );
+}
+
+
 namespace {
     int square( double u, double v ) {
         if ( std::abs(u) <= 1 && std::abs(v) <= 1 )
@@ -34,10 +41,8 @@ namespace {
             return 0;
     }
 }
-
-
-FSL_TEST_FUNCTION( basic_mapping ) {
+FSL_TEST_FUNCTION( square_texture ) {
     animray::texture<
         uint8_t, animray::texture_binop_wrapper< int, double >
-    > t( square, 0 );
+    > t( square );
 }

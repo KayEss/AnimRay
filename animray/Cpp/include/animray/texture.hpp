@@ -31,32 +31,63 @@
 namespace animray {
 
 
+    /// A texture which is a single solid colour
+    template<
+        typename C
+    > class solid_color_texture {
+        public:
+            /// Colour type stored in the texture
+            typedef C color_type;
+
+            /// Construct a texture functor
+            solid_color_texture( const color_type &c )
+            : color( c ) {
+            }
+
+            /// Stores the colour
+            fostlib::accessors< color_type > color;
+
+            /// Return the color
+            color_type operator () () const {
+                return color();
+            }
+    };
+
+
+    /// Colour conversion functor that forwards to coerce
+    template< typename T, typename F >
+    struct color_coercer {
+        T operator () ( const F &f ) const {
+            return fostlib::coerce< T >( f );
+        }
+    };
+
+
     /** \brief Handles a texture by managing a binary function
     */
     template<
-        typename C, typename F,
-        typename L = point2d< typename F::argument_type >
+        typename C,
+        typename F = solid_color_texture< C >,
+        typename CC = color_coercer< C, typename F::color_type >
     > class texture {
         F function;
+        CC color_converter;
         public:
             /// The type of the functor
             typedef F functor_type;
             /// The colour type that is returned by the texture
             typedef C color_type;
-            /// Describes where on the texture the colour come from
-            typedef L location_type;
+            /// The type of color conversion functor
+            typedef CC color_conversion_functor_type;
 
             /// Construct a texture from a function
-            texture( functor_type f, color_type base_color )
-            : function( f ), base_color( base_color ) {
+            texture( functor_type f )
+            : function( f ) {
             }
 
-            /// The base colour is used outside the function's range
-            fostlib::accessors< color_type > base_color;
-
-            /// Returns the colour for the specified location
-            color_type operator () ( const location_type &location ) const {
-                return base_color();
+            /// Return the color at the specified location
+            color_type operator () () const {
+                return color_converter(function());
             }
     };
 
@@ -67,8 +98,8 @@ namespace animray {
         R (*function)( A, A );
         public:
             typedef A argument_type;
-            typedef R result_type;
-            typedef result_type (*function_type)(
+            typedef R color_type;
+            typedef color_type (*function_type)(
                 argument_type,argument_type
             );
 
