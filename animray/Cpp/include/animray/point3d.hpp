@@ -41,6 +41,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+            using superclass::c_array_size;
             using superclass::to_json;
             using superclass::print_on;
 

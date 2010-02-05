@@ -46,6 +46,8 @@ namespace animray {
             typedef const D &const_value_parameter_type;
             /// The type of the array
             typedef boost::array< D, S > array_type;
+            /// The number of elements in the array
+            static const std::size_t c_array_size = S;
 
             /// The actual data
             array_type array;
@@ -94,6 +96,25 @@ namespace fostlib {
     > {
         fostlib::json coerce( const T &a ) {
             return a.to_json();
+        }
+    };
+    template< typename T >
+    struct coercer<
+        T, fostlib::json,
+        typename boost::enable_if<
+            boost::mpl::and_<
+                boost::is_base_of< animray::detail::array_based_base_class, T >,
+                boost::mpl::bool_< ( T::c_array_size == 4 ) >
+            >
+        >::type
+    > {
+        T coerce( const json &j ) {
+            return T(
+                fostlib::coerce< typename T::value_type >(j[0]),
+                fostlib::coerce< typename T::value_type >(j[1]),
+                fostlib::coerce< typename T::value_type >(j[2]),
+                fostlib::coerce< typename T::value_type >(j[3])
+            );
         }
     };
 }

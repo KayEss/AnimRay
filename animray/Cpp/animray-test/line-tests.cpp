@@ -20,7 +20,7 @@
 
 
 #include <animray/line.hpp>
-#include <fost/test>
+#include "test-json.hpp"
 
 
 FSL_TEST_SUITE( line );
@@ -43,17 +43,13 @@ FSL_TEST_FUNCTION( constructor_simple ) {
 }
 
 
-FSL_TEST_FUNCTION( to_json ) {
-    FSL_CHECK_EQ(
-        fostlib::coerce< fostlib::json >(
-            animray::line< int >(
-                animray::line< int >::end_type( -1, -2, -3 ),
-                animray::line< int >::end_type( 1, 2, 3 )
-            )
+FSL_TEST_FUNCTION( json ) {
+    json_roundtrip(
+        animray::line< int >(
+            animray::line< int >::end_type( -1, -2, -3 ),
+            animray::line< int >::end_type( 1, 2, 3 )
         ),
-        fostlib::json::parse(
-            "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}"
-        )
+        "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}"
     );
 }
 

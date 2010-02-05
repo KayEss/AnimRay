@@ -86,6 +86,25 @@ namespace fostlib {
             return r;
         }
     };
+    /// Coerce a line from JSON
+    template< typename D >
+    struct coercer< animray::line<D>, json > {
+        animray::line< D > coerce( const json &js ) {
+            return animray::line< D >(
+                fostlib::coerce< typename animray::line< D >::end_type >( js[L"from"] ),
+                fostlib::coerce< typename animray::line< D >::end_type >( js[L"to"] )
+            );
+        }
+    };
+}
+
+
+namespace std {
+    /// Allow the line to be displayed
+    template< typename D >
+    fostlib::ostream &operator << ( fostlib::ostream &o, const animray::line< D > &l ) {
+        return o << l.from() << " -> " << l.to();
+    }
 }
 
 
