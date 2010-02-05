@@ -34,6 +34,9 @@ namespace animray {
     template< typename C >
     class point2d {
         public:
+            /// The type of the location values
+            typedef C value_type;
+
             /// The x location
             fostlib::accessors< C > x;
             /// The y location
@@ -58,6 +61,28 @@ namespace animray {
     };
 
 
+}
+
+
+namespace fostlib {
+    template< typename C >
+    struct coercer< fostlib::json, animray::point2d< C > > {
+        fostlib::json coerce( const animray::point2d< C > &p ) {
+            fostlib::json j; fostlib::jcursor r;
+            r.push_back(j, fostlib::coerce< fostlib::json >( p.x() ));
+            r.push_back(j, fostlib::coerce< fostlib::json >( p.y() ));
+            return j;
+        }
+    };
+    template< typename C >
+    struct coercer< animray::point2d< C >, fostlib::json > {
+        animray::point2d< C > coerce( const fostlib::json &j ) {
+            return animray::point2d< C >(
+                fostlib::coerce< typename animray::point2d< C >::value_type >( j[0] ),
+                fostlib::coerce< typename animray::point2d< C >::value_type >( j[1] )
+            );
+        }
+    };
 }
 
 
