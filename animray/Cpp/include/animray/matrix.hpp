@@ -71,6 +71,7 @@ namespace animray {
                         return m.at( r * 4 + c );
                     }
             };
+            /// Allow a row to be fetched from the matrix
             row_proxy operator [] ( std::size_t r ) const {
                 return row_proxy( *this, r );
             }
