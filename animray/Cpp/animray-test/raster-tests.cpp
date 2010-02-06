@@ -28,27 +28,19 @@ FSL_TEST_SUITE( raster );
 
 
 FSL_TEST_FUNCTION( constructors ) {
-    typedef animray::extents2d< double > extents_type;
-    typedef uint8_t color_type;
-
-    animray::raster< color_type, extents_type > r1(
-        extents_type(-1, -1, 1, 1), 4.0 / 10000.0 // 100 pixels in each dimension
+    animray::raster< animray::film< uint8_t > > r1(
+        std::auto_ptr< animray::film< uint8_t > >(
+            new animray::film< uint8_t >( 10, 6 )
+        )
     );
-    animray::raster< color_type, extents_type > r2(
-        extents_type(-1, -1, 1, 1), 100, 100
-    );
-    FSL_CHECK_EQ( r1.pixel_area(), r2.pixel_area() );
-    FSL_CHECK_EQ( r1.pixels(), r2.pixels() );
-}
+    FSL_CHECK_EQ( r1.film().width(), 10u );
+    FSL_CHECK_EQ( r1.film().height(), 6u );
 
+    animray::raster< animray::film< unsigned int > > r2( 4, 3, 127 );
+    animray::raster< animray::film< unsigned int > > r3( r2, 4, 3 );
 
-FSL_TEST_FUNCTION( film_api ) {
-    typedef animray::extents2d< double > extents_type;
-    typedef uint8_t color_type;
-    animray::raster< color_type, extents_type > raster(
-        extents_type(-1, -1, 1, 1), 2, 2
-    );
-    FSL_CHECK_EQ( raster.pixel_area(), 1 );
-    FSL_CHECK_EQ( raster.pixels(), 4u );
+    FSL_CHECK_EQ( r3.film().width(), 16u );
+    FSL_CHECK_EQ( r3.film().height(), 9u );
+    FSL_CHECK_EQ( r3.film()[12][4], 127u );
 }
 

@@ -33,9 +33,9 @@ namespace animray {
     /// A film represents a raster of pixel data
     template< typename C, typename E = std::size_t >
     class film : boost::noncopyable {
-        typedef std::vector< C > row_type;
-        typedef std::vector< row_type > rows_type;
-        rows_type rows;
+        typedef std::vector< C > column_type;
+        typedef std::vector< column_type > columns_type;
+        columns_type columns;
         public:
             /// The colour type
             typedef C color_type;
@@ -48,7 +48,8 @@ namespace animray {
 
             /// Construct an empty targa of the given size
             film( size_type width, size_type height, const C &colour = C() )
-            : rows( height, row_type(width, colour)), width( width ), height( height ) {
+            : columns( width, column_type(height, colour)),
+            width( width ), height( height ) {
             }
 
             /// The width of the image
@@ -61,12 +62,12 @@ namespace animray {
             }
 
             /// Return a mutable row
-            row_type &operator [] ( size_type r ) {
-                return rows[r];
+            column_type &operator [] ( size_type c ) {
+                return columns[c];
             }
             /// Return a non-mutable row
-            const row_type &operator [] ( size_type r ) const {
-                return rows[r];
+            const column_type &operator [] ( size_type c ) const {
+                return columns[c];
             }
 
             /// Iterate the given function across the image and allow it to mutate the image
@@ -77,19 +78,23 @@ namespace animray {
             /// Iterate the given function across the image and allow it to mutate the image
             template< typename F >
             void transform( const F &fn, const extents_type &area ) {
-                for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
-                    for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c )
-                        rows[r][c] = fn( *this,
+                for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c ) {
+                    column_type &col = columns[c];
+                    for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
+                        col[r] = fn( *this,
                             typename extents_type::corner_type(c, r),
-                            rows[r][c]
+                            col[r]
                         );
+                }
             }
             /// Iterate the function across the image rows/columns
             template< typename F >
             void for_each( const F &fn ) const {
-                for ( size_type r = 0; r < height(); ++r )
-                    for ( size_type c = 0; c < width(); ++c )
-                        fn( *this, rows[r][c] );
+                for ( size_type c = 0; c < width(); ++c ) {
+                    const column_type &col = columns[c];
+                    for ( size_type r = 0; r < height(); ++r )
+                        fn( *this, col[r] );
+                }
             }
     };
 

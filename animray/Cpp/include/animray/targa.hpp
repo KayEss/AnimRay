@@ -73,11 +73,12 @@ namespace animray {
                 file.write(reinterpret_cast< const char * >(&w), 2);
                 file.write(reinterpret_cast< const char * >(&h), 2);
                 file.put(8); // 8 bit pixels
-                file.put(0); // Image data starts bottom left with zero alpha channel
+                file.put(0x0); // Image data starts bottom left with zero alpha channel
                 // Image data
-                image.for_each(boost::lambda::bind(
-                    &boost::filesystem::ofstream::put, boost::ref(file), boost::lambda::_2
-                ));
+                typedef typename film< uint8_t, E >::size_type size_type;
+                for ( size_type r = 0; r < image.height(); ++r )
+                    for ( size_type c = 0; c < image.width(); ++c )
+                        file.put(image[c][r]);
                 // Footer (for Targa 2)
                 file.put(0); file.put(0); // Targa 2 extension data size
                 file << "TRUEVISION-XFILE.";

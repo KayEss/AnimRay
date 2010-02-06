@@ -24,53 +24,51 @@
 #pragma once
 
 
-#include <fost/core>
+#include <animray/film.hpp>
 
 
 namespace animray {
 
 
-    /// A permanent data structure able to hold raster images of varying resolution
-    template<
-        typename C, typename E,
-        typename R = typename E::size_type
-    > class raster {
-        typedef C pixel_type;
-        typedef std::vector< pixel_type > pixels_type;
-        pixels_type pixel_data;
+    /// An immutable data structure able to hold raster images of varying resolution
+    template< typename F >
+    class raster {
+        /// The cache of the film data
+        boost::shared_ptr< F > film_data;
         public:
-            /// The type of colour data held within the raster
-            typedef C color_type;
-            /// The way that extents are held within the raster
-            typedef E extents_type;
-            /// The type of the resolution
-            typedef R resolution_type;
+            /// The film type the raster covers
+            typedef F film_type;
+            /// The type describing the number of pixels
+            typedef typename film_type::extents_value_type resolution_type;
+            /// The colour type
+            typedef typename film_type::color_type color_type;
 
-            /// Constructs a raster covering a particular co-ordinate range
-            raster( const extents_type &e, resolution_type pixel_area )
-            : pixel_data( std::size_t( e.area() / pixel_area ) ),
-                extents( e ), pixel_area( pixel_area )
-            {
+            /// We can start by making a raster based on a film
+            raster( std::auto_ptr< film_type > film )
+            : film_data( film.release() ) {
             }
-            /// Constructs a raster covering a particular co-ordinate range
+            /// We can also start by making a blank raster from a resolution
             raster(
-                const extents_type &e, std::size_t x_pixels, std::size_t y_pixels
-            ) : pixel_data( x_pixels * y_pixels ),
-                extents( e ), pixel_area( e.area() / ( x_pixels * y_pixels ) )
-            {
+                resolution_type w, resolution_type h, const color_type &c = color_type()
+            ) : film_data( new film_type( w, h, c ) ) {
+            }
+            /// Create a new raster by splitting apart a smaller one
+            raster(
+                const raster &from, resolution_type x_split, resolution_type y_split
+            ) : film_data( new film_type(
+                from.film().width() * x_split, from.film().height() * y_split
+            ) ) {
+                for ( resolution_type ox = 0; ox < from.film().width(); ++ox )
+                    for ( resolution_type oy = 0; oy < from.film().height(); ++oy )
+                        for ( resolution_type cx = 0; cx < x_split; ++cx )
+                            for ( resolution_type cy = 0; cy < y_split; ++cy )
+                                (*film_data)[ ox * x_split + cx ][ oy * y_split + cy ] =
+                                    from.film()[ ox ][ oy ];
             }
 
-            /// Stores the extents of the raster
-            fostlib::accessors< extents_type > extents;
-            /// Stores the width in pixels
-            fostlib::accessors< std::size_t > width;
-            /// Stores the height in pixels
-            fostlib::accessors< std::size_t > height;
-            /// Stores the pixel area of the raster
-            fostlib::accessors< resolution_type > pixel_area;
-            /// The number of pixels
-            std::size_t pixels() const {
-                return pixel_data.size();
+            /// Provide access to the actual raster data
+            const film_type &film() const {
+                return *film_data;
             }
     };
 
