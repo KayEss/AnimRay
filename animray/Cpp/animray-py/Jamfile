@@ -8,4 +8,6 @@ python-extension _animray :
         animray-py.cpp
     ;
 
-py-install _animray : animray ;
+run-py-test load-test : _animray load-test.py ;
+
+fost-py-install _animray : animray ;

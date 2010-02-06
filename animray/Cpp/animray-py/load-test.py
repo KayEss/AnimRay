@@ -1,4 +1,5 @@
-/*
+# -*- coding: utf-8 -*-
+"""
     Copyright 2010, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
@@ -16,13 +17,6 @@
 
     You should have received a copy of the GNU General Public License
     along with AnimRay.  If not, see <http://www.gnu.org/licenses/>.
-*/
+"""
 
-
-#include <fost/python>
-
-
-BOOST_PYTHON_MODULE( _animray ) {
-    using namespace boost::python;
-    fostlib::python_string_registration();
-}
+import _animray

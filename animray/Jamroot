@@ -10,13 +10,6 @@ fost-project animray :
     ;
 
 
-# An install rule for the Python libs
-rule py-install ( pyd : location )
-{
-    install $(location) : $(pyd) : <location>$(TOP)/../dist/lib/python/site-packages/$(location) ;
-}
-
-
 alias animray :
         Cpp/animray-py
         Cpp/animray-test
