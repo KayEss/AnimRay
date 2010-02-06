@@ -21,4 +21,8 @@
 
 import _animray
 
-f1 = _animray.film_gray8( 100, 100, 0 )
+f1 = _animray.film_gray8( 120, 80, 123 )
+
+assert f1.width == 120, f1.width
+assert f1.height == 80, f1.height
+assert f1(30, 40) == 123, f1(30, 40)

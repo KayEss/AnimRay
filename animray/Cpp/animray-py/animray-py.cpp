@@ -24,6 +24,14 @@
 #include <animray/film.hpp>
 
 
+namespace {
+    template< typename F > inline
+    typename F::color_type film_x_y(
+        F const *f, typename F::size_type x, typename F::size_type y
+    ) {
+        return (*f)[x][y];
+    }
+}
 BOOST_PYTHON_MODULE( _animray ) {
     using namespace boost::python;
     fostlib::python_string_registration();
@@ -44,5 +52,13 @@ BOOST_PYTHON_MODULE( _animray ) {
                 &animray::film< uint8_t >::width
             >
         )
+        .add_property("height",
+            fostlib::accessors_getter<
+                animray::film< uint8_t >,
+                const animray::film< uint8_t >::size_type,
+                &animray::film< uint8_t >::height
+            >
+        )
+        .def("__call__", film_x_y< animray::film< uint8_t > >)
     ;
 }
