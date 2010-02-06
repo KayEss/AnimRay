@@ -30,6 +30,22 @@
 namespace animray {
 
 
+    /// The size for integral types -- includes both values in the range
+    template< typename S > inline
+    typename boost::enable_if<
+        boost::is_integral< S >, S
+    >::type size( S min, S max ) {
+        return max - min + 1;
+    }
+    /// The size for continuous types
+    template< typename S > inline
+    typename boost::enable_if<
+        boost::is_floating_point< S >, S
+    >::type size( S min, S max ) {
+        return max - min;
+    }
+
+
     /// Extents that describe part of the area of a film
     template< typename S >
     class extents2d {
@@ -67,11 +83,15 @@ namespace animray {
 
             /// Calculate the height of the extents
             size_type width() const {
-                return top_right().x() - lower_left().x() + 1;
+                return animray::size< size_type >( lower_left().x(), top_right().x() );
             }
             /// Calculate the width of the extents
             size_type height() const {
-                return top_right().y() - lower_left().y() + 1;
+                return animray::size< size_type >( lower_left().y(), top_right().y() );
+            }
+            /// Calculate the area of the extents
+            size_type area() const {
+                return width() * height();
             }
 
             /// Check for equality

@@ -33,6 +33,23 @@ FSL_TEST_FUNCTION( extents_construct ) {
 }
 
 
+FSL_TEST_FUNCTION( sizes ) {
+    animray::extents2d< int >
+        e1( -1, -1, 1, 1 )
+    ;
+    FSL_CHECK_EQ( e1.width(), 3 );
+    FSL_CHECK_EQ( e1.height(), 3 );
+    FSL_CHECK_EQ( e1.area(), 9 );
+
+    animray::extents2d< double >
+        e2( -1, -1, 1, 1 )
+    ;
+    FSL_CHECK_EQ( e2.width(), 2 );
+    FSL_CHECK_EQ( e2.height(), 2 );
+    FSL_CHECK_EQ( e2.area(), 4 );
+}
+
+
 FSL_TEST_FUNCTION( intersection ) {
     animray::extents2d< char >
         e1( 0, 0, 10, 10 ),
