@@ -1,4 +1,5 @@
-/*
+# -*- coding: utf-8 -*-
+"""
     Copyright 2010, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
@@ -16,33 +17,8 @@
 
     You should have received a copy of the GNU General Public License
     along with AnimRay.  If not, see <http://www.gnu.org/licenses/>.
-*/
+"""
 
+import _animray
 
-#include <fost/python>
-
-#include <animray/film.hpp>
-
-
-BOOST_PYTHON_MODULE( _animray ) {
-    using namespace boost::python;
-    fostlib::python_string_registration();
-    fostlib::python_json_registration();
-
-    class_<
-        animray::film< uint8_t >,
-        std::auto_ptr< animray::film< uint8_t > >,
-        boost::noncopyable
-    >(
-        "film_gray8",
-        init< std::size_t, std::size_t, uint8_t >()
-    )
-        .add_property("width",
-            fostlib::accessors_getter<
-                animray::film< uint8_t >,
-                const animray::film< uint8_t >::size_type,
-                &animray::film< uint8_t >::width
-            >
-        )
-    ;
-}
+f1 = _animray.film_gray8( 100, 100, 0 )

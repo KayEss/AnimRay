@@ -9,5 +9,6 @@ python-extension _animray :
     ;
 
 run-py-test load-test : _animray load-test.py ;
+run-py-test film-test : _animray film-test.py ;
 
 fost-py-install _animray : animray ;
