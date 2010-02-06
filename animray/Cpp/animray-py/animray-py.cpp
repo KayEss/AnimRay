@@ -22,6 +22,7 @@
 #include <fost/python>
 
 #include <animray/film.hpp>
+#include <animray/mandelbrot.hpp>
 
 
 namespace {
@@ -37,6 +38,15 @@ namespace {
         typename F::color_type c
     ) {
         return (*f)[x][y] = c;
+    }
+
+    template< typename F > inline
+    void mandelbrot (
+        F *f, double x, double y, double r, std::size_t bits
+    ) {
+        f->transform( animray::mandelbrot::iterations< F, double >(
+            *f, x, y, r, bits
+        ) );
     }
 }
 BOOST_PYTHON_MODULE( _animray ) {
@@ -69,4 +79,6 @@ BOOST_PYTHON_MODULE( _animray ) {
         .def("__call__", film_get_xy< animray::film< uint8_t > >)
         .def("__call__", film_set_xy< animray::film< uint8_t > >)
     ;
+
+    def("mandelbrot", mandelbrot< animray::film< uint8_t > >);
 }

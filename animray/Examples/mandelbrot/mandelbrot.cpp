@@ -43,13 +43,13 @@ FSL_MAIN(
     film_type output(width, height);
 
     typedef double precision;
-    precision centre_x = fostlib::coerce< double >(
+    precision centre_x = fostlib::coerce< precision >(
         args.commandSwitch("cx").value("0")
     );
-    precision centre_y = fostlib::coerce< double >(
+    precision centre_y = fostlib::coerce< precision >(
         args.commandSwitch("cy").value("0")
     );
-    precision radius = fostlib::coerce< double >(
+    precision radius = fostlib::coerce< precision >(
         args.commandSwitch("r").value("2")
     );
     std::size_t bits = fostlib::coerce< int >(
