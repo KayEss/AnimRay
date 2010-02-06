@@ -31,7 +31,7 @@ namespace animray {
 
 
     /// A film represents a raster of pixel data
-    template< typename C, typename E = uint16_t >
+    template< typename C, typename E = std::size_t >
     class film : boost::noncopyable {
         typedef std::vector< C > row_type;
         typedef std::vector< row_type > rows_type;
