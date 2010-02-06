@@ -32,7 +32,7 @@ namespace animray {
 
     /// A film represents a raster of pixel data
     template< typename C, typename E = std::size_t >
-    class film : boost::noncopyable {
+    class film {
         typedef std::vector< C > column_type;
         typedef std::vector< column_type > columns_type;
         columns_type columns;
@@ -78,7 +78,7 @@ namespace animray {
             /// Iterate the given function across the image and allow it to mutate the image
             template< typename F >
             void transform( const F &fn, const extents_type &area ) {
-                for ( size_type c = area.lower_left().x(); c < area.top_right().x(); ++c ) {
+                for ( size_type c = area.lower_left().x(); c <= area.top_right().x(); ++c ) {
                     column_type &col = columns[c];
                     for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
                         col[r] = fn( *this,

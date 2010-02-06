@@ -42,5 +42,18 @@ FSL_TEST_FUNCTION( constructors ) {
     FSL_CHECK_EQ( r3.film().width(), 16u );
     FSL_CHECK_EQ( r3.film().height(), 9u );
     FSL_CHECK_EQ( r3.film()[12][4], 127u );
+
+    animray::film< unsigned int > f1( 2, 3 );
+    animray::raster< animray::film< unsigned int > > r4( r3, f1, 4, 5 );
+    FSL_CHECK_EQ( r4.film()[0][0], 127u );
+    FSL_CHECK_EQ( r4.film()[4][5], 0u );
+    FSL_CHECK_EQ( r4.film()[5][5], 0u );
+    FSL_CHECK_EQ( r4.film()[6][5], 127u );
+    FSL_CHECK_EQ( r4.film()[4][6], 0u );
+    FSL_CHECK_EQ( r4.film()[5][6], 0u );
+    FSL_CHECK_EQ( r4.film()[6][6], 127u );
+    FSL_CHECK_EQ( r4.film()[4][7], 0u );
+    FSL_CHECK_EQ( r4.film()[5][7], 0u );
+    FSL_CHECK_EQ( r4.film()[6][7], 127u );
 }
 

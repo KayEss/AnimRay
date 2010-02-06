@@ -62,8 +62,16 @@ namespace animray {
                     for ( resolution_type oy = 0; oy < from.film().height(); ++oy )
                         for ( resolution_type cx = 0; cx < x_split; ++cx )
                             for ( resolution_type cy = 0; cy < y_split; ++cy )
-                                (*film_data)[ ox * x_split + cx ][ oy * y_split + cy ] =
-                                    from.film()[ ox ][ oy ];
+                                (*film_data)[ ox * x_split + cx ][ oy * y_split + cy ]
+                                    = from.film()[ ox ][ oy ];
+            }
+            /// Create a new raster replacing part of the image with a better one
+            raster(
+                const raster &from, const film_type &film, resolution_type x, resolution_type y
+            ) : film_data( new film_type( *from.film_data ) ) {
+                for ( resolution_type px = 0; px < film.width(); ++px )
+                    for ( resolution_type py = 0; py < film.height(); ++py )
+                        (*film_data)[ px + x ][ py + y ] = film[px][py];
             }
 
             /// Provide access to the actual raster data
