@@ -3,11 +3,22 @@ include $(TOP)/../boost-version.jam ;
 include ../fost-base/fost.jam ;
 
 use-project fost-base : ../fost-base/ ;
+use-project fost-py : ../fost-py/ ;
 
-fost-project animray ;
+fost-project animray :
+        <include>../fost-py/Cpp/include
+    ;
+
+
+# An install rule for the Python libs
+rule py-install ( pyd : location )
+{
+    install $(location) : $(pyd) : <location>$(TOP)/../dist/lib/python/site-packages/$(location) ;
+}
 
 
 alias animray :
+        Cpp/animray-py
         Cpp/animray-test
         Python
     ;

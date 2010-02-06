@@ -1,0 +1,11 @@
+
+python-extension _animray :
+        ../../../Boost//boost-filesystem-dll
+        ../../../Boost//boost-python-dll
+        ../../../Boost//boost-system-dll
+        ../../../fost-base/Cpp/fost-core
+        ../../../fost-py/Cpp/fost-python
+        animray-py.cpp
+    ;
+
+py-install _animray : animray ;
