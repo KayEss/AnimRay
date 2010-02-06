@@ -26,10 +26,17 @@
 
 namespace {
     template< typename F > inline
-    typename F::color_type film_x_y(
+    typename F::color_type film_get_xy(
         F const *f, typename F::size_type x, typename F::size_type y
     ) {
         return (*f)[x][y];
+    }
+    template< typename F > inline
+    typename F::color_type film_set_xy(
+        F *f, typename F::size_type x, typename F::size_type y,
+        typename F::color_type c
+    ) {
+        return (*f)[x][y] = c;
     }
 }
 BOOST_PYTHON_MODULE( _animray ) {
@@ -59,6 +66,7 @@ BOOST_PYTHON_MODULE( _animray ) {
                 &animray::film< uint8_t >::height
             >
         )
-        .def("__call__", film_x_y< animray::film< uint8_t > >)
+        .def("__call__", film_get_xy< animray::film< uint8_t > >)
+        .def("__call__", film_set_xy< animray::film< uint8_t > >)
     ;
 }
