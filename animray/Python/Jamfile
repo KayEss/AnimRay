@@ -1,0 +1,9 @@
+import path ;
+
+install animray-python
+    :
+        [ path.glob-tree $(TOP)/Python/animray : *.* : .svn *.py~ *.pyc *.so ]
+    :
+        <location>$(TOP)/../dist/lib/python/site-packages/animray
+        <install-source-root>$(TOP)/Python/animray
+    ;

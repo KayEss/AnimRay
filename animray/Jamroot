@@ -9,6 +9,7 @@ fost-project animray ;
 
 alias animray :
         Cpp/animray-test
+        Python
     ;
 
 alias docs :
@@ -24,11 +25,13 @@ explicit examples ;
 
 alias fost :
         ../fost-base//fost
+        ../fost-py//fost
     ;
 explicit fost ;
 
 alias tests :
         ../fost-base//tests
+        ../fost-py//fost
     ;
 explicit tests ;
 
