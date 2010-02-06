@@ -33,40 +33,57 @@
 namespace animray {
 
 
+    namespace detail {
+        /// Used to implement the Targa file saving. Do not use directly
+        template< typename C, typename E >
+        struct targa_saver;
+    }
+
+
+    /// Save a film as a Targa file
     template< typename C, typename E >
     void targa(
         const boost::filesystem::wpath &filename,
-        const film< C, E > &
-    );
-
-
-    template<>
-    void targa< uint8_t >(
-        const boost::filesystem::wpath &filename,
-        const film< uint8_t, uint16_t > &image
+        const film< C, E > &f
     ) {
-        boost::filesystem::ofstream file( filename, std::ios::binary );
-        // Header
-        file.put(0); // 0 identsize
-        file.put(0); // Has no colour map
-        file.put(3); // Uncompressed grayscale image (as this is uint8_t)
-        file.put(0); file.put(0); // Colour map offset
-        file.put(0); file.put(0); // Colour map indexes
-        file.put(0); // Colour map bits per pixel
-        file.put(0); file.put(0); // X origin
-        file.put(0); file.put(0); // Y origin
-        file.write(reinterpret_cast< const char * >(&image.width()), 2);
-        file.write(reinterpret_cast< const char * >(&image.height()), 2);
-        file.put(8); // 8 bit pixels
-        file.put(0); // Image data starts bottom left with zero alpha channel
-        // Image data
-        image.for_each(boost::lambda::bind(
-            &boost::filesystem::ofstream::put, boost::ref(file), boost::lambda::_2
-        ));
-        // Footer (for Targa 2)
-        file.put(0); file.put(0); // Targa 2 extension data size
-        file << "TRUEVISION-XFILE.";
-        file.put(0);
+        detail::targa_saver< C, E >()( filename, f );
+    }
+
+
+    namespace detail {
+        /// Save 8 bit films as Targa file
+        template< typename E >
+        struct targa_saver< uint8_t, E > {
+            void operator () (
+                const boost::filesystem::wpath &filename,
+                const film< uint8_t, E > &image
+            ) const {
+                boost::filesystem::ofstream file( filename, std::ios::binary );
+                // Header
+                file.put(0); // 0 identsize
+                file.put(0); // Has no colour map
+                file.put(3); // Uncompressed grayscale image (as this is uint8_t)
+                file.put(0); file.put(0); // Colour map offset
+                file.put(0); file.put(0); // Colour map indexes
+                file.put(0); // Colour map bits per pixel
+                file.put(0); file.put(0); // X origin
+                file.put(0); file.put(0); // Y origin
+                uint16_t w( fostlib::coerce< uint16_t >(image.width()) );
+                uint16_t h( fostlib::coerce< uint16_t >(image.height()) );
+                file.write(reinterpret_cast< const char * >(&w), 2);
+                file.write(reinterpret_cast< const char * >(&h), 2);
+                file.put(8); // 8 bit pixels
+                file.put(0); // Image data starts bottom left with zero alpha channel
+                // Image data
+                image.for_each(boost::lambda::bind(
+                    &boost::filesystem::ofstream::put, boost::ref(file), boost::lambda::_2
+                ));
+                // Footer (for Targa 2)
+                file.put(0); file.put(0); // Targa 2 extension data size
+                file << "TRUEVISION-XFILE.";
+                file.put(0);
+            }
+        };
     }
 
 
