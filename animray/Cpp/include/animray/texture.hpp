@@ -56,9 +56,11 @@ namespace animray {
             /// The type of the location conversion functor
             typedef typename P::location_mapping_functor_type \
                 location_mapping_functor_type;
+            /// The type of the first argument to the constructor (which creates the functor)
+            typedef typename P::texture_constructor_arg1_type constructor_arg1_type;
 
             /// Construct a texture from a function
-            texture( functor_type f )
+            texture( constructor_arg1_type f )
             : function( f ) {
             }
 

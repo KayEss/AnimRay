@@ -27,6 +27,8 @@
 #include <fost/core>
 #include <animray/point2d.hpp>
 
+#include <functional>
+
 
 namespace animray {
 
@@ -47,6 +49,8 @@ namespace animray {
         /// The location mapping type
         typedef fostlib::functor::apply< typename F::arg1_type, L >
             location_mapping_functor_type;
+        /// Texture constructor functor type
+        typedef F texture_constructor_arg1_type;
     };
 
 
@@ -66,6 +70,8 @@ namespace animray {
         /// The location mapping type
         typedef fostlib::functor::apply_without_arguments< C, L >
             location_mapping_functor_type;
+        /// Texture constructor functor type
+        typedef C texture_constructor_arg1_type;
     };
 
 
@@ -83,26 +89,6 @@ namespace animray {
                 return f( l.x(), l.y() );
             }
         };
-        /// A wrapper class for a function pointer that can be used as a texture
-        template< typename R, typename A >
-        class texture_binop_wrapper {
-            R (*function)( A, A );
-            public:
-                typedef A arg1_type;
-                typedef R result_type;
-
-                typedef result_type (*function_type)(
-                    arg1_type, arg1_type
-                );
-
-                texture_binop_wrapper( function_type f )
-                : function( f ) {
-                }
-
-                R operator () ( const A &x, const A &y ) const {
-                    return function(x, y);
-                }
-        };
     }
     /// Specialisation of the policy for binary functions
     template< typename C, typename S, typename R >
@@ -116,12 +102,14 @@ namespace animray {
         /// The location co-ordinate type
         typedef animray::point2d< S > location_type;
         /// The functor type
-        typedef detail::texture_binop_wrapper< R, S > functor_type;
+        typedef std::pointer_to_binary_function< S, S, R > functor_type;
         /// The colour conversion functor type
         typedef fostlib::functor::coercer< C, R > color_conversion_functor_type;
         /// The location mapping type
         typedef detail::location_mapper_binary_op< R, animray::point2d< S > >
             location_mapping_functor_type;
+        /// Texture constructor functor type
+        typedef R(*texture_constructor_arg1_type)(S, S);
     };
 
 

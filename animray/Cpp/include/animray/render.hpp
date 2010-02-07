@@ -50,7 +50,7 @@ namespace animray {
 
             /// Construct a render command from a texture functor
             render(
-                const typename texture_type::functor_type &f
+                const typename texture_type::constructor_arg1_type &f
             ) : texture( f ),
                     raster(1, 1, texture(location_type())) {
             }
