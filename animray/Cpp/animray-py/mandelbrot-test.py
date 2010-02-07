@@ -21,6 +21,7 @@
 
 import _animray
 
-f1 = _animray.film_gray8(100, 100, 0)
-mandelbrot = _animray.mandelbrot_gray8(f1.width, f1.height, 0, 0 ,2, 8)
-mandelbrot(f1)
+mandelbrot = _animray.mandelbrot_gray8(100, 100, 0, 0 ,2, 8)
+f1 = mandelbrot()
+assert f1.width == 100
+assert f1.height == 100

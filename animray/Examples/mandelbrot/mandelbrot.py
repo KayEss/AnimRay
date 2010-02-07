@@ -46,8 +46,7 @@ class mandelbrot(object):
         """
             Redraw the mandelbrot on the screen
         """
-        film = film_gray8(self.mandelbrot.width, self.mandelbrot.height, 0)
-        self.mandelbrot(film)
+        film = self.mandelbrot()
         background = pygame.Surface(screen.get_size())
         for x in range(0, film.width):
             for y in range(0, film.height):

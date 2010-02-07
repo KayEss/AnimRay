@@ -41,8 +41,10 @@ namespace {
     }
 
     template< typename F, typename M > inline
-    void generate_mandelbrot( M *m, F *f ) {
+    boost::shared_ptr< F > generate_mandelbrot( M *m ) {
+        boost::shared_ptr< F > f( new F( m->width, m->height ) );
         f->transform( *m );
+        return f;
     }
 }
 BOOST_PYTHON_MODULE( _animray ) {
@@ -52,7 +54,7 @@ BOOST_PYTHON_MODULE( _animray ) {
 
     class_<
         animray::film< uint8_t >,
-        std::auto_ptr< animray::film< uint8_t > >,
+        boost::shared_ptr< animray::film< uint8_t > >,
         boost::noncopyable
     >(
         "film_gray8",
