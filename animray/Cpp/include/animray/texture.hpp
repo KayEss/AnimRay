@@ -80,7 +80,7 @@ namespace animray {
     };
 
 
-    /** \brief Handles a texture by managing a binary function
+    /** \brief Handles a texture by managing generating and mapping functions
     */
     template<
         typename C, typename L,
