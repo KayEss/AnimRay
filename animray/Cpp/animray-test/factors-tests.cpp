@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/raster.hpp>
 #include <animray/detail/factors.hpp>
 #include <fost/test>
 
@@ -79,3 +80,20 @@ FSL_TEST_FUNCTION( prime_factors ) {
     FSL_CHECK_EQ( p600[4], 5 );
     FSL_CHECK_EQ( p600[5], 5 );
 }
+
+
+FSL_TEST_FUNCTION( raster_split ) {
+    const std::size_t w = 640, h = 480;
+    std::vector< std::size_t > ws = animray::detail::prime_factors(w);
+    std::vector< std::size_t > hs = animray::detail::prime_factors(h);
+    std::vector< std::size_t >::const_iterator wi = ws.begin();
+    std::vector< std::size_t >::const_iterator hi = hs.begin();
+    animray::raster< animray::film< uint8_t > > raster(1, 1);
+    while ( wi != ws.end() || hi != hs.end() )
+        raster = animray::raster< animray::film< uint8_t > >( raster,
+            wi != ws.end() ? *wi++ : 1, hi != hs.end() ? *hi++ : 1
+        );
+    FSL_CHECK_EQ( raster.film().width(), 640u );
+    FSL_CHECK_EQ( raster.film().height(), 480u );
+}
+
