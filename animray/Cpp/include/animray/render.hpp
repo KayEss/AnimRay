@@ -52,7 +52,7 @@ namespace animray {
             render(
                 const typename texture_type::functor_type &f
             ) : texture( f ),
-                    raster(1, 1, this->texture(location_type(0, 0))) {
+                    raster(1, 1, this->texture(location_type())) {
             }
 
             /// Returns the current film showing the progress of the render
