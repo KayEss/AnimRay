@@ -19,95 +19,16 @@
 */
 
 
-#include <fost/python>
-
-#include <animray/film.hpp>
-#include <animray/mandelbrot.hpp>
+#include "film.hpp"
+#include "mandelbrot.hpp"
 
 
-namespace {
-    template< typename F > inline
-    typename F::color_type film_get_xy(
-        F const *f, typename F::size_type x, typename F::size_type y
-    ) {
-        return (*f)[x][y];
-    }
-    template< typename F > inline
-    typename F::color_type film_set_xy(
-        F *f, typename F::size_type x, typename F::size_type y,
-        typename F::color_type c
-    ) {
-        return (*f)[x][y] = c;
-    }
-
-    template< typename F, typename M > inline
-    boost::shared_ptr< F > generate_mandelbrot( M *m ) {
-        boost::shared_ptr< F > f( new F( m->width, m->height ) );
-        f->transform( *m );
-        return f;
-    }
-}
 BOOST_PYTHON_MODULE( _animray ) {
     using namespace boost::python;
     fostlib::python_string_registration();
     fostlib::python_json_registration();
 
-    class_<
-        animray::film< uint8_t >,
-        boost::shared_ptr< animray::film< uint8_t > >,
-        boost::noncopyable
-    >(
-        "film_gray8",
-        init< std::size_t, std::size_t >()
-    )
-        .def(init< std::size_t, std::size_t, uint8_t >())
-        .add_property("width",
-            fostlib::accessors_getter<
-                animray::film< uint8_t >,
-                const animray::film< uint8_t >::size_type,
-                &animray::film< uint8_t >::width
-            >
-        )
-        .add_property("height",
-            fostlib::accessors_getter<
-                animray::film< uint8_t >,
-                const animray::film< uint8_t >::size_type,
-                &animray::film< uint8_t >::height
-            >
-        )
-        .def("__call__", film_get_xy< animray::film< uint8_t > >)
-        .def("__call__", film_set_xy< animray::film< uint8_t > >)
-    ;
+    film_py< uint8_t >("film_gray8");
 
-    class_<
-        animray::mandelbrot::iterations< animray::film< uint8_t >, double >
-    >(
-        "mandelbrot_gray8",
-        init<
-            animray::film< uint8_t >::size_type, animray::film< uint8_t >::size_type,
-            double , double, double, std::size_t
-        >()
-    )
-        .add_property("width",
-            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::width
-        )
-        .add_property("height",
-            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::height
-        )
-        .add_property("center_x",
-            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::cx
-        )
-        .add_property("center_y",
-            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::cy
-        )
-        .add_property("radius",
-            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::sz
-        )
-        .def("__call__",
-            generate_mandelbrot<
-                animray::film< uint8_t >,
-                animray::mandelbrot::iterations< animray::film< uint8_t >, double >
-            >
-        )
-    ;
+    mandelbrot< uint8_t >("mandelbrot_gray8");
 }
