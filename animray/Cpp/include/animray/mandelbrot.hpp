@@ -29,22 +29,26 @@
 
 namespace animray{
 
+
     namespace mandelbrot {
 
 
         template< typename F, typename D >
         struct iterations {
-            const typename F::extents_type size;
+            const typename F::size_type width, height;
             const D aspect, weight;
-            const D ox, oy, sz;
+            const D cx, cy, ox, oy, sz;
             const std::size_t bits;
             const unsigned int mask;
-            iterations( const F &film, D x, D y, D s, std::size_t bits )
-            : size( film.size() ),
-                    aspect( D(size.width()) / D(size.height()) ),
-                    weight( D(1) / std::max( size.width(), size.height() ) ),
-                    ox(x - s * aspect),
-                    oy(y - s),
+            iterations(
+                typename F::size_type width, typename F::size_type height,
+                D x, D y, D s, std::size_t bits
+            ) : width(width), height(height),
+                    aspect( D(width) / D(height) ),
+                    weight( D(1) / std::max( width, height ) ),
+                    cx( x ), cy( y ),
+                    ox(x - s * ( aspect < D(1) ? aspect : D(1))),
+                    oy(y - s / ( aspect > D(1) ? aspect : D(1))),
                     sz( s * D(2) ),
                     bits( bits ), mask(  ( 0x1 << bits ) - 1 ) {
             }

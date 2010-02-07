@@ -40,13 +40,9 @@ namespace {
         return (*f)[x][y] = c;
     }
 
-    template< typename F > inline
-    void mandelbrot (
-        F *f, double x, double y, double r, std::size_t bits
-    ) {
-        f->transform( animray::mandelbrot::iterations< F, double >(
-            *f, x, y, r, bits
-        ) );
+    template< typename F, typename M > inline
+    void generate_mandelbrot( M *m, F *f ) {
+        f->transform( *m );
     }
 }
 BOOST_PYTHON_MODULE( _animray ) {
@@ -81,5 +77,35 @@ BOOST_PYTHON_MODULE( _animray ) {
         .def("__call__", film_set_xy< animray::film< uint8_t > >)
     ;
 
-    def("mandelbrot", mandelbrot< animray::film< uint8_t > >);
+    class_<
+        animray::mandelbrot::iterations< animray::film< uint8_t >, double >
+    >(
+        "mandelbrot_gray8",
+        init<
+            animray::film< uint8_t >::size_type, animray::film< uint8_t >::size_type,
+            double , double, double, std::size_t
+        >()
+    )
+        .add_property("width",
+            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::width
+        )
+        .add_property("height",
+            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::height
+        )
+        .add_property("center_x",
+            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::cx
+        )
+        .add_property("center_y",
+            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::cy
+        )
+        .add_property("radius",
+            &animray::mandelbrot::iterations< animray::film< uint8_t >, double >::sz
+        )
+        .def("__call__",
+            generate_mandelbrot<
+                animray::film< uint8_t >,
+                animray::mandelbrot::iterations< animray::film< uint8_t >, double >
+            >
+        )
+    ;
 }

@@ -63,7 +63,7 @@ FSL_MAIN(
 
     output.transform(
         animray::mandelbrot::iterations< film_type, precision >(
-            output, centre_x, centre_y, radius, bits
+            width, height, centre_x, centre_y, radius, bits
         )
     );
 

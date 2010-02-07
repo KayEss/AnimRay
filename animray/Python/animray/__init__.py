@@ -21,4 +21,4 @@
 
 from _animray import \
     film_gray8, \
-    mandelbrot
+    mandelbrot_gray8
