@@ -48,14 +48,9 @@ namespace {
 }
 FSL_TEST_FUNCTION( square_texture ) {
     typedef animray::point2d< double > location_type;
-    typedef animray::texture_binop_wrapper< int, double > tx_fn_type;
     typedef animray::texture<
         uint8_t, location_type,
-        tx_fn_type,
-        animray::location_mapper_binary_op<
-            tx_fn_type,
-            location_type
-        >
+        boost::function2< int, double, double >
     > texture_type;
     texture_type t( square );
     FSL_CHECK_EQ( t( location_type() ), 1 );
