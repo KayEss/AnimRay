@@ -26,9 +26,10 @@
 FSL_TEST_SUITE( render );
 
 
-FSL_TEST_FUNCTION( constructors ){
+FSL_TEST_FUNCTION( constructors ) {
     animray::render<
-        animray::texture< uint8_t, double >
+        animray::texture< int, animray::point2d< double > >
     > r1( 127 );
+    FSL_CHECK_EQ( r1.film()[0][0], 127 );
 }
 

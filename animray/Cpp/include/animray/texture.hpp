@@ -92,12 +92,12 @@ namespace animray {
         CC color_converter;
         LM location_converter;
         public:
+            /// The colour type that is returned by the texture
+            typedef C color_type;
             /// The location type used externally to the texture
             typedef L location_type;
             /// The type of the functor
             typedef F functor_type;
-            /// The colour type that is returned by the texture
-            typedef C color_type;
             /// The type of color conversion functor
             typedef CC color_conversion_functor_type;
             /// The type of the location conversion functor

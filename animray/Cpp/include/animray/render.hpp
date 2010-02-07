@@ -34,17 +34,30 @@ namespace animray {
     /// Render a texture to a raster
     template<
         typename T,
-        typename R = raster< typename T::color_type >
+        typename R = raster< film< typename T::color_type > >
     > class render {
         T texture;
+        R raster;
         public:
             /// The type of the texture to be rendered
             typedef T texture_type;
+            /// The type of the raster that is to be produced
+            typedef R raster_type;
+            /// The type of the film inside the raster
+            typedef typename raster_type::film_type film_type;
+            /// The location type in use
+            typedef typename texture_type::location_type location_type;
 
             /// Construct a render command from a texture functor
             render(
                 const typename texture_type::functor_type &f
-            ) : texture( f ) {
+            ) : texture( f ),
+                    raster(1, 1, this->texture(location_type(0, 0))) {
+            }
+
+            /// Returns the current film showing the progress of the render
+            const film_type &film() const {
+                return raster.film();
             }
     };
 
