@@ -60,8 +60,9 @@ BOOST_PYTHON_MODULE( _animray ) {
         boost::noncopyable
     >(
         "film_gray8",
-        init< std::size_t, std::size_t, uint8_t >()
+        init< std::size_t, std::size_t >()
     )
+        .def(init< std::size_t, std::size_t, uint8_t >())
         .add_property("width",
             fostlib::accessors_getter<
                 animray::film< uint8_t >,
