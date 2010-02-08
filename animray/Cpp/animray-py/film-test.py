@@ -21,12 +21,17 @@
 
 import _animray
 
-f1 = _animray.film_gray8(120, 80, 123)
+def basic_test(cls):
+    f1 = cls(120, 80, 123)
 
-assert f1.width == 120, f1.width
-assert f1.height == 80, f1.height
-assert f1(30, 40) == 123, f1(30, 40)
-f1(30, 40, 127); assert f1(30, 40) == 127, f1(30, 40)
+    assert f1.width == 120, f1.width
+    assert f1.height == 80, f1.height
+    assert f1(30, 40) == 123, f1(30, 40)
+    f1(30, 40, 127); assert f1(30, 40) == 127, f1(30, 40)
 
-f2 = _animray.film_gray8(100, 100)
-assert f2(10, 10) == 0, f2(10, 10)
+    f2 = cls(100, 100)
+    assert f2(10, 10) == 0, f2(10, 10)
+
+[basic_test(k) for k in [
+    _animray.film_gray8, _animray.film_gray16
+]]

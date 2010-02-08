@@ -20,5 +20,5 @@
 """
 
 from _animray import \
-    film_gray8, \
+    film_gray8, film_gray16, \
     mandelbrot_gray8
