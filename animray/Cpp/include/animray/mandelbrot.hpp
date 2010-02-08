@@ -40,6 +40,7 @@ namespace animray{
             const D cx, cy, ox, oy, sz;
             const std::size_t bits;
             const unsigned int mask;
+
             iterations(
                 typename F::size_type width, typename F::size_type height,
                 D x, D y, D s, std::size_t bits
@@ -58,10 +59,12 @@ namespace animray{
                 else
                     return v >> (bits-8);
             }
+
+            typedef typename F::color_type result_type;
+            typedef typename F::extents_type::corner_type arg1_type;
+
             typename F::color_type operator () (
-                const F &,
-                const typename F::extents_type::corner_type &loc,
-                const typename F::color_type &
+                const typename F::extents_type::corner_type &loc
             ) const {
                 const D proportion_x = D( loc.x() ) * weight;
                 const D proportion_y = D( loc.y() ) * weight;
@@ -74,7 +77,14 @@ namespace animray{
                     current = current * current + position
                 ) counter = ( counter + 1 ) & mask;
                 return scale(counter);
-            }
+             }
+            typename F::color_type operator () (
+                const F &,
+                const typename F::extents_type::corner_type &loc,
+                const typename F::color_type &
+            ) const {
+                return (*this)( loc );
+           }
         };
 
 

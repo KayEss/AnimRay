@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/mandelbrot.hpp>
 #include <animray/render.hpp>
 #include <fost/test>
 
@@ -33,3 +34,17 @@ FSL_TEST_FUNCTION( constructors ) {
     FSL_CHECK_EQ( r1.film()[0][0], 127 );
 }
 
+/*
+FSL_TEST_FUNCTION( mandelbrot ) {
+    typedef animray::mandelbrot::iterations<
+        animray::film< uint8_t >, double
+    > mandelbrot_type;
+
+    animray::render<
+        animray::texture<
+            int, animray::point2d< std::size_t >,
+            mandelbrot_type
+        >
+    > rm(mandelbrot_type( 100, 100, 0, 0, 2, 6 ));
+}
+*/
