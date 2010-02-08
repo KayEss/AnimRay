@@ -47,7 +47,7 @@ namespace animray {
         typedef fostlib::functor::coercer< C, typename F::result_type >
             color_conversion_functor_type;
         /// The location mapping type
-        typedef fostlib::functor::apply< typename F::arg1_type, L >
+        typedef fostlib::functor::apply< typename F::result_type, L >
             location_mapping_functor_type;
         /// Texture constructor functor type
         typedef F texture_constructor_arg1_type;
