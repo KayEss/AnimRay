@@ -27,6 +27,16 @@
 #include <animray/detail/array_based.hpp>
 
 
+#ifdef _MSC_VER
+namespace std {
+	template< typename I >
+	typename boost::enable_if< boost::is_integral< I >, I >::type sqrt( I i ) {
+		return I( sqrt( double(i) ) );
+	}
+}
+#endif
+
+
 namespace animray {
 
 
@@ -41,7 +51,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
-            using superclass::c_array_size;
+			static const std::size_t c_array_size = superclass::c_array_size;
             using superclass::to_json;
             using superclass::print_on;
 

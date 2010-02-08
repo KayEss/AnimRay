@@ -41,7 +41,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
-            using superclass::c_array_size;
+            static const std::size_t c_array_size = superclass::c_array_size;
             using superclass::print_on;
             using superclass::to_json;
 

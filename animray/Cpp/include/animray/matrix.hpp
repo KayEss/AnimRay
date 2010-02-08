@@ -42,7 +42,7 @@ namespace animray {
                 const_value_parameter_type
             ;
             using superclass::at;
-            using superclass::c_array_size;
+            static const std::size_t c_array_size = superclass::c_array_size;
 
             /// Construct an identity transform matrix
             matrix() {

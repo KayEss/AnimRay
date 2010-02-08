@@ -41,6 +41,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
+			static const std::size_t c_array_size = superclass::c_array_size;
             using superclass::to_json;
 
             /// Return the channel values
