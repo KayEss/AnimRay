@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <fost/core>
 #include <complex>
 
 
@@ -33,15 +34,31 @@ namespace animray{
     namespace mandelbrot {
 
 
+        /// A mandelbrot texture
+        template< typename S, typename D >
+        S iterations( const std::complex< D > &p, S max ) {
+            S counter = 0;
+            for (
+                std::complex< D > c(p);
+                ++counter < max && std::norm(c) < D(4);
+                c = c * c + p
+            );
+            if ( counter > max )
+                return fostlib::null;
+            else
+                return counter;
+        }
+
+        /// A film transformation functor implementing the mandelbrot
         template< typename F, typename D >
-        struct iterations {
+        struct transformer {
             const typename F::size_type width, height;
             const D aspect, weight;
             const D cx, cy, ox, oy, sz;
             const std::size_t bits;
             const unsigned int mask;
 
-            iterations(
+            transformer(
                 typename F::size_type width, typename F::size_type height,
                 D x, D y, D s, std::size_t bits
             ) : width(width), height(height),
@@ -77,7 +94,7 @@ namespace animray{
                     current = current * current + position
                 ) counter = ( counter + 1 ) & mask;
                 return scale(counter);
-             }
+            }
             typename F::color_type operator () (
                 const F &,
                 const typename F::extents_type::corner_type &loc,

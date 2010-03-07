@@ -39,7 +39,7 @@ namespace {
         using namespace boost::python;
 
         class_<
-            animray::mandelbrot::iterations< animray::film< C >, double >
+            animray::mandelbrot::transformer< animray::film< C >, double >
         >(
             name,
             init<
@@ -49,24 +49,24 @@ namespace {
             >()
         )
             .add_property("width",
-                &animray::mandelbrot::iterations< animray::film< C >, double >::width
+                &animray::mandelbrot::transformer< animray::film< C >, double >::width
             )
             .add_property("height",
-                &animray::mandelbrot::iterations< animray::film< C >, double >::height
+                &animray::mandelbrot::transformer< animray::film< C >, double >::height
             )
             .add_property("center_x",
-                &animray::mandelbrot::iterations< animray::film< C >, double >::cx
+                &animray::mandelbrot::transformer< animray::film< C >, double >::cx
             )
             .add_property("center_y",
-                &animray::mandelbrot::iterations< animray::film< C >, double >::cy
+                &animray::mandelbrot::transformer< animray::film< C >, double >::cy
             )
             .add_property("radius",
-                &animray::mandelbrot::iterations< animray::film< C >, double >::sz
+                &animray::mandelbrot::transformer< animray::film< C >, double >::sz
             )
             .def("__call__",
                 generate_mandelbrot<
                     animray::film< C >,
-                    animray::mandelbrot::iterations< animray::film< C >, double >
+                    animray::mandelbrot::transformer< animray::film< C >, double >
                 >
             )
         ;

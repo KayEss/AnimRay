@@ -20,33 +20,15 @@
 
 
 #include <animray/mandelbrot.hpp>
-#include <animray/render.hpp>
 #include <fost/test>
 
 
-FSL_TEST_SUITE( render );
+FSL_TEST_SUITE( mandelbrot );
 
 
-FSL_TEST_FUNCTION( constructors ) {
-    animray::render<
-        animray::texture< int, animray::point2d< std::size_t > >
-    > r1( 127 );
-    FSL_CHECK_EQ( r1.film()[0][0], 127 );
-}
-
-
-FSL_TEST_FUNCTION( mandelbrot ) {
-    typedef animray::mandelbrot::transformer<
-        animray::film< uint8_t, std::size_t >, double
-    > mandelbrot_type;
-
-    typedef animray::texture<
-        int, animray::point2d< std::size_t >,
-        mandelbrot_type
-    > mandelbrot_texture_type;
-
-    animray::render< mandelbrot_texture_type > rm(
-        mandelbrot_type( 100, 100, 0, 0, 2, 6 )
-    );
+FSL_TEST_FUNCTION( iterations ) {
+    using animray::mandelbrot::iterations;
+    FSL_CHECK_EQ(iterations(std::complex<double>(2, 2), 10), 1);
+    FSL_CHECK_EQ(iterations(std::complex<double>(0, 0), 10), 10);
 }
 
