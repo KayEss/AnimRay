@@ -94,25 +94,25 @@ namespace fostlib {
         /// Performs the coercion
         animray::rgb< D > coerce( const animray::hls< D > &hls ) {
             const D h = hls.array()[0], l = hls.array()[1], s = hls.array()[2];
-            D r, g, b;
             const D C = l <= D(0.5) ? D(2) * l * s : ( D(2) - D(2) * l ) * s;
             const D H = h / D(60);
             D Hmod2 = H;
             while ( Hmod2 > D(2) )
                 Hmod2 -= D(2);
             const D X = C * ( D(1) - std::abs(Hmod2 - D(1)) );
-            if ( H < 1.0f ) {
-                r = C; g = X; b = 0.0f;
-            } else if ( H < 2.0f ) {
-                r = X; g = C; b = 0.0f;
-            } else if ( H < 3.0f ) {
-                r = 0.0f; g = C; b = X;
-            } else if ( H < 4.0f ) {
-                r = 0.0f; g = X; b = C;
-            } else if ( H < 5.0f ) {
-                r = X; g = 0.0f; b = C;
+            D r, g, b;
+            if ( H < D(1) ) {
+                r = C; g = X; b = D(0);
+            } else if ( H < D(2) ) {
+                r = X; g = C; b = D(0);
+            } else if ( H < D(3) ) {
+                r = D(0); g = C; b = X;
+            } else if ( H < D(4) ) {
+                r = D(0); g = X; b = C;
+            } else if ( H < D(5) ) {
+                r = X; g = D(0); b = C;
             } else {
-                r = C; g = 0.0f; b = X;
+                r = C; g = D(0); b = X;
             }
             const float m = l - D(0.5) * C;
             return animray::rgb< D >(r + m, g + m, b + m);
