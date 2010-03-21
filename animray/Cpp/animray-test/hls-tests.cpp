@@ -45,9 +45,9 @@ namespace {
     void check(float h, float l, float s, float r, float g, float b) {
         animray::hls< float > f(h, l, s);
         animray::rgb< float > t( fostlib::coerce< animray::rgb< float > >( f ) );
-        FSL_CHECK_EQ(int(t.array()[0] * 1000 + .5f), int(r * 1000));
-        FSL_CHECK_EQ(int(t.array()[1] * 1000 + .5f), int(g * 1000));
-        FSL_CHECK_EQ(int(t.array()[2] * 1000 + .5f), int(b * 1000));
+        FSL_CHECK_EQ(int(t.array()[0] * 1000 + .5f), int(r * 1000 + .5f));
+        FSL_CHECK_EQ(int(t.array()[1] * 1000 + .5f), int(g * 1000 + .5f));
+        FSL_CHECK_EQ(int(t.array()[2] * 1000 + .5f), int(b * 1000 + .5f));
     }
 }
 FSL_TEST_FUNCTION( to_rgb ) {
