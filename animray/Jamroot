@@ -5,9 +5,7 @@ include ../fost-base/fost.jam ;
 use-project fost-base : ../fost-base/ ;
 use-project fost-py : ../fost-py/ ;
 
-fost-project animray :
-        <include>../fost-py/Cpp/include
-    ;
+fost-project animray ;
 
 
 alias animray :

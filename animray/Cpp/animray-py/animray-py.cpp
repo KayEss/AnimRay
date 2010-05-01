@@ -29,7 +29,7 @@ BOOST_PYTHON_MODULE( _animray ) {
     fostlib::python_json_registration();
 
     film_py< uint8_t >("film_gray8");
-    film_py< uint8_t >("film_gray16");
+    film_py< uint16_t >("film_gray16");
 
     mandelbrot< uint8_t >("mandelbrot_gray8");
 }
