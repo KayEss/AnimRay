@@ -64,32 +64,14 @@ namespace animray {
 }
 
 
-/// Allow two points to be added together
-template< typename C >
-animray::point2d< C > operator + (
-    const animray::point2d< C > &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a.x() + b.x(), a.y() + b.y() );
-}
-/// Allow us to scale a point location by a scalar
-template< typename C >
-animray::point2d< C > operator * (
-    const C &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a * b.x(), a * b.y() );
-}
-/// Allow us to scale a point location by a scalar
-template< typename C >
-animray::point2d< C > operator * (
-    const animray::point2d< C > &a, const C &b
-) {
-    return animray::point2d< C >( a.x() * b, a.y() * b );
-}
+#include <animray/detail/point2d-i.hpp>
 
 
 namespace fostlib {
+    /// Allow coercion to JSON
     template< typename C >
     struct coercer< fostlib::json, animray::point2d< C > > {
+        /// Perform the coercion
         fostlib::json coerce( const animray::point2d< C > &p ) {
             fostlib::json j; fostlib::jcursor r;
             r.push_back(j, fostlib::coerce< fostlib::json >( p.x() ));
@@ -97,8 +79,10 @@ namespace fostlib {
             return j;
         }
     };
+    /// Allow coercion from JSON
     template< typename C >
     struct coercer< animray::point2d< C >, fostlib::json > {
+        /// Perform the coercion
         animray::point2d< C > coerce( const fostlib::json &j ) {
             return animray::point2d< C >(
                 fostlib::coerce< typename animray::point2d< C >::value_type >( j[0] ),
