@@ -1,6 +1,6 @@
 2010-05-01  Kirit Saelensminde  <kirit@felspar.com>
  Operators
- - Added + and * operators to point2d.
+ - Added +, -, * and / operators to point2d.
 
 2010-03-22  Kirit Saelensminde  <kirit@felspar.com>
  ChangeLog
