@@ -64,6 +64,15 @@ namespace animray {
 }
 
 
+/// Allow two points to be added together
+template< typename C >
+animray::point2d< C > operator + (
+    const animray::point2d< C > &a, const animray::point2d< C > &b
+) {
+    return animray::point2d< C >( a.x() + b.x(), a.y() + b.y() );
+}
+
+
 namespace fostlib {
     template< typename C >
     struct coercer< fostlib::json, animray::point2d< C > > {

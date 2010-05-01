@@ -1,3 +1,7 @@
+2010-05-01  Kirit Saelensminde  <kirit@felspar.com>
+ Operators
+ - Added an + operator to point2d.
+
 2010-03-22  Kirit Saelensminde  <kirit@felspar.com>
  ChangeLog
  - Added ChangeLog
