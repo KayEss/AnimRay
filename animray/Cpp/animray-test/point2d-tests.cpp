@@ -48,3 +48,10 @@ FSL_TEST_FUNCTION( operator_add ) {
     FSL_CHECK_EQ(p1 += p2, animray::point2d<int>(1,2));
     FSL_CHECK_EQ(p1 += p2, 2 * animray::point2d<int>(1,2));
 }
+
+
+FSL_TEST_FUNCTION( operator_mul ) {
+    animray::point2d<int> p1, p2 = animray::point2d<int>(1,2);
+    FSL_CHECK_EQ(p1 * 4, p1);
+    FSL_CHECK_EQ(p2 *= 3, animray::point2d<int>(3,6));
+}

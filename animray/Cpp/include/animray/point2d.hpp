@@ -65,6 +65,13 @@ namespace animray {
                 y( y() + r.y() );
                 return *this;
             }
+
+            /// Scale a point by a scalar
+            point2d &operator *= ( const C &r ) {
+                x( x() * r );
+                y( y() * r );
+                return *this;
+            }
     };
 
 

@@ -1,6 +1,6 @@
 2010-05-01  Kirit Saelensminde  <kirit@felspar.com>
  Operators
- - Added mutating += operator to point2d.
+ - Added mutating += and *= operators to point2d.
 
 2010-05-01  Kirit Saelensminde  <kirit@felspar.com>
  Operators
