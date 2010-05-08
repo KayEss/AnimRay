@@ -58,6 +58,13 @@ namespace animray {
             bool operator != ( const point2d &r ) const {
                 return x() != r.x() || y() != r.y();
             }
+
+            /// Add another point to this one
+            point2d &operator += ( const point2d &r ) {
+                x( x() + r.x() );
+                y( y() + r.y() );
+                return *this;
+            }
     };
 
 

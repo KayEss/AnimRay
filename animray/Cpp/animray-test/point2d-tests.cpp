@@ -41,3 +41,10 @@ FSL_TEST_FUNCTION( json ) {
     json_roundtrip( animray::point2d< int >(1,2), "[1,2]" );
     json_roundtrip( animray::point2d< int >(2,-5), "[2,-5]" );
 }
+
+
+FSL_TEST_FUNCTION( operator_add ) {
+    animray::point2d<int> p1, p2 = animray::point2d<int>(1,2);
+    FSL_CHECK_EQ(p1 += p2, animray::point2d<int>(1,2));
+    FSL_CHECK_EQ(p1 += p2, 2 * animray::point2d<int>(1,2));
+}
