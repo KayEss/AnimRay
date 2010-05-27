@@ -15,5 +15,6 @@ IF ERRORLEVEL 1 (
     popd
     copy
 ) ELSE (
+    echo animray %* OK
     popd
 )
