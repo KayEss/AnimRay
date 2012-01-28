@@ -1,0 +1,16 @@
+import path ;
+
+
+searched-lib opengl-glew ;
+searched-lib opengl-glew : : <name>GLEW <target-os>linux ;
+
+searched-lib opengl-glut ;
+searched-lib opengl-glut : : <name>glut <target-os>linux ;
+
+
+fost-exe ar-view
+    :
+        [ path.glob $(TOP)/Cpp/ar-view : *.cpp ]
+        opengl-glut
+        opengl-glew
+    ;
