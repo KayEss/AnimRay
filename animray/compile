@@ -6,16 +6,16 @@ export VARIANTS=$*
 if test -e /proc/
 then {
     export CPUCOUNT=`grep -c ^processor /proc/cpuinfo`
-    export TOOLSET=gcc
+    export TOOLSET=toolset=clang
 }
 else {
     export CPUCOUNT=`sysctl -n hw.ncpu`
-    export TOOLSET=darwin
+    export TOOLSET=toolset=darwin
     export LANG=C
 }
 fi
 
-if ../bjam -j$CPUCOUNT toolset=$TOOLSET $VARIANTS `../python.opts.sh`
+if ../bjam -j$CPUCOUNT $TOOLSET $VARIANTS `../python.opts.sh`
 then {
     echo animray $* OK
     exit 0
