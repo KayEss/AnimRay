@@ -1,18 +1,37 @@
 #!/bin/bash
 cd `dirname $0`
-svn up .
 
 if test -e metachatr
 then {
-    cd metachatr
-    git pull
+    git submodule sync
+    git submodule update
 }
 else {
-    git clone git@github.com:KayEss/metachatr.git
+    git submodule sync
+    git submodule update
     cd metachatr
+    git checkout master
     git flow init -d
+    cd ..
 }
 fi
-cd ..
+
+svn co http://svn.felspar.com/external/Boost \
+    Boost
+Boost/install `lsb_release -cs`
+
+svn co https://svn.felspar.com/external/crypto++ \
+    crypto++
+svn co https://svn.felspar.com/external/OpenSSL \
+    OpenSSL
+
+svn co http://svn.felspar.com/public/fost-base/stable/fost-base \
+    fost-base
+svn co http://svn.felspar.com/public/fost-internet/stable/fost-internet \
+    fost-internet
+svn co http://svn.felspar.com/public/fost-orm/stable/fost-orm \
+    fost-orm
+svn co http://svn.felspar.com/public/fost-py/stable/fost-py \
+    fost-py
 
 animray/compile $*

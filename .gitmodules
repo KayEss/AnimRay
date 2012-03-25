@@ -1,0 +1,3 @@
+[submodule "metachatr"]
+	path = metachatr
+	url = git@github.com:KayEss/metachatr.git
