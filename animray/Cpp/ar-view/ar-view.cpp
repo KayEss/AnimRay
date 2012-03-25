@@ -20,6 +20,9 @@
 
 
 #include <fost/main>
+#include <animray/metachatr.hpp>
+
+
 #include <GL/glew.h>
 #ifdef __APPLE__
 #   include <GLUT/glug.h>

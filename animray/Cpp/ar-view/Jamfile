@@ -10,6 +10,7 @@ searched-lib opengl-glut : : <name>glut <target-os>linux ;
 
 fost-exe ar-view
     :
+        ../animray-chatr
         [ path.glob $(TOP)/Cpp/ar-view : *.cpp ]
         opengl-glut
         opengl-glew
