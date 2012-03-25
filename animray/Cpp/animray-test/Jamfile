@@ -1,0 +1,7 @@
+import path ;
+
+fost-smoke-test animray-base-test-smoke
+    :
+    :
+        [ path.glob $(TOP)/Cpp/animray-test : *-tests.cpp ]
+    ;

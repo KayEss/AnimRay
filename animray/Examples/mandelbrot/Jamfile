@@ -1,0 +1,5 @@
+
+fost-exe mandelbrot
+    :
+        mandelbrot.cpp
+    ;

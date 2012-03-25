@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="animray"
+	ProjectGUID="{329B0A95-BF57-484B-81B1-623CCE91E009}"
+	Keyword="MakeFileProj"
+	TargetFrameworkVersion="0"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)dist\bin"
+			IntermediateDirectory="$(SolutionDir)build.tmp\Debug"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="..\bjam toolset=msvc"
+				ReBuildCommandLine="..\bjam toolset=msvc clean &amp;&amp; ..\bjam toolset=msvc"
+				CleanCommandLine="..\bjam toolset=msvc clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;_DEBUG;"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)dist\bin"
+			IntermediateDirectory="$(SolutionDir)build.tmp\Release"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="..\bjam toolset=msvc release"
+				ReBuildCommandLine="..\bjam toolset=msvc release clean &amp;&amp; ..\bjam toolset=msvc release"
+				CleanCommandLine="..\bjam toolset=msvc release clean"
+				Output=""
+				PreprocessorDefinitions="WIN32;NDEBUG;"
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -1,0 +1,18 @@
+
+python-extension _animray :
+        ../../../Boost//boost-filesystem-dll
+        ../../../Boost//boost-python-dll
+        ../../../Boost//boost-system-dll
+        ../../../Boost//boost-thread-dll
+        ../../../fost-base/Cpp/fost-core
+        ../../../fost-py/Cpp/fost-python
+        animray-py.cpp
+    :
+        <include>../../../fost-py/Cpp/include
+    ;
+
+run-py-test load-test : _animray load-test.py ;
+run-py-test film-test : _animray film-test.py ;
+run-py-test mandelbrot-test : _animray mandelbrot-test.py ;
+
+fost-py-install _animray : animray ;
