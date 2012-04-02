@@ -1,6 +1,6 @@
 AnimRay was a 16 bit Windows 3.0 ray-tracer and animation program. This is a port of the concepts that it implemented to modern C++ code and modern platforms.
 
-=Building AnimRay=
+# Building AnimRay #
 
     git clone git@github.com:KayEss/AnimRay.git
     cd AnimRay
