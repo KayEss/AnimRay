@@ -18,7 +18,7 @@ fi
 
 svn co http://svn.felspar.com/external/Boost \
     Boost
-Boost/install `lsb_release -cs`
+Boost/install 49 0
 
 svn co https://svn.felspar.com/external/crypto++ \
     crypto++
