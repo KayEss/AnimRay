@@ -58,6 +58,12 @@ namespace animray {
                         1, std::numeric_limits<E>::max(), height);
             }
 
+            /// Construct a film of a given size with a lambda telling us which colors to use
+            template< typename F >
+            film( size_type width, size_type height, F fn, const C &colour = C() )
+            : film(width, height, colour) {
+            }
+
             /// The width of the image
             const size_type width() const {
                 return columns.size();
