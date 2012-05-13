@@ -25,6 +25,7 @@
 
 
 #include <animray/extents2d.hpp>
+#include <fost/exception/out_of_range.hpp>
 
 
 namespace animray {
@@ -48,8 +49,13 @@ namespace animray {
 
             /// Construct an empty targa of the given size
             film( size_type width, size_type height, const C &colour = C() )
-            : columns( width, column_type(height, colour)),
-            width( width ), height( height ) {
+            : columns( width, column_type(height, colour)) {
+                if ( width < 1 )
+                    throw fostlib::exceptions::out_of_range<E>(
+                        1, std::numeric_limits<E>::max(), width);
+                if ( height < 1 )
+                    throw fostlib::exceptions::out_of_range<E>(
+                        1, std::numeric_limits<E>::max(), height);
             }
 
             /// The width of the image

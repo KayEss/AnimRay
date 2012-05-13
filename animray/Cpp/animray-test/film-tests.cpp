@@ -34,4 +34,8 @@ FSL_TEST_FUNCTION( extents_construct ) {
 FSL_TEST_FUNCTION( film_construction ) {
     animray::film< uint8_t > film( 10, 100 );
     FSL_CHECK_EQ( film.size(), animray::film< uint8_t >::extents_type(0, 0, 9, 99) );
+    FSL_CHECK_EXCEPTION(animray::film< uint8_t >(0, 10),
+        fostlib::exceptions::out_of_range< std::size_t >&);
+    FSL_CHECK_EXCEPTION(animray::film< uint8_t >(10, 0),
+        fostlib::exceptions::out_of_range< std::size_t >&);
 }
