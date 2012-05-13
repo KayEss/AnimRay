@@ -53,9 +53,13 @@ namespace animray {
             }
 
             /// The width of the image
-            fostlib::accessors< const size_type > width;
+            const size_type width() const {
+                return columns.size();
+            }
             /// The height of the image
-            fostlib::accessors< const size_type > height;
+            const size_type height() const {
+                return columns[0].size();
+            }
             /// Return the extents of the image
             extents_type size() const {
                 return extents_type( 0, 0, width() - 1, height() - 1 );
