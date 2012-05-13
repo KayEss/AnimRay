@@ -86,26 +86,9 @@ namespace animray {
                 return columns[c];
             }
 
-            /// Iterate the given function across the image and allow it to mutate the image
-            template< typename F >
-            void transform( const F &fn ) {
-                transform( fn, size() );
-            }
-            /// Iterate the given function across the image and allow it to mutate the image
-            template< typename F >
-            void transform( const F &fn, const extents_type &area ) {
-                for ( size_type c = area.lower_left().x(); c <= area.top_right().x(); ++c ) {
-                    column_type &col = columns[c];
-                    for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
-                        col[r] = fn( *this,
-                            typename extents_type::corner_type(c, r),
-                            col[r]
-                        );
-                }
-            }
             /// Iterate the function across the image rows/columns
             template< typename F >
-            void for_each( const F &fn ) const {
+            void for_each( F fn ) const {
                 for ( size_type c = 0; c < width(); ++c ) {
                     const column_type &col = columns[c];
                     for ( size_type r = 0; r < height(); ++r )
