@@ -29,10 +29,10 @@
 
 #ifdef _MSC_VER
 namespace std {
-	template< typename I >
-	typename boost::enable_if< boost::is_integral< I >, I >::type sqrt( I i ) {
-		return I( sqrt( double(i) ) );
-	}
+    template< typename I >
+    typename boost::enable_if< boost::is_integral< I >, I >::type sqrt( I i ) {
+        return I( sqrt( double(i) ) );
+    }
 }
 #endif
 
@@ -40,7 +40,7 @@ namespace std {
 namespace animray {
 
 
-    /// Homogenous coordinates store a location or a vector
+    /// Homogeneous coordinates store a location or a vector
     template < typename D >
     class point3d : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;
@@ -51,7 +51,7 @@ namespace animray {
                 superclass::const_value_parameter_type
                 const_value_parameter_type
             ;
-			static const std::size_t c_array_size = superclass::c_array_size;
+            static const std::size_t c_array_size = superclass::c_array_size;
             using superclass::to_json;
             using superclass::print_on;
 
