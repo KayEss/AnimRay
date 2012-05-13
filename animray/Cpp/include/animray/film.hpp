@@ -25,12 +25,13 @@
 
 
 #include <animray/extents2d.hpp>
+#include <fost/exception/out_of_range.hpp>
 
 
 namespace animray {
 
 
-    /// A film represents a raster of pixel data
+    /// A film represents a raster of pixel data in columns
     template< typename C, typename E = std::size_t >
     class film {
         typedef std::vector< C > column_type;
@@ -48,14 +49,29 @@ namespace animray {
 
             /// Construct an empty targa of the given size
             film( size_type width, size_type height, const C &colour = C() )
-            : columns( width, column_type(height, colour)),
-            width( width ), height( height ) {
+            : columns( width, column_type(height, colour)) {
+                if ( width < 1 )
+                    throw fostlib::exceptions::out_of_range<E>(
+                        1, std::numeric_limits<E>::max(), width);
+                if ( height < 1 )
+                    throw fostlib::exceptions::out_of_range<E>(
+                        1, std::numeric_limits<E>::max(), height);
+            }
+
+            /// Construct a film of a given size with a lambda telling us which colors to use
+            template< typename F >
+            film( size_type width, size_type height, F fn, const C &colour = C() )
+            : film(width, height, colour) {
             }
 
             /// The width of the image
-            fostlib::accessors< const size_type > width;
+            const size_type width() const {
+                return columns.size();
+            }
             /// The height of the image
-            fostlib::accessors< const size_type > height;
+            const size_type height() const {
+                return columns[0].size();
+            }
             /// Return the extents of the image
             extents_type size() const {
                 return extents_type( 0, 0, width() - 1, height() - 1 );
@@ -70,26 +86,9 @@ namespace animray {
                 return columns[c];
             }
 
-            /// Iterate the given function across the image and allow it to mutate the image
-            template< typename F >
-            void transform( const F &fn ) {
-                transform( fn, size() );
-            }
-            /// Iterate the given function across the image and allow it to mutate the image
-            template< typename F >
-            void transform( const F &fn, const extents_type &area ) {
-                for ( size_type c = area.lower_left().x(); c <= area.top_right().x(); ++c ) {
-                    column_type &col = columns[c];
-                    for ( size_type r = area.lower_left().y(); r <= area.top_right().y(); ++r )
-                        col[r] = fn( *this,
-                            typename extents_type::corner_type(c, r),
-                            col[r]
-                        );
-                }
-            }
             /// Iterate the function across the image rows/columns
             template< typename F >
-            void for_each( const F &fn ) const {
+            void for_each( F fn ) const {
                 for ( size_type c = 0; c < width(); ++c ) {
                     const column_type &col = columns[c];
                     for ( size_type r = 0; r < height(); ++r )

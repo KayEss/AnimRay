@@ -52,20 +52,8 @@ namespace {
             name, init< std::size_t, std::size_t >()
         )
             .def(init< std::size_t, std::size_t, C >())
-            .add_property("width",
-                fostlib::accessors_getter<
-                    animray::film< C >,
-                    const typename animray::film< C >::size_type,
-                    &animray::film< C >::width
-                >
-            )
-            .add_property("height",
-                fostlib::accessors_getter<
-                    animray::film< C >,
-                    const typename animray::film< C >::size_type,
-                    &animray::film< C >::height
-                >
-            )
+            .add_property("width", &animray::film< C >::width)
+            .add_property("height", &animray::film< C >::height)
             .def("__call__", film_get_xy< animray::film< C > >)
             .def("__call__", film_set_xy< animray::film< C > >)
         ;

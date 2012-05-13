@@ -29,8 +29,7 @@ namespace {
 
     template< typename F, typename M > inline
     boost::shared_ptr< F > generate_mandelbrot( M *m ) {
-        boost::shared_ptr< F > f( new F( m->width, m->height ) );
-        f->transform( *m );
+        boost::shared_ptr< F > f( new F( m->width, m->height, *m ) );
         return f;
     }
 
