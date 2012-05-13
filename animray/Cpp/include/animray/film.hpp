@@ -31,7 +31,7 @@
 namespace animray {
 
 
-    /// A film represents a raster of pixel data
+    /// A film represents a raster of pixel data in columns
     template< typename C, typename E = std::size_t >
     class film {
         typedef std::vector< C > column_type;
