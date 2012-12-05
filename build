@@ -1,20 +1,10 @@
 #!/bin/bash
 cd `dirname $0`
 
-if test -e metachatr
-then {
-    git submodule sync
-    git submodule update
-}
-else {
-    git submodule sync
-    git submodule update
-    cd metachatr
-    git checkout master
-    git flow init -d
-    cd ..
-}
-fi
+git pull
+git submodule init
+git submodule sync
+git submodule update
 
 svn co http://svn.felspar.com/external/Boost \
     Boost
