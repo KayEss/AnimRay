@@ -4,8 +4,4 @@ boost-build.jam
 boost-version.jam
 build.tmp
 dist
-fost-base
-fost-internet
-fost-orm
-fost-py
 python.opts.sh
