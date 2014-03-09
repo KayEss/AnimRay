@@ -26,6 +26,7 @@
 
 #include <fost/core>
 #include <complex>
+#include <functional>
 
 
 namespace animray{
@@ -41,11 +42,22 @@ namespace animray{
             const D aspect, weight;
             const D cx, cy, ox, oy, sz;
             const std::size_t bits;
-            const unsigned int mask;
+            typedef std::function<
+                typename F::color_type (unsigned int, std::size_t) > colour_constructor;
+            colour_constructor cons;
 
             transformer(
                 typename F::size_type width, typename F::size_type height,
-                D x, D y, D s, std::size_t bits
+                D x, D y, D s, std::size_t bits,
+                colour_constructor fn
+                    = [] (unsigned int d, std::size_t bits) {
+                        // Scale to 0-255 range
+                        if ( bits < 8 ) {
+                            return typename F::color_type(d << (8-bits));
+                        } else {
+                            return typename F::color_type(d >> (bits-8));
+                        }
+                    }
             ) : width(width), height(height),
                     aspect( D(width) / D(height) ),
                     weight( D(1) / std::max( width, height ) ),
@@ -53,17 +65,12 @@ namespace animray{
                     ox(x - s * ( aspect < D(1) ? aspect : D(1))),
                     oy(y - s / ( aspect > D(1) ? aspect : D(1))),
                     sz( s * D(2) ),
-                    bits( bits ), mask(  ( 0x1 << bits ) - 1 ) {
+                    bits( bits ),
+                    cons( fn ) {
             }
-            typename F::color_type scale( unsigned int v ) const {
-                if ( bits < 8 )
-                    return v << (8-bits);
-                else
-                    return v >> (bits-8);
-            }
-
             typedef typename F::color_type result_type;
-            typedef typename F::extents_type::corner_type arg1_type;
+            typedef typename F::size_type arg1_type;
+            typedef typename F::size_type arg2_type;
 
             typename F::color_type operator () (
                 const typename F::size_type lx, const typename F::size_type ly
@@ -73,13 +80,14 @@ namespace animray{
                 const D x = proportion_x * sz + ox;
                 const D y = proportion_y * sz + oy;
                 const std::complex< D > position( x, y );
+                const unsigned int mask = ( 1u << bits ) - 1u;
                 unsigned int counter = 1;
                 for ( std::complex< D > current( position );
                         std::norm(current) < D(4) && counter > 0;
                         current = current * current + position) {
                     counter = ( counter + 1 ) & mask;
                 }
-                return scale(counter);
+                return cons(counter, bits);
             }
         };
 

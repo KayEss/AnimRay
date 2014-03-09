@@ -22,7 +22,7 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
-#include <animray/rgb.hpp>
+#include <animray/hls.hpp>
 #include <animray/targa.hpp>
 #include <animray/mandelbrot.hpp>
 
@@ -55,7 +55,19 @@ FSL_MAIN(
     typedef animray::film< animray::rgb<uint8_t> > film_type;
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
-            width, height, centre_x, centre_y, radius, bits));
+            width, height, centre_x, centre_y, radius, bits,
+            [] (unsigned int d, std::size_t b) {
+                if ( d ) {
+                    unsigned int m = ( 1u << b ) - 1u;
+                    animray::hls<double> h(360.0 * d / m, 0.5, 1.0);
+                    animray::rgb<double> c(
+                        fostlib::coerce< animray::rgb<double> >(h));
+                    return animray::rgb<uint8_t>(
+                        c.red() * 255, c.green() * 255, c.blue() * 255);
+                } else {
+                    return animray::rgb<uint8_t>(0);
+                }
+            }));
 
     animray::targa(output_filename, output);
 
