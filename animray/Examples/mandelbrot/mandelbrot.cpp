@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014 Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -31,41 +31,32 @@ FSL_MAIN(
     L"Mandelbrot, Copyright 2010 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"))
-    ;
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     int width = fostlib::coerce< int >( args[2].value("100") );
     int height = fostlib::coerce< int >( args[3].value("100") );
     out << "Creating image " << output_filename
-        <<", size " << width << " x " << height << std::endl
-    ;
+        <<", size " << width << " x " << height << std::endl;
 
     typedef animray::film< uint8_t > film_type;
-    film_type output(width, height);
 
     typedef double precision;
     precision centre_x = fostlib::coerce< precision >(
-        args.commandSwitch("cx").value("0")
-    );
+        args.commandSwitch("cx").value("0"));
     precision centre_y = fostlib::coerce< precision >(
-        args.commandSwitch("cy").value("0")
-    );
+        args.commandSwitch("cy").value("0"));
     precision radius = fostlib::coerce< precision >(
-        args.commandSwitch("r").value("2")
-    );
+        args.commandSwitch("r").value("2"));
     std::size_t bits = fostlib::coerce< int >(
-        args.commandSwitch("bits").value("8")
-    );
+        args.commandSwitch("bits").value("8"));
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
         " with radius of " << radius <<
         " to " << bits << " bits" <<
     std::endl;
 
-    output.transform(
+    film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
-            width, height, centre_x, centre_y, radius, bits
-        )
-    );
+            width, height, centre_x, centre_y, radius, bits));
 
     animray::targa(output_filename, output);
 
