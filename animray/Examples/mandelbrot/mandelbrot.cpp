@@ -38,8 +38,6 @@ FSL_MAIN(
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height << std::endl;
 
-    typedef animray::film< animray::rgb<uint8_t> > film_type;
-
     typedef double precision;
     precision centre_x = fostlib::coerce< precision >(
         args.commandSwitch("cx").value("0"));
@@ -54,6 +52,7 @@ FSL_MAIN(
         " with radius of " << radius <<
         " to " << bits << " bits" << std::endl;
 
+    typedef animray::film< animray::rgb<uint8_t> > film_type;
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
             width, height, centre_x, centre_y, radius, bits));
