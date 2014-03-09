@@ -98,9 +98,9 @@ namespace animray {
             void operator () (std::ostream &file,
                     const film< rgb<uint8_t>, E > &image) {
                 image.for_each([&] (rgb<uint8_t> c) {
-                    file.put(c.red());
-                    file.put(c.green());
                     file.put(c.blue());
+                    file.put(c.green());
+                    file.put(c.red());
                 });
             }
         };
