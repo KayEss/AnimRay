@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -25,6 +25,7 @@
 
 
 #include <animray/film.hpp>
+#include <animray/rgb.hpp>
 
 #include <boost/lambda/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -51,7 +52,7 @@ namespace animray {
         // Header
         file.put(0); // 0 identsize
         file.put(0); // Has no colour map
-        file.put(3); // Uncompressed grayscale image (as this is uint8_t)
+        file.put(saver.type);
         file.put(0); file.put(0); // Colour map offset
         file.put(0); file.put(0); // Colour map indexes
         file.put(0); // Colour map bits per pixel
@@ -76,6 +77,7 @@ namespace animray {
         /// Save 8 bit films as Targa file
         template< typename E >
         struct targa_saver< uint8_t, E > {
+            const static char type = 3; // Uncompressed grayscale image
             const static uint8_t bits = 8;
             void operator () (
                 std::ostream &file,
@@ -85,6 +87,21 @@ namespace animray {
                 for ( size_type r = 0; r < image.height(); ++r )
                     for ( size_type c = 0; c < image.width(); ++c )
                         file.put(image[c][r]);
+            }
+        };
+
+        /// Save 24 bit RGB films as Targa file
+        template< typename E >
+        struct targa_saver< rgb<uint8_t>, E > {
+            const static char type = 2; // Uncompressed RGB image
+            const static uint8_t bits = 24;
+            void operator () (std::ostream &file,
+                    const film< rgb<uint8_t>, E > &image) {
+                image.for_each([&] (rgb<uint8_t> c) {
+                    file.put(c.red());
+                    file.put(c.green());
+                    file.put(c.blue());
+                });
             }
         };
     }
