@@ -22,13 +22,14 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
+#include <animray/rgb.hpp>
 #include <animray/targa.hpp>
 #include <animray/mandelbrot.hpp>
 
 
 FSL_MAIN(
     L"mandelbrot",
-    L"Mandelbrot, Copyright 2010 Kirit Saelensminde"
+    L"Mandelbrot, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
@@ -37,7 +38,7 @@ FSL_MAIN(
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height << std::endl;
 
-    typedef animray::film< uint8_t > film_type;
+    typedef animray::film< animray::rgb<uint8_t> > film_type;
 
     typedef double precision;
     precision centre_x = fostlib::coerce< precision >(
@@ -51,8 +52,7 @@ FSL_MAIN(
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
         " with radius of " << radius <<
-        " to " << bits << " bits" <<
-    std::endl;
+        " to " << bits << " bits" << std::endl;
 
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
@@ -62,3 +62,4 @@ FSL_MAIN(
 
     return 0;
 }
+
