@@ -2,6 +2,8 @@ AnimRay was a 16 bit Windows 3.0 ray-tracer and animation program. This is a por
 
 # Building AnimRay #
 
+You'll need a recent Ubuntu, or at least a recent clang.
+
     git clone git@github.com:KayEss/AnimRay.git
     cd AnimRay
     git flow init -d
