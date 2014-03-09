@@ -66,18 +66,19 @@ namespace animray{
             typedef typename F::extents_type::corner_type arg1_type;
 
             typename F::color_type operator () (
-                const typename F::extents_type::corner_type &loc
+                const typename F::size_type lx, const typename F::size_type ly
             ) const {
-                const D proportion_x = D( loc.x() ) * weight;
-                const D proportion_y = D( loc.y() ) * weight;
+                const D proportion_x = D( lx ) * weight;
+                const D proportion_y = D( ly ) * weight;
                 const D x = proportion_x * sz + ox;
                 const D y = proportion_y * sz + oy;
                 const std::complex< D > position( x, y );
                 unsigned int counter = 1;
                 for ( std::complex< D > current( position );
-                    std::norm(current) < D(4) && counter > 0;
-                    current = current * current + position
-                ) counter = ( counter + 1 ) & mask;
+                        std::norm(current) < D(4) && counter > 0;
+                        current = current * current + position) {
+                    counter = ( counter + 1 ) & mask;
+                }
                 return scale(counter);
             }
         };
