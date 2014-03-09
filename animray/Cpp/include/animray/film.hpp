@@ -62,6 +62,12 @@ namespace animray {
             template< typename F >
             film( size_type width, size_type height, F fn, const C &colour = C() )
             : film(width, height, colour) {
+                for ( size_type c = 0; c < width; ++c ) {
+                    column_type &col = columns[c];
+                    for ( size_type r = 0; r < height; ++r ) {
+                        col[r] = fn(c, r);
+                    }
+                }
             }
 
             /// The width of the image
