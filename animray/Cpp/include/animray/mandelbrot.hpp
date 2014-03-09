@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -33,21 +33,6 @@ namespace animray{
 
     namespace mandelbrot {
 
-
-        /// A mandelbrot texture
-        template< typename S, typename D >
-        S iterations( const std::complex< D > &p, S max ) {
-            S counter = 0;
-            for (
-                std::complex< D > c(p);
-                ++counter < max && std::norm(c) < D(4);
-                c = c * c + p
-            );
-            if ( counter > max )
-                return fostlib::null;
-            else
-                return counter;
-        }
 
         /// A film transformation functor implementing the mandelbrot
         template< typename F, typename D >
@@ -95,13 +80,6 @@ namespace animray{
                 ) counter = ( counter + 1 ) & mask;
                 return scale(counter);
             }
-            typename F::color_type operator () (
-                const F &,
-                const typename F::extents_type::corner_type &loc,
-                const typename F::color_type &
-            ) const {
-                return (*this)( loc );
-           }
         };
 
 
