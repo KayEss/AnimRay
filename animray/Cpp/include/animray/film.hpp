@@ -97,8 +97,9 @@ namespace animray {
             void for_each( F fn ) const {
                 for ( size_type c = 0; c < width(); ++c ) {
                     const column_type &col = columns[c];
-                    for ( size_type r = 0; r < height(); ++r )
-                        fn( *this, col[r] );
+                    for ( size_type r = 0; r < height(); ++r ) {
+                        fn( col[r] );
+                    }
                 }
             }
     };
