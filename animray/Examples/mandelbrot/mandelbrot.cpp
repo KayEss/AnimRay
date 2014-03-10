@@ -47,6 +47,8 @@ FSL_MAIN(
         args.commandSwitch("d").value("2"));
     std::size_t bits = fostlib::coerce< int >(
         args.commandSwitch("bits").value("8"));
+    double hue = fostlib::coerce<double>(
+        args.commandSwitch("h").value("0.0"));
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
         " with diameter of " << diameter <<
@@ -56,10 +58,10 @@ FSL_MAIN(
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
             width, height, centre_x, centre_y, diameter, bits,
-            [] (unsigned int d, std::size_t b) {
+            [hue] (unsigned int d, std::size_t b) {
                 if ( d ) {
                     unsigned int m = ( 1u << b ) - 1u;
-                    animray::hls<double> h(360.0 * d / m, 0.5, 1.0);
+                    animray::hls<double> h(hue + 360.0 * d / m, 0.5, 1.0);
                     animray::rgb<double> c(
                         fostlib::coerce< animray::rgb<double> >(h));
                     return animray::rgb<uint8_t>(
