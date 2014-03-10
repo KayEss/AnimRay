@@ -61,7 +61,7 @@ FSL_MAIN(
             [hue] (unsigned int d, std::size_t b) {
                 if ( d ) {
                     unsigned int m = ( 1u << b ) - 1u;
-                    animray::hls<double> h(hue + 360.0 * d / m, 0.5, 1.0);
+                    animray::hls<double> h(int(hue + 360.0 * d / m) % 360, 0.5, 1.0);
                     animray::rgb<double> c(
                         fostlib::coerce< animray::rgb<double> >(h));
                     return animray::rgb<uint8_t>(
