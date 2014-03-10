@@ -102,6 +102,16 @@ namespace animray {
                     }
                 }
             }
+            /// Allow us to force iteration over the rows first
+            template< typename F >
+            void for_each_row( F fn ) const {
+                for ( size_type r = 0; r < height(); ++r ) {
+                    for ( size_type c = 0; c < width(); ++c ) {
+                        fn( columns[c][r] );
+                    }
+                }
+            }
+
     };
 
 
