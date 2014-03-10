@@ -43,19 +43,19 @@ FSL_MAIN(
         args.commandSwitch("cx").value("0"));
     precision centre_y = fostlib::coerce< precision >(
         args.commandSwitch("cy").value("0"));
-    precision radius = fostlib::coerce< precision >(
-        args.commandSwitch("r").value("2"));
+    precision diameter = fostlib::coerce< precision >(
+        args.commandSwitch("d").value("2"));
     std::size_t bits = fostlib::coerce< int >(
         args.commandSwitch("bits").value("8"));
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
-        " with radius of " << radius <<
+        " with diameter of " << diameter <<
         " to " << bits << " bits" << std::endl;
 
     typedef animray::film< animray::rgb<uint8_t> > film_type;
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
-            width, height, centre_x, centre_y, radius, bits,
+            width, height, centre_x, centre_y, diameter, bits,
             [] (unsigned int d, std::size_t b) {
                 if ( d ) {
                     unsigned int m = ( 1u << b ) - 1u;
