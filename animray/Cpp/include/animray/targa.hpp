@@ -63,7 +63,7 @@ namespace animray {
         file.write(reinterpret_cast< const char * >(&w), 2);
         file.write(reinterpret_cast< const char * >(&h), 2);
         file.put(saver.bits); // n bit pixels
-        file.put(0x0); // Image data starts bottom left with zero alpha channel
+        file.put(0x20); // Image data starts top left with zero alpha channel
         // Image data
         saver( file, image );
         // Footer (for Targa 2)
