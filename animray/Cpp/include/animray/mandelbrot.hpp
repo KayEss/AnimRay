@@ -39,8 +39,7 @@ namespace animray{
         template< typename F, typename D >
         struct transformer {
             const typename F::size_type width, height;
-            const D aspect, weight;
-            const D cx, cy, ox, oy, sz;
+            const D centre_x, centre_y, diameter, per_pixel;
             const std::size_t bits;
             typedef std::function<
                 typename F::color_type (unsigned int, std::size_t) > colour_constructor;
@@ -59,15 +58,11 @@ namespace animray{
                         }
                     }
             ) : width(width), height(height),
-                    aspect( D(width) / D(height) ),
-                    weight( D(1) / std::max( width, height ) ),
-                    cx( x ), cy( y ),
-                    ox(x - s * ( aspect < D(1) ? aspect : D(1))),
-                    oy(y - s / ( aspect > D(1) ? aspect : D(1))),
-                    sz( s * D(2) ),
-                    bits( bits ),
-                    cons( fn ) {
+                    centre_x(x), centre_y(y), diameter(s),
+                    per_pixel( s / std::min(width, height) ),
+                    bits( bits ), cons( fn ) {
             }
+
             typedef typename F::color_type result_type;
             typedef typename F::size_type arg1_type;
             typedef typename F::size_type arg2_type;
@@ -75,11 +70,9 @@ namespace animray{
             typename F::color_type operator () (
                 const typename F::size_type lx, const typename F::size_type ly
             ) const {
-                const D proportion_x = D( lx ) * weight;
-                const D proportion_y = D( ly ) * weight;
-                const D x = proportion_x * sz + ox;
-                const D y = proportion_y * sz + oy;
-                const std::complex< D > position( x, y );
+                const D x = (D(lx) - D(width) / D(2)) * per_pixel;
+                const D y = (D(ly) - D(height) / D(2)) * per_pixel;
+                const std::complex< D > position( x + centre_x, y + centre_y );
                 const unsigned int mask = ( 1u << bits ) - 1u;
                 unsigned int counter = 1;
                 for ( std::complex< D > current( position );
