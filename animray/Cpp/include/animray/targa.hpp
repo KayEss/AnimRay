@@ -97,11 +97,14 @@ namespace animray {
             const static uint8_t bits = 24;
             void operator () (std::ostream &file,
                     const film< rgb<uint8_t>, E > &image) {
-                image.for_each([&] (rgb<uint8_t> c) {
-                    file.put(c.blue());
-                    file.put(c.green());
-                    file.put(c.red());
-                });
+                typedef typename film< rgb<uint8_t>, E >::size_type size_type;
+                for ( size_type r = 0; r < image.height(); ++r )
+                    for ( size_type c = 0; c < image.width(); ++c ) {
+                        rgb<uint8_t> col(image[c][r]);
+                        file.put(col.blue());
+                        file.put(col.green());
+                        file.put(col.red());
+                    }
             }
         };
     }
