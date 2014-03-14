@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
