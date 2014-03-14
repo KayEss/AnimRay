@@ -48,7 +48,7 @@ namespace animray {
             typedef typename extents_type::size_type size_type;
 
             /// Construct an empty targa of the given size
-            film( size_type width, size_type height, const C &colour = C() )
+            film(size_type width, size_type height, const C &colour = C())
             : columns( width, column_type(height, colour)) {
                 if ( width < 1 )
                     throw fostlib::exceptions::out_of_range<E>(
@@ -59,8 +59,9 @@ namespace animray {
             }
 
             /// Construct a film of a given size with a lambda telling us which colors to use
-            template< typename F >
-            film( size_type width, size_type height, F fn, const C &colour = C() )
+            film(size_type width, size_type height,
+                std::function< color_type(size_type, size_type) > fn,
+                const C &colour = C())
             : film(width, height, colour) {
                 for ( size_type c = 0; c < width; ++c ) {
                     column_type &col = columns[c];
