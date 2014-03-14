@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -110,25 +110,25 @@ namespace {
 
 FSL_MAIN(
     L"landmaker",
-    L"LandMaker, Copyright 2010 Kirit Saelensminde"
+    L"LandMaker, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"))
-    ;
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     int width = fostlib::coerce< int >( args[2].value("100") );
     int height = fostlib::coerce< int >( args[3].value("100") );
     out << "Creating image " << output_filename
-        <<", size " << width << " x " << height << std::endl
-    ;
+        <<", size " << width << " x " << height << std::endl;
 
     typedef animray::film< uint8_t > film_type;
     film_type output(width, height);
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
-    for ( std::size_t i = 0; i < 10; ++i )
+    for ( std::size_t i = 0; i < 10; ++i ) {
         elevate(output, rng);
+    }
 
     animray::targa(output_filename, output);
 
     return 0;
 }
+
