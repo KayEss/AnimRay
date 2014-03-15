@@ -39,7 +39,7 @@ namespace animray{
         template< typename F, typename D >
         struct transformer {
             const typename F::size_type width, height;
-            const D centre_x, centre_y, diameter, per_pixel;
+            const D center_x, center_y, diameter, per_pixel;
             const std::size_t bits;
             typedef std::function<
                 typename F::color_type (unsigned int, std::size_t) > colour_constructor;
@@ -58,7 +58,7 @@ namespace animray{
                         }
                     }
             ) : width(width), height(height),
-                    centre_x(x), centre_y(y), diameter(s),
+                    center_x(x), center_y(y), diameter(s),
                     per_pixel( s / std::min(width, height) ),
                     bits( bits ), cons( fn ) {
             }
@@ -72,7 +72,7 @@ namespace animray{
             ) const {
                 const D x = (D(lx) - D(width) / D(2)) * per_pixel;
                 const D y = (D(ly) - D(height) / D(2)) * per_pixel;
-                const std::complex< D > position( x + centre_x, y + centre_y );
+                const std::complex< D > position( x + center_x, y + center_y );
                 const unsigned int mask = ( 1u << bits ) - 1u;
                 unsigned int counter = 1;
                 for ( std::complex< D > current( position );

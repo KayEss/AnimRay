@@ -57,11 +57,11 @@ namespace {
             )
             .add_property("center_x",
                 &animray::mandelbrot::transformer
-                    < animray::film< C >, double >::centre_x
+                    < animray::film< C >, double >::center_x
             )
             .add_property("center_y",
                 &animray::mandelbrot::transformer
-                    < animray::film< C >, double >::centre_y
+                    < animray::film< C >, double >::center_y
             )
             .add_property("diameter",
                 &animray::mandelbrot::transformer
@@ -70,7 +70,8 @@ namespace {
             .def("__call__",
                 generate_mandelbrot<
                     animray::film< C >,
-                    animray::mandelbrot::transformer< animray::film< C >, double >
+                    animray::mandelbrot::transformer<
+                        animray::film< C >, double >
                 >
             )
         ;
