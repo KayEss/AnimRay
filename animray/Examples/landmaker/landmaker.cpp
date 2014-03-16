@@ -30,22 +30,32 @@
 namespace {
 
 
+    const double pi = boost::math::constants::pi<double>();
+
+
+    template<typename V>
+    V square(V v) {
+        return v * v;
+    }
+
+
     struct circle {
-        std::size_t cx, cy, r2;
+        float cx, cy, r;
+        bool contains(std::size_t x, std::size_t y)  const {
+            return square(cx - x) + square(cy - y) < square(r);
+        }
     };
 
 
-    void create(boost::mt19937 &rng) {
+    void create(boost::mt19937 &rng, ::circle within) {
+        boost::uniform_real<float>
+            r_radians(0, 2 * pi), r_distance(0, within.r);
         boost::variate_generator<
-            boost::mt19937&,
-            boost::uniform_int<>
-        > rx( rng, 100 ), ry( rng, 100 );
+            boost::mt19937&, boost::uniform_real<float> >
+                radians(rng, r_radians), distance(rng, r_distance);
     }
 
-    //     boost::uniform_int<>
-    //         uix(size.lower_left().x(), size.top_right().x()),
-    //         uiy(size.lower_left().y(), size.top_right().y())
-    //     ;
+
 }
 
 
@@ -62,11 +72,16 @@ FSL_MAIN(
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;
+    circle start{width  / 2.f, height / 2.f, std::min(width, height) / 2.f};
+    circles.push_back(start);
 
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
-        [](film_type::size_type x, film_type::size_type y) {
-            double weight = 0.1;
+        [&circles](film_type::size_type x, film_type::size_type y) {
+            double weight = 0.5 * std::count_if(circles.begin(), circles.end(),
+                [=](const circle &c) -> bool {
+                    return c.contains(x, y);
+                });
             animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
             animray::rgb<double> c(
                 fostlib::coerce< animray::rgb<double> >(h));
