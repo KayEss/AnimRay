@@ -47,12 +47,19 @@ namespace {
     };
 
 
-    void create(boost::mt19937 &rng, ::circle within) {
+    void more_circles(boost::mt19937 &rng, const ::circle &within,
+            std::vector< ::circle > &circles) {
         boost::uniform_real<float>
             r_radians(0, 2 * pi), r_distance(0, within.r);
         boost::variate_generator<
             boost::mt19937&, boost::uniform_real<float> >
                 radians(rng, r_radians), distance(rng, r_distance);
+        float theta{radians()}, length{distance()};
+        circle next{
+            within.cx + length * std::cos(theta),
+            within.cy + length * std::sin(theta),
+            within.r / 2.f};
+        circles.push_back(next);
     }
 
 
@@ -74,6 +81,7 @@ FSL_MAIN(
     std::vector< ::circle > circles;
     circle start{width  / 2.f, height / 2.f, std::min(width, height) / 2.f};
     circles.push_back(start);
+    more_circles(rng, start, circles);
 
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
