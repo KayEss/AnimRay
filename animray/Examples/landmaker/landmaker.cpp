@@ -55,11 +55,16 @@ namespace {
             boost::mt19937&, boost::uniform_real<float> >
                 radians(rng, r_radians), distance(rng, r_distance);
         float theta{radians()}, length{distance()};
-        circle next{
-            within.cx + length * std::cos(theta),
-            within.cy + length * std::sin(theta),
-            within.r / 2.f};
-        circles.push_back(next);
+        for ( auto i = 0; i < 4; ++i ) {
+            circle next{
+                within.cx + length * std::cos(theta),
+                within.cy + length * std::sin(theta),
+                within.r / 2.f};
+            circles.push_back(next);
+            if ( within.r > 3.f ) {
+                more_circles(rng, next, circles);
+            }
+        }
     }
 
 
@@ -86,7 +91,7 @@ FSL_MAIN(
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [&circles](film_type::size_type x, film_type::size_type y) {
-            double weight = 0.5 * std::count_if(circles.begin(), circles.end(),
+            double weight = 0.1 * std::count_if(circles.begin(), circles.end(),
                 [=](const circle &c) -> bool {
                     return c.contains(x, y);
                 });
