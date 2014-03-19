@@ -79,14 +79,16 @@ FSL_MAIN(
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     int width = fostlib::coerce< int >( args[2].value("100") );
     int height = fostlib::coerce< int >( args[3].value("100") );
-    out << "Creating image " << output_filename
-        <<", size " << width << " x " << height << std::endl;
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;
     circle start{width  / 2.f, height / 2.f, std::min(width, height) / 2.f};
     circles.push_back(start);
     more_circles(rng, start, circles);
+
+    out << "Creating image " << output_filename
+        <<", size " << width << " x " << height
+        << " using " << circles.size() << " circles" << std::endl;
 
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
