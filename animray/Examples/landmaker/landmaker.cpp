@@ -55,7 +55,7 @@ namespace {
             boost::mt19937&, boost::uniform_real<float> >
                 radians(rng, r_radians), distance(rng, r_distance);
         float theta{radians()}, length{distance()};
-        for ( auto i = 0; i < 4; ++i ) {
+        for ( auto i = 0; i < 3; ++i ) {
             circle next{
                 within.cx + length * std::cos(theta),
                 within.cy + length * std::sin(theta),
