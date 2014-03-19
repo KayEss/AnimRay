@@ -91,7 +91,7 @@ FSL_MAIN(
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [&circles](film_type::size_type x, film_type::size_type y) {
-            double weight = 0.1 * std::count_if(circles.begin(), circles.end(),
+            double weight = 0.005 * std::count_if(circles.begin(), circles.end(),
                 [=](const circle &c) -> bool {
                     return c.contains(x, y);
                 });
