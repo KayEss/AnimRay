@@ -83,8 +83,10 @@ FSL_MAIN(
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;
     circle start{width  / 2.f, height / 2.f, float(std::max(width, height))};
-    circles.push_back(start);
-    more_circles(rng, start, circles);
+    for ( auto i = 0; i != 3; ++i ) {
+        circles.push_back(start);
+        more_circles(rng, start, circles);
+    }
 
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height
