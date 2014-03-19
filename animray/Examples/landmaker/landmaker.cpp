@@ -61,7 +61,7 @@ namespace {
                 within.cy + length * std::sin(theta),
                 within.r / 2.f};
             circles.push_back(next);
-            if ( within.r > 3.f ) {
+            if ( within.r > 2.f ) {
                 more_circles(rng, next, circles);
             }
         }
@@ -82,7 +82,7 @@ FSL_MAIN(
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;
-    circle start{width  / 2.f, height / 2.f, float(std::max(width, height))};
+    circle start{width  / 2.f, height / 2.f, std::min(width, height) / 4.f};
     for ( auto i = 0; i != 3; ++i ) {
         circles.push_back(start);
         more_circles(rng, start, circles);
@@ -95,7 +95,7 @@ FSL_MAIN(
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [&circles](film_type::size_type x, film_type::size_type y) {
-            double weight = 0.005 * std::count_if(circles.begin(), circles.end(),
+            double weight = 0.0025 * std::count_if(circles.begin(), circles.end(),
                 [=](const circle &c) -> bool {
                     return c.contains(x, y);
                 });
