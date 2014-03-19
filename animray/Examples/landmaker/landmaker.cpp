@@ -82,7 +82,7 @@ FSL_MAIN(
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;
-    circle start{width  / 2.f, height / 2.f, std::min(width, height) / 2.f};
+    circle start{width  / 2.f, height / 2.f, float(std::max(width, height))};
     circles.push_back(start);
     more_circles(rng, start, circles);
 
