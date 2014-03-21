@@ -22,13 +22,14 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
+#include <animray/hls.hpp>
 #include <animray/targa.hpp>
 #include <animray/mandelbrot.hpp>
 
 
 FSL_MAIN(
     L"mandelbrot",
-    L"Mandelbrot, Copyright 2010 Kirit Saelensminde"
+    L"Mandelbrot, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
@@ -37,28 +38,41 @@ FSL_MAIN(
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height << std::endl;
 
-    typedef animray::film< uint8_t > film_type;
-
     typedef double precision;
     precision centre_x = fostlib::coerce< precision >(
         args.commandSwitch("cx").value("0"));
     precision centre_y = fostlib::coerce< precision >(
         args.commandSwitch("cy").value("0"));
-    precision radius = fostlib::coerce< precision >(
-        args.commandSwitch("r").value("2"));
+    precision diameter = fostlib::coerce< precision >(
+        args.commandSwitch("d").value("2"));
     std::size_t bits = fostlib::coerce< int >(
         args.commandSwitch("bits").value("8"));
+    double hue = fostlib::coerce<double>(
+        args.commandSwitch("h").value("0.0"));
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
-        " with radius of " << radius <<
-        " to " << bits << " bits" <<
-    std::endl;
+        " with diameter of " << diameter <<
+        " to " << bits << " bits" << std::endl;
 
+    typedef animray::film< animray::rgb<uint8_t> > film_type;
     film_type output(width, height,
         animray::mandelbrot::transformer< film_type, precision >(
-            width, height, centre_x, centre_y, radius, bits));
+            width, height, centre_x, centre_y, diameter, bits,
+            [hue] (unsigned int d, std::size_t b) {
+                if ( d ) {
+                    unsigned int m = ( 1u << b ) - 1u;
+                    animray::hls<double> h(int(hue + 360.0 * d / m) % 360, 0.5, 1.0);
+                    animray::rgb<double> c(
+                        fostlib::coerce< animray::rgb<double> >(h));
+                    return animray::rgb<uint8_t>(
+                        c.red() * 255, c.green() * 255, c.blue() * 255);
+                } else {
+                    return animray::rgb<uint8_t>(0);
+                }
+            }));
 
     animray::targa(output_filename, output);
 
     return 0;
 }
+

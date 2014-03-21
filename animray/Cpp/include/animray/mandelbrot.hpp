@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -26,6 +26,7 @@
 
 #include <fost/core>
 #include <complex>
+#include <functional>
 
 
 namespace animray{
@@ -34,74 +35,53 @@ namespace animray{
     namespace mandelbrot {
 
 
-        /// A mandelbrot texture
-        template< typename S, typename D >
-        S iterations( const std::complex< D > &p, S max ) {
-            S counter = 0;
-            for (
-                std::complex< D > c(p);
-                ++counter < max && std::norm(c) < D(4);
-                c = c * c + p
-            );
-            if ( counter > max )
-                return fostlib::null;
-            else
-                return counter;
-        }
-
         /// A film transformation functor implementing the mandelbrot
         template< typename F, typename D >
         struct transformer {
             const typename F::size_type width, height;
-            const D aspect, weight;
-            const D cx, cy, ox, oy, sz;
+            const D center_x, center_y, diameter, per_pixel;
             const std::size_t bits;
-            const unsigned int mask;
+            typedef std::function<
+                typename F::color_type (unsigned int, std::size_t) > colour_constructor;
+            colour_constructor cons;
 
             transformer(
                 typename F::size_type width, typename F::size_type height,
-                D x, D y, D s, std::size_t bits
+                D x, D y, D s, std::size_t bits,
+                colour_constructor fn
+                    = [] (unsigned int d, std::size_t bits) {
+                        // Scale to 0-255 range
+                        if ( bits < 8 ) {
+                            return typename F::color_type(d << (8-bits));
+                        } else {
+                            return typename F::color_type(d >> (bits-8));
+                        }
+                    }
             ) : width(width), height(height),
-                    aspect( D(width) / D(height) ),
-                    weight( D(1) / std::max( width, height ) ),
-                    cx( x ), cy( y ),
-                    ox(x - s * ( aspect < D(1) ? aspect : D(1))),
-                    oy(y - s / ( aspect > D(1) ? aspect : D(1))),
-                    sz( s * D(2) ),
-                    bits( bits ), mask(  ( 0x1 << bits ) - 1 ) {
-            }
-            typename F::color_type scale( unsigned int v ) const {
-                if ( bits < 8 )
-                    return v << (8-bits);
-                else
-                    return v >> (bits-8);
+                    center_x(x), center_y(y), diameter(s),
+                    per_pixel( s / std::min(width, height) ),
+                    bits( bits ), cons( fn ) {
             }
 
             typedef typename F::color_type result_type;
-            typedef typename F::extents_type::corner_type arg1_type;
+            typedef typename F::size_type arg1_type;
+            typedef typename F::size_type arg2_type;
 
             typename F::color_type operator () (
-                const typename F::extents_type::corner_type &loc
+                const typename F::size_type lx, const typename F::size_type ly
             ) const {
-                const D proportion_x = D( loc.x() ) * weight;
-                const D proportion_y = D( loc.y() ) * weight;
-                const D x = proportion_x * sz + ox;
-                const D y = proportion_y * sz + oy;
-                const std::complex< D > position( x, y );
+                const D x = (D(lx) - D(width) / D(2)) * per_pixel;
+                const D y = (D(ly) - D(height) / D(2)) * per_pixel;
+                const std::complex< D > position( x + center_x, y + center_y );
+                const unsigned int mask = ( 1u << bits ) - 1u;
                 unsigned int counter = 1;
                 for ( std::complex< D > current( position );
-                    std::norm(current) < D(4) && counter > 0;
-                    current = current * current + position
-                ) counter = ( counter + 1 ) & mask;
-                return scale(counter);
+                        std::norm(current) < D(4) && counter > 0;
+                        current = current * current + position) {
+                    counter = ( counter + 1 ) & mask;
+                }
+                return cons(counter, bits);
             }
-            typename F::color_type operator () (
-                const F &,
-                const typename F::extents_type::corner_type &loc,
-                const typename F::color_type &
-            ) const {
-                return (*this)( loc );
-           }
         };
 
 

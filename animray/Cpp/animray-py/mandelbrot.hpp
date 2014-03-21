@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -48,24 +48,30 @@ namespace {
             >()
         )
             .add_property("width",
-                &animray::mandelbrot::transformer< animray::film< C >, double >::width
+                &animray::mandelbrot::transformer
+                    < animray::film< C >, double >::width
             )
             .add_property("height",
-                &animray::mandelbrot::transformer< animray::film< C >, double >::height
+                &animray::mandelbrot::transformer
+                    < animray::film< C >, double >::height
             )
             .add_property("center_x",
-                &animray::mandelbrot::transformer< animray::film< C >, double >::cx
+                &animray::mandelbrot::transformer
+                    < animray::film< C >, double >::center_x
             )
             .add_property("center_y",
-                &animray::mandelbrot::transformer< animray::film< C >, double >::cy
+                &animray::mandelbrot::transformer
+                    < animray::film< C >, double >::center_y
             )
-            .add_property("radius",
-                &animray::mandelbrot::transformer< animray::film< C >, double >::sz
+            .add_property("diameter",
+                &animray::mandelbrot::transformer
+                    < animray::film< C >, double >::diameter
             )
             .def("__call__",
                 generate_mandelbrot<
                     animray::film< C >,
-                    animray::mandelbrot::transformer< animray::film< C >, double >
+                    animray::mandelbrot::transformer<
+                        animray::film< C >, double >
                 >
             )
         ;
@@ -73,3 +79,4 @@ namespace {
 
 
 }
+

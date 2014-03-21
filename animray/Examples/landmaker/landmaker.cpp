@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -23,112 +23,91 @@
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
 #include <animray/targa.hpp>
+#include <animray/hls.hpp>
 #include <boost/random.hpp>
 
 
 namespace {
-    template< typename F >
-    struct circle {
-        typename F::size_type px, py, r2;
-        circle(
-            typename F::size_type px,
-            typename F::size_type py,
-            typename F::size_type r2
-        ) : px(px), py(py), r2(r2) {
-        }
 
-        typename F::color_type operator () (
-            const F &film,
-            const typename F::extents_type::corner_type &loc,
-            const typename F::color_type &current
-        ) const {
-            if ( current < 0xff
-                    && (px-loc.x()) * (px-loc.x()) + (py-loc.y()) * (py-loc.y()) < r2 )
-                return current + 1;
-            else
-                return current;
-        }
-    };
 
-    template< typename F >
-    class do_elevation {
-        F &film; boost::mt19937 &rng;
+    const double pi = boost::math::constants::pi<double>();
 
-        void operator () (
-            const animray::extents2d< int > &size,
-            typename F::size_type radius
-        ) {
-            // Create a random number handler across the range we need
-            boost::uniform_int<>
-                uix(size.lower_left().x(), size.top_right().x()),
-                uiy(size.lower_left().y(), size.top_right().y())
-            ;
-            boost::variate_generator<
-                boost::mt19937&,
-                boost::uniform_int<>
-            > rx( rng, uix ), ry( rng, uiy );
 
-            // Calculate the position and extents of the circle
-            typename F::size_type x(rx()), y(ry());
-            animray::extents2d< int > location(
-                x - radius, y - radius,
-                x + radius, y + radius
-            );
-            fostlib::nullable< animray::extents2d< int > > intersect(
-                fostlib::coerce< animray::extents2d< int > >( film.size() )
-                    .intersection(location)
-            );
-
-            // Raise the land covered by the circle
-            if ( !intersect.isnull() )
-                film.transform(
-                    circle< F >(x, y, radius * radius),
-                    fostlib::coerce< typename F::extents_type >(intersect)
-                );
-
-            // Now recursivley do some more
-            if ( radius > 0 )
-                for ( std::size_t s = 0; s < 4; ++s )
-                    (*this)( location, radius / 2 );
-        }
-        public:
-            do_elevation( F &film, boost::mt19937 &rng )
-            : film( film ), rng( rng ) {
-                (*this)(
-                    fostlib::coerce< animray::extents2d< int > >(film.size()),
-                    std::max(film.width(), film.height())
-                );
-            }
-    };
-
-    template< typename F >
-    void elevate( F &film, boost::mt19937 &rng ) {
-        do_elevation< F > functor(film, rng);
+    template<typename V>
+    V square(V v) {
+        return v * v;
     }
+
+
+    struct circle {
+        float cx, cy, r;
+        bool contains(std::size_t x, std::size_t y)  const {
+            return square(cx - x) + square(cy - y) < square(r);
+        }
+    };
+
+
+    void more_circles(boost::mt19937 &rng, const ::circle &within,
+            std::vector< ::circle > &circles) {
+        boost::uniform_real<float>
+            r_radians(0, 2 * pi), r_distance(0, within.r);
+        boost::variate_generator<
+            boost::mt19937&, boost::uniform_real<float> >
+                radians(rng, r_radians), distance(rng, r_distance);
+        float theta{radians()}, length{distance()};
+        for ( auto i = 0; i < 3; ++i ) {
+            circle next{
+                within.cx + length * std::cos(theta),
+                within.cy + length * std::sin(theta),
+                within.r / 2.f};
+            circles.push_back(next);
+            if ( within.r > 2.f ) {
+                more_circles(rng, next, circles);
+            }
+        }
+    }
+
+
 }
 
 
 FSL_MAIN(
     L"landmaker",
-    L"LandMaker, Copyright 2010 Kirit Saelensminde"
+    L"LandMaker, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"))
-    ;
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     int width = fostlib::coerce< int >( args[2].value("100") );
     int height = fostlib::coerce< int >( args[3].value("100") );
-    out << "Creating image " << output_filename
-        <<", size " << width << " x " << height << std::endl
-    ;
-
-    typedef animray::film< uint8_t > film_type;
-    film_type output(width, height);
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
-    for ( std::size_t i = 0; i < 10; ++i )
-        elevate(output, rng);
+    std::vector< ::circle > circles;
+    circle start{width  / 2.f, height / 2.f, std::min(width, height) / 4.f};
+    for ( auto i = 0; i != 3; ++i ) {
+        circles.push_back(start);
+        more_circles(rng, start, circles);
+    }
+
+    out << "Creating image " << output_filename
+        <<", size " << width << " x " << height
+        << " using " << circles.size() << " circles" << std::endl;
+
+    typedef animray::film< animray::rgb< uint8_t > > film_type;
+    film_type output(width, height,
+        [&circles](film_type::size_type x, film_type::size_type y) {
+            double weight = 0.0025 * std::count_if(circles.begin(), circles.end(),
+                [=](const circle &c) -> bool {
+                    return c.contains(x, y);
+                });
+            animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
+            animray::rgb<double> c(
+                fostlib::coerce< animray::rgb<double> >(h));
+            return animray::rgb<uint8_t>(
+                c.red() * 255, c.green() * 255, c.blue() * 255);
+        });
 
     animray::targa(output_filename, output);
 
     return 0;
 }
+

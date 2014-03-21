@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -39,14 +39,17 @@ namespace animray {
             typedef typename superclass::array_type array_type;
             typedef typename
                 superclass::const_value_parameter_type
-                const_value_parameter_type
-            ;
+                    const_value_parameter_type;
             static const std::size_t c_array_size = superclass::c_array_size;
             using superclass::print_on;
             using superclass::to_json;
 
             /// Default construct an RGB colour with all channels at zero
-            rgb() {
+            rgb() {}
+            rgb( value_type gray ) {
+                superclass::array[0] = gray;
+                superclass::array[1] = gray;
+                superclass::array[2] = gray;
             }
             /// Construct an RGB colour with the specified channel values
             rgb( value_type r, value_type g, value_type b ) {
@@ -58,6 +61,19 @@ namespace animray {
             /// Return the channel values
             const array_type &array() const {
                 return superclass::array;
+            }
+
+            /// Return the red channel value
+            value_type red() const {
+                return superclass::array[0];
+            }
+            /// Return the red channel value
+            value_type green() const {
+                return superclass::array[1];
+            }
+            /// Return the red channel value
+            value_type blue() const {
+                return superclass::array[2];
             }
 
             /// Compare for equality
