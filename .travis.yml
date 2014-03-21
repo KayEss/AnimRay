@@ -13,7 +13,7 @@ before_install:
     - git submodule update
 
 install:
-    - sudo apt-get install libboost-all-dev libbz2-dev libssl-dev python-dev uuid-dev
+    - sudo apt-get install libboost-all-dev libbz2-dev libssl-dev python-dev uuid-dev libglew-dev freeglut3-dev
     - Boost/build 53 0
     - Boost/install 53 0
 
