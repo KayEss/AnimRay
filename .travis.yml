@@ -14,7 +14,8 @@ before_install:
 
 install:
     - sudo apt-get install libboost-all-dev libbz2-dev libssl-dev python-dev uuid-dev
-    - Boost/install $(lsb_release -cs)
+    - Boost/build 53 0
+    - Boost/install 53 0
 
 script:
     - ./build toolset=$CC -q animray tests examples
