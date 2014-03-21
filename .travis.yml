@@ -24,7 +24,7 @@ install:
     - Boost/install 55 0
 
 script:
-    - ./build toolset=$CC -q animray tests examples
+    - ./animray/compile toolset=$CC -q animray tests examples
 
 matrix:
     allow_failures:
