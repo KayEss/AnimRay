@@ -20,7 +20,7 @@ install:
     - echo "./bjam -j$CPUCOUNT toolset=clang debug link=shared $OPTIONS" > Boost/compile
     - echo "./bjam -j$CPUCOUNT toolset=clang release link=shared $OPTIONS" >> Boost/compile
     - chmod +x Boost/compile
-    - 'Boost/build 55 0 > /dev/null'
+    - 'Boost/build 55 0'
     - Boost/install 55 0
 
 script:
