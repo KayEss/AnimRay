@@ -42,11 +42,18 @@ FSL_MAIN(
             const double limit = std::min(width, height) / 2.0;
             const double cx = (double(x) + 0.5 - width/2.0) / limit;
             const double cy = (double(y) + 0.5 - height/2.0) / limit;
-            ray r(ray::end_type(cx, cy, -10), ray::end_type(cx, cy, -9));
-            if ( sphere.occludes(r) )
-                return animray::rgb< uint8_t >(255);
-            else
+            ray r(ray::end_type(cx, cy, -10.0), ray::end_type(cx, cy, -9.0));
+            fostlib::nullable<ray> intersection(sphere.intersection(r));
+            if ( !intersection.isnull() ) {
+                ray light(intersection.value().from(), ray::end_type(5.0, -5.0, -5.0));
+                if ( sphere.occludes(light, 1e-9) ) {
+                    return animray::rgb< uint8_t >(127);
+                } else {
+                    return animray::rgb< uint8_t >(255);
+                }
+            } else {
                 return animray::rgb< uint8_t >(0);
+            }
         });
     animray::targa(output_filename, output);
 
