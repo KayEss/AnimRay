@@ -25,6 +25,14 @@
 #include <animray/targa.hpp>
 
 
+namespace {
+    template< typename D >
+    D dot(const animray::unit_vector<D> &d1, const animray::unit_vector<D> &d2) {
+        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
+    }
+}
+
+
 FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
@@ -47,9 +55,11 @@ FSL_MAIN(
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
                 if ( sphere.occludes(light, 1e-9) ) {
-                    return animray::rgb< uint8_t >(127);
+                    return animray::rgb< uint8_t >(50);
                 } else {
-                    return animray::rgb< uint8_t >(255);
+                    const double costheta = dot(light.direction(),
+                        intersection.value().direction());
+                    return animray::rgb< uint8_t >(50 + 205 * costheta);
                 }
             } else {
                 return animray::rgb< uint8_t >(0);
