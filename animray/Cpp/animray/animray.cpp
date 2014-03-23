@@ -25,14 +25,6 @@
 #include <animray/targa.hpp>
 
 
-namespace {
-    template< typename D >
-    D dot(const animray::unit_vector<D> &d1, const animray::unit_vector<D> &d2) {
-        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
-    }
-}
-
-
 FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
