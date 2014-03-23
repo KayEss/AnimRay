@@ -43,7 +43,7 @@ namespace animray {
                 return false;
             }
 
-            /// Returns true if the ray hits the sphere from the outside
+            /// Returns true if the ray hits the sphere
             bool occludes( const ray< D > &by ) const {
                 // http://www.siggraph.org/education/materials/HyperGraph/
                 const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
