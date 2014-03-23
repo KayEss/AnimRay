@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -57,6 +57,13 @@ namespace animray {
             using superclass_type::y;
             using superclass_type::z;
     };
+
+
+    /// Dot product for two unit vectors
+    template< typename D >
+    D dot(const unit_vector<D> &d1, const unit_vector<D> &d2) {
+        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
+    }
 
 
 }

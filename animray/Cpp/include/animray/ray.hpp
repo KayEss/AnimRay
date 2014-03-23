@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -47,6 +47,10 @@ namespace animray {
             /// Construct a line between two locations
             ray( const end_type &from, const end_type &to )
             : from( from ), direction( to - from ) {
+            }
+            /// Construct a line from a location in the specified direction
+            ray( const end_type &from, const direction_type &dir )
+            : from(from), direction(dir) {
             }
 
             /// The start of the ray

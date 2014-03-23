@@ -1,3 +1,6 @@
+2014-03-23  Kirit Saelensminde  <kirit@felspar.com>
+ Hard coded a very simple ray traced scene.
+
 2012-01-28  Kirit Saelensminde  <kirit@felspar.com>
  Added a very basic OpenGL app that so far just shows white.
 
