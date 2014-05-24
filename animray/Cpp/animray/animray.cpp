@@ -36,14 +36,14 @@ FSL_MAIN(
     const int height = fostlib::coerce< int >( args[3].value("100") );
     const double aspect = double(width) / height;
 
-    animray::sphere<double> sphere;
-    animray::flat_camera<double> camera(2.0 * aspect, 2.0, width, height);
+    typedef double world;
+    animray::sphere<world> sphere;
+    typedef animray::ray<world> ray;
+    animray::ortho_camera<ray> camera(2.0 * aspect, 2.0, width, height, -3.0);
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
-            const animray::point2d<double> pc(camera(x, y));
-            typedef animray::ray<double> ray;
-            ray r(ray::end_type(pc.x(), pc.y(), -10.0), ray::end_type(pc.x(), pc.y(), -9.0));
+            ray r(camera(x, y));
             fostlib::nullable<ray> intersection(sphere.intersection(r));
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
