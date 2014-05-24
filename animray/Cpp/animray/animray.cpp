@@ -42,8 +42,8 @@ FSL_MAIN(
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
             const animray::point2d<double> pc(camera(x, y));
-            animray::ray<double> r(ray::end_type(pc.x(), pc.y(), -10.0),
-                ray::end_type(pc.x(), pc.y(), -9.0));
+            typedef animray::ray<double> ray;
+            ray r(ray::end_type(pc.x(), pc.y(), -10.0), ray::end_type(pc.x(), pc.y(), -9.0));
             fostlib::nullable<ray> intersection(sphere.intersection(r));
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
