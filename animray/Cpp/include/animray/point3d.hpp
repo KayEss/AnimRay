@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -108,8 +108,7 @@ namespace animray {
             point3d unit() const {
                 return point3d(
                     superclass::array[0], superclass::array[1], superclass::array[2],
-                    std::sqrt( dot(*this) )
-                );
+                    std::sqrt(dot(*this)));
             }
 
             /// The dot product of two homogeneous co-ordinates
@@ -118,7 +117,7 @@ namespace animray {
                     superclass::array[0] * r.superclass::array[0]
                     + superclass::array[1] * r.superclass::array[1]
                     + superclass::array[2] * r.superclass::array[2]
-                ) / superclass::array[3] * r.superclass::array[3];
+                ) / (superclass::array[3] * r.superclass::array[3]);
             }
     };
 
