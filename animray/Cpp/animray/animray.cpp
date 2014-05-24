@@ -35,11 +35,13 @@ FSL_MAIN(
     const int width = fostlib::coerce< int >( args[2].value("100") );
     const int height = fostlib::coerce< int >( args[3].value("100") );
     const double aspect = double(width) / height;
+    const double fw = width > height ? aspect * 0.024 : 0.024;
+    const double fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef double world;
     animray::sphere<world> sphere;
     typedef animray::ray<world> ray;
-    animray::ortho_camera<ray> camera(2.0 * aspect, 2.0, width, height, -3.0);
+    animray::pinhole_camera<ray> camera(fw, fh, width, height, -5.05, 0.05);
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
