@@ -21,6 +21,7 @@
 
 #include <fost/main>
 #include <fost/unicode>
+#include <animray/camera.hpp>
 #include <animray/sphere.hpp>
 #include <animray/targa.hpp>
 
@@ -31,18 +32,18 @@ FSL_MAIN(
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    int width = fostlib::coerce< int >( args[2].value("100") );
-    int height = fostlib::coerce< int >( args[3].value("100") );
+    const int width = fostlib::coerce< int >( args[2].value("100") );
+    const int height = fostlib::coerce< int >( args[3].value("100") );
+    const double aspect = double(width) / height;
 
     animray::sphere<double> sphere;
+    animray::flat_camera<double> camera(2.0 * aspect, 2.0, width, height);
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
-            typedef animray::ray<double> ray;
-            const double limit = std::min(width, height) / 2.0;
-            const double cx = (double(x) + 0.5 - width/2.0) / limit;
-            const double cy = -(double(y) + 0.5 - height/2.0) / limit;
-            ray r(ray::end_type(cx, cy, -10.0), ray::end_type(cx, cy, -9.0));
+            const animray::point2d<double> pc(camera(x, y));
+            animray::ray<double> r(ray::end_type(pc.x(), pc.y(), -10.0),
+                ray::end_type(pc.x(), pc.y(), -9.0));
             fostlib::nullable<ray> intersection(sphere.intersection(r));
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
