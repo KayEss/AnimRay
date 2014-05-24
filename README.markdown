@@ -9,8 +9,8 @@ You'll need a recent Ubuntu, or at least a recent clang.
     git flow init -d
     ./build
 
-You should now have a `dist/bin` folder which contains the viewer program, `ar-view-d` (the `-d` means it's the debug build).
+You should now have a `dist/bin` folder which a simple renderer. You can generate an image using
 
-    dist/bin/ar-view-d
+    dist/bin/animray out.tga 600 400
 
-Currently this just shows a small white window.
+You'll now have an image you can open in an image viewer.
