@@ -50,7 +50,7 @@ namespace animray {
                     resolution_type x, resolution_type y) const {
                 return point2d< extents_type >(
                     width * ((extents_type(x) + half()) / columns - half()),
-                    height * ((extents_type(y) + half()) / rows - half()));
+                    -height * ((extents_type(y) + half()) / rows - half()));
             }
 
         private:
