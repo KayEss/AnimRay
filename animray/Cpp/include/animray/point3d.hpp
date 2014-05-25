@@ -122,16 +122,20 @@ namespace animray {
             point3d unit() const {
                 return point3d(
                     superclass::array[0], superclass::array[1], superclass::array[2],
-                    std::sqrt(dot(*this)));
+                    magnitude());
             }
 
-            /// The dot product of two homogeneous co-ordinates
-            D dot( const point3d &r ) const {
+            /// The dot product of the location as vector with itself
+            D dot() const {
                 return (
-                    superclass::array[0] * r.superclass::array[0]
-                    + superclass::array[1] * r.superclass::array[1]
-                    + superclass::array[2] * r.superclass::array[2]
-                ) / (superclass::array[3] * r.superclass::array[3]);
+                    superclass::array[0] * superclass::array[0]
+                    + superclass::array[1] * superclass::array[1]
+                    + superclass::array[2] * superclass::array[2]
+                ) / (superclass::array[3] * superclass::array[3]);
+            }
+            /// The length of the location as vectro
+            D magnitude() const {
+                return std::sqrt(dot());
             }
     };
 

@@ -81,12 +81,20 @@ FSL_TEST_FUNCTION( json ) {
 
 FSL_TEST_FUNCTION( minus ) {
     animray::point3d< int >
-        h0,
-        h1( 1, 0, 0 ),
-        h2( -1, 0, 0 )
-    ;
+        h0, h1( 1, 0, 0 ), h2( -1, 0, 0 );
     FSL_CHECK_EQ( h0 - h0, h0 );
     FSL_CHECK_EQ( h1 - h0, h1 );
     FSL_CHECK_EQ( h0 - h1, h2 );
     FSL_CHECK_EQ( h1 - h1, h0 );
 }
+
+
+FSL_TEST_FUNCTION( dot ) {
+    animray::point3d< int > h1(3, 4, 5), h2(-2, -2, -2);
+    FSL_CHECK_EQ(h1.dot(), 50);
+    FSL_CHECK_EQ(h2.dot(), 12);
+    FSL_CHECK_EQ((h1 - h2).dot(), 110);
+    FSL_CHECK_EQ((h2 - h1).dot(), 110);
+    FSL_CHECK_EQ((h1 + h2).dot(), 14);
+}
+

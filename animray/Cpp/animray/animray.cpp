@@ -44,6 +44,8 @@ FSL_MAIN(
     typedef double world;
     animray::compound<animray::movable<void, world>> scene;
     scene.insert(animray::movable<animray::sphere<world>>()(
+        animray::translate(0.0, 0.0, 5.0)));
+    scene.insert(animray::movable<animray::sphere<world>>()(
         animray::translate(-1.0, -1.0, 0.0)));
     scene.insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, -1.0, 0.0)));

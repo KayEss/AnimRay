@@ -52,21 +52,34 @@ namespace animray {
             }
 
             /// Ray intersection with closest item
-            template<typename Rf>
-            fostlib::nullable< ray_type > intersection(const Rf &by) const {
+            fostlib::nullable< ray_type > intersection(const ray_type &by) const {
                 fostlib::nullable< ray_type > result;
+                local_coord_type result_dot;
                 for ( const auto &instance : instances ) {
                     if ( result.isnull() ) {
                         result = instance->intersection(by);
+                        if ( !result.isnull() ) {
+                            result_dot = (result.value().from() - by.from()).dot();
+                        }
+                    } else {
+                        fostlib::nullable< ray_type > intersection(
+                            instance->intersection(by));
+                        if ( !intersection.isnull() ) {
+                            local_coord_type dot(
+                                (intersection.value().from() - by.from()).dot());
+                            if ( dot < result_dot ) {
+                                result = intersection;
+                                result_dot = dot;
+                            }
+                        }
                     }
                 }
                 return result;
             }
 
             /// Occlusion check
-            template<typename Rf>
             bool occludes(
-                const Rf &by, const local_coord_type epsilon
+                const ray_type &by, const local_coord_type epsilon
             ) const {
                 return std::find_if(instances.begin(), instances.end(),
                     [&](const std::unique_ptr<instance_type> &instance) {
