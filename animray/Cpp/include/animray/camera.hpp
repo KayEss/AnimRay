@@ -133,6 +133,18 @@ namespace animray {
             : camera(w, h, c, r), focal_plane(f), focal_length(l) {
             }
 
+            /// The camera is invisible in any scene
+            fostlib::nullable< ray_type > intersection(
+                    const ray_type &by) const {
+                return fostlib::null;
+            }
+            /// The camera is invisible in any scene
+            bool occludes(const ray_type &by,
+                    const local_coord_type epsilon) const {
+                return false;
+            }
+
+            /// Build a ray that starts from the requested pixel
             ray_type operator() (resolution_type x, resolution_type y) const {
                 const animray::point2d<extents_type> pc(camera(x, y));
                 typedef typename ray_type::end_type end_type;
