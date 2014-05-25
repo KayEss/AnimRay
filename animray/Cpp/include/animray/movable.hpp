@@ -38,42 +38,53 @@ namespace animray {
     /// Abstract base class
     template<typename W>
     class movable<void, W> {
-        matrix<W> forward, backward;
         public:
+            /// The type of the local coordinate system
+            typedef W local_coord_type;
+
+            virtual ~movable() {}
+
             movable<void, W> &operator () (
                 const std::pair<matrix<W>, matrix<W>> &t
             ) {
-                forward *= t.first;
-                backward *= t.second;
+                // Swap forward and backward here because we're
+                // going from world to local
+                forward *= t.second;
+                backward *= t.first;
                 return *this;
             }
+
+        protected:
+            matrix<W> forward, backward;
     };
 
 
     /// Concrete type for a given scene object
     template< typename O, typename W = typename O::local_coord_type >
-    class movable  : public movable< void, W > {
+    class movable : public movable<void, W> {
         O instance;
+        typedef movable<void, W> superclass;
         public:
             /// The type of object that can be moved
             typedef O instance_type;
 
             /// The type of the local coordinate system
-            typedef W local_coord_type;
+            typedef typename superclass::local_coord_type local_coord_type;
 
             /// Ray intersection
-            fostlib::nullable< ray< local_coord_type > > intersection(
+            fostlib::nullable< ray<local_coord_type> > intersection(
                 const ray<local_coord_type> &by
             ) const {
-                return instance.intersection(by);
+                return instance.intersection(by * superclass::forward)
+                    * superclass::backward;
             }
 
             /// Occlusion check
             bool occludes(
-                const ray< local_coord_type > &by,
+                const ray<local_coord_type> &by,
                 const local_coord_type epsilon = local_coord_type(0)
             ) const {
-                return instance.occludes(by, epsilon);
+                return instance.occludes(by * superclass::forward, epsilon);
             }
     };
 

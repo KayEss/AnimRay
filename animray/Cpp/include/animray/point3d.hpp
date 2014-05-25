@@ -104,6 +104,11 @@ namespace animray {
                 return point3d( x() - r.x(), y() - r.y(), z() - r.z() );
             }
 
+            /// Binary addition
+            point3d operator + ( const point3d &r ) const {
+                return point3d( x() + r.x(), y() + r.y(), z() + r.z() );
+            }
+
             /// Return the homogeneous with unit length
             point3d unit() const {
                 return point3d(

@@ -35,6 +35,9 @@ namespace animray {
     class unit_vector : private point3d< D > {
         typedef point3d< D > superclass_type;
         public:
+            /// The value type
+            typedef D value_type;
+
             /// Constructs a unit vector pointing along the x axis.
             unit_vector()
             : superclass_type( 1, 0, 0 ) {
@@ -42,6 +45,12 @@ namespace animray {
             /// Constructs a unit vector from a point relative to the origin
             unit_vector( const point3d< D > &p )
             : superclass_type( p.unit() ) {
+            }
+
+            /// Multiply by a scalar
+            point3d<value_type> operator * (D scalar) const {
+                return point3d<value_type>(
+                    x() * scalar, y() * scalar, z() * scalar);
             }
 
             /// Compare for equality
@@ -56,6 +65,7 @@ namespace animray {
             using superclass_type::x;
             using superclass_type::y;
             using superclass_type::z;
+            using superclass_type::print_on;
     };
 
 

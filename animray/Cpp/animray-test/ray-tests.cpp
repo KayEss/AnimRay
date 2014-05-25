@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/affine.hpp>
 #include <animray/ray.hpp>
 #include <fost/test>
 
@@ -38,6 +39,26 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 FSL_TEST_FUNCTION( constructor_simple ) {
     animray::ray< int > r1(
         animray::ray< int >::end_type( 0, 0, 0 ),
-        animray::ray< int >::end_type( 0, 0, 1 )
-    );
+        animray::ray< int >::end_type( 0, 0, 1 ));
 }
+
+
+FSL_TEST_FUNCTION( transformation ) {
+    animray::ray< int > r(
+        animray::ray< int >::end_type( 0, 0, 0 ),
+        animray::ray< int >::end_type( 0, 0, 1 ));
+    std::pair< animray::matrix< int >, animray::matrix< int > > aff
+        (animray::translate(10, 23, 54));
+    animray::ray<int> rf(r * aff.first);
+    FSL_CHECK_EQ(rf.from(), animray::ray< int >::end_type(10, 23, 54));
+    FSL_CHECK_EQ(rf.direction(), animray::ray< int >::end_type(0, 0, 1));
+    animray::ray<int> rb(r * aff.second);
+    FSL_CHECK_EQ(rb.from(), animray::ray< int >::end_type(-10, -23, -54));
+    FSL_CHECK_EQ(rb.direction(), animray::ray< int >::end_type(0, 0, 1));
+
+    FSL_CHECK_EQ((r * aff.first * aff.second).from(), r.from());
+    FSL_CHECK_EQ((r * aff.first * aff.second).direction(), r.direction());
+    FSL_CHECK_EQ((r * aff.second * aff.first).from(), r.from());
+    FSL_CHECK_EQ((r * aff.second * aff.first).direction(), r.direction());
+}
+

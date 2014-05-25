@@ -131,6 +131,16 @@ namespace animray {
                 }
                 return result;
             }
+            /// Multiply by a vector
+            point3d<value_type> operator * (
+                const point3d<value_type> v
+            ) const {
+                return point3d<value_type>(
+                    sum(((*this)[0] * v).array()),
+                    sum(((*this)[1] * v).array()),
+                    sum(((*this)[2] * v).array()),
+                    sum(((*this)[3] * v).array()));
+            }
 
             /// Multiply by another matrix
             matrix &operator *= ( const matrix &r ) {

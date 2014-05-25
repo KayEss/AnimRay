@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/matrix.hpp>
 #include <animray/unit-vector.hpp>
 
 
@@ -58,6 +59,11 @@ namespace animray {
             /// A unit direction vector
             fostlib::accessors< direction_type > direction;
 
+            /// Return a point somewhere along the line
+            end_type ends(value_type distance = value_type(1)) const {
+                return from() + direction() * distance;
+            }
+
             /// Compare for equality
             bool operator == ( const ray &r ) const {
                 return direction() == r.direction() && from() == r.from();
@@ -67,6 +73,25 @@ namespace animray {
                 return ! ( *this == r );
             }
     };
+
+
+    /// Transform a ray by a matrix
+    template<typename D>
+    ray<D> operator * (const ray<D> &left, const matrix<D> &right) {
+        return ray<D>(right * left.from(), right * left.ends());
+    }
+
+    /// Transform a ray by a matrix
+    template<typename D>
+    fostlib::nullable<ray<D>> operator * (
+        const fostlib::nullable<ray<D>> &left, const matrix<D> &right
+    ) {
+        if ( left.isnull() ) {
+            return fostlib::null;
+        } else {
+            return left.value() * right;
+        }
+    }
 
 
 }
