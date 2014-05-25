@@ -33,39 +33,38 @@ namespace animray {
     /// A unit vector shows direction
     template < typename D >
     class unit_vector : private point3d< D > {
-        typedef point3d< D > superclass_type;
+        typedef point3d< D > superclass;
         public:
             /// The value type
             typedef D value_type;
 
             /// Constructs a unit vector pointing along the x axis.
             unit_vector()
-            : superclass_type( 1, 0, 0 ) {
+            : superclass( 1, 0, 0 ) {
             }
             /// Constructs a unit vector from a point relative to the origin
             unit_vector( const point3d< D > &p )
-            : superclass_type( p.unit() ) {
+            : superclass( p.unit() ) {
             }
 
             /// Multiply by a scalar
             point3d<value_type> operator * (D scalar) const {
-                return point3d<value_type>(
-                    x() * scalar, y() * scalar, z() * scalar);
+                return point3d<value_type>(*this) * scalar;
             }
 
             /// Compare for equality
             bool operator == ( const unit_vector &v ) const {
-                return this->superclass_type::operator == ( v );
+                return this->superclass::operator == ( v );
             }
             /// Compare for inequality
             bool operator !=( const unit_vector &v ) const {
-                return this->superclass_type::operator != ( v );
+                return this->superclass::operator != ( v );
             }
 
-            using superclass_type::x;
-            using superclass_type::y;
-            using superclass_type::z;
-            using superclass_type::print_on;
+            using superclass::x;
+            using superclass::y;
+            using superclass::z;
+            using superclass::print_on;
     };
 
 

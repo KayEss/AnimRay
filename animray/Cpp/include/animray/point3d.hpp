@@ -84,10 +84,10 @@ namespace animray {
                 const_value_parameter_type z,
                 const_value_parameter_type h = 1
             ) {
-                superclass::array.c_array()[0] = x;
-                superclass::array.c_array()[1] = y;
-                superclass::array.c_array()[2] = z;
-                superclass::array.c_array()[3] = h;
+                superclass::array[0] = x;
+                superclass::array[1] = y;
+                superclass::array[2] = z;
+                superclass::array[3] = h;
             }
 
             /// Compare for equality
@@ -101,12 +101,21 @@ namespace animray {
 
             /// Binary subtraction
             point3d operator - ( const point3d &r ) const {
-                return point3d( x() - r.x(), y() - r.y(), z() - r.z() );
+                return point3d(x() - r.x(), y() - r.y(), z() - r.z());
             }
 
             /// Binary addition
             point3d operator + ( const point3d &r ) const {
-                return point3d( x() + r.x(), y() + r.y(), z() + r.z() );
+                return point3d(x() + r.x(), y() + r.y(), z() + r.z());
+            }
+
+            /// Multiply by a scalar
+            point3d operator * (const value_type s) const {
+                return point3d(
+                    superclass::array[0],
+                    superclass::array[1],
+                    superclass::array[2],
+                    superclass::array[3] * s);
             }
 
             /// Return the homogeneous with unit length
