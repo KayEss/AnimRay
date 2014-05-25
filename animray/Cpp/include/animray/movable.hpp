@@ -63,7 +63,7 @@ namespace animray {
     /// Concrete type for a given scene object
     template< typename O, typename W = typename O::local_coord_type,
         typename R = ray<W> >
-    class movable : public movable<void, W> {
+    class movable : public movable<void, W, R> {
         O instance;
         typedef movable<void, W> superclass;
         public:
