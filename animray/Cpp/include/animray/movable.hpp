@@ -43,6 +43,8 @@ namespace animray {
             movable<void, W> &operator () (
                 const std::pair<matrix<W>, matrix<W>> &t
             ) {
+                forward *= t.first;
+                backward *= t.second;
                 return *this;
             }
     };

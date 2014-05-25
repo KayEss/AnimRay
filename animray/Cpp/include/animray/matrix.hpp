@@ -132,6 +132,12 @@ namespace animray {
                 return result;
             }
 
+            /// Multiply by another matrix
+            matrix &operator *= ( const matrix &r ) {
+                matrix result(*this * r);
+                return *this = result;
+            }
+
             /// The matrix has a special JSON representation
             fostlib::json to_json() const {
                 fostlib::json ret, line;
