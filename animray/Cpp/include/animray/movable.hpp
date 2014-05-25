@@ -31,20 +31,24 @@ namespace animray {
 
 
     /// Describe a type that allows artefacts to be transformed
-    template< typename O, typename W >
+    template< typename O, typename W, typename R >
     class movable;
 
 
     /// Abstract base class
-    template<typename W>
-    class movable<void, W> {
+    template<typename W, typename R>
+    class movable<void, W, R> {
         public:
             /// The type of the local coordinate system
             typedef W local_coord_type;
+            /// The type of the ray output by the instance
+            typedef R ray_type;
 
-            virtual ~movable() {}
+            /// Allow this to be safely used as a superclass.
+            virtual ~movable() = default;
 
-            movable<void, W> &operator () (
+            /// Apply an affine transformation
+            movable<void, W, R> &operator () (
                 const std::pair<matrix<W>, matrix<W>> &t
             ) {
                 // Swap forward and backward here because we're
@@ -60,7 +64,8 @@ namespace animray {
 
 
     /// Concrete type for a given scene object
-    template< typename O, typename W = typename O::local_coord_type >
+    template< typename O, typename W = typename O::local_coord_type,
+        typename R = ray<W> >
     class movable : public movable<void, W> {
         O instance;
         typedef movable<void, W> superclass;
@@ -68,7 +73,9 @@ namespace animray {
             /// The type of object that can be moved
             typedef O instance_type;
             /// The type of the local coordinate system
-            typedef typename superclass::local_coord_type local_coord_type;
+            typedef W local_coord_type;
+            /// The type of the ray output by the instance
+            typedef R ray_type;
 
             /// Allow the underlying instance to be constructed
             template<typename... A>
@@ -76,23 +83,23 @@ namespace animray {
             : instance(std::forward<A>(args)...) {}
 
             /// Ray intersection
-            fostlib::nullable< ray<local_coord_type> > intersection(
-                const ray<local_coord_type> &by
-            ) const {
+            template<typename Rf>
+            fostlib::nullable< ray_type > intersection(const Rf &by) const {
                 return instance.intersection(by * superclass::forward)
                     * superclass::backward;
             }
 
             /// Occlusion check
+            template<typename Rf>
             bool occludes(
-                const ray<local_coord_type> &by,
-                const local_coord_type epsilon = local_coord_type(0)
+                const Rf &by, const local_coord_type epsilon = local_coord_type(0)
             ) const {
                 return instance.occludes(by * superclass::forward, epsilon);
             }
 
             /// Allow the instance to be used as a camera
-            ray<local_coord_type> operator() (std::size_t x, std::size_t y) const {
+            template< typename F >
+            ray_type operator() (F x, F y) const {
                 return instance(x, y) * superclass::backward;
             }
             using superclass::operator ();
