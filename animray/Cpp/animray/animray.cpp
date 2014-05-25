@@ -25,6 +25,7 @@
 #include <animray/sphere.hpp>
 #include <animray/movable.hpp>
 #include <animray/targa.hpp>
+#include <animray/affine.hpp>
 
 
 FSL_MAIN(
@@ -41,6 +42,7 @@ FSL_MAIN(
 
     typedef double world;
     animray::movable< animray::sphere<world> > sphere;
+    sphere(animray::translate(-1.0, -1.0, 0.0));
     typedef animray::ray<world> ray;
     animray::pinhole_camera<ray> camera(fw, fh, width, height, -5.05, 0.05);
     typedef animray::film< animray::rgb< uint8_t > > film_type;

@@ -24,6 +24,9 @@
 #pragma once
 
 
+#include <animray/matrix.hpp>
+
+
 namespace animray {
 
 
@@ -35,6 +38,13 @@ namespace animray {
     /// Abstract base class
     template<typename W>
     class movable<void, W> {
+        matrix<W> forward, backward;
+        public:
+            movable<void, W> &operator () (
+                const std::pair<matrix<W>, matrix<W>> &t
+            ) {
+                return *this;
+            }
     };
 
 

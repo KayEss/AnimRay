@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -34,23 +34,22 @@ namespace animray {
     template< typename D >
     class matrix : private detail::array_based< D, 16 > {
         typedef detail::array_based< D, 16 > superclass;
+        using superclass::at;
         public:
             typedef typename superclass::value_type value_type;
             typedef typename superclass::array_type array_type;
             typedef typename
                 superclass::const_value_parameter_type
-                const_value_parameter_type
-            ;
-            using superclass::at;
+                const_value_parameter_type;
             static const std::size_t c_array_size = superclass::c_array_size;
 
             /// Construct an identity transform matrix
             matrix() {
                 // Set the values on the leading diagonal to 1
-                superclass::array[0] = 1;
-                superclass::array[5] = 1;
-                superclass::array[10] = 1;
-                superclass::array[15] = 1;
+                superclass::array[0] = D(1);
+                superclass::array[5] = D(1);
+                superclass::array[10] = D(1);
+                superclass::array[15] = D(1);
             }
             /// Construct a matrix from its JSON representation
             matrix( const fostlib::json &js ) {
@@ -62,18 +61,27 @@ namespace animray {
             /// Allows us to fetch values from rows then columns
             class row_proxy {
                 friend class matrix;
-                const matrix &m; const std::size_t r;
-                row_proxy( const matrix &m, std::size_t r )
+                matrix &m; const std::size_t r;
+                row_proxy(matrix &m, std::size_t r)
                 : m(m), r(r) {
                 }
                 public:
-                    value_type operator [] ( std::size_t c ) const {
-                        return m.at( r * 4 + c );
+                    value_type operator [] (std::size_t c) const {
+                        return m.at(r * 4 + c);
+                    }
+                    value_type &operator [] (std::size_t c) {
+                        return m.at(r * 4 + c);
                     }
             };
+            friend row_proxy;
+
             /// Allow a row to be fetched from the matrix
-            row_proxy operator [] ( std::size_t r ) const {
-                return row_proxy( *this, r );
+            const row_proxy operator [] (std::size_t r) const {
+                return row_proxy(*this, r);
+            }
+            /// Allow a row to be fetched from the matrix
+            row_proxy operator [] (std::size_t r) {
+                return row_proxy(*this, r);
             }
 
             /// Compare for equality

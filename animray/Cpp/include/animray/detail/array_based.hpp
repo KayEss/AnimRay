@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -59,6 +59,17 @@ namespace animray {
 
             /// Fetch a value from the array with bounds checking
             value_type at( std::size_t p ) const {
+                try {
+                    return array.at(p);
+                } catch ( std::out_of_range & ) {
+                    throw fostlib::exceptions::out_of_range< std::size_t >(
+                        "Array index was out of bounds",
+                        0, c_array_size, p
+                    );
+                }
+            }
+            /// Fetch a value from the array with bounds checking
+            value_type &at( std::size_t p ) {
                 try {
                     return array.at(p);
                 } catch ( std::out_of_range & ) {
