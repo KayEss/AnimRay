@@ -19,25 +19,48 @@
 */
 
 
-#ifndef ANIMRAY_BEAM_HPP
-#define ANIMRAY_BEAM_HPP
+#ifndef ANIMRAY_ILLUMINATION_HPP
+#define ANIMRAY_ILLUMINATION_HPP
 #pragma once
 
 
-#include <animray/matrix.hpp>
+#include <animray/ray.hpp>
 
 
 namespace animray {
 
 
+    /// Unlit part of a scene
+    template< typename M >
+    class dark {
+    };
+
+    /// A light
+    template< typename M >
+    class light {
+    };
+
     /// Like a ray, but carries with it an illumination model
     template< typename R, typename C, typename S >
     class beam {
+        R ray;
+        const S &scene;
         public:
+            /// The ray type for specifying the direction of the beam
+            typedef R ray_type;
+            /// The colour model for the beam
+            typedef C color_type;
+            /// The scene type for the beam
+            typedef S scene_type;
+
+            /// Construct a beam
+            beam(const ray_type &ray, const scene_type &scene)
+            : ray(ray), scene(scene) {
+            }
     };
 
 
 }
 
 
-#endif // ANIMRAY_BEAM_HPP
+#endif // ANIMRAY_ILLUMINATION_HPP
