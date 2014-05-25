@@ -66,18 +66,36 @@ namespace animray {
                 : m(m), r(r) {
                 }
                 public:
-                    value_type operator [] (std::size_t c) const {
-                        return m.at(r * 4 + c);
-                    }
                     value_type &operator [] (std::size_t c) {
                         return m.at(r * 4 + c);
                     }
             };
             friend row_proxy;
+            class const_row_proxy {
+                friend class matrix;
+                const matrix &m; const std::size_t r;
+                const_row_proxy(const matrix &m, std::size_t r)
+                : m(m), r(r) {
+                }
+                public:
+                    value_type operator [] (std::size_t c) {
+                        return m.at(r * 4 + c);
+                    }
+                    point3d<matrix::value_type> operator * (
+                        const point3d<matrix::value_type> &by
+                    ) {
+                        return point3d<matrix::value_type>(
+                            m.at(r * 4) * by.array()[0],
+                            m.at(r * 4 + 1) * by.array()[1],
+                            m.at(r * 4 + 2) * by.array()[2],
+                            m.at(r * 4 + 3) * by.array()[3]);
+                    }
+            };
+            friend row_proxy;
 
             /// Allow a row to be fetched from the matrix
-            const row_proxy operator [] (std::size_t r) const {
-                return row_proxy(*this, r);
+            const_row_proxy operator [] (std::size_t r) const {
+                return const_row_proxy(*this, r);
             }
             /// Allow a row to be fetched from the matrix
             row_proxy operator [] (std::size_t r) {
@@ -91,6 +109,27 @@ namespace animray {
             /// Compare for inequality
             bool operator != ( const matrix &r ) const {
                 return superclass::array != r.array;
+            }
+
+            /// Fetch a column as a vector
+            point3d<value_type> column(std::size_t col) const {
+                return point3d<value_type>(
+                    at(col), at(col+4), at(col+8), at(col+12));
+            }
+
+            /// Multiply two matrixes
+            matrix operator * (const matrix &r) const {
+                matrix result;
+                const point3d<value_type> cols[4] = {
+                    r.column(0), r.column(1), r.column(2), r.column(3)};
+                for ( std::size_t row(0); row < 4; ++row ) {
+                    const_row_proxy my_row((*this)[row]);
+                    row_proxy res_row(result[row]);
+                    for ( std::size_t col(0); col < 4; ++col ) {
+                        res_row[col] = sum((my_row * cols[col]).array());
+                    }
+                }
+                return result;
             }
 
             /// The matrix has a special JSON representation

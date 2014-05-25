@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/matrix.hpp>
+#include <animray/affine.hpp>
 #include "test-json.hpp"
 
 
@@ -32,6 +32,14 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
     fostlib::test::default_copy_constructable< animray::matrix< float > >();
     fostlib::test::default_copy_constructable< animray::matrix< double > >();
     fostlib::test::default_copy_constructable< animray::matrix< long double > >();
+}
+
+
+FSL_TEST_FUNCTION( matrix_multiply ) {
+    animray::matrix< int > id;
+    std::pair< animray::matrix< int >, animray::matrix< int > > aff
+        (animray::translate(10, 23, 54));
+    FSL_CHECK_EQ(aff.first * aff.second, id);
 }
 
 

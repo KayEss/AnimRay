@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <numeric>
 #include <fost/core>
 #include <boost/array.hpp>
 
@@ -102,6 +103,12 @@ namespace animray {
         };
 
 
+    }
+
+
+    template<typename D, std::size_t S>
+    D sum(const boost::array< D, S > &arr) {
+        return std::accumulate(arr.begin(), arr.end(), D());
     }
 
 
