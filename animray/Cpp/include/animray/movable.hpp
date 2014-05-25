@@ -67,9 +67,13 @@ namespace animray {
         public:
             /// The type of object that can be moved
             typedef O instance_type;
-
             /// The type of the local coordinate system
             typedef typename superclass::local_coord_type local_coord_type;
+
+            /// Allow the underlying instance to be constructed
+            template<typename... A>
+            explicit movable(A&&... args)
+            : instance(std::forward<A>(args)...) {}
 
             /// Ray intersection
             fostlib::nullable< ray<local_coord_type> > intersection(
@@ -86,6 +90,12 @@ namespace animray {
             ) const {
                 return instance.occludes(by * superclass::forward, epsilon);
             }
+
+            /// Allow the instance to be used as a camera
+            ray<local_coord_type> operator() (std::size_t x, std::size_t y) const {
+                return instance(x, y) * superclass::backward;
+            }
+            using superclass::operator ();
     };
 
 

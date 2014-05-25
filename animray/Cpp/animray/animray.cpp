@@ -44,10 +44,12 @@ FSL_MAIN(
     animray::movable< animray::sphere<world> > sphere;
     sphere(animray::translate(-1.0, -1.0, 0.0));
     typedef animray::ray<world> ray;
-    animray::pinhole_camera<ray> camera(fw, fh, width, height, -5.05, 0.05);
+    animray::movable<animray::pinhole_camera<ray>> camera
+        (fw, fh, width, height, 0.05);
+    camera(animray::translate(0.0, 0.0, -5.0));
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
-        [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
+        [&sphere, &camera](const film_type::size_type x, const film_type::size_type y) {
             ray r(camera(x, y));
             fostlib::nullable<ray> intersection(sphere.intersection(r));
             if ( !intersection.isnull() ) {
