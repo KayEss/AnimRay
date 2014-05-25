@@ -34,6 +34,9 @@ namespace animray {
     template< typename D >
     class sphere {
         public:
+            /// The type of the local coordinates used
+            typedef D local_coord_type;
+
             /// Check for equality
             bool operator == ( const sphere &r ) const {
                 return true;

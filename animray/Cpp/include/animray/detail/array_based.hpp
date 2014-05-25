@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <numeric>
 #include <fost/core>
 #include <boost/array.hpp>
 
@@ -68,6 +69,17 @@ namespace animray {
                     );
                 }
             }
+            /// Fetch a value from the array with bounds checking
+            value_type &at( std::size_t p ) {
+                try {
+                    return array.at(p);
+                } catch ( std::out_of_range & ) {
+                    throw fostlib::exceptions::out_of_range< std::size_t >(
+                        "Array index was out of bounds",
+                        0, c_array_size, p
+                    );
+                }
+            }
 
             /// Turn the array into a JSON array
             fostlib::json to_json() const {
@@ -91,6 +103,12 @@ namespace animray {
         };
 
 
+    }
+
+
+    template<typename D, std::size_t S>
+    D sum(const boost::array< D, S > &arr) {
+        return std::accumulate(arr.begin(), arr.end(), D());
     }
 
 
