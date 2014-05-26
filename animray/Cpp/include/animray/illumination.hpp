@@ -30,16 +30,6 @@
 namespace animray {
 
 
-    /// Unlit part of a scene
-    template< typename M >
-    class dark {
-    };
-
-    /// A light
-    template< typename M >
-    class light {
-    };
-
     /// Like a ray, but carries with it an illumination model
     template< typename R, typename C, typename S >
     class beam {
@@ -57,6 +47,21 @@ namespace animray {
             beam(const ray_type &ray, const scene_type &scene)
             : ray(ray), scene(scene) {
             }
+    };
+
+    /// Non-light emitting part of a scene
+    template< typename B, typename M >
+    class geometry {
+    };
+
+    /// A light
+    template< typename B, typename M >
+    class light {
+    };
+
+    /// A scene featuring a light and a model
+    template< typename S, typename L, typename B >
+    class scene {
     };
 
 
