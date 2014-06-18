@@ -8,7 +8,6 @@ use-project fost-py : ../fost-py/ ;
 fost-project animray
     :
         <include>../metachatr/Cpp/include
-        <toolset>clang:<cxxflags>-std=c++11
     ;
 
 
