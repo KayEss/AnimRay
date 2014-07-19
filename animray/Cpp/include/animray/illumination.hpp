@@ -49,22 +49,6 @@ namespace animray {
             }
     };
 
-    /// Non-light emitting part of a scene
-    template< typename B, typename M >
-    class geometry {
-        public:
-            typedef B beam_type;
-            typedef M model_type;
-    };
-
-    /// A light
-    template< typename B, typename M >
-    class light {
-        public:
-            typedef B beam_type;
-            typedef M model_type;
-    };
-
     /// A scene featuring a light and a model
     template< typename S, typename L,
             typename B = typename S::beam_type >
