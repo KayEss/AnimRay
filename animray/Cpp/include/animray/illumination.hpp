@@ -31,41 +31,56 @@ namespace animray {
 
 
     /// Like a ray, but carries with it an illumination model
-    template< typename R, typename C, typename S >
+    template< typename R, typename C >
     class beam {
         R ray;
-        const S &scene;
         public:
+            /// The co-ordinate system precision type
+            typedef typename R::value_type value_type;
             /// The ray type for specifying the direction of the beam
             typedef R ray_type;
             /// The colour model for the beam
             typedef C color_type;
-            /// The scene type for the beam
-            typedef S scene_type;
 
             /// Construct a beam
-            beam(const ray_type &ray, const scene_type &scene)
-            : ray(ray), scene(scene) {
+            beam(const ray_type &ray)
+            : ray(ray) {
             }
     };
 
     /// A scene featuring a light and a model
-    template< typename S, typename L,
-            typename B = typename S::beam_type >
+    template< typename G, typename L, typename B >
     class scene {
         public:
-            typedef S geometry_type;
+            typedef G geometry_type;
             typedef L light_type;
             typedef B beam_type;
 
-            scene &insert(const geometry_type &g) {
-                geometry.push_back(g);
-                return *this;
-            }
+            scene() {}
 
-        private:
-            geometry_type geometry;
-            light_type light;
+            fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
+            fostlib::accessors<light_type, fostlib::lvalue> light;
+
+            template< typename C, typename S >
+            typename beam_type::color_type operator() (const C &camera, S x, S y) const {
+                typename beam_type::ray_type r(camera(x, y));
+                fostlib::nullable<typename beam_type::ray_type>
+                    intersection(geometry().intersection(r));
+                if ( !intersection.isnull() ) {
+                    typename beam_type::ray_type light(
+                        intersection.value().from(),
+                        typename beam_type::ray_type::end_type(5.0, 5.0, -5.0));
+                    if ( geometry().occludes(light, 1e-9) ) {
+                        return typename beam_type::color_type(50);
+                    } else {
+                        const double costheta = dot(light.direction(),
+                            intersection.value().direction());
+                        return typename beam_type::color_type(50 + 205 * costheta);
+                    }
+                } else {
+                    return typename beam_type::color_type(0);
+                }
+            }
     };
 
 
