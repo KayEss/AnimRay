@@ -63,8 +63,10 @@ FSL_MAIN(
         animray::translate(1.0, 1.0, 0.0)));
 
     animray::light<animray::point3d<world>, uint8_t> light;
-    scene.light().light(animray::point3d<world>(5.0, 5.0, -5.0));
-    scene.light().color(50);
+    light.geometry(animray::point3d<world>(5.0, 5.0, -5.0));
+    light.ambient(50);
+    light.color(205);
+    scene.light(light);
 
     animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
         camera(fw, fh, width, height, 0.05);

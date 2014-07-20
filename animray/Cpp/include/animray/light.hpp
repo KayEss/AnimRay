@@ -27,6 +27,7 @@
 namespace animray {
 
 
+    /// Lights allow illumination of the scene
     template< typename L, typename C >
     class light {
         public:
@@ -36,20 +37,22 @@ namespace animray {
             typedef C color_type;
 
             /// The geometry of the light
-            fostlib::accessors< geometry_type > light;
+            fostlib::accessors< geometry_type > geometry;
+            /// Ambient light provided by this light source
+            fostlib::accessors< color_type> ambient;
             /// The colour of the light
             fostlib::accessors< color_type > color;
 
             /// Calculate the illumination given by this light
             template< typename R, typename G >
-            color_type operator () (const R &intersection, const G &geometry) const {
-                R illumination(intersection.from(), light());
-                if ( geometry.occludes(illumination, 1e-9) ) {
-                    return color();
+            color_type operator () (const R &intersection, const G &scene) const {
+                R illumination(intersection.from(), geometry());
+                if ( scene.occludes(illumination, 1e-9) ) {
+                    return ambient();
                 } else {
                     const double costheta = dot(illumination.direction(),
                         intersection.direction());
-                    return color_type(color() + 205 * costheta);
+                    return color_type(ambient() + color() * costheta);
                 }
             }
     };
