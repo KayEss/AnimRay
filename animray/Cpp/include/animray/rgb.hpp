@@ -87,6 +87,19 @@ namespace animray {
     };
 
 
+    /// Add a value to each channel
+    template<typename D>
+    rgb<D> operator + (const D d, const rgb<D> &c) {
+        return rgb<D>(d + c.red(), d + c.green(), d + c.blue());
+    }
+
+    /// Multiply the colour by a scalar
+    template<typename D, typename S>
+    rgb<D> operator * (const rgb<D> &c, const S s) {
+        return rgb<D>(D(c.red() * s), D(c.green() * s), D(c.blue() * s));
+    }
+
+
 }
 
 

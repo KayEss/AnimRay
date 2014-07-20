@@ -46,7 +46,7 @@ FSL_MAIN(
     typedef double world;
     typedef animray::scene<
         animray::compound<animray::movable<void, world>>,
-        animray::light<animray::point3d<world>, uint8_t>, uint8_t,
+        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>, uint8_t,
         animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
             scene_type;
     scene_type scene;
@@ -62,9 +62,9 @@ FSL_MAIN(
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
 
-    animray::light<animray::point3d<world>, uint8_t> light;
+    animray::light<animray::point3d<world>, animray::rgb<uint8_t>> light;
     light.geometry(animray::point3d<world>(5.0, 5.0, -5.0));
-    light.color(205);
+    light.color(animray::rgb<uint8_t>(0x80, 205, 0x80));
     scene.light(light);
     scene.ambient(50);
 
