@@ -62,6 +62,8 @@ FSL_MAIN(
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
 
+    animray::light<animray::point3d<world>, uint8_t> light;
+    scene.light().light(animray::point3d<world>(5.0, 5.0, -5.0));
     scene.light().color(50);
 
     animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
