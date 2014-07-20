@@ -49,7 +49,7 @@ namespace animray {
                         typename R::value_type(1000000000) ) ) {
                     const typename R::value_type costheta =
                         dot(illumination.direction(), intersection.direction());
-                    return color_type(color() * costheta);
+                    return color() * costheta;
                 } else {
                     return color_type(0);
                 }

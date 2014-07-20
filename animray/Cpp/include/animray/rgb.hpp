@@ -57,6 +57,10 @@ namespace animray {
                 superclass::array[1] = g;
                 superclass::array[2] = b;
             }
+            /// Construct from a 3 valued array
+            rgb(superclass &&s)
+            : superclass(s) {
+            }
 
             /// Return the channel values
             const array_type &array() const {
@@ -84,19 +88,23 @@ namespace animray {
             bool operator != ( const rgb &r ) const {
                 return superclass::array != r.superclass::array;
             }
+
+            /// Add the same value to each channel
+            rgb operator + (value_type gray) const {
+                return rgb(superclass::operator +(gray));
+            }
+            /// Multiply the channel values by a scalar
+            template<typename S>
+            rgb operator * (const S weight) const {
+                return rgb(superclass::operator *(weight));
+            }
     };
 
 
     /// Add a value to each channel
-    template<typename D>
+    template<typename D> inline
     rgb<D> operator + (const D d, const rgb<D> &c) {
-        return rgb<D>(d + c.red(), d + c.green(), d + c.blue());
-    }
-
-    /// Multiply the colour by a scalar
-    template<typename D, typename S>
-    rgb<D> operator * (const rgb<D> &c, const S s) {
-        return rgb<D>(D(c.red() * s), D(c.green() * s), D(c.blue() * s));
+        return c + d;
     }
 
 
