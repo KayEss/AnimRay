@@ -52,15 +52,22 @@ namespace animray {
     template< typename G, typename L, typename B >
     class scene {
         public:
+            /// The geometry type
             typedef G geometry_type;
+            /// The light type
             typedef L light_type;
+            /// The beam type
             typedef B beam_type;
 
+            /// Construct an empty scene
             scene() {}
 
+            /// Store the geometry
             fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
+            /// Store the light
             fostlib::accessors<light_type, fostlib::lvalue> light;
 
+            /// Given a position on the camera film, calculate the colour it should be
             template< typename C, typename S >
             typename beam_type::color_type operator() (const C &camera, S x, S y) const {
                 typename beam_type::ray_type r(camera(x, y));
