@@ -50,8 +50,8 @@ namespace animray {
                 if ( scene.occludes(illumination, 1e-9) ) {
                     return ambient();
                 } else {
-                    const double costheta = dot(illumination.direction(),
-                        intersection.direction());
+                    const typename R::value_type costheta =
+                        dot(illumination.direction(), intersection.direction());
                     return color_type(ambient() + color() * costheta);
                 }
             }
