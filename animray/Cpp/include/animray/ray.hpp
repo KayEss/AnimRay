@@ -34,44 +34,44 @@ namespace animray {
     /// Represents a ray starting at a point and going to infinity along a given vector
     template< typename D >
     class ray {
-        public:
-            /// The value type of the line
-            typedef D value_type;
-            /// The type of the end point
-            typedef point3d< value_type > end_type;
-            /// Unit vector type describing the direction
-            typedef unit_vector< value_type > direction_type;
+    public:
+        /// The value type of the line
+        typedef D value_type;
+        /// The type of the end point
+        typedef point3d< value_type > end_type;
+        /// Unit vector type describing the direction
+        typedef unit_vector< value_type > direction_type;
 
-            /// Construct a null line
-            ray() {
-            }
-            /// Construct a line between two locations
-            ray( const end_type &from, const end_type &to )
-            : from( from ), direction( to - from ) {
-            }
-            /// Construct a line from a location in the specified direction
-            ray( const end_type &from, const direction_type &dir )
-            : from(from), direction(dir) {
-            }
+        /// Construct a null line
+        ray() {
+        }
+        /// Construct a line between two locations
+        ray( const end_type &from, const end_type &to )
+        : from( from ), direction( to - from ) {
+        }
+        /// Construct a line from a location in the specified direction
+        ray( const end_type &from, const direction_type &dir )
+        : from(from), direction(dir) {
+        }
 
-            /// The start of the ray
-            fostlib::accessors< end_type > from;
-            /// A unit direction vector
-            fostlib::accessors< direction_type > direction;
+        /// The start of the ray
+        fostlib::accessors< end_type > from;
+        /// A unit direction vector
+        fostlib::accessors< direction_type > direction;
 
-            /// Return a point somewhere along the line
-            end_type ends(value_type distance = value_type(1)) const {
-                return from() + direction() * distance;
-            }
+        /// Return a point somewhere along the line
+        end_type ends(value_type distance = value_type(1)) const {
+            return from() + direction() * distance;
+        }
 
-            /// Compare for equality
-            bool operator == ( const ray &r ) const {
-                return direction() == r.direction() && from() == r.from();
-            }
-            /// Compare for inequality
-            bool operator != ( const ray &r ) const {
-                return ! ( *this == r );
-            }
+        /// Compare for equality
+        bool operator == ( const ray &r ) const {
+            return direction() == r.direction() && from() == r.from();
+        }
+        /// Compare for inequality
+        bool operator != ( const ray &r ) const {
+            return ! ( *this == r );
+        }
     };
 
 

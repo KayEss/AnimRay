@@ -33,42 +33,42 @@ namespace animray {
     /// Represents part of a line through 3D space
     template< typename D >
     class line {
-        public:
-            /// The value type of the line
-            typedef D value_type;
-            /// The type of the end points
-            typedef point3d< value_type > end_type;
+    public:
+        /// The value type of the line
+        typedef D value_type;
+        /// The type of the end points
+        typedef point3d< value_type > end_type;
 
-            /// Construct a null line
-            line() {
-            }
-            /// Construct a line between two locations
-            line( const end_type &from, const end_type &to )
-            : from( from ), to( to ) {
-            }
+        /// Construct a null line
+        line() {
+        }
+        /// Construct a line between two locations
+        line( const end_type &from, const end_type &to )
+        : from( from ), to( to ) {
+        }
 
-            /// The start of the line
-            fostlib::accessors< end_type > from;
-            /// The end of the line
-            fostlib::accessors< end_type > to;
+        /// The start of the line
+        fostlib::accessors< end_type > from;
+        /// The end of the line
+        fostlib::accessors< end_type > to;
 
-            /// Compare for equality
-            bool operator == ( const line &r ) const {
-                return to() == r.to() && from() == r.from();
-            }
-            /// Compare for inequality
-            bool operator != ( const line &r ) const {
-                return ! ( *this == r );
-            }
+        /// Compare for equality
+        bool operator == ( const line &r ) const {
+            return to() == r.to() && from() == r.from();
+        }
+        /// Compare for inequality
+        bool operator != ( const line &r ) const {
+            return ! ( *this == r );
+        }
 
-            /// Returns the square of the length of the line
-            value_type length_squared() const {
-                value_type
-                    dx = to().x() - from().x(),
-                    dy = to().y() - from().y(),
-                    dz = to().z() - from().z();
-                return dx * dx + dy * dy + dz * dz;
-            }
+        /// Returns the square of the length of the line
+        value_type length_squared() const {
+            value_type
+                dx = to().x() - from().x(),
+                dy = to().y() - from().y(),
+                dz = to().z() - from().z();
+            return dx * dx + dy * dy + dz * dz;
+        }
     };
 
 

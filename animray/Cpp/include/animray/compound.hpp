@@ -35,57 +35,57 @@ namespace animray {
     template<typename O>
     class compound {
         std::vector<std::unique_ptr<O>> instances;
-        public:
-            /// The type of objects that can be inserted
-            typedef O instance_type;
-            /// The type of the local coordinate system
-            typedef typename instance_type::local_coord_type local_coord_type;
-            /// The type of the ray output by the instance
-            typedef typename instance_type::ray_type ray_type;
+    public:
+        /// The type of objects that can be inserted
+        typedef O instance_type;
+        /// The type of the local coordinate system
+        typedef typename instance_type::local_coord_type local_coord_type;
+        /// The type of the ray output by the instance
+        typedef typename instance_type::ray_type ray_type;
 
-            /// Insert a new object into the compound
-            template<typename I>
-            compound &insert(const I &instance) {
-                instances.push_back(
-                    std::unique_ptr<instance_type>(new I(instance)));
-                return *this;
-            }
+        /// Insert a new object into the compound
+        template<typename I>
+        compound &insert(const I &instance) {
+            instances.push_back(
+                std::unique_ptr<instance_type>(new I(instance)));
+            return *this;
+        }
 
-            /// Ray intersection with closest item
-            fostlib::nullable< ray_type > intersection(const ray_type &by) const {
-                fostlib::nullable< ray_type > result;
-                local_coord_type result_dot;
-                for ( const auto &instance : instances ) {
-                    if ( result.isnull() ) {
-                        result = instance->intersection(by);
-                        if ( !result.isnull() ) {
-                            result_dot = (result.value().from() - by.from()).dot();
-                        }
-                    } else {
-                        fostlib::nullable< ray_type > intersection(
-                            instance->intersection(by));
-                        if ( !intersection.isnull() ) {
-                            local_coord_type dot(
-                                (intersection.value().from() - by.from()).dot());
-                            if ( dot < result_dot ) {
-                                result = intersection;
-                                result_dot = dot;
-                            }
+        /// Ray intersection with closest item
+        fostlib::nullable< ray_type > intersection(const ray_type &by) const {
+            fostlib::nullable< ray_type > result;
+            local_coord_type result_dot;
+            for ( const auto &instance : instances ) {
+                if ( result.isnull() ) {
+                    result = instance->intersection(by);
+                    if ( !result.isnull() ) {
+                        result_dot = (result.value().from() - by.from()).dot();
+                    }
+                } else {
+                    fostlib::nullable< ray_type > intersection(
+                        instance->intersection(by));
+                    if ( !intersection.isnull() ) {
+                        local_coord_type dot(
+                            (intersection.value().from() - by.from()).dot());
+                        if ( dot < result_dot ) {
+                            result = intersection;
+                            result_dot = dot;
                         }
                     }
                 }
-                return result;
             }
+            return result;
+        }
 
-            /// Occlusion check
-            bool occludes(
-                const ray_type &by, const local_coord_type epsilon
-            ) const {
-                return std::find_if(instances.begin(), instances.end(),
-                    [&](const std::unique_ptr<instance_type> &instance) {
-                        return instance->occludes(by, epsilon);
-                    }) != instances.end();
-            }
+        /// Occlusion check
+        bool occludes(
+            const ray_type &by, const local_coord_type epsilon
+        ) const {
+            return std::find_if(instances.begin(), instances.end(),
+                [&](const std::unique_ptr<instance_type> &instance) {
+                    return instance->occludes(by, epsilon);
+                }) != instances.end();
+        }
     };
 
 

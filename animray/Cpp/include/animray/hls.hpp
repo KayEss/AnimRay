@@ -34,45 +34,45 @@ namespace animray {
     template< typename D >
     class hls : private detail::array_based< D, 3 > {
         typedef detail::array_based< D, 3 > superclass;
-        public:
-            /// The value type
-            typedef typename superclass::value_type value_type;
-            /// The array type
-            typedef typename superclass::array_type array_type;
-            /// The type of a value parameter
-            typedef typename
-                superclass::const_value_parameter_type
-                const_value_parameter_type
-            ;
-            /// The size of the array
-            static const std::size_t c_array_size = superclass::c_array_size;
+    public:
+        /// The value type
+        typedef typename superclass::value_type value_type;
+        /// The array type
+        typedef typename superclass::array_type array_type;
+        /// The type of a value parameter
+        typedef typename
+            superclass::const_value_parameter_type
+            const_value_parameter_type
+        ;
+        /// The size of the array
+        static const std::size_t c_array_size = superclass::c_array_size;
 
-            using superclass::print_on;
-            using superclass::to_json;
+        using superclass::print_on;
+        using superclass::to_json;
 
-            /// Default construct an HLS colour with all channels at zero
-            hls() {
-            }
-            /// Construct an HLS colour with the specified channel values
-            hls( value_type h, value_type l, value_type s ) {
-                superclass::array[0] = h;
-                superclass::array[1] = l;
-                superclass::array[2] = s;
-            }
+        /// Default construct an HLS colour with all channels at zero
+        hls() {
+        }
+        /// Construct an HLS colour with the specified channel values
+        hls( value_type h, value_type l, value_type s ) {
+            superclass::array[0] = h;
+            superclass::array[1] = l;
+            superclass::array[2] = s;
+        }
 
-            /// Return the channel values
-            const array_type &array() const {
-                return superclass::array;
-            }
+        /// Return the channel values
+        const array_type &array() const {
+            return superclass::array;
+        }
 
-            /// Compare for equality
-            bool operator == ( const hls &r ) const {
-                return superclass::array == r.superclass::array;
-            }
-            /// Compare for inequality
-            bool operator != ( const hls &r ) const {
-                return superclass::array != r.superclass::array;
-            }
+        /// Compare for equality
+        bool operator == ( const hls &r ) const {
+            return superclass::array == r.superclass::array;
+        }
+        /// Compare for inequality
+        bool operator != ( const hls &r ) const {
+            return superclass::array != r.superclass::array;
+        }
     };
 
 
