@@ -38,8 +38,6 @@ namespace animray {
 
             /// The geometry of the light
             fostlib::accessors< geometry_type > geometry;
-            /// Ambient light provided by this light source
-            fostlib::accessors< color_type> ambient;
             /// The colour of the light
             fostlib::accessors< color_type > color;
 
@@ -47,12 +45,13 @@ namespace animray {
             template< typename R, typename G >
             color_type operator () (const R &intersection, const G &scene) const {
                 R illumination(intersection.from(), geometry());
-                if ( scene.occludes(illumination, 1e-9) ) {
-                    return ambient();
-                } else {
+                if ( not scene.occludes(illumination, typename R::value_type(1) /
+                        typename R::value_type(1000000000) ) ) {
                     const typename R::value_type costheta =
                         dot(illumination.direction(), intersection.direction());
-                    return color_type(ambient() + color() * costheta);
+                    return color_type(color() * costheta);
+                } else {
+                    return color_type(0);
                 }
             }
     };
