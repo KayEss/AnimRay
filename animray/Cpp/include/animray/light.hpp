@@ -27,8 +27,30 @@
 namespace animray {
 
 
-    template< typename L >
+    template< typename L, typename C >
     class light {
+        public:
+            /// The light geometry
+            typedef L geometry_type;
+            /// The colour type
+            typedef C color_type;
+
+            /// The colour of the light
+            fostlib::accessors< color_type > color;
+
+            /// Calculate the illumination given by this light
+            template< typename R, typename G >
+            color_type operator () (const R &intersection, const G &geometry) const {
+                R light(intersection.from(),
+                    typename R::end_type(5.0, 5.0, -5.0));
+                if ( geometry.occludes(light, 1e-9) ) {
+                    return color();
+                } else {
+                    const double costheta = dot(light.direction(),
+                        intersection.direction());
+                    return color_type(color() + 205 * costheta);
+                }
+            }
     };
 
 

@@ -74,16 +74,7 @@ namespace animray {
                 fostlib::nullable<typename beam_type::ray_type>
                     intersection(geometry().intersection(r));
                 if ( !intersection.isnull() ) {
-                    typename beam_type::ray_type light(
-                        intersection.value().from(),
-                        typename beam_type::ray_type::end_type(5.0, 5.0, -5.0));
-                    if ( geometry().occludes(light, 1e-9) ) {
-                        return typename beam_type::color_type(50);
-                    } else {
-                        const double costheta = dot(light.direction(),
-                            intersection.value().direction());
-                        return typename beam_type::color_type(50 + 205 * costheta);
-                    }
+                    return light()(intersection.value(), geometry());
                 } else {
                     return typename beam_type::color_type(0);
                 }

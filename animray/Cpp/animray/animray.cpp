@@ -46,7 +46,7 @@ FSL_MAIN(
     typedef double world;
     typedef animray::scene<
         animray::compound<animray::movable<void, world>>,
-        animray::light<animray::point3d<world>>,
+        animray::light<animray::point3d<world>, uint8_t>,
         animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
             scene_type;
     scene_type scene;
@@ -61,6 +61,8 @@ FSL_MAIN(
         animray::translate(-1.0, 1.0, 0.0)));
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
+
+    scene.light().color(50);
 
     animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
         camera(fw, fh, width, height, 0.05);
