@@ -42,6 +42,15 @@ namespace animray {
         /// The colour of the light
         fostlib::accessors< color_type > color;
 
+        /// Default construct a light with no illumincation
+        light()
+        : color() {
+        }
+        /// Construct with a given color
+        explicit light(const color_type &c)
+        : color(c) {
+        }
+
         /// Calculate the illumination given by this light
         template< typename R, typename G >
         color_type operator () (const R &intersection, const G &scene) const {
@@ -60,6 +69,11 @@ namespace animray {
 
         /// The geometry of the light
         fostlib::accessors< geometry_type > geometry;
+
+        /// Construct from a position and color
+        light(const geometry_type &p, const typename superclass::color_type &c)
+        : superclass(c), geometry(p) {
+        }
 
         /// Calculate the illumination given by this light
         template< typename R, typename G >
