@@ -31,6 +31,7 @@ namespace animray {
     template< typename L, typename C >
     class light;
 
+
     /// Void lights are ambient
     template< typename C >
     class light<void, C> {
@@ -47,6 +48,7 @@ namespace animray {
             return color();
         }
     };
+
 
     /// Point lights
     template< typename C, typename W >
@@ -74,6 +76,36 @@ namespace animray {
                 return typename superclass::color_type(0);
             }
         }
+    };
+
+
+    /// Collections of lights of a single type
+    template< typename C >
+    class lights {
+    public:
+        /// The type of the light
+        typedef typename C::value_type light_type;
+        /// The colour model
+        typedef typename light_type::color_type color_type;
+
+        /// Add a light to this collection
+        lights &insert(const light_type &light) {
+            _lights.push_back(light);
+            return *this;
+        }
+
+        /// Calculate the illumination given by this light
+        template< typename R, typename G >
+        color_type operator () (const R &intersection, const G &scene) const {
+            color_type c;
+            for ( const auto &i : _lights ) {
+                c = c + i(intersection, scene);
+            }
+            return c;
+        }
+
+    private:
+        std::vector<light_type> _lights;
     };
 
 

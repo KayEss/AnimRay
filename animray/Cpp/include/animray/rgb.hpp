@@ -93,6 +93,11 @@ namespace animray {
         rgb operator + (value_type gray) const {
             return rgb(superclass::operator +(gray));
         }
+        /// Add two colour values together
+        rgb operator + (const rgb &r) {
+            return rgb(red() + r.red(), green() + r.green(), blue() + r.blue());
+        }
+
         /// Multiply the channel values by a scalar
         template<typename S>
         rgb operator * (const S weight) const {
