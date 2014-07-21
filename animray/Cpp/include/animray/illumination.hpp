@@ -67,7 +67,7 @@ namespace animray {
         /// Store the geometry
         fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
         /// Store the ambient light
-        fostlib::accessors<ambient_light_type> ambient;
+        fostlib::accessors<ambient_light_type, fostlib::lvalue> ambient;
         /// Store the light
         fostlib::accessors<light_type, fostlib::lvalue> light;
 
@@ -78,7 +78,8 @@ namespace animray {
             fostlib::nullable<typename beam_type::ray_type>
                 intersection(geometry().intersection(r));
             if ( !intersection.isnull() ) {
-                return ambient() + light()(intersection.value(), geometry());
+                return ambient()(intersection.value(), geometry) +
+                    light()(intersection.value(), geometry());
             } else {
                 return typename beam_type::color_type(0);
             }

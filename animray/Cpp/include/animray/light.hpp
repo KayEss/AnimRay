@@ -40,6 +40,12 @@ namespace animray {
 
         /// The colour of the light
         fostlib::accessors< color_type > color;
+
+        /// Calculate the illumination given by this light
+        template< typename R, typename G >
+        color_type operator () (const R &intersection, const G &scene) const {
+            return color();
+        }
     };
 
     /// Point lights
