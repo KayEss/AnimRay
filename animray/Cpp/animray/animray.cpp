@@ -64,8 +64,8 @@ FSL_MAIN(
         animray::translate(1.0, 1.0, 0.0)));
 
     animray::light<animray::point3d<world>, animray::rgb<uint8_t>> light;
-    light.geometry(animray::point3d<world>(5.0, 5.0, -5.0));
-    light.color(animray::rgb<uint8_t>(0x80, 205, 0x80));
+    light.geometry(animray::point3d<world>(-5.0, 5.0, -5.0));
+    light.color(animray::rgb<uint8_t>(0x40, 205, 0x40));
     scene.light(light);
     scene.ambient().color(50);
 
