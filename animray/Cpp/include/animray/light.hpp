@@ -29,29 +29,43 @@ namespace animray {
 
     /// Lights allow illumination of the scene
     template< typename L, typename C >
-    class light {
+    class light;
+
+    /// Void lights are ambient
+    template< typename C >
+    class light<void, C> {
     public:
-        /// The light geometry
-        typedef L geometry_type;
         /// The colour type
         typedef C color_type;
 
-        /// The geometry of the light
-        fostlib::accessors< geometry_type > geometry;
         /// The colour of the light
         fostlib::accessors< color_type > color;
+    };
+
+    /// Point lights
+    template< typename C, typename W >
+    class light<point3d<W>, C> : public light<void, C> {
+        typedef light<void, C> superclass;
+    public:
+        /// The light geometry
+        typedef point3d<W> geometry_type;
+
+        /// The geometry of the light
+        fostlib::accessors< geometry_type > geometry;
 
         /// Calculate the illumination given by this light
         template< typename R, typename G >
-        color_type operator () (const R &intersection, const G &scene) const {
+        typename superclass::color_type operator () (
+            const R &intersection, const G &scene
+        ) const {
             R illumination(intersection.from(), geometry());
             if ( not scene.occludes(illumination, typename R::value_type(1) /
                     typename R::value_type(1000000000) ) ) {
                 const typename R::value_type costheta =
                     dot(illumination.direction(), intersection.direction());
-                return color() * costheta;
+                return superclass::color() * costheta;
             } else {
-                return color_type(0);
+                return typename superclass::color_type(0);
             }
         }
     };
