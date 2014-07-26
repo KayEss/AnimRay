@@ -64,15 +64,15 @@ FSL_MAIN(
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
 
-    scene.light().insert(
+    scene.light().push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(-5.0, 5.0, -5.0),
             animray::rgb<uint8_t>(0x20, 0x80, 0x20)));
-    scene.light().insert(
+    scene.light().push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(-5.0, -5.0, -5.0),
             animray::rgb<uint8_t>(0x80, 0x20, 0x20)));
-    scene.light().insert(
+    scene.light().push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(5.0, -5.0, -5.0),
             animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
