@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/ray.hpp>
 #include <animray/matrix.hpp>
 
 
@@ -35,37 +36,12 @@ namespace animray {
     class movable;
 
 
-    /// Abstract base class
-    template<typename W, typename R>
-    class movable<void, W, R> {
-    public:
-        /// The type of the local coordinate system
-        typedef W local_coord_type;
-        /// The type of the ray output by the instance
-        typedef R ray_type;
-
-        /// Allow this to be safely used as a superclass.
-        virtual ~movable() = default;
-
-        /// Ray intersection
-        virtual fostlib::nullable< ray_type > intersection(
-            const ray_type &by) const = 0;
-
-        /// Occlusion check
-        virtual bool occludes(const ray_type &by,
-            const local_coord_type epsilon) const = 0;
-
-    protected:
-        matrix<W> forward, backward;
-    };
-
-
     /// Concrete type for a given scene object
     template< typename O, typename W = typename O::local_coord_type,
         typename R = ray<W> >
-    class movable : public movable<void, W, R> {
+    class movable {
         O instance;
-        typedef movable<void, W> superclass;
+        matrix<W> forward, backward;
     public:
         /// The type of object that can be moved
         typedef O instance_type;
@@ -83,20 +59,17 @@ namespace animray {
         : instance(std::forward<A>(args)...) {}
 
         /// Apply an affine transformation
-        movable &operator () (
-            const transform_type &t
-        ) {
+        movable &operator () (const transform_type &t) {
             // Swap forward and backward here because we're
             // going from world to local
-            superclass::forward *= t.second;
-            superclass::backward *= t.first;
+            forward *= t.second;
+            backward *= t.first;
             return *this;
         }
 
         /// Ray intersection
         fostlib::nullable< ray_type > intersection(const ray_type &by) const {
-            return instance.intersection(by * superclass::forward)
-                * superclass::backward;
+            return instance.intersection(by * forward) * backward;
         }
 
         /// Occlusion check
@@ -104,13 +77,13 @@ namespace animray {
             const ray_type &by,
             const local_coord_type epsilon = local_coord_type(0)
         ) const {
-            return instance.occludes(by * superclass::forward, epsilon);
+            return instance.occludes(by * forward, epsilon);
         }
 
         /// Allow the instance to be used as a camera
         template< typename F >
         ray_type operator() (F x, F y) const {
-            return instance(x, y) * superclass::backward;
+            return instance(x, y) * backward;
         }
     };
 

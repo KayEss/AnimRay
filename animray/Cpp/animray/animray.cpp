@@ -45,7 +45,9 @@ FSL_MAIN(
 
     typedef double world;
     typedef animray::scene<
-        animray::compound<animray::movable<void, world>>,
+        animray::compound<
+            animray::movable<animray::sphere<world>>
+        >,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
