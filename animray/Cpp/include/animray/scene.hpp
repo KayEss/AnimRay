@@ -19,12 +19,9 @@
 */
 
 
-#ifndef ANIMRAY_ILLUMINATION_HPP
-#define ANIMRAY_ILLUMINATION_HPP
+#ifndef ANIMRAY_SCENE_HPP
+#define ANIMRAY_SCENE_HPP
 #pragma once
-
-
-#include <animray/ray.hpp>
 
 
 namespace animray {
@@ -68,4 +65,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_ILLUMINATION_HPP
+#endif // ANIMRAY_SCENE_HPP
