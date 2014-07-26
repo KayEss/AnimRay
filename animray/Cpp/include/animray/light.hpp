@@ -113,7 +113,7 @@ namespace animray {
         color_type operator () (const R &intersection, const G &scene) const {
             color_type c;
             for ( const auto &i : _lights ) {
-                c = c + i(intersection, scene);
+                c += i(intersection, scene);
             }
             return c;
         }

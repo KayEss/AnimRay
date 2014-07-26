@@ -97,6 +97,11 @@ namespace animray {
         rgb operator + (const rgb &r) {
             return rgb(red() + r.red(), green() + r.green(), blue() + r.blue());
         }
+        /// Add two colour values together
+        rgb &operator += (const rgb &r) {
+            superclass::operator +=(r);
+            return *this;
+        }
 
         /// Multiply the channel values by a scalar
         template<typename S>
