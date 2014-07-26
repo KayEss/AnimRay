@@ -114,7 +114,7 @@ namespace animray {
         /// Calculate the illumination given by this light
         template< typename R, typename G >
         color_type operator () (const R &intersection, const G &scene) const {
-            color_type c;
+            color_type c(superclass::color());
             for ( const auto &i : _lights ) {
                 c += i(intersection, scene);
             }
