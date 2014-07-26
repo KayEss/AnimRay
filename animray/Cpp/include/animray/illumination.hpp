@@ -76,7 +76,7 @@ namespace animray {
             if ( !intersection.isnull() ) {
                 return light()(intersection.value(), geometry());
             } else {
-                return typename beam_type::color_type(0);
+                return typename beam_type::color_type();
             }
         }
     };

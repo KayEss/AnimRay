@@ -90,7 +90,7 @@ namespace animray {
                     dot(illumination.direction(), intersection.direction());
                 return superclass::color() * costheta;
             } else {
-                return typename superclass::color_type(0);
+                return typename superclass::color_type();
             }
         }
     };
