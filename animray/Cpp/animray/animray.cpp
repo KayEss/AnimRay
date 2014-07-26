@@ -25,6 +25,8 @@
 #include <animray/sphere.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
+#include <animray/illumination.hpp>
+#include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 
@@ -42,38 +44,53 @@ FSL_MAIN(
     const double fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef double world;
-    animray::compound<animray::movable<void, world>> scene;
-    scene.insert(animray::movable<animray::sphere<world>>()(
+    typedef animray::scene<
+        animray::compound<animray::movable<void, world>>,
+        animray::light<
+            std::tuple<
+                animray::light<void, uint8_t>,
+                animray::light<
+                    std::vector<
+                        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>,
+                    animray::rgb<uint8_t>>
+            >, animray::rgb<uint8_t>
+        >,
+        animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
+            scene_type;
+    scene_type scene;
+
+    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(0.0, 0.0, 5.0)));
-    scene.insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(-1.0, -1.0, 0.0)));
-    scene.insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, -1.0, 0.0)));
-    scene.insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(-1.0, 1.0, 0.0)));
-    scene.insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
-    typedef animray::ray<world> ray;
-    animray::movable<animray::pinhole_camera<ray>> camera
-        (fw, fh, width, height, 0.05);
+
+    std::get<0>(scene.light()).color(50);
+    std::get<1>(scene.light()).push_back(
+        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+            animray::point3d<world>(-5.0, 5.0, -5.0),
+            animray::rgb<uint8_t>(0x20, 0x80, 0x20)));
+    std::get<1>(scene.light()).push_back(
+        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+            animray::point3d<world>(-5.0, -5.0, -5.0),
+            animray::rgb<uint8_t>(0x80, 0x20, 0x20)));
+    std::get<1>(scene.light()).push_back(
+        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+            animray::point3d<world>(5.0, -5.0, -5.0),
+            animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
+
+    animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
+        camera(fw, fh, width, height, 0.05);
     camera(animray::translate(0.0, 0.0, -8.5));
-    typedef animray::film< animray::rgb< uint8_t > > film_type;
+    typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            ray r(camera(x, y));
-            fostlib::nullable<ray> intersection(scene.intersection(r));
-            if ( !intersection.isnull() ) {
-                ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
-                if ( scene.occludes(light, 1e-9) ) {
-                    return animray::rgb< uint8_t >(50);
-                } else {
-                    const double costheta = dot(light.direction(),
-                        intersection.value().direction());
-                    return animray::rgb< uint8_t >(50 + 205 * costheta);
-                }
-            } else {
-                return animray::rgb< uint8_t >(0);
-            }
+            return scene(camera, x, y);
         });
     animray::targa(output_filename, output);
 

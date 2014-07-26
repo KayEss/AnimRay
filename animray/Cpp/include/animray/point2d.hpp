@@ -33,45 +33,45 @@ namespace animray {
     /// A 2d point
     template< typename C >
     class point2d {
-        public:
-            /// The type of the location values
-            typedef C value_type;
+    public:
+        /// The type of the location values
+        typedef C value_type;
 
-            /// The x location
-            fostlib::accessors< C > x;
-            /// The y location
-            fostlib::accessors< C > y;
+        /// The x location
+        fostlib::accessors< C > x;
+        /// The y location
+        fostlib::accessors< C > y;
 
-            /// Construct an empty point
-            point2d() {
-            }
-            /// Construct a point from a pair of co-ordinates
-            point2d( const C &x, const C &y )
-            : x(x), y(y) {
-            }
+        /// Construct an empty point
+        point2d() {
+        }
+        /// Construct a point from a pair of co-ordinates
+        point2d( const C &x, const C &y )
+        : x(x), y(y) {
+        }
 
-            /// Check for equality
-            bool operator == ( const point2d &r ) const {
-                return x() == r.x() && y() == r.y();
-            }
-            /// Check for inequality
-            bool operator != ( const point2d &r ) const {
-                return x() != r.x() || y() != r.y();
-            }
+        /// Check for equality
+        bool operator == ( const point2d &r ) const {
+            return x() == r.x() && y() == r.y();
+        }
+        /// Check for inequality
+        bool operator != ( const point2d &r ) const {
+            return x() != r.x() || y() != r.y();
+        }
 
-            /// Add another point to this one
-            point2d &operator += ( const point2d &r ) {
-                x( x() + r.x() );
-                y( y() + r.y() );
-                return *this;
-            }
+        /// Add another point to this one
+        point2d &operator += ( const point2d &r ) {
+            x( x() + r.x() );
+            y( y() + r.y() );
+            return *this;
+        }
 
-            /// Scale a point by a scalar
-            point2d &operator *= ( const C &r ) {
-                x( x() * r );
-                y( y() * r );
-                return *this;
-            }
+        /// Scale a point by a scalar
+        point2d &operator *= ( const C &r ) {
+            x( x() * r );
+            y( y() * r );
+            return *this;
+        }
     };
 
 

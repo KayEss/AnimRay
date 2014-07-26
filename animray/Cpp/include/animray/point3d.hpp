@@ -44,99 +44,99 @@ namespace animray {
     template < typename D >
     class point3d : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;
-        public:
-            typedef typename superclass::value_type value_type;
-            typedef typename superclass::array_type array_type;
-            typedef typename
-                superclass::const_value_parameter_type
-                const_value_parameter_type
-            ;
-            static const std::size_t c_array_size = superclass::c_array_size;
-            using superclass::to_json;
-            using superclass::print_on;
+    public:
+        typedef typename superclass::value_type value_type;
+        typedef typename superclass::array_type array_type;
+        typedef typename
+            superclass::const_value_parameter_type
+            const_value_parameter_type
+        ;
+        static const std::size_t c_array_size = superclass::c_array_size;
+        using superclass::to_json;
+        using superclass::print_on;
 
-            /// Return the 4 underlying coordinates
-            const array_type &array() const {
-                return superclass::array;
-            }
+        /// Return the 4 underlying coordinates
+        const array_type &array() const {
+            return superclass::array;
+        }
 
-            /// The x coordinate
-            value_type x() const {
-                return superclass::array[0] / superclass::array[3];
-            }
-            /// The y coordinate
-            value_type y() const {
-                return superclass::array[1] / superclass::array[3];
-            }
-            /// The z coordinate
-            value_type z() const {
-                return superclass::array[2] / superclass::array[3];
-            }
+        /// The x coordinate
+        value_type x() const {
+            return superclass::array[0] / superclass::array[3];
+        }
+        /// The y coordinate
+        value_type y() const {
+            return superclass::array[1] / superclass::array[3];
+        }
+        /// The z coordinate
+        value_type z() const {
+            return superclass::array[2] / superclass::array[3];
+        }
 
-            /// Constructor makes a point at the origin
-            point3d() {
-                superclass::array.c_array()[3] = 1;
-            }
-            /// Constructor for making a point at a given location
-            point3d(
-                const_value_parameter_type x,
-                const_value_parameter_type y,
-                const_value_parameter_type z,
-                const_value_parameter_type h = 1
-            ) {
-                superclass::array[0] = x;
-                superclass::array[1] = y;
-                superclass::array[2] = z;
-                superclass::array[3] = h;
-            }
+        /// Constructor makes a point at the origin
+        point3d() {
+            superclass::array.c_array()[3] = 1;
+        }
+        /// Constructor for making a point at a given location
+        point3d(
+            const_value_parameter_type x,
+            const_value_parameter_type y,
+            const_value_parameter_type z,
+            const_value_parameter_type h = 1
+        ) {
+            superclass::array[0] = x;
+            superclass::array[1] = y;
+            superclass::array[2] = z;
+            superclass::array[3] = h;
+        }
 
-            /// Compare for equality
-            bool operator == ( const point3d &r ) const {
-                return superclass::array == r.superclass::array;
-            }
-            /// Compare for inequality
-            bool operator != ( const point3d &r ) const {
-                return superclass::array != r.superclass::array;
-            }
+        /// Compare for equality
+        bool operator == ( const point3d &r ) const {
+            return superclass::array == r.superclass::array;
+        }
+        /// Compare for inequality
+        bool operator != ( const point3d &r ) const {
+            return superclass::array != r.superclass::array;
+        }
 
-            /// Binary subtraction
-            point3d operator - ( const point3d &r ) const {
-                return point3d(x() - r.x(), y() - r.y(), z() - r.z());
-            }
+        /// Binary subtraction
+        point3d operator - ( const point3d &r ) const {
+            return point3d(x() - r.x(), y() - r.y(), z() - r.z());
+        }
 
-            /// Binary addition
-            point3d operator + ( const point3d &r ) const {
-                return point3d(x() + r.x(), y() + r.y(), z() + r.z());
-            }
+        /// Binary addition
+        point3d operator + ( const point3d &r ) const {
+            return point3d(x() + r.x(), y() + r.y(), z() + r.z());
+        }
 
-            /// Multiply by a scalar
-            point3d operator * (const value_type s) const {
-                return point3d(
-                    superclass::array[0],
-                    superclass::array[1],
-                    superclass::array[2],
-                    superclass::array[3] * s);
-            }
+        /// Multiply by a scalar
+        point3d operator * (const value_type s) const {
+            return point3d(
+                superclass::array[0],
+                superclass::array[1],
+                superclass::array[2],
+                superclass::array[3] * s);
+        }
 
-            /// Return the homogeneous with unit length
-            point3d unit() const {
-                return point3d(
-                    superclass::array[0], superclass::array[1], superclass::array[2],
-                    magnitude());
-            }
+        /// Return the homogeneous with unit length
+        point3d unit() const {
+            return point3d(
+                superclass::array[0], superclass::array[1], superclass::array[2],
+                magnitude());
+        }
 
-            /// The dot product of the location as vector with itself
-            D dot() const {
-                return (
-                    superclass::array[0] * superclass::array[0]
-                    + superclass::array[1] * superclass::array[1]
-                    + superclass::array[2] * superclass::array[2]
-                ) / (superclass::array[3] * superclass::array[3]);
-            }
-            /// The length of the location as vectro
-            D magnitude() const {
-                return std::sqrt(dot());
-            }
+        /// The dot product of the location as vector with itself
+        D dot() const {
+            return (
+                superclass::array[0] * superclass::array[0]
+                + superclass::array[1] * superclass::array[1]
+                + superclass::array[2] * superclass::array[2]
+            ) / (superclass::array[3] * superclass::array[3]);
+        }
+        /// The length of the location as vectro
+        D magnitude() const {
+            return std::sqrt(dot());
+        }
     };
 
 

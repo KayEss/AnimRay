@@ -100,12 +100,39 @@ namespace animray {
                 }
                 return o << ")";
             }
+
+            /// Add a value to each component
+            array_based operator + (const value_type v) const {
+                array_based c(*this);
+                for ( auto &i : c.array ) {
+                    i += v;
+                }
+                return c;
+            }
+            /// Add a value to each component
+            array_based &operator +=(const array_based &v) {
+                for ( std::size_t i(0); i < array.size(); ++i ) {
+                    array[i] += v.array[i];
+                }
+                return *this;
+            }
+
+            /// Multiply each component
+            template<typename W>
+            array_based operator * (const W w) const {
+                array_based c(*this);
+                for ( auto &i : c.array ) {
+                    i = value_type(i * w);
+                }
+                return c;
+            }
         };
 
 
     }
 
 
+    /// Return the sum of the values
     template<typename D, std::size_t S>
     D sum(const boost::array< D, S > &arr) {
         return std::accumulate(arr.begin(), arr.end(), D());
