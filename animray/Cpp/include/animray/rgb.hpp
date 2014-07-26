@@ -94,7 +94,7 @@ namespace animray {
             return rgb(superclass::operator +(gray));
         }
         /// Add two colour values together
-        rgb operator + (const rgb &r) {
+        rgb operator + (const rgb &r)  const{
             return rgb(red() + r.red(), green() + r.green(), blue() + r.blue());
         }
         /// Add two colour values together
