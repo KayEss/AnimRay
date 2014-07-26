@@ -44,10 +44,9 @@ FSL_MAIN(
     const double fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef double world;
+    typedef animray::movable<animray::sphere<world>> movable_sphere;
     typedef animray::scene<
-        animray::compound<
-            animray::movable<animray::sphere<world>>
-        >,
+        animray::compound<movable_sphere>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
