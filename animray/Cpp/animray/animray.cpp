@@ -48,14 +48,14 @@ FSL_MAIN(
         animray::compound<animray::movable<void, world>>,
         animray::light<
             std::tuple<
-                animray::light<void, uint8_t>,
+                animray::light<void, float>,
                 animray::light<
                     std::vector<
-                        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>,
-                    animray::rgb<uint8_t>>
-            >, animray::rgb<uint8_t>
+                        animray::light<animray::point3d<world>, animray::rgb<float>>>,
+                    animray::rgb<float>>
+            >, animray::rgb<float>
         >,
-        animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
+        animray::rgb<float>>
             scene_type;
     scene_type scene;
 
@@ -72,19 +72,19 @@ FSL_MAIN(
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(-5.0, 5.0, -5.0),
-            animray::rgb<uint8_t>(0x20, 0x80, 0x20)));
+            animray::rgb<float>(0x40, 0xa0, 0x40)));
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(-5.0, -5.0, -5.0),
-            animray::rgb<uint8_t>(0x80, 0x20, 0x20)));
+            animray::rgb<float>(0xa0, 0x40, 0x40)));
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(5.0, -5.0, -5.0),
-            animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
+            animray::rgb<float>(0x40, 0x40, 0xa0)));
 
-    animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
+    animray::movable<animray::pinhole_camera<scene_type::ray_type>>
         camera(fw, fh, width, height, 0.05);
     camera(animray::translate(0.0, 0.0, -8.5));
     typedef animray::film<animray::rgb<uint8_t>> film_type;
