@@ -58,6 +58,7 @@ FSL_MAIN(
         animray::rgb<float>>
             scene_type;
     scene_type scene;
+    scene.background(animray::rgb<float>(10, 50, 50));
 
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(0.0, 0.0, 5.0)));

@@ -47,6 +47,8 @@ namespace animray {
         fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
         /// Store the light
         fostlib::accessors<light_type, fostlib::lvalue> light;
+        /// Background colour
+        fostlib::accessors<color_type> background;
 
         /// Given a position on the camera film, calculate the colour it should be
         template< typename M, typename S >
@@ -56,7 +58,7 @@ namespace animray {
             if ( !intersection.isnull() ) {
                 return color_type(light()(intersection.value(), geometry()));
             } else {
-                return color_type();
+                return background();
             }
         }
     };
