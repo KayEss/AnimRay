@@ -9,7 +9,7 @@ You'll need a recent Ubuntu, or at least a recent clang.
     git flow init -d
     ./build
 
-You should now have a `dist/bin` folder which a simple renderer. You can generate an image using
+You should now have a `dist/bin` folder which contains a simple renderer. You can generate an image using
 
     dist/bin/animray out.tga 600 400
 
