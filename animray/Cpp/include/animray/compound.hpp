@@ -34,7 +34,7 @@ namespace animray {
     /// A simple compound object with no intelligence
     template<typename O>
     class compound {
-        std::vector<std::unique_ptr<O>> instances;
+        std::vector<O> instances;
     public:
         /// The type of objects that can be inserted
         typedef O instance_type;
@@ -46,8 +46,7 @@ namespace animray {
         /// Insert a new object into the compound
         template<typename I>
         compound &insert(const I &instance) {
-            instances.push_back(
-                std::unique_ptr<instance_type>(new I(instance)));
+            instances.push_back(instance);
             return *this;
         }
 
@@ -57,13 +56,13 @@ namespace animray {
             local_coord_type result_dot;
             for ( const auto &instance : instances ) {
                 if ( result.isnull() ) {
-                    result = instance->intersection(by);
+                    result = instance.intersection(by);
                     if ( !result.isnull() ) {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 } else {
                     fostlib::nullable< ray_type > intersection(
-                        instance->intersection(by));
+                        instance.intersection(by));
                     if ( !intersection.isnull() ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
@@ -82,8 +81,8 @@ namespace animray {
             const ray_type &by, const local_coord_type epsilon
         ) const {
             return std::find_if(instances.begin(), instances.end(),
-                [&](const std::unique_ptr<instance_type> &instance) {
-                    return instance->occludes(by, epsilon);
+                [&](const instance_type &instance) {
+                    return instance.occludes(by, epsilon);
                 }) != instances.end();
         }
     };
