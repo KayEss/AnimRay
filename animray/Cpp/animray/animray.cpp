@@ -90,7 +90,12 @@ FSL_MAIN(
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            return scene(camera, x, y);
+            animray::rgb<float> photons(scene(camera, x, y));
+            const float exposure = 1.2f;
+            return animray::rgb<uint8_t>(
+                uint8_t(photons.red() / exposure > 255 ? 255 : photons.red() / exposure),
+                uint8_t(photons.green() / exposure > 255 ? 255 : photons.green() / exposure),
+                uint8_t(photons.blue() / exposure > 255 ? 255 : photons.blue() / exposure));
         });
     animray::targa(output_filename, output);
 
