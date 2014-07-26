@@ -49,15 +49,13 @@ namespace animray {
     };
 
     /// A scene featuring a light and a model
-    template< typename G, typename L, typename A, typename B >
+    template< typename G, typename L, typename B >
     class scene {
     public:
         /// The geometry type
         typedef G geometry_type;
         /// The light type
         typedef L light_type;
-        /// The ambient light colour model type
-        typedef A ambient_light_type;
         /// The beam type
         typedef B beam_type;
 
@@ -66,8 +64,6 @@ namespace animray {
 
         /// Store the geometry
         fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
-        /// Store the ambient light
-        fostlib::accessors<ambient_light_type, fostlib::lvalue> ambient;
         /// Store the light
         fostlib::accessors<light_type, fostlib::lvalue> light;
 
@@ -78,8 +74,7 @@ namespace animray {
             fostlib::nullable<typename beam_type::ray_type>
                 intersection(geometry().intersection(r));
             if ( !intersection.isnull() ) {
-                return ambient()(intersection.value(), geometry) +
-                    light()(intersection.value(), geometry());
+                return light()(intersection.value(), geometry());
             } else {
                 return typename beam_type::color_type(0);
             }

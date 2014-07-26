@@ -126,6 +126,24 @@ namespace animray {
     };
 
 
+    /// A collection of lights of differing types
+    template<typename C, typename L1, typename... Ls>
+    class light<boost::tuple<L1, Ls...>, C>
+            : public light<void, C>, public boost::tuple<L1, Ls...> {
+        typedef light<void, C> superclass;
+    public:
+        /// The colour model
+        typedef C color_type;
+
+        /// Calculate the illumination given by this light
+        template< typename R, typename G >
+        color_type operator () (const R &intersection, const G &scene) const {
+            return superclass::color();
+        };
+    };
+
+
+
 }
 
 
