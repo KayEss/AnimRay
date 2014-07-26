@@ -14,3 +14,8 @@ You should now have a `dist/bin` folder which a simple renderer. You can generat
     dist/bin/animray out.tga 600 400
 
 You'll now have an image you can open in an image viewer.
+
+# Concepts #
+
+AnimRay is fully implemented as C++ templates in such a way as to make all of the key parts of a ray tracing algorithm pluggable (shortcomings in the implementation notwithstanding).
+
