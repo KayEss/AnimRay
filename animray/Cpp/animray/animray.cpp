@@ -48,13 +48,12 @@ FSL_MAIN(
         animray::compound<animray::movable<void, world>>,
         animray::light<
             std::tuple<
+                animray::light<void, uint8_t>,
                 animray::light<
                     std::vector<
                         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>,
-                    animray::rgb<uint8_t>>,
-                animray::light<void, uint8_t>
-            >,
-            animray::rgb<uint8_t>
+                    animray::rgb<uint8_t>>
+            >, animray::rgb<uint8_t>
         >,
         animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
             scene_type;
@@ -71,19 +70,19 @@ FSL_MAIN(
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
         animray::translate(1.0, 1.0, 0.0)));
 
-    std::get<0>(scene.light()).push_back(
+    std::get<0>(scene.light()).color(50);
+    std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(-5.0, 5.0, -5.0),
             animray::rgb<uint8_t>(0x20, 0x80, 0x20)));
-    std::get<0>(scene.light()).push_back(
+    std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(-5.0, -5.0, -5.0),
             animray::rgb<uint8_t>(0x80, 0x20, 0x20)));
-    std::get<0>(scene.light()).push_back(
+    std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
             animray::point3d<world>(5.0, -5.0, -5.0),
             animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
-    std::get<1>(scene.light()).color(50);
 
     animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
         camera(fw, fh, width, height, 0.05);

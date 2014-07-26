@@ -134,6 +134,24 @@ namespace animray {
     class light<std::tuple<L1, Ls...>, C>
             : public light<void, C>, public std::tuple<L1, Ls...> {
         typedef light<void, C> superclass;
+        typedef std::tuple<L1, Ls...> tuple_type;
+
+        template<typename R, typename G, std::size_t S>
+        struct helper {
+            typename std::tuple_element<S, tuple_type>::type::color_type
+                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
+                return helper<R, G, S - 1>().lighting(lights, intersection, scene) +
+                    std::get<S>(lights)(intersection, scene);
+            }
+        };
+        template<typename R, typename G>
+        struct helper<R, G, 0> {
+            typename std::tuple_element<0, tuple_type>::type::color_type
+                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
+                return std::get<0>(lights)(intersection, scene);
+            }
+        };
+
     public:
         /// The colour model
         typedef C color_type;
@@ -141,7 +159,9 @@ namespace animray {
         /// Calculate the illumination given by this light
         template< typename R, typename G >
         color_type operator () (const R &intersection, const G &scene) const {
-            return superclass::color();
+            return superclass::color() +
+                helper<R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
+                    *this, intersection, scene);
         };
     };
 
