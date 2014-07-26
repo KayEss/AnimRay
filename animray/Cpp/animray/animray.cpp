@@ -46,8 +46,10 @@ FSL_MAIN(
     typedef double world;
     typedef animray::scene<
         animray::compound<animray::movable<void, world>>,
-        animray::lights<std::vector<
-            animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>>,
+        animray::light<
+            std::vector<
+                animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>,
+            animray::rgb<uint8_t>>,
         animray::light<void, uint8_t>,
         animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
             scene_type;

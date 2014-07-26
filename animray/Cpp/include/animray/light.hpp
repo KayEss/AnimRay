@@ -93,19 +93,20 @@ namespace animray {
     };
 
 
-    /// Collections of lights of a single type
-    template< typename S >
-    class lights {
+    /// Collection of lights of a single type
+    template< typename C, typename L >
+    class light<std::vector<L>, C> : public light<void, C > {
+        typedef light<void, C> superclass;
     public:
         /// The container type
-        typedef S container_type;
+        typedef std::vector<L> container_type;
         /// The type of the light
-        typedef typename S::value_type light_type;
+        typedef L light_type;
         /// The colour model
-        typedef typename light_type::color_type color_type;
+        typedef C color_type;
 
         /// Add a light to this collection
-        lights &push_back(const light_type &light) {
+        light<std::vector<L>, C> &push_back(const light_type &light) {
             _lights.push_back(light);
             return *this;
         }
