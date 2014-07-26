@@ -25,7 +25,7 @@
 #include <animray/sphere.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
-#include <animray/illumination.hpp>
+#include <animray/scene.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
