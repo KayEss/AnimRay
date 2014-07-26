@@ -24,6 +24,9 @@
 #pragma once
 
 
+#include <tuple>
+
+
 namespace animray {
 
 
@@ -128,8 +131,8 @@ namespace animray {
 
     /// A collection of lights of differing types
     template<typename C, typename L1, typename... Ls>
-    class light<boost::tuple<L1, Ls...>, C>
-            : public light<void, C>, public boost::tuple<L1, Ls...> {
+    class light<std::tuple<L1, Ls...>, C>
+            : public light<void, C>, public std::tuple<L1, Ls...> {
         typedef light<void, C> superclass;
     public:
         /// The colour model
