@@ -39,11 +39,12 @@ FSL_MAIN(
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     const int width = fostlib::coerce< int >( args[2].value("100") );
     const int height = fostlib::coerce< int >( args[3].value("100") );
-    const double aspect = double(width) / height;
-    const double fw = width > height ? aspect * 0.024 : 0.024;
-    const double fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef double world;
+    typedef long double world;
+    const world aspect = double(width) / height;
+    const world fw = width > height ? aspect * 0.024 : 0.024;
+    const world fh = width > height ? 0.024 : 0.024 / aspect;
+
     typedef animray::scene<
         animray::compound<animray::movable<void, world>>,
         animray::lights<std::vector<
@@ -54,15 +55,15 @@ FSL_MAIN(
     scene_type scene;
 
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(0.0, 0.0, 5.0)));
+        animray::translate<world>(0.0, 0.0, 5.0)));
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(-1.0, -1.0, 0.0)));
+        animray::translate<world>(-1.0, -1.0, 0.0)));
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(1.0, -1.0, 0.0)));
+        animray::translate<world>(1.0, -1.0, 0.0)));
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(-1.0, 1.0, 0.0)));
+        animray::translate<world>(-1.0, 1.0, 0.0)));
     scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(1.0, 1.0, 0.0)));
+        animray::translate<world>(1.0, 1.0, 0.0)));
 
     scene.light().insert(
         animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
@@ -80,7 +81,7 @@ FSL_MAIN(
 
     animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
         camera(fw, fh, width, height, 0.05);
-    camera(animray::translate(0.0, 0.0, -8.5));
+    camera(animray::translate<world>(0.0, 0.0, -8.5));
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
