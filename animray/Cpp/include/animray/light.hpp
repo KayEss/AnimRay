@@ -24,6 +24,9 @@
 #pragma once
 
 
+#include <tuple>
+
+
 namespace animray {
 
 
@@ -87,23 +90,26 @@ namespace animray {
                     dot(illumination.direction(), intersection.direction());
                 return superclass::color() * costheta;
             } else {
-                return typename superclass::color_type(0);
+                return typename superclass::color_type();
             }
         }
     };
 
 
-    /// Collections of lights of a single type
-    template< typename C >
-    class lights {
+    /// Collection of lights of a single type
+    template< typename C, typename L >
+    class light<std::vector<L>, C> : public light<void, C > {
+        typedef light<void, C> superclass;
     public:
+        /// The container type
+        typedef std::vector<L> container_type;
         /// The type of the light
-        typedef typename C::value_type light_type;
+        typedef L light_type;
         /// The colour model
-        typedef typename light_type::color_type color_type;
+        typedef C color_type;
 
         /// Add a light to this collection
-        lights &insert(const light_type &light) {
+        light<std::vector<L>, C> &push_back(const light_type &light) {
             _lights.push_back(light);
             return *this;
         }
@@ -111,16 +117,54 @@ namespace animray {
         /// Calculate the illumination given by this light
         template< typename R, typename G >
         color_type operator () (const R &intersection, const G &scene) const {
-            color_type c;
+            color_type c(superclass::color());
             for ( const auto &i : _lights ) {
-                c = c + i(intersection, scene);
+                c += i(intersection, scene);
             }
             return c;
         }
 
     private:
-        std::vector<light_type> _lights;
+        container_type _lights;
     };
+
+
+    /// A collection of lights of differing types
+    template<typename C, typename L1, typename... Ls>
+    class light<std::tuple<L1, Ls...>, C>
+            : public light<void, C>, public std::tuple<L1, Ls...> {
+        typedef light<void, C> superclass;
+        typedef std::tuple<L1, Ls...> tuple_type;
+
+        template<typename R, typename G, std::size_t S>
+        struct helper {
+            typename std::tuple_element<S, tuple_type>::type::color_type
+                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
+                return helper<R, G, S - 1>().lighting(lights, intersection, scene) +
+                    std::get<S>(lights)(intersection, scene);
+            }
+        };
+        template<typename R, typename G>
+        struct helper<R, G, 0> {
+            typename std::tuple_element<0, tuple_type>::type::color_type
+                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
+                return std::get<0>(lights)(intersection, scene);
+            }
+        };
+
+    public:
+        /// The colour model
+        typedef C color_type;
+
+        /// Calculate the illumination given by this light
+        template< typename R, typename G >
+        color_type operator () (const R &intersection, const G &scene) const {
+            return superclass::color() +
+                helper<R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
+                    *this, intersection, scene);
+        };
+    };
+
 
 
 }

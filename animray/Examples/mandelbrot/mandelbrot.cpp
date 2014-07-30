@@ -67,7 +67,7 @@ FSL_MAIN(
                     return animray::rgb<uint8_t>(
                         c.red() * 255, c.green() * 255, c.blue() * 255);
                 } else {
-                    return animray::rgb<uint8_t>(0);
+                    return animray::rgb<uint8_t>();
                 }
             }));
 

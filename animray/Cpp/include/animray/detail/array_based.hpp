@@ -109,6 +109,14 @@ namespace animray {
                 }
                 return c;
             }
+            /// Add a value to each component
+            array_based &operator +=(const array_based &v) {
+                for ( std::size_t i(0); i < array.size(); ++i ) {
+                    array[i] += v.array[i];
+                }
+                return *this;
+            }
+
             /// Multiply each component
             template<typename W>
             array_based operator * (const W w) const {

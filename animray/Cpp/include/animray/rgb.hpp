@@ -46,11 +46,6 @@ namespace animray {
 
         /// Default construct an RGB colour with all channels at zero
         rgb() {}
-        rgb( value_type gray ) {
-            superclass::array[0] = gray;
-            superclass::array[1] = gray;
-            superclass::array[2] = gray;
-        }
         /// Construct an RGB colour with the specified channel values
         rgb( value_type r, value_type g, value_type b ) {
             superclass::array[0] = r;
@@ -94,8 +89,13 @@ namespace animray {
             return rgb(superclass::operator +(gray));
         }
         /// Add two colour values together
-        rgb operator + (const rgb &r) {
+        rgb operator + (const rgb &r)  const{
             return rgb(red() + r.red(), green() + r.green(), blue() + r.blue());
+        }
+        /// Add two colour values together
+        rgb &operator += (const rgb &r) {
+            superclass::operator +=(r);
+            return *this;
         }
 
         /// Multiply the channel values by a scalar
