@@ -38,25 +38,25 @@ namespace animray {
     /// Abstract base class
     template<typename W, typename R>
     class movable<void, W, R> {
-        public:
-            /// The type of the local coordinate system
-            typedef W local_coord_type;
-            /// The type of the ray output by the instance
-            typedef R ray_type;
+    public:
+        /// The type of the local coordinate system
+        typedef W local_coord_type;
+        /// The type of the ray output by the instance
+        typedef R ray_type;
 
-            /// Allow this to be safely used as a superclass.
-            virtual ~movable() = default;
+        /// Allow this to be safely used as a superclass.
+        virtual ~movable() = default;
 
-            /// Ray intersection
-            virtual fostlib::nullable< ray_type > intersection(
-                const ray_type &by) const = 0;
+        /// Ray intersection
+        virtual fostlib::nullable< ray_type > intersection(
+            const ray_type &by) const = 0;
 
-            /// Occlusion check
-            virtual bool occludes(const ray_type &by,
-                const local_coord_type epsilon) const = 0;
+        /// Occlusion check
+        virtual bool occludes(const ray_type &by,
+            const local_coord_type epsilon) const = 0;
 
-        protected:
-            matrix<W> forward, backward;
+    protected:
+        matrix<W> forward, backward;
     };
 
 
@@ -66,52 +66,52 @@ namespace animray {
     class movable : public movable<void, W, R> {
         O instance;
         typedef movable<void, W> superclass;
-        public:
-            /// The type of object that can be moved
-            typedef O instance_type;
-            /// The type of the local coordinate system
-            typedef W local_coord_type;
-            /// The type of the ray output by the instance
-            typedef R ray_type;
-            /// A transformation
-            typedef std::pair<matrix<local_coord_type>,
-                    matrix<local_coord_type>> transform_type;
+    public:
+        /// The type of object that can be moved
+        typedef O instance_type;
+        /// The type of the local coordinate system
+        typedef W local_coord_type;
+        /// The type of the ray output by the instance
+        typedef R ray_type;
+        /// A transformation
+        typedef std::pair<matrix<local_coord_type>,
+                matrix<local_coord_type>> transform_type;
 
-            /// Allow the underlying instance to be constructed
-            template<typename... A>
-            explicit movable(A&&... args)
-            : instance(std::forward<A>(args)...) {}
+        /// Allow the underlying instance to be constructed
+        template<typename... A>
+        explicit movable(A&&... args)
+        : instance(std::forward<A>(args)...) {}
 
-            /// Apply an affine transformation
-            movable &operator () (
-                const transform_type &t
-            ) {
-                // Swap forward and backward here because we're
-                // going from world to local
-                superclass::forward *= t.second;
-                superclass::backward *= t.first;
-                return *this;
-            }
+        /// Apply an affine transformation
+        movable &operator () (
+            const transform_type &t
+        ) {
+            // Swap forward and backward here because we're
+            // going from world to local
+            superclass::forward *= t.second;
+            superclass::backward *= t.first;
+            return *this;
+        }
 
-            /// Ray intersection
-            fostlib::nullable< ray_type > intersection(const ray_type &by) const {
-                return instance.intersection(by * superclass::forward)
-                    * superclass::backward;
-            }
+        /// Ray intersection
+        fostlib::nullable< ray_type > intersection(const ray_type &by) const {
+            return instance.intersection(by * superclass::forward)
+                * superclass::backward;
+        }
 
-            /// Occlusion check
-            bool occludes(
-                const ray_type &by,
-                const local_coord_type epsilon = local_coord_type(0)
-            ) const {
-                return instance.occludes(by * superclass::forward, epsilon);
-            }
+        /// Occlusion check
+        bool occludes(
+            const ray_type &by,
+            const local_coord_type epsilon = local_coord_type(0)
+        ) const {
+            return instance.occludes(by * superclass::forward, epsilon);
+        }
 
-            /// Allow the instance to be used as a camera
-            template< typename F >
-            ray_type operator() (F x, F y) const {
-                return instance(x, y) * superclass::backward;
-            }
+        /// Allow the instance to be used as a camera
+        template< typename F >
+        ray_type operator() (F x, F y) const {
+            return instance(x, y) * superclass::backward;
+        }
     };
 
 

@@ -37,82 +37,81 @@ namespace animray {
         typedef std::vector< C > column_type;
         typedef std::vector< column_type > columns_type;
         columns_type columns;
-        public:
-            /// The colour type
-            typedef C color_type;
-            /// The type of the extents co-ordinates
-            typedef E extents_value_type;
-            /// The extents type
-            typedef extents2d< extents_value_type > extents_type;
-            /// The extents size type
-            typedef typename extents_type::size_type size_type;
+    public:
+        /// The colour type
+        typedef C color_type;
+        /// The type of the extents co-ordinates
+        typedef E extents_value_type;
+        /// The extents type
+        typedef extents2d< extents_value_type > extents_type;
+        /// The extents size type
+        typedef typename extents_type::size_type size_type;
 
-            /// Construct an empty targa of the given size
-            film(size_type width, size_type height, const C &colour = C())
-            : columns( width, column_type(height, colour)) {
-                if ( width < 1 )
-                    throw fostlib::exceptions::out_of_range<E>(
-                        1, std::numeric_limits<E>::max(), width);
-                if ( height < 1 )
-                    throw fostlib::exceptions::out_of_range<E>(
-                        1, std::numeric_limits<E>::max(), height);
-            }
+        /// Construct an empty targa of the given size
+        film(size_type width, size_type height, const C &colour = C())
+        : columns( width, column_type(height, colour)) {
+            if ( width < 1 )
+                throw fostlib::exceptions::out_of_range<E>(
+                    1, std::numeric_limits<E>::max(), width);
+            if ( height < 1 )
+                throw fostlib::exceptions::out_of_range<E>(
+                    1, std::numeric_limits<E>::max(), height);
+        }
 
-            /// Construct a film of a given size with a lambda telling us which colors to use
-            film(size_type width, size_type height,
-                std::function< color_type(size_type, size_type) > fn,
-                const C &colour = C())
-            : film(width, height, colour) {
-                for ( size_type c = 0; c < width; ++c ) {
-                    column_type &col = columns[c];
-                    for ( size_type r = 0; r < height; ++r ) {
-                        col[r] = fn(c, r);
-                    }
+        /// Construct a film of a given size with a lambda telling us which colors to use
+        film(size_type width, size_type height,
+            std::function< color_type(size_type, size_type) > fn,
+            const C &colour = C())
+        : film(width, height, colour) {
+            for ( size_type c = 0; c < width; ++c ) {
+                column_type &col = columns[c];
+                for ( size_type r = 0; r < height; ++r ) {
+                    col[r] = fn(c, r);
                 }
             }
+        }
 
-            /// The width of the image
-            const size_type width() const {
-                return columns.size();
-            }
-            /// The height of the image
-            const size_type height() const {
-                return columns[0].size();
-            }
-            /// Return the extents of the image
-            extents_type size() const {
-                return extents_type( 0, 0, width() - 1, height() - 1 );
-            }
+        /// The width of the image
+        const size_type width() const {
+            return columns.size();
+        }
+        /// The height of the image
+        const size_type height() const {
+            return columns[0].size();
+        }
+        /// Return the extents of the image
+        extents_type size() const {
+            return extents_type( 0, 0, width() - 1, height() - 1 );
+        }
 
-            /// Return a mutable row
-            column_type &operator [] ( size_type c ) {
-                return columns[c];
-            }
-            /// Return a non-mutable row
-            const column_type &operator [] ( size_type c ) const {
-                return columns[c];
-            }
+        /// Return a mutable row
+        column_type &operator [] ( size_type c ) {
+            return columns[c];
+        }
+        /// Return a non-mutable row
+        const column_type &operator [] ( size_type c ) const {
+            return columns[c];
+        }
 
-            /// Iterate the function across the image rows/columns
-            template< typename F >
-            void for_each( F fn ) const {
-                for ( size_type c = 0; c < width(); ++c ) {
-                    const column_type &col = columns[c];
-                    for ( size_type r = 0; r < height(); ++r ) {
-                        fn( col[r] );
-                    }
-                }
-            }
-            /// Allow us to force iteration over the rows first
-            template< typename F >
-            void for_each_row( F fn ) const {
+        /// Iterate the function across the image rows/columns
+        template< typename F >
+        void for_each( F fn ) const {
+            for ( size_type c = 0; c < width(); ++c ) {
+                const column_type &col = columns[c];
                 for ( size_type r = 0; r < height(); ++r ) {
-                    for ( size_type c = 0; c < width(); ++c ) {
-                        fn( columns[c][r] );
-                    }
+                    fn( col[r] );
                 }
             }
-
+        }
+        /// Allow us to force iteration over the rows first
+        template< typename F >
+        void for_each_row( F fn ) const {
+            for ( size_type r = 0; r < height(); ++r ) {
+                for ( size_type c = 0; c < width(); ++c ) {
+                    fn( columns[c][r] );
+                }
+            }
+        }
     };
 
 

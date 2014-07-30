@@ -34,29 +34,29 @@ namespace animray {
     template< typename D >
     class rgba : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;
-        public:
-            typedef typename superclass::value_type value_type;
-            typedef typename superclass::array_type array_type;
-            typedef typename
-                superclass::const_value_parameter_type
-                const_value_parameter_type
-            ;
-			static const std::size_t c_array_size = superclass::c_array_size;
-            using superclass::to_json;
+    public:
+        typedef typename superclass::value_type value_type;
+        typedef typename superclass::array_type array_type;
+        typedef typename
+            superclass::const_value_parameter_type
+            const_value_parameter_type
+        ;
+		static const std::size_t c_array_size = superclass::c_array_size;
+        using superclass::to_json;
 
-            /// Return the channel values
-            const array_type &array() const {
-                return superclass::array;
-            }
+        /// Return the channel values
+        const array_type &array() const {
+            return superclass::array;
+        }
 
-            /// Compare for equality
-            bool operator == ( const rgba &r ) const {
-                return superclass::array == r.superclass::array;
-            }
-            /// Compare for inequality
-            bool operator != ( const rgba &r ) const {
-                return superclass::array != r.superclass::array;
-            }
+        /// Compare for equality
+        bool operator == ( const rgba &r ) const {
+            return superclass::array == r.superclass::array;
+        }
+        /// Compare for inequality
+        bool operator != ( const rgba &r ) const {
+            return superclass::array != r.superclass::array;
+        }
     };
 
 
