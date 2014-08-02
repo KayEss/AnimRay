@@ -24,11 +24,41 @@
 #pragma once
 
 
+#include <animray/ray.hpp>
+
+
 namespace animray {
 
 
     /// Implements a simple shader
+    template< typename O, typename C >
     class shader {
+    public:
+        /// The underlying object type
+        typedef O instance_type;
+        /// The colour type
+        typedef C color_type;
+        /// The type of the local coordinate system
+        typedef typename instance_type::local_coord_type local_coord_type;
+        /// The ray type
+        typedef ray<local_coord_type> ray_type;
+
+        /// The geometry that is being shaded
+        fostlib::accessors<instance_type, fostlib::lvalue> geometry;
+
+        /// Calculate the intersection of the ray on the instance
+        template<typename R>
+        fostlib::nullable< ray_type > intersection(const R &by) const {
+            return fostlib::null;
+        }
+
+        /// Calculate whether this object occludes the ray or not
+        bool occludes(
+            const ray_type &by,
+            const local_coord_type epsilon = local_coord_type(0)
+        ) const {
+            return false;
+        }
     };
 
 

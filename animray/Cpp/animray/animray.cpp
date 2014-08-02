@@ -26,6 +26,7 @@
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/scene.hpp>
+#include <animray/shader.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
@@ -46,7 +47,10 @@ FSL_MAIN(
     typedef double world;
     typedef animray::movable<animray::sphere<world>> movable_sphere;
     typedef animray::scene<
-        animray::compound<movable_sphere>,
+        animray::shader<
+            animray::compound<movable_sphere>,
+            animray::rgb<float>
+        >,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
@@ -61,16 +65,21 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(10, 50, 70));
 
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(0.0, 0.0, 5.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(-1.0, -1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(1.0, -1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(-1.0, 1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
-        animray::translate(1.0, 1.0, 0.0)));
+    scene.geometry().geometry().insert(
+        animray::movable<animray::sphere<world>>()(
+            animray::translate(0.0, 0.0, 5.0)));
+    scene.geometry().geometry().insert(
+        animray::movable<animray::sphere<world>>()(
+            animray::translate(-1.0, -1.0, 0.0)));
+    scene.geometry().geometry().insert(
+        animray::movable<animray::sphere<world>>()(
+            animray::translate(1.0, -1.0, 0.0)));
+    scene.geometry().geometry().insert(
+        animray::movable<animray::sphere<world>>()(
+            animray::translate(-1.0, 1.0, 0.0)));
+    scene.geometry().geometry().insert(
+        animray::movable<animray::sphere<world>>()(
+            animray::translate(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
