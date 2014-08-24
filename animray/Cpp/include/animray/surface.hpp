@@ -31,7 +31,8 @@ namespace animray {
 
 
     /// Implements a simple shader
-    template< typename O, typename C >
+    template< typename O, typename C,
+        typename I = typename O::intersection_type >
     class surface {
     public:
         /// The underlying object type
@@ -40,24 +41,22 @@ namespace animray {
         typedef C color_type;
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
-        /// The ray type
-        typedef ray<local_coord_type> ray_type;
+        /// The intersection type
+        typedef I intersection_type;
 
         /// The geometry that is being shaded
         fostlib::accessors<instance_type, fostlib::lvalue> geometry;
 
         /// Calculate the intersection of the ray on the instance
         template<typename R>
-        fostlib::nullable< ray_type > intersection(const R &by) const {
-            return fostlib::null;
+        fostlib::nullable< intersection_type > intersects(const R &by) const {
+            return geometry().intersects(by);
         }
 
         /// Calculate whether this object occludes the ray or not
-        bool occludes(
-            const ray_type &by,
-            const local_coord_type epsilon = local_coord_type(0)
-        ) const {
-            return false;
+        template< typename R >
+        bool occludes(const R &by, const local_coord_type epsilon) const {
+            return geometry().occludes(by, epsilon);
         }
     };
 

@@ -25,7 +25,6 @@
 #include <animray/sphere.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
-#include <animray/illumination.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
@@ -94,7 +93,7 @@ FSL_MAIN(
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
-            animray::pinhole_camera<scene_type::beam_type::ray_type>,
+            animray::pinhole_camera<animray::ray<world>>,
             animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
     camera(animray::translate<world>(0.0, 0.0, -8.5));

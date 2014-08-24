@@ -63,8 +63,8 @@ namespace animray {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 } else {
-                    fostlib::nullable< ray_type > intersects(
-                        instance.intersects(by));
+                    fostlib::nullable< intersection_type >
+                        intersection(instance.intersects(by));
                     if ( !intersection.isnull() ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());

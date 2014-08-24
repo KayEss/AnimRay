@@ -38,7 +38,7 @@ namespace animray {
         /// The colour type
         typedef C color_type;
         /// The type of the rays used
-        typedef typename geometry_type::ray_type ray_type;
+        typedef typename geometry_type::intersection_type intersection_type;
 
         /// Construct an empty scene
         scene() {}
@@ -53,7 +53,7 @@ namespace animray {
         /// Given a position on the camera film, calculate the colour it should be
         template< typename M, typename S >
         color_type operator() (const M &camera, S x, S y) const {
-            fostlib::nullable<ray_type>
+            fostlib::nullable<intersection_type>
                 intersection(geometry().intersects(camera(x, y)));
             if ( !intersection.isnull() ) {
                 return color_type(light()(intersection.value(), geometry()));
