@@ -36,11 +36,11 @@ namespace animray {
     class ray {
     public:
         /// The value type of the line
-        typedef D value_type;
+        typedef D local_coord_type;
         /// The type of the end point
-        typedef point3d< value_type > end_type;
+        typedef point3d< local_coord_type > end_type;
         /// Unit vector type describing the direction
-        typedef unit_vector< value_type > direction_type;
+        typedef unit_vector< local_coord_type > direction_type;
 
         /// Construct a null line
         ray() {
@@ -60,7 +60,7 @@ namespace animray {
         fostlib::accessors< direction_type > direction;
 
         /// Return a point somewhere along the line
-        end_type ends(value_type distance = value_type(1)) const {
+        end_type ends(local_coord_type distance = local_coord_type(1)) const {
             return from() + direction() * distance;
         }
 

@@ -36,7 +36,7 @@ namespace animray {
         R ray;
     public:
         /// The co-ordinate system precision type
-        typedef typename R::value_type value_type;
+        typedef typename R::local_coord_type local_coord_type;
         /// The ray type for specifying the direction of the beam
         typedef R ray_type;
         /// The colour model for the beam
