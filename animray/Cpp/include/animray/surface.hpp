@@ -75,63 +75,6 @@ namespace animray {
     };
 
 
-
-    /// The intersection type
-    template<typename I, typename C>
-    class matte : public I {
-        typedef I superclass;
-    public:
-        class parameters {
-        public:
-            parameters(const C &c)
-            : attenuation(c) {
-            }
-
-            /// Store the light attenuation
-            fostlib::accessors<C> attenuation;
-        };
-
-        /// Default constructor (nothing struck)
-        matte()
-        : superclass(), m_struck(nullptr) {
-        }
-        /// Construct an intersection that also stores the struck geometry
-        matte(
-            const superclass &intersection, const parameters &struck
-        ) : superclass(intersection), m_struck(&struck) {
-        }
-
-        /// The geometry that was hit by the intersection
-        const parameters &struck() const {
-            return *m_struck;
-        }
-
-        /// Multiply by something
-        template< typename S >
-        matte operator * ( const S &s ) {
-            superclass r(superclass::operator * (s));
-            return matte(r, *m_struck);
-        }
-    private:
-        const parameters *m_struck;
-    };
-
-    template<typename C, typename I, typename IC, typename R, typename G>
-    struct surface_interaction< C, matte<I, IC>, R, G > {
-        surface_interaction() {}
-        C operator() (
-            const R &light,
-            const matte<I, IC> &intersection,
-            const C &incident,
-            const G &
-        ) const {
-            const typename R::local_coord_type costheta =
-                    dot(light.direction(), intersection.direction());
-            return incident * intersection.struck().attenuation() * costheta;
-        }
-    };
-
-
 }
 
 

@@ -28,7 +28,7 @@
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
-#include <animray/surface.hpp>
+#include <animray/surface/matte.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
