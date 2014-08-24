@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/ray.hpp>
 #include <animray/matrix.hpp>
 
 

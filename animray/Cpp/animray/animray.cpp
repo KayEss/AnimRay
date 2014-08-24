@@ -27,6 +27,9 @@
 #include <animray/movable.hpp>
 #include <animray/illumination.hpp>
 #include <animray/intersection.hpp>
+#include <animray/scene.hpp>
+#include <animray/shader.hpp>
+#include <animray/surface.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
@@ -46,21 +49,24 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::sphere< animray::ray< world > > sphere_type;
+    typedef animray::surface<
+        animray::sphere< animray::ray< world > >,
+        animray::rgb<float> > sphere_type;
     typedef animray::scene<
         animray::compound<animray::movable<sphere_type>>,
         animray::light<
             std::tuple<
-                animray::light<void, uint8_t>,
+                animray::light<void, float>,
                 animray::light<
                     std::vector<
-                        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>>,
-                    animray::rgb<uint8_t>>
-            >, animray::rgb<uint8_t>
+                        animray::light<animray::point3d<world>, animray::rgb<float>>>,
+                    animray::rgb<float>>
+            >, animray::rgb<float>
         >,
-        animray::beam<animray::ray<world>, animray::rgb<uint8_t>>>
+        animray::rgb<float>>
             scene_type;
     scene_type scene;
+    scene.background(animray::rgb<float>(10, 50, 70));
 
     scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate<world>(0.0, 0.0, 5.0)));
@@ -75,17 +81,17 @@ FSL_MAIN(
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(-5.0, 5.0, -5.0),
-            animray::rgb<uint8_t>(0x20, 0x80, 0x20)));
+            animray::rgb<float>(0x40, 0xa0, 0x40)));
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(-5.0, -5.0, -5.0),
-            animray::rgb<uint8_t>(0x80, 0x20, 0x20)));
+            animray::rgb<float>(0xa0, 0x40, 0x40)));
     std::get<1>(scene.light()).push_back(
-        animray::light<animray::point3d<world>, animray::rgb<uint8_t>>(
+        animray::light<animray::point3d<world>, animray::rgb<float>>(
             animray::point3d<world>(5.0, -5.0, -5.0),
-            animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
+            animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
             animray::pinhole_camera<scene_type::beam_type::ray_type>,
@@ -95,7 +101,12 @@ FSL_MAIN(
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            return scene(camera, x, y);
+            animray::rgb<float> photons(scene(camera, x, y));
+            const float exposure = 1.2f;
+            return animray::rgb<uint8_t>(
+                uint8_t(photons.red() / exposure > 255 ? 255 : photons.red() / exposure),
+                uint8_t(photons.green() / exposure > 255 ? 255 : photons.green() / exposure),
+                uint8_t(photons.blue() / exposure > 255 ? 255 : photons.blue() / exposure));
         });
     animray::targa(output_filename, output);
 

@@ -35,7 +35,7 @@ namespace animray {
     template<typename O,
             typename I = typename O::intersection_type>
     class compound {
-        std::vector<std::unique_ptr<O>> instances;
+        std::vector<O> instances;
     public:
         /// The type of objects that can be inserted
         typedef O instance_type;
@@ -47,8 +47,7 @@ namespace animray {
         /// Insert a new object into the compound
         template<typename G>
         compound &insert(const G &instance) {
-            instances.push_back(
-                std::unique_ptr<instance_type>(new G(instance)));
+            instances.push_back(instance);
             return *this;
         }
 
@@ -59,13 +58,13 @@ namespace animray {
             local_coord_type result_dot;
             for ( const auto &instance : instances ) {
                 if ( result.isnull() ) {
-                    result = instance->intersects(by);
+                    result = instance.intersects(by);
                     if ( !result.isnull() ) {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 } else {
-                    fostlib::nullable< intersection_type > intersection(
-                        instance->intersects(by));
+                    fostlib::nullable< ray_type > intersects(
+                        instance.intersects(by));
                     if ( !intersection.isnull() ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
@@ -85,8 +84,8 @@ namespace animray {
             const R &by, const typename R::local_coord_type epsilon
         ) const {
             return std::find_if(instances.begin(), instances.end(),
-                [&](const std::unique_ptr<instance_type> &instance) {
-                    return instance->occludes(by, epsilon);
+                [&](const instance_type &instance) {
+                    return instance.occludes(by, epsilon);
                 }) != instances.end();
         }
     };
