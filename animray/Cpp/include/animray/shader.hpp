@@ -35,7 +35,7 @@ namespace animray {
         ) const {
             const typename R::local_coord_type costheta =
                     dot(light.direction(), intersection.direction());
-            return incident * costheta * 0;
+            return incident * costheta;
         }
     };
 
