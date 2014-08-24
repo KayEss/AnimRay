@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <fost/core>
 #include <animray/shader.hpp>
 
 
@@ -31,50 +32,25 @@ namespace animray {
 
 
     /// Stores a surface color
-    template< typename O, typename C >
+    template< typename O, typename I >
     class surface {
     public:
         /// The underlying object type
         typedef O instance_type;
-        /// The colour type
-        typedef C color_type;
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
+        /// The physical model of the surface
+        typedef typename I::parameters surface_physics_type;
         /// The intersection type
-        class intersection_type : public O::intersection_type {
-            typedef typename O::intersection_type superclass;
-            const surface *m_struck;
-        public:
-            /// Default constructor (nothing struck)
-            intersection_type()
-            : superclass(), m_struck(nullptr) {
-            }
-            /// Construct an intersection that also stores the struck geometry
-            intersection_type(
-                const superclass &intersection, const surface &struck
-            ) : superclass(intersection), m_struck(&struck) {
-            }
-
-            /// The geometry that was hit by the intersection
-            surface &struck() {
-                return *m_struck;
-            }
-
-            /// Multiply by something
-            template< typename S >
-            intersection_type operator * ( const S &s ) {
-                superclass r(superclass::operator * (s));
-                return intersection_type(r, *m_struck);
-            }
-        };
+        typedef I intersection_type;
 
         /// Constructor captures the color
-        surface(const color_type &c)
-        : attenuation(c) {
+        surface(const surface_physics_type &c)
+        : surface_physics(c) {
         }
 
-        /// Capture the colour attenuation used by the surface
-        fostlib::accessors< color_type > attenuation;
+        /// Capture the surface physics model
+        fostlib::accessors< surface_physics_type > surface_physics;
 
         /// The geometry that is being shaded
         fostlib::accessors<instance_type, fostlib::lvalue> geometry;
@@ -87,7 +63,7 @@ namespace animray {
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
-                return intersection_type(hit.value(), *this);
+                return intersection_type(hit.value(), surface_physics());
             }
         }
 
@@ -99,12 +75,53 @@ namespace animray {
     };
 
 
-    template<typename O, typename C, typename R, typename G>
-    struct surface_interaction< C,
-            typename surface<O, C>::intersection_type, R, G > {
+
+    /// The intersection type
+    template<typename I, typename C>
+    class matte : public I {
+        typedef I superclass;
+    public:
+        class parameters {
+        public:
+            parameters(const C &c)
+            : attenuation(c) {
+            }
+
+            /// Store the light attenuation
+            fostlib::accessors<C> attenuation;
+        };
+
+        /// Default constructor (nothing struck)
+        matte()
+        : superclass(), m_struck(nullptr) {
+        }
+        /// Construct an intersection that also stores the struck geometry
+        matte(
+            const superclass &intersection, const parameters &struck
+        ) : superclass(intersection), m_struck(&struck) {
+        }
+
+        /// The geometry that was hit by the intersection
+        const parameters &struck() const {
+            return *m_struck;
+        }
+
+        /// Multiply by something
+        template< typename S >
+        matte operator * ( const S &s ) {
+            superclass r(superclass::operator * (s));
+            return matte(r, *m_struck);
+        }
+    private:
+        const parameters *m_struck;
+    };
+
+    template<typename I, typename C, typename R, typename G>
+    struct surface_interaction< C, matte<I, C>, R, G > {
+        surface_interaction() {}
         C operator() (
             const R &light,
-            const typename surface<O, C>::intersection_type &intersection,
+            const matte<I, C> &intersection,
             const C &incident,
             const G &
         ) const {

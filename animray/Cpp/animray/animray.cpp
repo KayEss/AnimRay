@@ -49,8 +49,9 @@ FSL_MAIN(
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef animray::movable<animray::surface<
-        animray::sphere< animray::ray< world > >,
-        animray::rgb<float> >> sphere_type;
+            animray::sphere< animray::ray< world > >,
+            animray::matte< animray::ray< world >, animray::rgb<float> >
+        >> sphere_type;
     typedef animray::scene<
         animray::compound<sphere_type>,
         animray::light<
@@ -67,15 +68,15 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(10, 50, 70));
 
-    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 0.5, 1.0))(
-        animray::translate<world>(0.0, 0.0, 5.0)));
-    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 1.0, 1.0))(
-        animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry().insert(sphere_type(animray::rgb<float>(1.0, 0.5, 0.5))(
-        animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 1.0, 0.5))(
-        animray::translate<world>(-1.0, 1.0, 0.0)));
     scene.geometry().insert(sphere_type(animray::rgb<float>(1.0, 1.0, 1.0))(
+        animray::translate<world>(0.0, 0.0, 5.0)));
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0, 1.0, 1.0))(
+        animray::translate<world>(-1.0, -1.0, 0.0)));
+    scene.geometry().insert(sphere_type(animray::rgb<float>(1.0, 0.25, 0.5))(
+        animray::translate<world>(1.0, -1.0, 0.0)));
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0.25, 1.0, 0.5))(
+        animray::translate<world>(-1.0, 1.0, 0.0)));
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0.25, 0.5, 1.0))(
         animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
