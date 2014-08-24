@@ -55,6 +55,11 @@ namespace animray {
             ) : superclass(intersection), m_struck(&struck) {
             }
 
+            /// The geometry that was hit by the intersection
+            surface &struck() {
+                return *m_struck;
+            }
+
             /// Multiply by something
             template< typename S >
             intersection_type operator * ( const S &s ) {
@@ -62,6 +67,14 @@ namespace animray {
                 return intersection_type(r, *m_struck);
             }
         };
+
+        /// Constructor captures the color
+        surface(const color_type &c)
+        : attenuation(c) {
+        }
+
+        /// Capture the colour attenuation used by the surface
+        fostlib::accessors< color_type > attenuation;
 
         /// The geometry that is being shaded
         fostlib::accessors<instance_type, fostlib::lvalue> geometry;
@@ -82,6 +95,22 @@ namespace animray {
         template< typename R >
         bool occludes(const R &by, const local_coord_type epsilon) const {
             return geometry().occludes(by, epsilon);
+        }
+    };
+
+
+    template<typename O, typename C, typename R, typename G>
+    struct surface_interaction< C,
+            typename surface<O, C>::intersection_type, R, G > {
+        C operator() (
+            const R &light,
+            const typename surface<O, C>::intersection_type &intersection,
+            const C &incident,
+            const G &
+        ) const {
+            const typename R::local_coord_type costheta =
+                    dot(light.direction(), intersection.direction());
+            return incident * intersection.struck().attenuation() * costheta;
         }
     };
 

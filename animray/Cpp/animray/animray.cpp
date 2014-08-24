@@ -67,15 +67,15 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(10, 50, 70));
 
-    scene.geometry().insert(sphere_type()(
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 0.5, 1.0))(
         animray::translate<world>(0.0, 0.0, 5.0)));
-    scene.geometry().insert(sphere_type()(
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 1.0, 1.0))(
         animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry().insert(sphere_type()(
+    scene.geometry().insert(sphere_type(animray::rgb<float>(1.0, 0.5, 0.5))(
         animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry().insert(sphere_type()(
+    scene.geometry().insert(sphere_type(animray::rgb<float>(0.5, 1.0, 0.5))(
         animray::translate<world>(-1.0, 1.0, 0.0)));
-    scene.geometry().insert(sphere_type()(
+    scene.geometry().insert(sphere_type(animray::rgb<float>(1.0, 1.0, 1.0))(
         animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
