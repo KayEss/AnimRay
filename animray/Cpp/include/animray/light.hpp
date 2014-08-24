@@ -25,6 +25,7 @@
 
 
 #include <tuple>
+#include <animray/shader.hpp>
 
 
 namespace animray {
@@ -86,9 +87,7 @@ namespace animray {
             R illumination(intersection.from(), geometry());
             if ( not scene.occludes(illumination, typename R::local_coord_type(1) /
                     typename R::local_coord_type(10000000000000) ) ) {
-                const typename R::local_coord_type costheta =
-                    dot(illumination.direction(), intersection.direction());
-                return superclass::color() * costheta;
+                return shader(illumination, intersection, superclass::color(), scene);
             } else {
                 return typename superclass::color_type();
             }
