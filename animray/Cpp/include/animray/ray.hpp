@@ -72,26 +72,14 @@ namespace animray {
         bool operator != ( const ray &r ) const {
             return ! ( *this == r );
         }
-    };
 
 
-    /// Transform a ray by a matrix
-    template<typename D>
-    ray<D> operator * (const ray<D> &left, const matrix<D> &right) {
-        return ray<D>(right * left.from(), right * left.ends());
-    }
-
-    /// Transform a ray by a matrix
-    template<typename D>
-    fostlib::nullable<ray<D>> operator * (
-        const fostlib::nullable<ray<D>> &left, const matrix<D> &right
-    ) {
-        if ( left.isnull() ) {
-            return fostlib::null;
-        } else {
-            return left.value() * right;
+        /// Transform a ray by a matrix
+        template<typename MD>
+        ray operator * (const matrix<MD> &right) const {
+            return ray(right * from(), right * ends());
         }
-    }
+    };
 
 
 }

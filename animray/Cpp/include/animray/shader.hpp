@@ -27,23 +27,17 @@
 namespace animray {
 
 
-    namespace detail {
-
-
-        template<typename C, typename I, typename R, typename G>
-        struct surface_interaction {
-            surface_interaction() {}
-            C operator() (
-                const R &light, const I &intersection, const C &incident, const G &
-            ) const {
-                const typename R::local_coord_type costheta =
-                        dot(light.direction(), intersection.direction());
-                return incident * costheta;
-            }
-        };
-
-
-    }
+    template<typename C, typename I, typename R, typename G>
+    struct surface_interaction {
+        surface_interaction() {}
+        C operator() (
+            const R &light, const I &intersection, const C &incident, const G &
+        ) const {
+            const typename R::local_coord_type costheta =
+                    dot(light.direction(), intersection.direction());
+            return incident * costheta;
+        }
+    };
 
 
     /// Basic Lambertian full-white surface
@@ -52,7 +46,7 @@ namespace animray {
         const R &light, const I &intersection, const C &incident,
         const G &geometry
     ) {
-        const detail::surface_interaction<C, I, R, G> calculation;
+        const surface_interaction<C, I, R, G> calculation;
         return calculation(light, intersection, incident, geometry);
     }
 

@@ -30,9 +30,8 @@
 namespace animray {
 
 
-    /// Implements a simple shader
-    template< typename O, typename C,
-        typename I = typename O::intersection_type >
+    /// Stores a surface color
+    template< typename O, typename C >
     class surface {
     public:
         /// The underlying object type
@@ -42,7 +41,27 @@ namespace animray {
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
         /// The intersection type
-        typedef I intersection_type;
+        class intersection_type : public O::intersection_type {
+            typedef typename O::intersection_type superclass;
+            const surface *m_struck;
+        public:
+            /// Default constructor (nothing struck)
+            intersection_type()
+            : superclass(), m_struck(nullptr) {
+            }
+            /// Construct an intersection that also stores the struck geometry
+            intersection_type(
+                const superclass &intersection, const surface &struck
+            ) : superclass(intersection), m_struck(&struck) {
+            }
+
+            /// Multiply by something
+            template< typename S >
+            intersection_type operator * ( const S &s ) {
+                superclass r(superclass::operator * (s));
+                return intersection_type(r, *m_struck);
+            }
+        };
 
         /// The geometry that is being shaded
         fostlib::accessors<instance_type, fostlib::lvalue> geometry;
@@ -50,7 +69,13 @@ namespace animray {
         /// Calculate the intersection of the ray on the instance
         template<typename R>
         fostlib::nullable< intersection_type > intersects(const R &by) const {
-            return geometry().intersects(by);
+            fostlib::nullable< typename O::intersection_type >
+                hit(geometry().intersects(by));
+            if ( hit.isnull() ) {
+                return fostlib::null;
+            } else {
+                return intersection_type(hit.value(), *this);
+            }
         }
 
         /// Calculate whether this object occludes the ray or not
