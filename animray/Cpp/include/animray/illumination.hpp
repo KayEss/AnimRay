@@ -72,7 +72,7 @@ namespace animray {
         typename beam_type::color_type operator() (const C &camera, S x, S y) const {
             typename beam_type::ray_type r(camera(x, y));
             fostlib::nullable<typename beam_type::ray_type>
-                intersection(geometry().intersection(r));
+                intersection(geometry().intersects(r));
             if ( !intersection.isnull() ) {
                 return light()(intersection.value(), geometry());
             } else {

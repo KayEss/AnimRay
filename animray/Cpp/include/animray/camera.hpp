@@ -134,7 +134,7 @@ namespace animray {
         }
 
         /// The camera is invisible in any scene
-        fostlib::nullable< ray_type > intersection(
+        fostlib::nullable< ray_type > intersects(
                 const ray_type &by) const {
             return fostlib::null;
         }

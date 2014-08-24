@@ -48,7 +48,7 @@ namespace animray {
         virtual ~movable() = default;
 
         /// Ray intersection
-        virtual fostlib::nullable< ray_type > intersection(
+        virtual fostlib::nullable< ray_type > intersects(
             const ray_type &by) const = 0;
 
         /// Occlusion check
@@ -94,8 +94,8 @@ namespace animray {
         }
 
         /// Ray intersection
-        fostlib::nullable< ray_type > intersection(const ray_type &by) const {
-            return instance.intersection(by * superclass::forward)
+        fostlib::nullable< ray_type > intersects(const ray_type &by) const {
+            return instance.intersects(by * superclass::forward)
                 * superclass::backward;
         }
 

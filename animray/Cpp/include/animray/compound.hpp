@@ -52,18 +52,18 @@ namespace animray {
         }
 
         /// Ray intersection with closest item
-        fostlib::nullable< ray_type > intersection(const ray_type &by) const {
+        fostlib::nullable< ray_type > intersects(const ray_type &by) const {
             fostlib::nullable< ray_type > result;
             local_coord_type result_dot;
             for ( const auto &instance : instances ) {
                 if ( result.isnull() ) {
-                    result = instance->intersection(by);
+                    result = instance->intersects(by);
                     if ( !result.isnull() ) {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 } else {
                     fostlib::nullable< ray_type > intersection(
-                        instance->intersection(by));
+                        instance->intersects(by));
                     if ( !intersection.isnull() ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
