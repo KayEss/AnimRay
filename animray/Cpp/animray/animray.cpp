@@ -41,7 +41,7 @@ FSL_MAIN(
     const int width = fostlib::coerce< int >( args[2].value("100") );
     const int height = fostlib::coerce< int >( args[3].value("100") );
 
-    typedef float world;
+    typedef double world;
     const world aspect = double(width) / height;
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;

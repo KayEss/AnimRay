@@ -134,13 +134,11 @@ namespace animray {
         }
 
         /// The camera is invisible in any scene
-        fostlib::nullable< ray_type > intersects(
-                const ray_type &by) const {
+        fostlib::nullable< ray_type > intersects(const ray_type &) const {
             return fostlib::null;
         }
         /// The camera is invisible in any scene
-        bool occludes(const ray_type &by,
-                const local_coord_type epsilon) const {
+        bool occludes(const ray_type &, const local_coord_type) const {
             return false;
         }
 

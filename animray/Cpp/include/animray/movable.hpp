@@ -88,8 +88,7 @@ namespace animray {
 
         /// Occlusion check
         template< typename R >
-        bool occludes(const R &by, const local_coord_type epsilon
-        ) const {
+        bool occludes(const R &by, const local_coord_type epsilon) const {
             return instance.occludes(by * superclass::forward, epsilon);
         }
 

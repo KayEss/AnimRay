@@ -72,7 +72,7 @@ namespace animray {
 
         /// Returns true if the ray hits the sphere
         template< typename R >
-        bool occludes(const R &by, const D epsilon = D(0)) const {
+        bool occludes(const R &by, const D epsilon) const {
             // http://www.siggraph.org/education/materials/HyperGraph/
             const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
             const D b = D(2) * (

@@ -49,16 +49,16 @@ namespace {
             typedef animray::ray< D > ray;
             animray::sphere< animray::ray< D > > s;
             FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type() )
+                ray( end_type( 0, 0, 10 ), end_type() ), 0
             ) );
             FSL_CHECK( s.occludes(
-                ray( end_type(), end_type( 0, 0, 10 ) )
+                ray( end_type(), end_type( 0, 0, 10 ) ), 0
             ) );
             FSL_CHECK( !s.occludes(
-                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) )
+                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) ), 0
             ) );
             FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) )
+                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) ), 0
             ) );
         } catch ( fostlib::exceptions::exception &e ) {
             e.info() << "Type under test " <<
