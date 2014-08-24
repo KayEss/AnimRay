@@ -32,7 +32,8 @@ namespace animray {
 
 
     /// A simple compound object with no intelligence
-    template<typename O>
+    template<typename O,
+            typename I = typename O::intersection_type>
     class compound {
         std::vector<std::unique_ptr<O>> instances;
     public:
@@ -41,19 +42,20 @@ namespace animray {
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
         /// The type of the ray output by the instance
-        typedef typename instance_type::ray_type ray_type;
+        typedef I intersection_type;
 
         /// Insert a new object into the compound
-        template<typename I>
-        compound &insert(const I &instance) {
+        template<typename G>
+        compound &insert(const G &instance) {
             instances.push_back(
-                std::unique_ptr<instance_type>(new I(instance)));
+                std::unique_ptr<instance_type>(new G(instance)));
             return *this;
         }
 
         /// Ray intersection with closest item
-        fostlib::nullable< ray_type > intersects(const ray_type &by) const {
-            fostlib::nullable< ray_type > result;
+        template<typename R>
+        fostlib::nullable< intersection_type > intersects(const R &by) const {
+            fostlib::nullable< intersection_type > result;
             local_coord_type result_dot;
             for ( const auto &instance : instances ) {
                 if ( result.isnull() ) {
@@ -62,7 +64,7 @@ namespace animray {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 } else {
-                    fostlib::nullable< ray_type > intersection(
+                    fostlib::nullable< intersection_type > intersection(
                         instance->intersects(by));
                     if ( !intersection.isnull() ) {
                         local_coord_type dot(
@@ -78,8 +80,9 @@ namespace animray {
         }
 
         /// Occlusion check
+        template<typename R>
         bool occludes(
-            const ray_type &by, const local_coord_type epsilon
+            const R &by, const typename R::local_coord_type epsilon
         ) const {
             return std::find_if(instances.begin(), instances.end(),
                 [&](const std::unique_ptr<instance_type> &instance) {

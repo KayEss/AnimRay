@@ -46,8 +46,9 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
+    typedef animray::sphere< animray::ray< world > > sphere_type;
     typedef animray::scene<
-        animray::compound<animray::movable<void, world>>,
+        animray::compound<animray::movable<sphere_type>>,
         animray::light<
             std::tuple<
                 animray::light<void, uint8_t>,
@@ -61,7 +62,6 @@ FSL_MAIN(
             scene_type;
     scene_type scene;
 
-    typedef animray::sphere< animray::ray< world > > sphere_type;
     scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate<world>(0.0, 0.0, 5.0)));
     scene.geometry().insert(animray::movable<sphere_type>()(
@@ -87,7 +87,9 @@ FSL_MAIN(
             animray::point3d<world>(5.0, -5.0, -5.0),
             animray::rgb<uint8_t>(0x20, 0x20, 0x80)));
 
-    animray::movable<animray::pinhole_camera<scene_type::beam_type::ray_type>>
+    animray::movable<
+            animray::pinhole_camera<scene_type::beam_type::ray_type>,
+            animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
     camera(animray::translate<world>(0.0, 0.0, -8.5));
     typedef animray::film<animray::rgb<uint8_t>> film_type;
