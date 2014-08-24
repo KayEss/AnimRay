@@ -116,12 +116,12 @@ namespace animray {
         const parameters *m_struck;
     };
 
-    template<typename I, typename C, typename R, typename G>
-    struct surface_interaction< C, matte<I, C>, R, G > {
+    template<typename C, typename I, typename IC, typename R, typename G>
+    struct surface_interaction< C, matte<I, IC>, R, G > {
         surface_interaction() {}
         C operator() (
             const R &light,
-            const matte<I, C> &intersection,
+            const matte<I, IC> &intersection,
             const C &incident,
             const G &
         ) const {

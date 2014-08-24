@@ -118,7 +118,9 @@ namespace animray {
             }
 
             /// Multiply each component
-            array_based operator * (const value_type w) const {
+            template<typename W>
+            typename std::enable_if<std::is_scalar<W>::value, array_based>::type
+                    operator * (const W w) const {
                 array_based c(*this);
                 for ( auto &i : c.array ) {
                     i = value_type(i * w);

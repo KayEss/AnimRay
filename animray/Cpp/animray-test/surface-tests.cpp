@@ -33,8 +33,8 @@ FSL_TEST_FUNCTION(matte_rgb) {
             animray::sphere<animray::ray<int>>,
             animray::matte< animray::ray<int>, animray::rgb<int> >
         > red_ball(animray::rgb<int>(1, 0, 0));
-    // Following based on the light<point3d<W>> class
 
+    // Following based on the light<point3d<W>> class
     animray::matte< animray::ray<int>, animray::rgb<int> >
         hit(animray::ray<int>(
                 animray::point3d<int>(0, 0, 1),
@@ -52,5 +52,25 @@ FSL_TEST_FUNCTION(matte_rgb) {
 
 
 FSL_TEST_FUNCTION(matte_gray) {
+    FSL_CHECK_EQ(10 * 0.5f, 5); // Check the maths will work out
+    animray::surface<
+            animray::sphere<animray::ray<int>>,
+            animray::matte< animray::ray<int>, float >
+        > gray_ball(0.5);
+
+    // Following based on the light<point3d<W>> class
+    animray::matte< animray::ray<int>, float >
+        hit(animray::ray<int>(
+                animray::point3d<int>(0, 0, 1),
+                animray::point3d<int>(0, 0, 2)),
+            gray_ball.surface_physics());
+    animray::ray<int> illumination(
+        animray::point3d<int>(0, 0, 1),
+        animray::point3d<int>(0, 0, 5));
+    animray::rgb<int> final(animray::shader(
+        illumination, hit, animray::rgb<int>(10, 10, 10), gray_ball));
+    FSL_CHECK_EQ(final.red(), 5);
+    FSL_CHECK_EQ(final.green(), 5);
+    FSL_CHECK_EQ(final.blue(), 5);
 }
 
