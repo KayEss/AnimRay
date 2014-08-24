@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/ray.hpp>
+#include <animray/shader.hpp>
 
 
 namespace animray {
