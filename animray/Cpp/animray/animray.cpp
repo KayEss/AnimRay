@@ -26,6 +26,7 @@
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/illumination.hpp>
+#include <animray/intersection.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
@@ -59,15 +60,16 @@ FSL_MAIN(
             scene_type;
     scene_type scene;
 
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
+    typedef animray::sphere< animray::ray< world > > sphere_type;
+    scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate(0.0, 0.0, 5.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate(-1.0, -1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate(1.0, -1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate(-1.0, 1.0, 0.0)));
-    scene.geometry().insert(animray::movable<animray::sphere<world>>()(
+    scene.geometry().insert(animray::movable<sphere_type>()(
         animray::translate(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);

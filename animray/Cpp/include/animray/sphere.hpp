@@ -31,11 +31,13 @@ namespace animray {
 
 
     /// A simple 3D unit sphere primitive at the origin.
-    template< typename D >
+    template< typename I, typename D = typename I::local_coord_type >
     class sphere {
     public:
         /// The type of the local coordinates used
         typedef D local_coord_type;
+        /// Type of intersection to return when the sphere is struck
+        typedef I intersection_type;
 
         /// Check for equality
         bool operator == ( const sphere &r ) const {
@@ -48,7 +50,8 @@ namespace animray {
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
-        fostlib::nullable< ray < D > > intersection(const ray<D> &by) const {
+        template< typename R >
+        fostlib::nullable< intersection_type > intersects(const R &by) const {
             const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
             const D xd = by.direction().x(), yd = by.direction().y(), zd = by.direction().z();
             const D b = D(2) * (x0 * xd + y0 * yd + z0 * zd);
@@ -63,12 +66,13 @@ namespace animray {
             typedef typename ray<D>::end_type end_type;
             typedef typename ray<D>::direction_type direction_type;
             const D px = x0 + t * xd, py = y0 + t * yd, pz = z0 + t * zd;
-            return ray<D>(end_type(px, py, pz),
+            return intersection_type(end_type(px, py, pz),
                 direction_type(end_type(px, py, pz)));
         }
 
         /// Returns true if the ray hits the sphere
-        bool occludes(const ray< D > &by, const D epsilon = D(0)) const {
+        template< typename R >
+        bool occludes(const R &by, const D epsilon = D(0)) const {
             // http://www.siggraph.org/education/materials/HyperGraph/
             const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
             const D b = D(2) * (
