@@ -41,12 +41,23 @@ namespace animray {
         typedef W parameters;
 
         /// Calculate the light/surface interaction
-        template< typename R, typename I, typename CI, typename G >
+        template< typename RI, typename RL, typename I,
+            typename CI, typename G >
         CI operator () (
-            const W &width, const R &light, const I &intersection,
-            const CI &incident, const G &
+            const W &width, const RI &observer, const RL &light,
+            const I &intersection, const CI &incident, const G &
         ) const {
-            return incident;
+            typedef typename RI::local_coord_type accuracy;
+            const accuracy ci = -dot(observer.direction(), intersection.direction());
+            const unit_vector< accuracy > ri(
+                observer.direction() +
+                    intersection.direction() * accuracy(2) * ci);
+            const accuracy costheta(dot(ri, light.direction()));
+            if ( costheta > accuracy() ) {
+                return incident * std::pow(costheta, width);
+            } else {
+                return CI();
+            }
         }
     };
 

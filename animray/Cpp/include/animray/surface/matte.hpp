@@ -41,12 +41,13 @@ namespace animray {
         typedef C parameters;
 
         /// Calculate the light/surface interaction
-        template< typename R, typename I, typename CI, typename G >
+        template< typename RI, typename RL, typename I,
+            typename CI, typename G >
         CI operator () (
-            const C &attenuation, const R &light, const I &intersection,
-            const CI &incident, const G &
+            const C &attenuation, const RI &, const RL &light,
+            const I &intersection, const CI &incident, const G &
         ) const {
-            const typename R::local_coord_type costheta =
+            const typename RI::local_coord_type costheta =
                     dot(light.direction(), intersection.direction());
             return incident * attenuation * costheta;
         }

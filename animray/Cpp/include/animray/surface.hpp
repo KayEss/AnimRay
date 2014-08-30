@@ -121,14 +121,15 @@ namespace animray {
         struct surface_calculation {
             surface_calculation() {}
             const N n;
-            template< typename R, typename I, typename G >
+            template< typename RI, typename RL, typename I, typename G >
             C operator () (
-                const R &light, const I &intersection, const C &incident, const G &geometry
+                const RI &observer, const RL &light, const I &intersection,
+                const C &incident, const G &geometry
             ) const {
                 return n(std::get<item>(intersection.parameters()),
-                        light, intersection, incident, geometry) +
+                        observer, light, intersection, incident, geometry) +
                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
-                        light, intersection, incident, geometry);
+                        observer, light, intersection, incident, geometry);
             }
         };
 
@@ -136,29 +137,31 @@ namespace animray {
         struct surface_calculation<1, item, C, N > {
             surface_calculation() {}
             const N n;
-            template< typename R, typename I, typename G >
+            template< typename RI, typename RL, typename I, typename G >
             C operator () (
-                const R &light, const I &intersection, const C &incident, const G &geometry
+                const RI &observer, const RL &light, const I &intersection,
+                const C &incident, const G &geometry
             ) const {
                 return n(std::get<item>(intersection.parameters()),
-                    light, intersection, incident, geometry);
+                    observer, light, intersection, incident, geometry);
             }
         };
     }
 
 
     /// Specialisation of the surface interaction that will use all of the surface layers
-    template< typename C, typename O, typename R, typename G, typename... S >
-    struct surface_interaction< C, intersection< surface<O, S...> >, R, G > {
+    template< typename C, typename O, typename RI, typename RL,
+        typename G, typename... S >
+    struct surface_interaction< C, intersection< surface<O, S...> >, RI, RL, G > {
         surface_interaction() {}
         C operator() (
-            const R &light,
+            const RI &observer, const RL &light,
             const intersection< surface<O, S...> > &intersection,
             const C &incident,
             const G &geometry
         ) const {
             return detail::surface_calculation<sizeof...(S), 0, C, S...>()(
-                light, intersection, incident, geometry);
+                observer, light, intersection, incident, geometry);
         }
     };
 

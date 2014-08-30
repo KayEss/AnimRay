@@ -71,19 +71,19 @@ FSL_MAIN(
     scene.background(animray::rgb<float>(10, 50, 70));
 
     scene.geometry().insert(
-        sphere_type(10.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
+        sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
             animray::translate<world>(0.0, 0.0, 5.0)));
     scene.geometry().insert(
-        sphere_type(10.0f, animray::rgb<float>(0, 1.0, 1.0))(
+        sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
     scene.geometry().insert(
         sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
             animray::translate<world>(1.0, -1.0, 0.0)));
     scene.geometry().insert(
-        sphere_type(10.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
+        sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
             animray::translate<world>(-1.0, 1.0, 0.0)));
     scene.geometry().insert(
-        sphere_type(10.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
+        sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
@@ -109,7 +109,7 @@ FSL_MAIN(
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
             animray::rgb<float> photons(scene(camera, x, y));
-            const float exposure = 1.2f;
+            const float exposure = 1.4f;
             return animray::rgb<uint8_t>(
                 uint8_t(photons.red() / exposure > 255 ? 255 : photons.red() / exposure),
                 uint8_t(photons.green() / exposure > 255 ? 255 : photons.green() / exposure),

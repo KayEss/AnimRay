@@ -53,10 +53,11 @@ namespace animray {
         /// Given a position on the camera film, calculate the colour it should be
         template< typename M, typename S >
         color_type operator() (const M &camera, S x, S y) const {
+            typename M::intersection_type observer(camera(x, y));
             fostlib::nullable<intersection_type>
-                intersection(geometry().intersects(camera(x, y)));
+                intersection(geometry().intersects(observer));
             if ( !intersection.isnull() ) {
-                return color_type(light()(intersection.value(), geometry()));
+                return color_type(light()(observer, intersection.value(), geometry()));
             } else {
                 return background();
             }

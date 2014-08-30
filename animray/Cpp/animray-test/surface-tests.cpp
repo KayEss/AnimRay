@@ -44,6 +44,7 @@ FSL_TEST_FUNCTION(matte_rgb) {
         animray::point3d<int>(0, 0, 1),
         animray::point3d<int>(0, 0, 5));
     animray::rgb<int> final(animray::shader(
+        animray::ray<int>(),
         illumination, hit, animray::rgb<int>(255, 255, 255), red_ball));
     FSL_CHECK_EQ(final.red(), 255);
     FSL_CHECK_EQ(final.green(), 0);
@@ -68,6 +69,7 @@ FSL_TEST_FUNCTION(matte_gray) {
         animray::point3d<int>(0, 0, 1),
         animray::point3d<int>(0, 0, 5));
     animray::rgb<int> final(animray::shader(
+        animray::ray<int>(),
         illumination, hit, animray::rgb<int>(10, 10, 10), gray_ball));
     FSL_CHECK_EQ(final.red(), 5);
     FSL_CHECK_EQ(final.green(), 5);
