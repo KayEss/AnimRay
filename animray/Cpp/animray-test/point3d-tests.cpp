@@ -79,13 +79,18 @@ FSL_TEST_FUNCTION( json ) {
 }
 
 
-FSL_TEST_FUNCTION( minus ) {
-    animray::point3d< int >
-        h0, h1( 1, 0, 0 ), h2( -1, 0, 0 );
-    FSL_CHECK_EQ( h0 - h0, h0 );
-    FSL_CHECK_EQ( h1 - h0, h1 );
-    FSL_CHECK_EQ( h0 - h1, h2 );
-    FSL_CHECK_EQ( h1 - h1, h0 );
+FSL_TEST_FUNCTION( basic_arithmatic ) {
+    animray::point3d< int > x(2, 0, 0, 2), y(0, 2, 0, 2), z(0, 0, 2, 2),
+        xy(2, 2, 0, 2), xz(2, 0, 2, 2), yz(0, 2, 2, 2);
+    FSL_CHECK_EQ(x + y, xy);
+    FSL_CHECK_EQ(x + z, xz);
+    FSL_CHECK_EQ(y + z, yz);
+    FSL_CHECK_EQ(xy * xz, x);
+    FSL_CHECK_EQ(xy * yz, y);
+    FSL_CHECK_EQ(xz * yz, z);
+    FSL_CHECK_EQ(x + x, x * 2);
+    FSL_CHECK_EQ(y + y, y * 2);
+    FSL_CHECK_EQ(z + z, z * 2);
 }
 
 

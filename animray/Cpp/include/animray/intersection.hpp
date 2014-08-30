@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -19,21 +19,20 @@
 */
 
 
-#include <animray/unit-vector.hpp>
-#include <fost/test>
+#ifndef ANIMRAY_INTERSECTION_HPP
+#define ANIMRAY_INTERSECTION_HPP
+#pragma once
 
 
-using animray::unit_vector;
+namespace animray {
 
 
-FSL_TEST_SUITE( unit_vector );
+    /// An intersection type that is capable of holding multiple extra parameters
+    template<typename S>
+    class intersection;
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< unit_vector< int > >();
-    fostlib::test::default_copy_constructable< unit_vector< int64_t > >();
-    fostlib::test::default_copy_constructable< unit_vector< float > >();
-    fostlib::test::default_copy_constructable< unit_vector< double > >();
-    fostlib::test::default_copy_constructable< unit_vector< long double > >();
 }
 
+
+#endif // ANIMRAY_INTERSECTION_HPP

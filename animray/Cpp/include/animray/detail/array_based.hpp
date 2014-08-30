@@ -119,10 +119,19 @@ namespace animray {
 
             /// Multiply each component
             template<typename W>
-            array_based operator * (const W w) const {
+            typename std::enable_if<std::is_scalar<W>::value, array_based>::type
+                    operator * (const W w) const {
                 array_based c(*this);
                 for ( auto &i : c.array ) {
                     i = value_type(i * w);
+                }
+                return c;
+            }
+            /// Multiply each component by the corresponding value
+            array_based operator * ( const array_based &w ) const {
+                array_based c(*this);
+                for ( std::size_t i(0); i < array.size(); ++i ) {
+                    c.array[i] *= w.array[i];
                 }
                 return c;
             }

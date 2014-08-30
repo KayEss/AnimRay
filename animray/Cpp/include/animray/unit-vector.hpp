@@ -51,6 +51,10 @@ namespace animray {
         point3d<value_type> operator * (D scalar) const {
             return point3d<value_type>(*this) * scalar;
         }
+        /// Add a vector
+        point3d<value_type> operator + (const point3d<value_type> &r) const {
+            return point3d<value_type>(*this) + r;
+        }
 
         /// Compare for equality
         bool operator == ( const unit_vector &v ) const {
