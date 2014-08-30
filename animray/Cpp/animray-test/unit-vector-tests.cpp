@@ -23,14 +23,17 @@
 #include <fost/test>
 
 
+using animray::unit_vector;
+
+
 FSL_TEST_SUITE( unit_vector );
 
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
-    using animray::unit_vector;
     fostlib::test::default_copy_constructable< unit_vector< int > >();
     fostlib::test::default_copy_constructable< unit_vector< int64_t > >();
     fostlib::test::default_copy_constructable< unit_vector< float > >();
     fostlib::test::default_copy_constructable< unit_vector< double > >();
     fostlib::test::default_copy_constructable< unit_vector< long double > >();
 }
+
