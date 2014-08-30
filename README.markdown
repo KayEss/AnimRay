@@ -36,5 +36,7 @@ Geometry is described by a class that implements the required methods.
 
 Lights create illumination. They are responsible for working out how much light hits any part of the geometry.
 
-## Shader ##
+## Surface physics ##
+
+Surface physics handle the colour of objects and how this colour and the illumination from lights shows up.
 
