@@ -19,20 +19,39 @@
 */
 
 
-#ifndef ANIMRAY_INTERSECTION_HPP
-#define ANIMRAY_INTERSECTION_HPP
+#ifndef ANIMRAY_SURFACE_GLOSS_HPP
+#define ANIMRAY_SURFACE_GLOSS_HPP
 #pragma once
+
+
+#include <animray/surface.hpp>
 
 
 namespace animray {
 
 
-    /// An intersection type that is capable of holding multiple extra parameters
-    template<typename S>
-    class intersection;
+    /// The gloss surface intersection type
+    template<typename W>
+    class gloss {
+    public:
+        /// Default constructor
+        gloss() {}
+
+        /// The width of the specular highlight
+        typedef W parameters;
+
+        /// Calculate the light/surface interaction
+        template< typename R, typename I, typename CI, typename G >
+        CI operator () (
+            const W &width, const R &light, const I &intersection,
+            const CI &incident, const G &
+        ) const {
+            return incident;
+        }
+    };
 
 
 }
 
 
-#endif // ANIMRAY_INTERSECTION_HPP
+#endif // ANIMRAY_SURFACE_GLOSS_HPP

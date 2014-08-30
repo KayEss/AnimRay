@@ -27,6 +27,7 @@
 namespace animray {
 
 
+    /// Basic Lambertian full-white surface
     template<typename C, typename I, typename R, typename G>
     struct surface_interaction {
         surface_interaction() {}
@@ -40,13 +41,13 @@ namespace animray {
     };
 
 
-    /// Basic Lambertian full-white surface
-    template<typename C, typename I, typename R, typename G>
+    /// Calls into the relevant surface partial specialisation
+    template<typename RL, typename C, typename I, typename G>
     C shader(
-        const R &light, const I &intersection, const C &incident,
+        const RL &light, const I &intersection, const C &incident,
         const G &geometry
     ) {
-        const surface_interaction<C, I, R, G> calculation;
+        const surface_interaction<C, I, RL, G> calculation;
         return calculation(light, intersection, incident, geometry);
     }
 
