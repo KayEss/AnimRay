@@ -44,6 +44,12 @@ namespace animray {
     template < typename D >
     class point3d : private detail::array_based< D, 4 > {
         typedef detail::array_based< D, 4 > superclass;
+
+        /// Allow this class to construct from the superclass
+        point3d(const superclass &sc)
+        : superclass(sc) {
+        }
+
     public:
         typedef typename superclass::value_type value_type;
         typedef typename superclass::array_type array_type;
@@ -92,11 +98,11 @@ namespace animray {
 
         /// Compare for equality
         bool operator == ( const point3d &r ) const {
-            return superclass::array == r.superclass::array;
+            return x() == x() && y() == y() && z() == z();
         }
         /// Compare for inequality
         bool operator != ( const point3d &r ) const {
-            return superclass::array != r.superclass::array;
+            return not operator == (r);
         }
 
         /// Binary subtraction
@@ -115,7 +121,11 @@ namespace animray {
                 superclass::array[0],
                 superclass::array[1],
                 superclass::array[2],
-                superclass::array[3] * s);
+                superclass::array[3] / s);
+        }
+        /// Multiply by another point
+        point3d operator * (const point3d &r) const {
+            return point3d(superclass::operator *(r));
         }
 
         /// Return the homogeneous with unit length

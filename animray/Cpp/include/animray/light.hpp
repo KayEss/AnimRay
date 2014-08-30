@@ -25,6 +25,7 @@
 
 
 #include <tuple>
+#include <animray/shader.hpp>
 
 
 namespace animray {
@@ -55,8 +56,8 @@ namespace animray {
         }
 
         /// Calculate the illumination given by this light
-        template< typename R, typename G >
-        color_type operator () (const R &intersection, const G &scene) const {
+        template< typename O, typename R, typename G >
+        color_type operator () (const O &, const R &, const G &) const {
             return color();
         }
     };
@@ -79,16 +80,15 @@ namespace animray {
         }
 
         /// Calculate the illumination given by this light
-        template< typename R, typename G >
+        template< typename O, typename I, typename G >
         typename superclass::color_type operator () (
-            const R &intersection, const G &scene
+            const O &observer, const I &intersection, const G &scene
         ) const {
-            R illumination(intersection.from(), geometry());
-            if ( not scene.occludes(illumination, typename R::value_type(1) /
-                    typename R::value_type(1000000000) ) ) {
-                const typename R::value_type costheta =
-                    dot(illumination.direction(), intersection.direction());
-                return superclass::color() * costheta;
+            ray<typename O::local_coord_type> illumination(
+                intersection.from(), geometry());
+            if ( not scene.occludes(illumination, typename I::local_coord_type(1) /
+                    typename I::local_coord_type(100000000000) ) ) {
+                return shader(observer, illumination, intersection, superclass::color(), scene);
             } else {
                 return typename superclass::color_type();
             }
@@ -115,11 +115,13 @@ namespace animray {
         }
 
         /// Calculate the illumination given by this light
-        template< typename R, typename G >
-        color_type operator () (const R &intersection, const G &scene) const {
+        template< typename O, typename R, typename G >
+        color_type operator () (
+            const O &observer, const R &intersection, const G &scene
+        ) const {
             color_type c(superclass::color());
             for ( const auto &i : _lights ) {
-                c += i(intersection, scene);
+                c += i(observer, intersection, scene);
             }
             return c;
         }
@@ -136,19 +138,23 @@ namespace animray {
         typedef light<void, C> superclass;
         typedef std::tuple<L1, Ls...> tuple_type;
 
-        template<typename R, typename G, std::size_t S>
+        template<typename O, typename R, typename G, std::size_t S>
         struct helper {
-            typename std::tuple_element<S, tuple_type>::type::color_type
-                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
-                return helper<R, G, S - 1>().lighting(lights, intersection, scene) +
-                    std::get<S>(lights)(intersection, scene);
+            typename std::tuple_element<S, tuple_type>::type::color_type lighting(
+                const tuple_type &lights, const O &observer,
+                const R &intersection, const G &scene
+            ) const {
+                return helper<O, R, G, S - 1>().lighting(lights, observer, intersection, scene) +
+                    std::get<S>(lights)(observer, intersection, scene);
             }
         };
-        template<typename R, typename G>
-        struct helper<R, G, 0> {
-            typename std::tuple_element<0, tuple_type>::type::color_type
-                    lighting(const tuple_type &lights, const R &intersection, const G &scene) const {
-                return std::get<0>(lights)(intersection, scene);
+        template<typename O, typename R, typename G>
+        struct helper<O, R, G, 0> {
+            typename std::tuple_element<0, tuple_type>::type::color_type lighting(
+                const tuple_type &lights, const O &observer,
+                    const R &intersection, const G &scene
+            ) const {
+                return std::get<0>(lights)(observer, intersection, scene);
             }
         };
 
@@ -157,11 +163,13 @@ namespace animray {
         typedef C color_type;
 
         /// Calculate the illumination given by this light
-        template< typename R, typename G >
-        color_type operator () (const R &intersection, const G &scene) const {
+        template< typename O, typename R, typename G >
+        color_type operator () (
+            const O &observer, const R &intersection, const G &scene
+        ) const {
             return superclass::color() +
-                helper<R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
-                    *this, intersection, scene);
+                helper<O, R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
+                    *this, observer, intersection, scene);
         };
     };
 

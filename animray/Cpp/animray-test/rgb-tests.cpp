@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -38,5 +38,13 @@ FSL_TEST_FUNCTION( constructor_default_tests ) {
 FSL_TEST_FUNCTION( json ) {
     json_roundtrip( animray::rgb< int64_t >(), "[0, 0, 0]" );
     json_roundtrip( animray::rgb< uint8_t >( 1, 2, 3 ), "[1,2,3]" );
+}
+
+
+FSL_TEST_FUNCTION(attenuation) {
+    animray::rgb<int> f1(animray::rgb<int>(10, 10, 10) * 0.5f);
+    FSL_CHECK_EQ(f1.red(), 5);
+    FSL_CHECK_EQ(f1.green(), 5);
+    FSL_CHECK_EQ(f1.blue(), 5);
 }
 

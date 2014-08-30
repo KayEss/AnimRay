@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -20,6 +20,7 @@
 
 
 #include <animray/sphere.hpp>
+#include <animray/ray.hpp>
 #include <fost/test>
 
 
@@ -27,11 +28,16 @@ FSL_TEST_SUITE( sphere );
 
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::sphere< int > >();
-    fostlib::test::default_copy_constructable< animray::sphere< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::sphere< float > >();
-    fostlib::test::default_copy_constructable< animray::sphere< double > >();
-    fostlib::test::default_copy_constructable< animray::sphere< long double > >();
+    fostlib::test::default_copy_constructable<
+        animray::sphere< animray::ray< int>  > >();
+    fostlib::test::default_copy_constructable<
+        animray::sphere< animray::ray< int64_t > > >();
+    fostlib::test::default_copy_constructable<
+        animray::sphere< animray::ray<float > > >();
+    fostlib::test::default_copy_constructable<
+        animray::sphere< animray::ray<double > > >();
+    fostlib::test::default_copy_constructable<
+        animray::sphere< animray::ray<long double > > >();
 }
 
 
@@ -41,18 +47,18 @@ namespace {
         try {
             typedef typename animray::ray< D >::end_type end_type;
             typedef animray::ray< D > ray;
-            animray::sphere< D > s;
+            animray::sphere< animray::ray< D > > s;
             FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type() )
+                ray( end_type( 0, 0, 10 ), end_type() ), 0
             ) );
             FSL_CHECK( s.occludes(
-                ray( end_type(), end_type( 0, 0, 10 ) )
+                ray( end_type(), end_type( 0, 0, 10 ) ), 0
             ) );
             FSL_CHECK( !s.occludes(
-                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) )
+                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) ), 0
             ) );
             FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) )
+                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) ), 0
             ) );
         } catch ( fostlib::exceptions::exception &e ) {
             e.info() << "Type under test " <<
