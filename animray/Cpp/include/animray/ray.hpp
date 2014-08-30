@@ -42,12 +42,12 @@ namespace animray {
         /// Unit vector type describing the direction
         typedef unit_vector< local_coord_type > direction_type;
 
-        /// Construct a null line
+        /// Construct a null ray
         ray() {
         }
         /// Construct a line between two locations
         ray( const end_type &from, const end_type &to )
-        : from( from ), direction( to - from ) {
+        : from(from), direction(to - from) {
         }
         /// Construct a line from a location in the specified direction
         ray( const end_type &from, const direction_type &dir )
@@ -72,7 +72,6 @@ namespace animray {
         bool operator != ( const ray &r ) const {
             return ! ( *this == r );
         }
-
 
         /// Transform a ray by a matrix
         template<typename MD>
