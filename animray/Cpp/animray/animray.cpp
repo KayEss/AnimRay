@@ -68,11 +68,13 @@ FSL_MAIN(
         animray::rgb<float>>
             scene_type;
     scene_type scene;
-    scene.background(animray::rgb<float>(10, 50, 70));
+    scene.background(animray::rgb<float>(20, 70, 100));
 
+    const world scale(200.0);
     scene.geometry().insert(
-        sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
-            animray::translate<world>(0.0, 0.0, 5.0)));
+        sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))
+            (animray::translate<world>(0.0, 0.0, scale + 1.0))
+            (animray::scale<world>(scale, scale, scale)) );
     scene.geometry().insert(
         sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
@@ -104,7 +106,13 @@ FSL_MAIN(
             animray::pinhole_camera<animray::ray<world>>,
             animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
-    camera(animray::translate<world>(0.0, 0.0, -8.5));
+    camera
+        (animray::rotate_z<world>(25_deg))
+        (animray::rotate_x<world>(-65_deg))
+        (animray::translate<world>(0.0, 0.0, -8.5))
+        (animray::rotate_x<world>(2_deg))
+        (animray::rotate_y<world>(-1_deg))
+        (animray::translate<world>(0.0, 0.0, -1.5));
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
