@@ -103,7 +103,10 @@ FSL_MAIN(
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
-            animray::pinhole_camera<animray::ray<world>>,
+            animray::pinhole_camera<
+                animray::ray<world>,
+                animray::flat_jitter_camera<world>
+            >,
             animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
     camera
@@ -116,12 +119,17 @@ FSL_MAIN(
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            animray::rgb<float> photons(scene(camera, x, y));
+            const std::size_t samples = 3;
+            animray::rgb<float> photons;
+            for ( std::size_t sample{}; sample != samples; ++sample ) {
+                photons += scene(camera, x, y) /= samples;
+            }
             const float exposure = 1.4f;
+            photons /= exposure;
             return animray::rgb<uint8_t>(
-                uint8_t(photons.red() / exposure > 255 ? 255 : photons.red() / exposure),
-                uint8_t(photons.green() / exposure > 255 ? 255 : photons.green() / exposure),
-                uint8_t(photons.blue() / exposure > 255 ? 255 : photons.blue() / exposure));
+                uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
         });
     animray::targa(output_filename, output);
 
