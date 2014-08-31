@@ -1,3 +1,7 @@
+2014-08-31  Kirit Saelensminde  <kirit@felspar.com>
+ Added some simple and basic materials plus the abstractions needed to deal with them.
+ Added the affine transformations for translation, scaling and rotation.
+
 2014-03-23  Kirit Saelensminde  <kirit@felspar.com>
  Hard coded a very simple ray traced scene.
 

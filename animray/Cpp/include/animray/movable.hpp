@@ -44,7 +44,7 @@ namespace animray {
         transformable &operator () (const transform_type &t) {
             // Swap forward and backward here because we're
             // going from world to local
-            forward *= t.second;
+            forward = t.second * forward;
             backward *= t.first;
             return *this;
         }
