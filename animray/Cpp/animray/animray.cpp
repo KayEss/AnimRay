@@ -119,7 +119,7 @@ FSL_MAIN(
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            const std::size_t samples = 3;
+            const std::size_t samples = 6;
             animray::rgb<float> photons;
             for ( std::size_t sample{}; sample != samples; ++sample ) {
                 photons += scene(camera, x, y) /= samples;
