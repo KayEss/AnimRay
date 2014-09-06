@@ -118,56 +118,25 @@ FSL_MAIN(
         (animray::rotate_y<world>(-1_deg))
         (animray::translate<world>(0.0, 0.0, -1.5));
 
-    std::size_t pdiv(animray::threading::detail::bigestodd(
-        animray::threading::detail::gcd(width, height)));
-    std::size_t px(width / pdiv), py(height / pdiv);
-
     typedef animray::film<animray::rgb<uint8_t>> film_type;
-    typedef animray::panel<film_type> panel_type;
-    typedef std::pair< fostlib::worker, fostlib::future<panel_type> > worker_type;
-    typedef animray::film<fostlib::future<panel_type>> calculation_type;
-
-    std::vector<worker_type> thread_pool(8);
-    std::size_t worker{};
-
-    calculation_type panels(width / px, height / py,
-        [&thread_pool, &scene, &camera, &worker, px, py](
-            const panel_type::size_type pr, const panel_type::size_type pc
-        ) {
-            if ( thread_pool[worker].second != fostlib::future<panel_type>() ) {
-                thread_pool[worker].second.exception();
-            }
-            fostlib::future<panel_type> result = thread_pool[worker].second =
-                thread_pool[worker].first.run<panel_type>(
-                    [&scene, &camera, px, py, pr, pc]() {
-                        return panel_type(px, py, px * pr, py * pc,
-                            [&scene, &camera](
-                                const film_type::size_type x, const film_type::size_type y
-                            ) {
-                                const std::size_t samples = 6;
-                                animray::rgb<float> photons;
-                                for ( std::size_t sample{}; sample != samples; ++sample ) {
-                                    photons += scene(camera, x, y) /= samples;
-                                }
-                                const float exposure = 1.4f;
-                                photons /= exposure;
-                                return animray::rgb<uint8_t>(
-                                    uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                                    uint8_t(photons.green() > 255 ? 255 : photons.green()),
-                                    uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
-                            });
-                    });
-            worker = (worker + 1) % thread_pool.size();
-            return result;
-        });
 
     animray::targa(output_filename,
         animray::threading::sub_panel<film_type>(
             width, height,
-            [&panels, px, py](
+            [&scene, &camera](
                 const film_type::size_type x, const film_type::size_type y
             ) {
-                return panels[x / px][y / py]()[x % px][y % py];
+                const std::size_t samples = 16;
+                animray::rgb<float> photons;
+                for ( std::size_t sample{}; sample != samples; ++sample ) {
+                    photons += scene(camera, x, y) /= samples;
+                }
+                const float exposure = 1.4f;
+                photons /= exposure;
+                return animray::rgb<uint8_t>(
+                    uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                    uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                    uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
             }));
 
     return 0;
