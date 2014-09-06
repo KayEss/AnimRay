@@ -143,12 +143,12 @@ FSL_MAIN(
                         uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
                 });
             }));
-    while ( !result.available(boost::posix_time::milliseconds(50)) ) {
+    while ( !result.available(fostlib::milliseconds(50)) ) {
         fostlib::meter::reading current(tracking());
         out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]\r" << std::flush;
     }
     fostlib::meter::reading current(tracking());
-    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]\r" << std::endl;
+    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]" << std::endl;
     animray::targa(output_filename, result());
 
     return 0;
