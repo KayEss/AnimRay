@@ -20,6 +20,7 @@
 
 
 #include <fost/main>
+#include <fost/progress-cli>
 #include <fost/unicode>
 #include <animray/camera.hpp>
 #include <animray/sphere.hpp>
@@ -120,24 +121,35 @@ FSL_MAIN(
 
     typedef animray::film<animray::rgb<uint8_t>> film_type;
 
-    animray::targa(output_filename,
-        animray::threading::sub_panel<film_type>(
-            8 /* threads */, width, height,
-            [&scene, &camera](
-                const film_type::size_type x, const film_type::size_type y
-            ) {
-                const std::size_t samples = 16;
-                animray::rgb<float> photons;
-                for ( std::size_t sample{}; sample != samples; ++sample ) {
-                    photons += scene(camera, x, y) /= samples;
-                }
-                const float exposure = 1.4f;
-                photons /= exposure;
-                return animray::rgb<uint8_t>(
-                    uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                    uint8_t(photons.green() > 255 ? 255 : photons.green()),
-                    uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+    fostlib::worker worker;
+    fostlib::meter tracking;
+    fostlib::future<film_type> result(worker.run<film_type>(
+        [width, height, &scene, &camera] () {
+            return animray::threading::sub_panel<film_type>(
+                8 /* threads */, width, height,
+                [&scene, &camera](
+                    const film_type::size_type x, const film_type::size_type y
+                ) {
+                    const std::size_t samples = 6;
+                    animray::rgb<float> photons;
+                    for ( std::size_t sample{}; sample != samples; ++sample ) {
+                        photons += scene(camera, x, y) /= samples;
+                    }
+                    const float exposure = 1.4f;
+                    photons /= exposure;
+                    return animray::rgb<uint8_t>(
+                        uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                        uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                        uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+                });
             }));
+    while ( !result.available(boost::posix_time::milliseconds(50)) ) {
+        fostlib::meter::reading current(tracking());
+        out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]\r" << std::flush;
+    }
+    fostlib::meter::reading current(tracking());
+    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]\r" << std::endl;
+    animray::targa(output_filename, result());
 
     return 0;
 }

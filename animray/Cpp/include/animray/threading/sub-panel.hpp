@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <fost/progress>
 #include <animray/panel.hpp>
 
 
@@ -65,6 +66,7 @@ namespace animray {
         ) {
             const std::size_t pdiv(detail::bigestodd(detail::gcd(width, height)));
             const std::size_t px(width / pdiv), py(height / pdiv);
+            fostlib::progress progress(fostlib::json(), px * py);
 
             typedef animray::panel<film_type> panel_type;
             typedef std::pair< fostlib::worker, fostlib::future<panel_type> > worker_type;
@@ -74,7 +76,7 @@ namespace animray {
             std::size_t worker{};
 
             calculation_type panels(width / px, height / py,
-                [&thread_pool, &worker, &fn, px, py](
+                [&thread_pool, &worker, &fn, px, py, threads](
                     const typename panel_type::size_type pr,
                     const typename panel_type::size_type pc
                 ) {
@@ -91,10 +93,11 @@ namespace animray {
                 });
 
             return film_type(width, height,
-                [&panels, px, py](
+                [&panels, px, py, &progress](
                     const typename film_type::size_type x,
                     const typename film_type::size_type y
                 ) {
+                    ++progress;
                     return panels[x / px][y / py]()[x % px][y % py];
                 });
         }
