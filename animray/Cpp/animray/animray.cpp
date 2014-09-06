@@ -33,6 +33,29 @@
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
+#include <animray/panel.hpp>
+
+
+namespace {
+    /// Calculate the greatest common denominator
+    template< typename S >
+    S gcd(S a, S b) {
+        while ( b != 0 ) {
+            S t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+    /// Calculate the largest odd number
+    template< typename S >
+    S bigestodd(S n) {
+        while ( (n & 1) == 0 ) {
+            n /= 2;
+        }
+        return n;
+    }
+}
 
 
 FSL_MAIN(
@@ -116,6 +139,12 @@ FSL_MAIN(
         (animray::rotate_x<world>(2_deg))
         (animray::rotate_y<world>(-1_deg))
         (animray::translate<world>(0.0, 0.0, -1.5));
+
+    std::size_t pdiv(bigestodd(gcd(width, height)));
+    std::size_t px(width / pdiv), py(height / pdiv);
+    out << "Panels are " << px << " x " << py <<
+        " (total of " << width / px * height  / py << " panels)" << std::endl;
+
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
