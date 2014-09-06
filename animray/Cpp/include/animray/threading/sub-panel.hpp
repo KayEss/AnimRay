@@ -76,7 +76,7 @@ namespace animray {
             std::size_t worker{};
 
             calculation_type panels(width / px, height / py,
-                [&thread_pool, &worker, &fn, px, py, threads](
+                [&thread_pool, &worker, &fn, px, py, threads, &progress](
                     const typename panel_type::size_type pr,
                     const typename panel_type::size_type pc
                 ) {
@@ -85,7 +85,8 @@ namespace animray {
                     }
                     fostlib::future<panel_type> result = thread_pool[worker].second =
                         thread_pool[worker].first. template run<panel_type>(
-                            [px, py, pr, pc, &fn]() {
+                            [px, py, pr, pc, &fn, &progress]() {
+                                ++progress;
                                 return panel_type(px, py, px * pr, py * pc, fn);
                             });
                     worker = (worker + 1) % threads;
@@ -93,11 +94,10 @@ namespace animray {
                 });
 
             return film_type(width, height,
-                [&panels, px, py, &progress](
+                [&panels, px, py](
                     const typename film_type::size_type x,
                     const typename film_type::size_type y
                 ) {
-                    ++progress;
                     return panels[x / px][y / py]()[x % px][y % py];
                 });
         }
