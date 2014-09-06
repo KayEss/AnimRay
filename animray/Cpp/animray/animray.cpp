@@ -33,29 +33,7 @@
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
-#include <animray/panel.hpp>
-
-
-namespace {
-    /// Calculate the greatest common denominator
-    template< typename S >
-    S gcd(S a, S b) {
-        while ( b != 0 ) {
-            S t = b;
-            b = a % b;
-            a = t;
-        }
-        return a;
-    }
-    /// Calculate the largest odd number
-    template< typename S >
-    S bigestodd(S n) {
-        while ( (n & 1) == 0 ) {
-            n /= 2;
-        }
-        return n;
-    }
-}
+#include <animray/threading/sub-panel.hpp>
 
 
 FSL_MAIN(
@@ -140,10 +118,9 @@ FSL_MAIN(
         (animray::rotate_y<world>(-1_deg))
         (animray::translate<world>(0.0, 0.0, -1.5));
 
-    std::size_t pdiv(bigestodd(gcd(width, height)));
+    std::size_t pdiv(animray::threading::detail::bigestodd(
+        animray::threading::detail::gcd(width, height)));
     std::size_t px(width / pdiv), py(height / pdiv);
-    out << "Panels are " << px << " x " << py <<
-        " (total of " << width / px * height  / py << " panels)" << std::endl;
 
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     typedef animray::panel<film_type> panel_type;
@@ -167,7 +144,7 @@ FSL_MAIN(
                             [&scene, &camera](
                                 const film_type::size_type x, const film_type::size_type y
                             ) {
-                                const std::size_t samples = 3;
+                                const std::size_t samples = 6;
                                 animray::rgb<float> photons;
                                 for ( std::size_t sample{}; sample != samples; ++sample ) {
                                     photons += scene(camera, x, y) /= samples;
@@ -184,13 +161,14 @@ FSL_MAIN(
             return result;
         });
 
-    film_type output(width, height,
-        [&panels, px, py](
-            const film_type::size_type x, const film_type::size_type y
-        ) {
-            return panels[x / px][y / py]()[x % px][y % py];
-        });
-    animray::targa(output_filename, output);
+    animray::targa(output_filename,
+        animray::threading::sub_panel<film_type>(
+            width, height,
+            [&panels, px, py](
+                const film_type::size_type x, const film_type::size_type y
+            ) {
+                return panels[x / px][y / py]()[x % px][y % py];
+            }));
 
     return 0;
 }
