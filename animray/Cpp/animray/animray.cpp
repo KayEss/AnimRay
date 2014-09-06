@@ -122,7 +122,7 @@ FSL_MAIN(
 
     animray::targa(output_filename,
         animray::threading::sub_panel<film_type>(
-            width, height,
+            8 /* threads */, width, height,
             [&scene, &camera](
                 const film_type::size_type x, const film_type::size_type y
             ) {

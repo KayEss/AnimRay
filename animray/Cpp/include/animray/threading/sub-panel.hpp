@@ -58,6 +58,7 @@ namespace animray {
         /// A mechanism whereby the frame is rendered in a number of sub-panels
         template<typename film_type, typename Fn>
         film_type sub_panel(
+            const std::size_t threads,
             const typename film_type::size_type width,
             const typename film_type::size_type height,
             Fn fn
@@ -69,7 +70,7 @@ namespace animray {
             typedef std::pair< fostlib::worker, fostlib::future<panel_type> > worker_type;
             typedef animray::film<fostlib::future<panel_type>> calculation_type;
 
-            std::vector<worker_type> thread_pool(8);
+            std::vector<worker_type> thread_pool(threads);
             std::size_t worker{};
 
             calculation_type panels(width / px, height / py,
@@ -85,7 +86,7 @@ namespace animray {
                             [px, py, pr, pc, &fn]() {
                                 return panel_type(px, py, px * pr, py * pc, fn);
                             });
-                    worker = (worker + 1) % thread_pool.size();
+                    worker = (worker + 1) % threads;
                     return result;
                 });
 
