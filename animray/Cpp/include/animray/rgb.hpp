@@ -98,6 +98,13 @@ namespace animray {
             return *this;
         }
 
+        /// In place division by a value
+        template<typename S>
+        rgb &operator /= (const S &s) {
+            superclass::operator /=(s);
+            return *this;
+        }
+
         /// Multiply the channel values by a scalar
         template<typename S>
         rgb operator * (const S weight) const {

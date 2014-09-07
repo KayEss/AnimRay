@@ -135,6 +135,16 @@ namespace animray {
                 }
                 return c;
             }
+
+            /// Divide by a value
+            template< typename W >
+            typename std::enable_if<std::is_scalar<W>::value, array_based&>::type
+                    operator /= (const W &s) {
+                for ( auto &i : array ) {
+                    i /= s;
+                }
+                return *this;
+            }
         };
 
 
