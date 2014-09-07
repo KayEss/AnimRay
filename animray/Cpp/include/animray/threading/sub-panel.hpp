@@ -66,11 +66,13 @@ namespace animray {
         ) {
             const std::size_t pdiv(detail::bigestodd(detail::gcd(width, height)));
             const std::size_t px(width / pdiv), py(height / pdiv);
-            fostlib::progress progress(fostlib::json(), width / px * height / py);
-            std::cout << width << " x " << height
-                << " split into " << width / px << " x " << height / py
-                << " panels of size " << px << " x " << height / py
-                << std::endl;
+            const std::size_t panels_x(width / px), panels_y(height / py);
+            fostlib::json description;
+            fostlib::insert(description, "panels", "x", panels_x);
+            fostlib::insert(description, "panels", "y", panels_y);
+            fostlib::insert(description, "size", "x", px);
+            fostlib::insert(description, "size", "y", py);
+            fostlib::progress progress(description, width / px * height / py);
 
             typedef animray::panel<film_type> panel_type;
             typedef animray::film<fostlib::future<panel_type>> calculation_type;
@@ -78,7 +80,7 @@ namespace animray {
             std::vector<fostlib::worker> thread_pool(threads);
             std::size_t worker{};
 
-            calculation_type panels(width / px, height / py,
+            calculation_type panels(panels_x, panels_y,
                 [&thread_pool, &worker, &fn, px, py, threads, &progress](
                     const typename panel_type::size_type pr,
                     const typename panel_type::size_type pc

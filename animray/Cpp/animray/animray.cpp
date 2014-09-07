@@ -143,16 +143,25 @@ FSL_MAIN(
                         uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
                 });
             }));
-    while ( !result.available(fostlib::milliseconds(50)) ) {
-        fostlib::meter::reading current(tracking());
-        out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m] "
-            << current.done() << "/" << current.work().value(0) << "\r" << std::flush;
-    }
+    fostlib::cli::monitor(out, tracking, result,
+        [](const fostlib::meter::reading &current) {
+            fostlib::stringstream out;
+            out << "\x1B[0m] "
+                << current.done() << "/" << current.work().value(0);
+            if ( current.meta().size() && not current.meta()[0].isnull() ) {
+                fostlib::json meta(current.meta()[0]);
+                out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
+                    << "x" << fostlib::json::unparse(meta["panels"]["y"], false)
+                    << " of size " << fostlib::json::unparse(meta["size"]["x"], false)
+                    << "x" << fostlib::json::unparse(meta["size"]["y"], false)
+                    << ")";
+            }
+            return out.str();
+        },
+        [](const fostlib::meter::reading &) {
+            return "[\x1B[1m";
+        });
     animray::targa(output_filename, result());
-    fostlib::meter::reading current(tracking());
-    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m] "
-            << current.done() << "/" << current.work().value()
-            << " done" << std::endl;
 
     return 0;
 }
