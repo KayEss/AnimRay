@@ -145,11 +145,14 @@ FSL_MAIN(
             }));
     while ( !result.available(fostlib::milliseconds(50)) ) {
         fostlib::meter::reading current(tracking());
-        out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]\r" << std::flush;
+        out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m] "
+            << current.done() << "/" << current.work().value(0) << "\r" << std::flush;
     }
-    fostlib::meter::reading current(tracking());
-    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m]" << std::endl;
     animray::targa(output_filename, result());
+    fostlib::meter::reading current(tracking());
+    out << "[\x1B[1m" << fostlib::cli::bar(current, 50) << "\x1B[0m] "
+            << current.done() << "/" << current.work().value()
+            << " done" << std::endl;
 
     return 0;
 }
