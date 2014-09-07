@@ -126,7 +126,7 @@ FSL_MAIN(
     fostlib::future<film_type> result(worker.run<film_type>(
         [width, height, &scene, &camera] () {
             return animray::threading::sub_panel<film_type>(
-                8 /* threads */, width, height,
+                10 /* threads */, width, height,
                 [&scene, &camera](
                     const film_type::size_type x, const film_type::size_type y
                 ) {
