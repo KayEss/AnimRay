@@ -66,7 +66,10 @@ namespace animray {
         ) {
             const std::size_t pdiv(detail::bigestodd(detail::gcd(width, height)));
             const std::size_t px(width / pdiv), py(height / pdiv);
-            fostlib::progress progress(fostlib::json(), px * py);
+            fostlib::progress progress(fostlib::json(), width / px * height / py);
+            std::cout << width / px << " x " << height / py
+                << " of size " << px << " x " << height / py
+                << std::endl;
 
             typedef animray::panel<film_type> panel_type;
             typedef std::pair< fostlib::worker, fostlib::future<panel_type> > worker_type;
