@@ -86,11 +86,13 @@ namespace animray {
                     if ( thread_pool[worker].second != fostlib::future<panel_type>() ) {
                         thread_pool[worker].second.exception();
                     }
-                    fostlib::future<panel_type> result = thread_pool[worker].second =
+                    fostlib::future<panel_type> result =
+                        thread_pool[worker].second =
                         thread_pool[worker].first. template run<panel_type>(
                             [px, py, pr, pc, &fn, &progress]() {
+                                panel_type panel(px, py, px * pr, py * pc, fn);
                                 ++progress;
-                                return panel_type(px, py, px * pr, py * pc, fn);
+                                return panel;
                             });
                     worker = (worker + 1) % threads;
                     return result;
