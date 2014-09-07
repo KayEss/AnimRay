@@ -67,15 +67,15 @@ namespace animray {
             const std::size_t pdiv(detail::bigestodd(detail::gcd(width, height)));
             const std::size_t px(width / pdiv), py(height / pdiv);
             fostlib::progress progress(fostlib::json(), width / px * height / py);
-            std::cout << width / px << " x " << height / py
-                << " of size " << px << " x " << height / py
+            std::cout << width << " x " << height
+                << " split into " << width / px << " x " << height / py
+                << " panels of size " << px << " x " << height / py
                 << std::endl;
 
             typedef animray::panel<film_type> panel_type;
-            typedef std::pair< fostlib::worker, fostlib::future<panel_type> > worker_type;
             typedef animray::film<fostlib::future<panel_type>> calculation_type;
 
-            std::vector<worker_type> thread_pool(threads);
+            std::vector<fostlib::worker> thread_pool(threads);
             std::size_t worker{};
 
             calculation_type panels(width / px, height / py,
@@ -83,12 +83,8 @@ namespace animray {
                     const typename panel_type::size_type pr,
                     const typename panel_type::size_type pc
                 ) {
-                    if ( thread_pool[worker].second != fostlib::future<panel_type>() ) {
-                        thread_pool[worker].second.exception();
-                    }
                     fostlib::future<panel_type> result =
-                        thread_pool[worker].second =
-                        thread_pool[worker].first. template run<panel_type>(
+                        thread_pool[worker]. template run<panel_type>(
                             [px, py, pr, pc, &fn, &progress]() {
                                 panel_type panel(px, py, px * pr, py * pc, fn);
                                 ++progress;
