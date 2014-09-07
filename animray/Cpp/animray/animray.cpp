@@ -20,6 +20,7 @@
 
 
 #include <fost/main>
+#include <fost/progress-cli>
 #include <fost/unicode>
 #include <animray/camera.hpp>
 #include <animray/sphere.hpp>
@@ -33,6 +34,7 @@
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
+#include <animray/threading/sub-panel.hpp>
 
 
 FSL_MAIN(
@@ -116,22 +118,50 @@ FSL_MAIN(
         (animray::rotate_x<world>(2_deg))
         (animray::rotate_y<world>(-1_deg))
         (animray::translate<world>(0.0, 0.0, -1.5));
+
     typedef animray::film<animray::rgb<uint8_t>> film_type;
-    film_type output(width, height,
-        [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {
-            const std::size_t samples = 6;
-            animray::rgb<float> photons;
-            for ( std::size_t sample{}; sample != samples; ++sample ) {
-                photons += scene(camera, x, y) /= samples;
+
+    fostlib::worker worker;
+    fostlib::meter tracking;
+    fostlib::future<film_type> result(worker.run<film_type>(
+        [width, height, &scene, &camera] () {
+            return animray::threading::sub_panel<film_type>(
+                10 /* threads */, width, height,
+                [&scene, &camera](
+                    const film_type::size_type x, const film_type::size_type y
+                ) {
+                    const std::size_t samples = 6;
+                    animray::rgb<float> photons;
+                    for ( std::size_t sample{}; sample != samples; ++sample ) {
+                        photons += scene(camera, x, y) /= samples;
+                    }
+                    const float exposure = 1.4f;
+                    photons /= exposure;
+                    return animray::rgb<uint8_t>(
+                        uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                        uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                        uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+                });
+            }));
+    fostlib::cli::monitor(out, tracking, result,
+        [](const fostlib::meter::reading &current) {
+            fostlib::stringstream out;
+            out << "\x1B[0m] "
+                << current.done() << "/" << current.work().value(0);
+            if ( current.meta().size() && not current.meta()[0].isnull() ) {
+                fostlib::json meta(current.meta()[0]);
+                out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
+                    << "x" << fostlib::json::unparse(meta["panels"]["y"], false)
+                    << " of size " << fostlib::json::unparse(meta["size"]["x"], false)
+                    << "x" << fostlib::json::unparse(meta["size"]["y"], false)
+                    << ")";
             }
-            const float exposure = 1.4f;
-            photons /= exposure;
-            return animray::rgb<uint8_t>(
-                uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                uint8_t(photons.green() > 255 ? 255 : photons.green()),
-                uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+            return out.str();
+        },
+        [](const fostlib::meter::reading &) {
+            return "[\x1B[1m";
         });
-    animray::targa(output_filename, output);
+    animray::targa(output_filename, result());
 
     return 0;
 }

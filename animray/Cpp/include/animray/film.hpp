@@ -34,9 +34,6 @@ namespace animray {
     /// A film represents a raster of pixel data in columns
     template< typename C, typename E = std::size_t >
     class film {
-        typedef std::vector< C > column_type;
-        typedef std::vector< column_type > columns_type;
-        columns_type columns;
     public:
         /// The colour type
         typedef C color_type;
@@ -46,6 +43,12 @@ namespace animray {
         typedef extents2d< extents_value_type > extents_type;
         /// The extents size type
         typedef typename extents_type::size_type size_type;
+        /// The type of a single column of image data
+        typedef std::vector< color_type > column_type;
+
+
+        /// Default constructor
+        film() {}
 
         /// Construct an empty targa of the given size
         film(size_type width, size_type height, const C &colour = C())
@@ -112,6 +115,9 @@ namespace animray {
                 }
             }
         }
+    private:
+        typedef std::vector< column_type > columns_type;
+        columns_type columns;
     };
 
 
