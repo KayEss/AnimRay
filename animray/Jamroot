@@ -36,6 +36,11 @@ alias fost :
     ;
 explicit fost ;
 
+alias scenes :
+        Scenes/early
+    ;
+explicit scenes ;
+
 alias tests :
         ../fost-base//tests
         ../fost-py//fost
