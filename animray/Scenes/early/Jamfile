@@ -9,6 +9,11 @@ fost-exe five-spheres-coloured-lights
         five-spheres-coloured-lights.cpp
     ;
 
+fost-exe simple-specular-highlight
+    :
+        simple-specular-highlight.cpp
+    ;
+
 fost-exe white-sphere
     :
         white-sphere.cpp
