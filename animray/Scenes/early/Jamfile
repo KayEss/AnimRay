@@ -1,4 +1,9 @@
 
+fost-exe coloured-matte-surfaces
+    :
+        coloured-matte-surfaces.cpp
+    ;
+
 fost-exe five-spheres-coloured-lights
     :
         five-spheres-coloured-lights.cpp
