@@ -1,4 +1,9 @@
 
+fost-exe five-spheres-coloured-lights
+    :
+        five-spheres-coloured-lights.cpp
+    ;
+
 fost-exe white-sphere
     :
         white-sphere.cpp
