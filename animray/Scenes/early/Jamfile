@@ -1,0 +1,5 @@
+
+fost-exe white-sphere
+    :
+        white-sphere.cpp
+    ;

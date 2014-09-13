@@ -46,6 +46,12 @@ namespace animray {
 
         /// Default construct an RGB colour with all channels at zero
         rgb() {}
+        /// Construct a colour from a luma signal
+        explicit rgb( value_type gray ) {
+            superclass::array[0] = gray;
+            superclass::array[1] = gray;
+            superclass::array[2] = gray;
+        }
         /// Construct an RGB colour with the specified channel values
         rgb( value_type r, value_type g, value_type b ) {
             superclass::array[0] = r;
