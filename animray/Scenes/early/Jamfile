@@ -1,3 +1,7 @@
+fost-exe affine-transformations
+    :
+        affine-transformations.cpp
+    ;
 
 fost-exe coloured-matte-surfaces
     :
