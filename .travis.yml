@@ -1,0 +1,31 @@
+language: cpp
+
+git:
+  submodules: false
+
+compiler:
+    - clang
+
+before_install:
+    - sed -i 's/git@github.com:/git:\/\/github.com\//' .gitmodules
+    - git submodule init
+    - git submodule sync
+    - git submodule update
+
+install:
+    - sudo apt-get install libboost-all-dev libbz2-dev libssl-dev python-dev uuid-dev libglew-dev freeglut3-dev
+    - 'svn co http://svn.boost.org/svn/boost/tags/release/Boost_1_55_0 Boost/1_55_0 > /dev/null'
+    - export CPUCOUNT=$(grep -c ^processor /proc/cpuinfo)
+    - export OPTIONS="install --layout=versioned --without-mpi --prefix=$(pwd)/Boost/boost"
+    - echo "./bjam -j$CPUCOUNT toolset=clang debug link=shared $OPTIONS" > Boost/compile
+    - echo "./bjam -j$CPUCOUNT toolset=clang release link=shared $OPTIONS" >> Boost/compile
+    - chmod +x Boost/compile
+    - 'Boost/build 55'
+    - Boost/install 55 0
+
+script:
+    - ./animray/compile toolset=$CC -q animray tests examples
+
+matrix:
+    allow_failures:
+        - compiler: gcc

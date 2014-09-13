@@ -1,0 +1,24 @@
+[submodule "metachatr"]
+	path = metachatr
+	url = git@github.com:KayEss/metachatr.git
+[submodule "Boost"]
+	path = Boost
+	url = git@github.com:KayEss/fost-boost.git
+[submodule "crypto++"]
+	path = crypto++
+	url = git@github.com:KayEss/fost-crypto.git
+[submodule "OpenSSL"]
+	path = OpenSSL
+	url = git@github.com:KayEss/fost-openssl.git
+[submodule "fost-base"]
+	path = fost-base
+	url = git@github.com:KayEss/fost-base.git
+[submodule "fost-internet"]
+	path = fost-internet
+	url = git@github.com:KayEss/fost-internet.git
+[submodule "fost-orm"]
+	path = fost-orm
+	url = git@github.com:KayEss/fost-orm.git
+[submodule "fost-py"]
+	path = fost-py
+	url = git@github.com:KayEss/fost-py.git
