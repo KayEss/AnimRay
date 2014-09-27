@@ -41,6 +41,9 @@ FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
+    const std::size_t threads(fostlib::coerce<int>(
+        args.commandSwitch("t").value("2")));
+
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
     const int width = fostlib::coerce< int >( args[2].value("100") );
@@ -124,9 +127,9 @@ FSL_MAIN(
     fostlib::worker worker;
     fostlib::meter tracking;
     fostlib::future<film_type> result(worker.run<film_type>(
-        [width, height, &scene, &camera] () {
+        [threads, width, height, &scene, &camera] () {
             return animray::threading::sub_panel<film_type>(
-                10 /* threads */, width, height,
+                threads, width, height,
                 [&scene, &camera](
                     const film_type::size_type x, const film_type::size_type y
                 ) {
