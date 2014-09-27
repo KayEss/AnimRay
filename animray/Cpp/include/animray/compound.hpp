@@ -40,11 +40,38 @@ namespace animray {
                 typename O::intersection_type,
                 typename Os::intersection_type...> intersection;
         public:
+            /// The type of the local coordinate system
+            typedef typename O::local_coord_type local_coord_type;
+            /// The type of the strike location
+            typedef typename O::intersection_type::end_type end_type;
+            /// The type of the strike location
+            typedef typename O::intersection_type::direction_type direction_type;
+
             intersection_type() {}
 
             template<typename I>
             intersection_type(I &&i)
             : intersection(std::move(i)) {
+            }
+
+            end_type from() const {
+                struct forwarder : public boost::static_visitor<end_type>{
+                    template<typename I>
+                    end_type operator () (const I &inter) const {
+                        return inter.from();
+                    }
+                };
+                return boost::apply_visitor(forwarder(), intersection);
+            }
+
+            direction_type direction() const {
+                struct forwarder : public boost::static_visitor<direction_type>{
+                    template<typename I>
+                    direction_type operator () (const I &inter) const {
+                        return inter.direction();
+                    }
+                };
+                return boost::apply_visitor(forwarder(), intersection);
             }
         };
 
