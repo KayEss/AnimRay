@@ -24,63 +24,78 @@
 #pragma once
 
 
+#include <fost/core>
+#include <animray/intersection.hpp>
+#include <animray/shader.hpp>
+#include <tuple>
+
+
 namespace animray {
+
+
+    /// Stores geometry objects of different types
+    template< typename O, typename... Os >
+    class compound;
+
+
+    /// Partial specialisation of the intersection type for compound
+    template< typename O, typename... Os >
+    class intersection< compound<O, Os...> > {
+        boost::variant<
+            typename O::intersection_type,
+            typename Os::intersection_type...> geometry;
+    public:
+        /// The type of the local coordinate system
+        typedef typename O::local_coord_type local_coord_type;
+        /// The type of the strike location
+        typedef typename O::intersection_type::end_type end_type;
+        /// The type of the strike location
+        typedef typename O::intersection_type::direction_type direction_type;
+
+        intersection() {}
+
+        template<typename I>
+        intersection(I &&i)
+        : geometry(std::move(i)) {
+        }
+
+        end_type from() const {
+            struct forwarder : public boost::static_visitor<end_type>{
+                template<typename I>
+                end_type operator () (const I &inter) const {
+                    return inter.from();
+                }
+            };
+            return boost::apply_visitor(forwarder(), geometry);
+        }
+
+        direction_type direction() const {
+            struct forwarder : public boost::static_visitor<direction_type>{
+                template<typename I>
+                direction_type operator () (const I &inter) const {
+                    return inter.direction();
+                }
+            };
+            return boost::apply_visitor(forwarder(), geometry);
+        }
+    };
 
 
     /// Stores geometry objects of different types
     template< typename O, typename... Os >
     class compound {
     public:
-        /// The type of the local coordinate system
-        typedef typename O::local_coord_type local_coord_type;
-
-        /// Intersections will be of all sorts of different types
-        class intersection_type {
-            boost::variant<
-                typename O::intersection_type,
-                typename Os::intersection_type...> intersection;
-        public:
-            /// The type of the local coordinate system
-            typedef typename O::local_coord_type local_coord_type;
-            /// The type of the strike location
-            typedef typename O::intersection_type::end_type end_type;
-            /// The type of the strike location
-            typedef typename O::intersection_type::direction_type direction_type;
-
-            intersection_type() {}
-
-            template<typename I>
-            intersection_type(I &&i)
-            : intersection(std::move(i)) {
-            }
-
-            end_type from() const {
-                struct forwarder : public boost::static_visitor<end_type>{
-                    template<typename I>
-                    end_type operator () (const I &inter) const {
-                        return inter.from();
-                    }
-                };
-                return boost::apply_visitor(forwarder(), intersection);
-            }
-
-            direction_type direction() const {
-                struct forwarder : public boost::static_visitor<direction_type>{
-                    template<typename I>
-                    direction_type operator () (const I &inter) const {
-                        return inter.direction();
-                    }
-                };
-                return boost::apply_visitor(forwarder(), intersection);
-            }
-        };
-
         /// The type we use to store the instances
         typedef std::tuple<O, Os...> instances_type;
+        /// The type of the local coordinate system
+        typedef typename O::local_coord_type local_coord_type;
+        /// The intersection type
+        typedef intersection<compound> intersection_type;
 
         /// Stores the geometry
         fostlib::accessors<instances_type, fostlib::lvalue> instances;
 
+        /// Forward the intersection check to the geometry instances
         template<typename R>
         fostlib::nullable< intersection_type > intersects(const R &by) const {
             return intersection_calculation<1 + sizeof...(Os), 0>()(*this, by);
