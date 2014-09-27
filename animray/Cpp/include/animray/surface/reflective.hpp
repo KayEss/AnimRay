@@ -47,7 +47,7 @@ namespace animray {
             const C &attenuation, const RI &, const RL &light,
             const I &intersection, const CI &incident, const G &
         ) const {
-            return incident;
+            throw fostlib::exceptions::not_implemented("reflective operator ()");
         }
     };
 
