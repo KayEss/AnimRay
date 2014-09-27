@@ -24,13 +24,14 @@
 #include <fost/unicode>
 #include <animray/camera.hpp>
 #include <animray/sphere.hpp>
-#include <animray/compound.hpp>
+#include <animray/collection.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
+#include <animray/surface/reflective.hpp>
 #include <animray/light.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
@@ -61,8 +62,12 @@ FSL_MAIN(
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         >> gloss_sphere_type;
+    typedef animray::movable<animray::surface<
+            animray::sphere< animray::ray< world > >,
+            animray::reflective< float >
+        >> reflective_sphere_type;
     typedef animray::scene<
-        animray::compound<gloss_sphere_type>,
+        animray::collection<gloss_sphere_type>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,

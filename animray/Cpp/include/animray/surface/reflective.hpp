@@ -19,15 +19,40 @@
 */
 
 
-#ifndef ANIMRAY_COMPOUND_HPP
-#define ANIMRAY_COMPOUND_HPP
+#ifndef ANIMRAY_SURFACE_REFLECTIVE_HPP
+#define ANIMRAY_SURFACE_REFLECTIVE_HPP
 #pragma once
+
+
+#include <animray/surface.hpp>
 
 
 namespace animray {
 
 
+    /// The matte surface intersection type
+    template<typename C>
+    class reflective {
+    public:
+        /// Default constructor
+        reflective() {}
+
+        /// The absorption attenuation of the surface
+        typedef C parameters;
+
+        /// Calculate the light/surface interaction
+        template< typename RI, typename RL, typename I,
+            typename CI, typename G >
+        CI operator () (
+            const C &attenuation, const RI &, const RL &light,
+            const I &intersection, const CI &incident, const G &
+        ) const {
+            return incident;
+        }
+    };
+
+
 }
 
 
-#endif // ANIMRAY_COMPOUND_HPP
+#endif // ANIMRAY_SURFACE_REFLECTIVE_HPP
