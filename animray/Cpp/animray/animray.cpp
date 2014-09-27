@@ -43,6 +43,8 @@ FSL_MAIN(
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(fostlib::coerce<int>(
         args.commandSwitch("t").value("2")));
+    const std::size_t samples(fostlib::coerce<int>(
+        args.commandSwitch("ss").value("6")));
 
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
@@ -127,13 +129,12 @@ FSL_MAIN(
     fostlib::worker worker;
     fostlib::meter tracking;
     fostlib::future<film_type> result(worker.run<film_type>(
-        [threads, width, height, &scene, &camera] () {
+        [threads, samples, width, height, &scene, &camera] () {
             return animray::threading::sub_panel<film_type>(
                 threads, width, height,
-                [&scene, &camera](
+                [samples, &scene, &camera](
                     const film_type::size_type x, const film_type::size_type y
                 ) {
-                    const std::size_t samples = 6;
                     animray::rgb<float> photons;
                     for ( std::size_t sample{}; sample != samples; ++sample ) {
                         photons += scene(camera, x, y) /= samples;
