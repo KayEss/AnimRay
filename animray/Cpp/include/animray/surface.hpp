@@ -85,6 +85,9 @@ namespace animray {
         /// The intersection type
         typedef intersection< surface > intersection_type;
 
+        /// Default construct a surface
+        surface() {}
+
         /// Pass the constructor arguments on to the underlying parameters
         surface(typename S::parameters... args)
         : surface_parameters(std::forward<typename S::parameters>(args)...) {
