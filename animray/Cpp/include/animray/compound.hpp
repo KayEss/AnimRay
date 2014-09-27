@@ -107,7 +107,12 @@ namespace animray {
                 } else if ( intersection2.isnull() ) {
                     return intersection1;
                 } else {
-                    throw fostlib::exceptions::not_implemented("compound::intersection_calculation operator ()");
+                    if ( (intersection1.value().from() - by.from()).dot() <
+                            (intersection2.value().from() - by.from()).dot() ) {
+                        return intersection1;
+                    }  else {
+                        return intersection2;
+                    }
                 }
             }
         };
