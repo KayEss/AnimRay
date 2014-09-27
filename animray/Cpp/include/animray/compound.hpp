@@ -27,6 +27,14 @@
 namespace animray {
 
 
+    /// Stores geometry objects of different types
+    template< typename... Os >
+    class compound {
+        std::tuple<Os...> instances;
+    public:
+    };
+
+
 }
 
 

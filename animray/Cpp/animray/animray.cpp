@@ -25,6 +25,7 @@
 #include <animray/camera.hpp>
 #include <animray/sphere.hpp>
 #include <animray/collection.hpp>
+#include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>
@@ -67,7 +68,10 @@ FSL_MAIN(
             animray::reflective< float >
         >> reflective_sphere_type;
     typedef animray::scene<
-        animray::collection<gloss_sphere_type>,
+        animray::compound<
+            animray::collection<gloss_sphere_type>,
+            reflective_sphere_type
+        >,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
