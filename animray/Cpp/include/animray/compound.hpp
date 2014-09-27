@@ -89,15 +89,16 @@ namespace animray {
         /// Calculate whether this object occludes the ray or not
         template< typename R >
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return false;
+            return occlusion_calculation<1 + sizeof...(Os), 0>()(*this, by, epsilon);
         }
+
     private:
         template< std::size_t left, std::size_t item >
         struct intersection_calculation {
             template<typename R>
             fostlib::nullable<intersection_type> operator () (
                 const compound &geometry, const R &by
-            ) {
+            ) const {
                 fostlib::nullable<intersection_type> intersection1
                     (std::get<item>(geometry.instances()).intersects(by));
                 fostlib::nullable<intersection_type> intersection2
@@ -121,8 +122,30 @@ namespace animray {
             template<typename R>
             fostlib::nullable<intersection_type> operator () (
                 const compound &geometry, const R &by
-            ) {
+            ) const {
                 return std::get<item>(geometry.instances()).intersects(by);
+            }
+        };
+
+        template< std::size_t left, std::size_t item >
+        struct occlusion_calculation {
+            template<typename R>
+            bool operator () (
+                const compound &geometry, const R &by,
+                const local_coord_type epsilon
+            ) const {
+                return std::get<item>(geometry.instances()).occludes(by, epsilon) ||
+                    occlusion_calculation<left - 1, item + 1>()(geometry, by, epsilon);
+            }
+        };
+        template< std::size_t item >
+        struct occlusion_calculation< 1, item > {
+            template<typename R>
+            bool operator () (
+                const compound &geometry, const R &by,
+                const local_coord_type epsilon
+            ) const {
+                return std::get<item>(geometry.instances()).occludes(by, epsilon);
             }
         };
     };
