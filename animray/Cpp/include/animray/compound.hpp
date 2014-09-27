@@ -32,8 +32,7 @@ namespace animray {
 
 
     /// A simple compound object with no intelligence
-    template<typename O,
-            typename I = typename O::intersection_type>
+    template<typename O>
     class compound {
         std::vector<O> instances;
     public:
@@ -42,7 +41,7 @@ namespace animray {
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
         /// The type of the ray output by the instance
-        typedef I intersection_type;
+        typedef typename O::intersection_type intersection_type;
 
         /// Insert a new object into the compound
         template<typename G>
