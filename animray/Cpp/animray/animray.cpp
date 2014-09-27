@@ -60,9 +60,9 @@ FSL_MAIN(
             animray::sphere< animray::ray< world > >,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
-        >> sphere_type;
+        >> gloss_sphere_type;
     typedef animray::scene<
-        animray::compound<sphere_type>,
+        animray::compound<gloss_sphere_type>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
@@ -79,20 +79,20 @@ FSL_MAIN(
 
     const world scale(200.0);
     scene.geometry().insert(
-        sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))
+        gloss_sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))
             (animray::translate<world>(0.0, 0.0, scale + 1.0))
             (animray::scale<world>(scale, scale, scale)) );
     scene.geometry().insert(
-        sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
+        gloss_sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
     scene.geometry().insert(
-        sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
+        gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
             animray::translate<world>(1.0, -1.0, 0.0)));
     scene.geometry().insert(
-        sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
+        gloss_sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
             animray::translate<world>(-1.0, 1.0, 0.0)));
     scene.geometry().insert(
-        sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
+        gloss_sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
