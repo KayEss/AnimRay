@@ -23,7 +23,7 @@
 #include <fost/unicode>
 #include <animray/camera.hpp>
 #include <animray/sphere.hpp>
-#include <animray/compound.hpp>
+#include <animray/collection.hpp>
 #include <animray/movable.hpp>
 #include <animray/scene.hpp>
 #include <animray/light.hpp>
@@ -47,7 +47,7 @@ FSL_MAIN(
     typedef animray::movable<
         animray::sphere<animray::ray<world>>> movable_sphere;
     typedef animray::scene<
-        animray::compound<movable_sphere>,
+        animray::collection<movable_sphere>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,

@@ -24,72 +24,187 @@
 #pragma once
 
 
-#include <vector>
-#include <memory>
+#include <fost/core>
+#include <animray/intersection.hpp>
+#include <animray/shader.hpp>
+#include <tuple>
 
 
 namespace animray {
 
 
-    /// A simple compound object with no intelligence
-    template<typename O,
-            typename I = typename O::intersection_type>
-    class compound {
-        std::vector<O> instances;
-    public:
-        /// The type of objects that can be inserted
-        typedef O instance_type;
-        /// The type of the local coordinate system
-        typedef typename instance_type::local_coord_type local_coord_type;
-        /// The type of the ray output by the instance
-        typedef I intersection_type;
+    /// Stores geometry objects of different types
+    template< typename O, typename... Os >
+    class compound;
 
-        /// Insert a new object into the compound
-        template<typename G>
-        compound &insert(const G &instance) {
-            instances.push_back(instance);
-            return *this;
+
+    /// Partial specialisation of the intersection type for compound
+    template< typename O, typename... Os >
+    class intersection< compound<O, Os...> > {
+    public:
+        /// The type of the local coordinate system
+        typedef typename O::local_coord_type local_coord_type;
+        /// The type of the strike location
+        typedef typename O::intersection_type::end_type end_type;
+        /// The type of the strike location
+        typedef typename O::intersection_type::direction_type direction_type;
+
+        /// The wrapped intersection
+        fostlib::accessors<
+            boost::variant<
+                typename O::intersection_type,
+                typename Os::intersection_type...
+            >, fostlib::lvalue> wrapped_intersection;
+
+        intersection() {}
+
+        template<typename I>
+        intersection(I &&i)
+        : wrapped_intersection(std::move(i)) {
         }
 
-        /// Ray intersection with closest item
-        template<typename R>
-        fostlib::nullable< intersection_type > intersects(const R &by) const {
-            fostlib::nullable< intersection_type > result;
-            local_coord_type result_dot;
-            for ( const auto &instance : instances ) {
-                if ( result.isnull() ) {
-                    result = instance.intersects(by);
-                    if ( !result.isnull() ) {
-                        result_dot = (result.value().from() - by.from()).dot();
-                    }
+        end_type from() const {
+            return boost::apply_visitor(end_forwarder(), wrapped_intersection());
+        }
+
+        direction_type direction() const {
+            return boost::apply_visitor(dir_forwarder(), wrapped_intersection());
+        }
+    private:
+        struct end_forwarder : public boost::static_visitor<end_type>{
+            template<typename I>
+            end_type operator () (const I &inter) const {
+                return inter.from();
+            }
+        };
+        struct dir_forwarder : public boost::static_visitor<direction_type>{
+            template<typename I>
+            direction_type operator () (const I &inter) const {
+                return inter.direction();
+            }
+        };
+    };
+
+
+    /// Stores geometry objects of different types
+    template< typename O, typename... Os >
+    class compound {
+    public:
+        /// The type we use to store the instances
+        typedef std::tuple<O, Os...> instances_type;
+        /// The type of the local coordinate system
+        typedef typename O::local_coord_type local_coord_type;
+        /// The intersection type
+        typedef intersection<compound> intersection_type;
+
+        /// Stores the geometry
+        fostlib::accessors<instances_type, fostlib::lvalue> instances;
+
+        /// Forward the intersection check to the geometry instances
+        template<typename R, typename E>
+        fostlib::nullable< intersection_type > intersects(
+            const R &by, const E epsilon
+        ) const {
+            return intersection_calculation<1 + sizeof...(Os), 0>()
+                (*this, by, epsilon);
+        };
+
+        /// Calculate whether this object occludes the ray or not
+        template< typename R >
+        bool occludes(const R &by, const local_coord_type epsilon) const {
+            return occlusion_calculation<1 + sizeof...(Os), 0>()(*this, by, epsilon);
+        }
+
+    private:
+        template< std::size_t left, std::size_t item >
+        struct intersection_calculation {
+            template<typename R, typename E>
+            fostlib::nullable<intersection_type> operator () (
+                const compound &geometry, const R &by, const E epsilon
+            ) const {
+                fostlib::nullable<intersection_type> intersection1
+                    (std::get<item>(geometry.instances()).intersects(by, epsilon));
+                fostlib::nullable<intersection_type> intersection2
+                    (intersection_calculation<left - 1, item + 1>()
+                        (geometry, by, epsilon));
+                if ( intersection1.isnull() ) {
+                    return intersection2;
+                } else if ( intersection2.isnull() ) {
+                    return intersection1;
                 } else {
-                    fostlib::nullable< intersection_type >
-                        intersection(instance.intersects(by));
-                    if ( !intersection.isnull() ) {
-                        local_coord_type dot(
-                            (intersection.value().from() - by.from()).dot());
-                        if ( dot < result_dot ) {
-                            result = intersection;
-                            result_dot = dot;
-                        }
+                    if ( (intersection1.value().from() - by.from()).dot() <
+                            (intersection2.value().from() - by.from()).dot() ) {
+                        return intersection1;
+                    }  else {
+                        return intersection2;
                     }
                 }
             }
-            return result;
-        }
+        };
+        template< std::size_t item >
+        struct intersection_calculation< 1, item > {
+            template<typename R, typename E>
+            fostlib::nullable<intersection_type> operator () (
+                const compound &geometry, const R &by, const E epsilon
+            ) const {
+                return std::get<item>(geometry.instances()).intersects(by, epsilon);
+            }
+        };
 
-        /// Occlusion check
-        template<typename R>
-        bool occludes(
-            const R &by, const typename R::local_coord_type epsilon
-        ) const {
-            return std::find_if(instances.begin(), instances.end(),
-                [&](const instance_type &instance) {
-                    return instance.occludes(by, epsilon);
-                }) != instances.end();
-        }
+        template< std::size_t left, std::size_t item >
+        struct occlusion_calculation {
+            template<typename R>
+            bool operator () (
+                const compound &geometry, const R &by,
+                const local_coord_type epsilon
+            ) const {
+                return std::get<item>(geometry.instances()).occludes(by, epsilon) ||
+                    occlusion_calculation<left - 1, item + 1>()(geometry, by, epsilon);
+            }
+        };
+        template< std::size_t item >
+        struct occlusion_calculation< 1, item > {
+            template<typename R>
+            bool operator () (
+                const compound &geometry, const R &by,
+                const local_coord_type epsilon
+            ) const {
+                return std::get<item>(geometry.instances()).occludes(by, epsilon);
+            }
+        };
     };
 
+
+    template<typename C, typename O, typename RI, typename RL,
+        typename G, typename... Os>
+    struct surface_interaction<C, intersection<compound<O, Os...>>, RI, RL, G> {
+        struct forwarder : public boost::static_visitor<C>{
+            const RI &observer;
+            const RL &light;
+            const C &incident;
+            const G &geometry;
+            forwarder(const RI &observer, const RL &light,
+                    const C &incident, const G &geometry)
+            : observer(observer), light(light), incident(incident),
+                    geometry(geometry) {
+            }
+
+            template<typename I>
+            C operator () (const I &inter) const {
+                return shader(observer, light, inter, incident, geometry);
+            }
+        };
+        surface_interaction() {}
+        C operator() (
+            const RI &observer, const RL &light,
+            const intersection< compound<O, Os...> > &intersection,
+            const C &incident, const G &geometry
+        ) const {
+            return boost::apply_visitor(
+                forwarder(observer, light, incident, geometry),
+                intersection.wrapped_intersection());
+        }
+    };
 
 }
 

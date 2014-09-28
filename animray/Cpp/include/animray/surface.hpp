@@ -85,6 +85,9 @@ namespace animray {
         /// The intersection type
         typedef intersection< surface > intersection_type;
 
+        /// Default construct a surface
+        surface() {}
+
         /// Pass the constructor arguments on to the underlying parameters
         surface(typename S::parameters... args)
         : surface_parameters(std::forward<typename S::parameters>(args)...) {
@@ -97,10 +100,12 @@ namespace animray {
         fostlib::accessors< surface_parameters_type > surface_parameters;
 
         /// Calculate the intersection of the ray on the instance
-        template<typename R>
-        fostlib::nullable< intersection_type > intersects(const R &by) const {
+        template<typename R, typename E>
+        fostlib::nullable< intersection_type > intersects(
+            const R &by, const E epsilon
+        ) const {
             fostlib::nullable< typename O::intersection_type >
-                hit(geometry().intersects(by));
+                hit(geometry().intersects(by, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
