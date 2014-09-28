@@ -173,20 +173,30 @@ namespace animray {
     template<typename C, typename O, typename RI, typename RL,
         typename G, typename... Os>
     struct surface_interaction<C, intersection<compound<O, Os...>>, RI, RL, G> {
+        struct forwarder : public boost::static_visitor<C>{
+            const RI &observer;
+            const RL &light;
+            const C &incident;
+            const G &geometry;
+            forwarder(const RI &observer, const RL &light,
+                    const C &incident, const G &geometry)
+            : observer(observer), light(light), incident(incident),
+                    geometry(geometry) {
+            }
+
+            template<typename I>
+            C operator () (const I &inter) const {
+                return shader(observer, light, inter, incident, geometry);
+            }
+        };
         surface_interaction() {}
         C operator() (
             const RI &observer, const RL &light,
             const intersection< compound<O, Os...> > &intersection,
-            const C &incident,
-            const G &geometry
+            const C &incident, const G &geometry
         ) const {
-            struct forwarder : public boost::static_visitor<C>{
-                template<typename I>
-                C operator () (const I &inter) const {
-                    return shader(observer, light, inter, incident, geometry);
-                }
-            };
-            return boost::apply_visitor(forwarder(),
+            return boost::apply_visitor(
+                forwarder(observer, light, incident, geometry),
                 intersection.wrapped_intersection());
         }
     };
