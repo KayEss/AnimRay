@@ -86,7 +86,7 @@ namespace animray {
         ) const {
             ray<typename O::local_coord_type> illumination(
                 intersection.from(), geometry());
-            if ( not scene.occludes(illumination, typename I::local_coord_type(1) /
+            if ( not scene.geometry().occludes(illumination, typename I::local_coord_type(1) /
                     typename I::local_coord_type(100000000000) ) ) {
                 return shader(observer, illumination, intersection, superclass::color(), scene);
             } else {

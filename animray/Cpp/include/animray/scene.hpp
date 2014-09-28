@@ -57,7 +57,7 @@ namespace animray {
             fostlib::nullable<intersection_type>
                 intersection(geometry().intersects(observer));
             if ( !intersection.isnull() ) {
-                return color_type(light()(observer, intersection.value(), geometry()));
+                return color_type(light()(observer, intersection.value(), *this));
             } else {
                 return background();
             }
