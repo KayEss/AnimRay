@@ -31,9 +31,7 @@
 namespace animray {
 
 
-    /// The matte surface intersection type
-    template<typename C>
-    class reflective {
+    namespace detail {
         template<typename RI>
         class reflected_ray : public RI {
         public:
@@ -59,6 +57,12 @@ namespace animray {
         struct ref_type<reflected_ray<R>> {
             typedef reflected_ray<R> type;
         };
+    }
+
+
+    /// The matte surface intersection type
+    template<typename C>
+    class reflective {
     public:
         /// Default constructor
         reflective() {}
@@ -78,7 +82,8 @@ namespace animray {
             const unit_vector< accuracy > ri(
                 observer.direction() +
                     intersection.direction() * accuracy(2) * ci);
-            typename ref_type<RI>::type refray(observer, intersection.from(), ri);
+            typename detail::ref_type<RI>::type refray(
+                observer, intersection.from(), ri);
             if ( refray.depth() > 5 ) {
                 return CI();
             }
