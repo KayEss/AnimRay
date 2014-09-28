@@ -33,6 +33,31 @@ namespace animray {
     /// The matte surface intersection type
     template<typename C>
     class reflective {
+        template<typename RI>
+        class reflected_ray : public RI {
+        public:
+            reflected_ray(const reflected_ray &ray,
+                    const typename RI::end_type &starts,
+                    const typename RI::direction_type &dir)
+            : RI(starts, dir), depth(ray.depth() + 1) {
+            }
+            reflected_ray(const RI &ray,
+                    const typename RI::end_type &starts,
+                    const typename RI::direction_type &dir)
+            : RI(starts, dir), depth(1) {
+            }
+
+            fostlib::accessors<std::size_t> depth;
+        };
+
+        template<typename R>
+        struct ref_type {
+            typedef reflected_ray<R> type;
+        };
+        template<typename R>
+        struct ref_type<reflected_ray<R>> {
+            typedef reflected_ray<R> type;
+        };
     public:
         /// Default constructor
         reflective() {}
@@ -44,10 +69,25 @@ namespace animray {
         template< typename RI, typename RL, typename I,
             typename CI, typename G >
         CI operator () (
-            const C &attenuation, const RI &, const RL &light,
-            const I &intersection, const CI &incident, const G &
+            const C &attenuation, const RI &observer, const RL &light,
+            const I &intersection, const CI &incident, const G &schene
         ) const {
-            throw fostlib::exceptions::not_implemented("reflective operator ()");
+            typedef typename RI::local_coord_type accuracy;
+            const accuracy ci = -dot(observer.direction(), intersection.direction());
+            const unit_vector< accuracy > ri(
+                observer.direction() +
+                    intersection.direction() * accuracy(2) * ci);
+            typename ref_type<RI>::type refray(observer, intersection.from(), ri);
+            if ( refray.depth() > 5 ) {
+                return CI();
+            }
+            fostlib::nullable<typename G::intersection_type>
+                reflected(schene.geometry().intersects(refray));
+            if ( reflected.isnull() ) {
+                return CI();
+            } else {
+                return schene.light()(refray, reflected.value(), schene);
+            }
         }
     };
 
