@@ -25,6 +25,7 @@
 
 
 #include <tuple>
+#include <animray/epsilon.hpp>
 #include <animray/shader.hpp>
 
 
@@ -86,8 +87,7 @@ namespace animray {
         ) const {
             ray<typename O::local_coord_type> illumination(
                 intersection.from(), geometry());
-            if ( not scene.geometry().occludes(illumination, typename I::local_coord_type(1) /
-                    typename I::local_coord_type(100000000000) ) ) {
+            if ( not scene.geometry().occludes(illumination, epsilon<I>::value ) ) {
                 return shader(observer, illumination, intersection, superclass::color(), scene);
             } else {
                 return typename superclass::color_type();
