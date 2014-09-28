@@ -71,7 +71,7 @@ namespace animray {
             typename CI, typename G >
         CI operator () (
             const C &attenuation, const RI &observer, const RL &light,
-            const I &intersection, const CI &incident, const G &schene
+            const I &intersection, const CI &incident, const G &scene
         ) const {
             typedef typename RI::local_coord_type accuracy;
             const accuracy ci = -dot(observer.direction(), intersection.direction());
@@ -83,11 +83,11 @@ namespace animray {
                 return CI();
             }
             fostlib::nullable<typename G::intersection_type>
-                reflected(schene.geometry().intersects(refray, epsilon<I>::value));
+                reflected(scene.geometry().intersects(refray, epsilon<I>::value));
             if ( reflected.isnull() ) {
                 return CI();
             } else {
-                return schene.light()(refray, reflected.value(), schene);
+                return scene.light()(refray, reflected.value(), scene) * attenuation;
             }
         }
     };
