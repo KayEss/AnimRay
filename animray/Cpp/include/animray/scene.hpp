@@ -24,6 +24,9 @@
 #pragma once
 
 
+#include <animray/epsilon.hpp>
+
+
 namespace animray {
 
 
@@ -55,7 +58,10 @@ namespace animray {
         color_type operator() (const M &camera, S x, S y) const {
             typename M::intersection_type observer(camera(x, y));
             fostlib::nullable<intersection_type>
-                intersection(geometry().intersects(observer));
+                intersection(
+                    geometry().intersects(
+                        observer,
+                        epsilon<intersection_type>::value));
             if ( !intersection.isnull() ) {
                 return color_type(light()(observer, intersection.value(), *this));
             } else {

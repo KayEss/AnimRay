@@ -21,6 +21,7 @@
 
 #include <fost/main>
 #include <fost/unicode>
+#include <animray/epsilon.hpp>
 #include <animray/sphere.hpp>
 #include <animray/targa.hpp>
 
@@ -43,7 +44,7 @@ FSL_MAIN(
             const double cx = (double(x) + 0.5 - width/2.0) / limit;
             const double cy = -(double(y) + 0.5 - height/2.0) / limit;
             ray r(ray::end_type(cx, cy, -10.0), ray::end_type(cx, cy, -9.0));
-            fostlib::nullable<ray> intersection(sphere.intersects(r));
+            fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
                 if ( sphere.occludes(light, 1e-9) ) {

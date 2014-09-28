@@ -81,10 +81,12 @@ namespace animray {
         }
 
         /// Ray intersection
-        template< typename R >
-        fostlib::nullable< intersection_type > intersects(const R &by) const {
+        template< typename R, typename E >
+        fostlib::nullable< intersection_type > intersects(
+            const R &by, const E epsilon
+        ) const {
             fostlib::nullable< intersection_type >
-                hit(instance.intersects(by * superclass::forward));
+                hit(instance.intersects(by * superclass::forward, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {

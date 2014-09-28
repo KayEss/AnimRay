@@ -100,9 +100,12 @@ namespace animray {
         fostlib::accessors<instances_type, fostlib::lvalue> instances;
 
         /// Forward the intersection check to the geometry instances
-        template<typename R>
-        fostlib::nullable< intersection_type > intersects(const R &by) const {
-            return intersection_calculation<1 + sizeof...(Os), 0>()(*this, by);
+        template<typename R, typename E>
+        fostlib::nullable< intersection_type > intersects(
+            const R &by, const E epsilon
+        ) const {
+            return intersection_calculation<1 + sizeof...(Os), 0>()
+                (*this, by, epsilon);
         };
 
         /// Calculate whether this object occludes the ray or not
@@ -114,14 +117,15 @@ namespace animray {
     private:
         template< std::size_t left, std::size_t item >
         struct intersection_calculation {
-            template<typename R>
+            template<typename R, typename E>
             fostlib::nullable<intersection_type> operator () (
-                const compound &geometry, const R &by
+                const compound &geometry, const R &by, const E epsilon
             ) const {
                 fostlib::nullable<intersection_type> intersection1
-                    (std::get<item>(geometry.instances()).intersects(by));
+                    (std::get<item>(geometry.instances()).intersects(by, epsilon));
                 fostlib::nullable<intersection_type> intersection2
-                    (intersection_calculation<left - 1, item + 1>()(geometry, by));
+                    (intersection_calculation<left - 1, item + 1>()
+                        (geometry, by, epsilon));
                 if ( intersection1.isnull() ) {
                     return intersection2;
                 } else if ( intersection2.isnull() ) {
@@ -138,11 +142,11 @@ namespace animray {
         };
         template< std::size_t item >
         struct intersection_calculation< 1, item > {
-            template<typename R>
+            template<typename R, typename E>
             fostlib::nullable<intersection_type> operator () (
-                const compound &geometry, const R &by
+                const compound &geometry, const R &by, const E epsilon
             ) const {
-                return std::get<item>(geometry.instances()).intersects(by);
+                return std::get<item>(geometry.instances()).intersects(by, epsilon);
             }
         };
 

@@ -50,8 +50,10 @@ namespace animray {
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
-        template< typename R >
-        fostlib::nullable< intersection_type > intersects(const R &by) const {
+        template<typename R, typename E>
+        fostlib::nullable< intersection_type > intersects(
+            const R &by, const E epsilon
+        ) const {
             const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
             const D xd = by.direction().x(), yd = by.direction().y(), zd = by.direction().z();
             const D b = D(2) * (x0 * xd + y0 * yd + z0 * zd);
@@ -62,7 +64,7 @@ namespace animray {
             const D t0 = (-b - disc_root) / D(2);
             const D t1 = (-b + disc_root) / D(2);
             const D t = t0 < D(0) ? t1 : t0;
-            if ( t < D(0) ) return fostlib::null;
+            if ( t < epsilon ) return fostlib::null;
             typedef typename ray<D>::end_type end_type;
             typedef typename ray<D>::direction_type direction_type;
             const D px = x0 + t * xd, py = y0 + t * yd, pz = z0 + t * zd;

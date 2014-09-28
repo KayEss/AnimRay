@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/epsilon.hpp>
 #include <animray/surface.hpp>
 
 
@@ -82,7 +83,7 @@ namespace animray {
                 return CI();
             }
             fostlib::nullable<typename G::intersection_type>
-                reflected(schene.geometry().intersects(refray));
+                reflected(schene.geometry().intersects(refray, epsilon<I>::value));
             if ( reflected.isnull() ) {
                 return CI();
             } else {
