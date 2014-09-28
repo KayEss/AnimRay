@@ -52,10 +52,8 @@ namespace animray {
         /// null if no intersection occurs
         template< typename R >
         fostlib::nullable< intersection_type > intersects(const R &by) const {
-            const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
-            const D xd = by.direction().x(), yd = by.direction().y(), zd = by.direction().z();
-            const D b = D(2) * (x0 * xd + y0 * yd + z0 * zd);
-            const D c = x0 * x0 + y0 * y0 + z0 * z0 - D(1);
+            const D b = D(2) * dot(by.from(), by.direction());
+            const D c = by.from().dot() - D(1);
             const D discriminant = b * b - D(4) * c;
             if ( discriminant < D(0) ) return fostlib::null;
             const D disc_root = std::sqrt( discriminant );
@@ -65,21 +63,16 @@ namespace animray {
             if ( t < D(0) ) return fostlib::null;
             typedef typename ray<D>::end_type end_type;
             typedef typename ray<D>::direction_type direction_type;
-            const D px = x0 + t * xd, py = y0 + t * yd, pz = z0 + t * zd;
-            return intersection_type(end_type(px, py, pz),
-                direction_type(end_type(px, py, pz)));
+            direction_type normal(by.from() + by.direction() * t);
+            return intersection_type(end_type(normal), normal);
         }
 
         /// Returns true if the ray hits the sphere
         template< typename R >
         bool occludes(const R &by, const D epsilon) const {
             // http://www.siggraph.org/education/materials/HyperGraph/
-            const D x0 = by.from().x(), y0 = by.from().y(), z0 = by.from().z();
-            const D b = D(2) * (
-                x0 * by.direction().x() +
-                    y0 * by.direction().y() +
-                        z0 * by.direction().z());
-            const D c = x0 * x0 + y0 * y0 + z0 * z0 - D(1);
+            const D b = D(2) * dot(by.from(), by.direction());
+            const D c = by.from().dot() - D(1);
             const D discriminant = b * b - D(4) * c;
             if ( discriminant < D(0) ) return false;
             const D disc_root = std::sqrt( discriminant );
