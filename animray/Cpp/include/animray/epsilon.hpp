@@ -20,7 +20,7 @@
 
 
 #ifndef ANIMRAY_EPSILON_HPP
-#define ANIMRAY_SURFACE_GLOSS_HPP
+#define ANIMRAY_EPSILON_HPP
 #pragma once
 
 
