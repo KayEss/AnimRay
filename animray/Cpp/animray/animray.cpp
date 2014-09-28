@@ -65,7 +65,8 @@ FSL_MAIN(
         >> gloss_sphere_type;
     typedef animray::movable<animray::surface<
             animray::sphere< animray::ray< world > >,
-            animray::reflective< float >
+            animray::reflective< float >,
+            animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
     typedef animray::scene<
         animray::compound<
@@ -87,9 +88,10 @@ FSL_MAIN(
     scene.background(animray::rgb<float>(20, 70, 100));
 
     const world scale(200.0);
-    std::get<0>(scene.geometry().instances())
-            (animray::translate<world>(0.0, 0.0, scale + 1.0))
-            (animray::scale<world>(scale, scale, scale));
+    std::get<0>(scene.geometry().instances()) =
+            reflective_sphere_type(0.3, animray::rgb<float>(0.3f))
+                (animray::translate<world>(0.0, 0.0, scale + 1.0))
+                (animray::scale<world>(scale, scale, scale));
     std::get<1>(scene.geometry().instances()).insert(
         gloss_sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
