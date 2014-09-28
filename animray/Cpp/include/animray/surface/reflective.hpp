@@ -66,12 +66,12 @@ namespace animray {
         /// The absorption attenuation of the surface
         typedef C parameters;
 
-        /// Calculate the light/surface interaction
+        /// Calculate the light coming from the reflected ray
         template< typename RI, typename RL, typename I,
             typename CI, typename G >
-        CI operator () (
-            const C &attenuation, const RI &observer, const RL &light,
-            const I &intersection, const CI &incident, const G &scene
+        CI reflected(
+            const RI &observer, const RL &light,
+            const I &intersection, const CI &, const G &scene
         ) const {
             typedef typename RI::local_coord_type accuracy;
             const accuracy ci = -dot(observer.direction(), intersection.direction());
@@ -87,8 +87,19 @@ namespace animray {
             if ( reflected.isnull() ) {
                 return CI();
             } else {
-                return scene.light()(refray, reflected.value(), scene) * attenuation;
+                return scene.light()(refray, reflected.value(), scene);
             }
+        }
+
+        /// Calculate the light/surface interaction
+        template< typename RI, typename RL, typename I,
+            typename CI, typename G >
+        CI operator () (
+            const C &attenuation, const RI &observer, const RL &light,
+            const I &intersection, const CI &incident, const G &scene
+        ) const {
+            return reflected(observer, light, intersection, incident, scene)
+                * attenuation;
         }
     };
 
