@@ -41,9 +41,6 @@ namespace animray {
     /// Partial specialisation of the intersection type for compound
     template< typename O, typename... Os >
     class intersection< compound<O, Os...> > {
-        boost::variant<
-            typename O::intersection_type,
-            typename Os::intersection_type...> geometry;
     public:
         /// The type of the local coordinate system
         typedef typename O::local_coord_type local_coord_type;
@@ -52,11 +49,18 @@ namespace animray {
         /// The type of the strike location
         typedef typename O::intersection_type::direction_type direction_type;
 
+        /// The wrapped intersection
+        fostlib::accessors<
+            boost::variant<
+                typename O::intersection_type,
+                typename Os::intersection_type...
+            >, fostlib::lvalue> wrapped_intersection;
+
         intersection() {}
 
         template<typename I>
         intersection(I &&i)
-        : geometry(std::move(i)) {
+        : wrapped_intersection(std::move(i)) {
         }
 
         end_type from() const {
@@ -66,7 +70,7 @@ namespace animray {
                     return inter.from();
                 }
             };
-            return boost::apply_visitor(forwarder(), geometry);
+            return boost::apply_visitor(forwarder(), wrapped_intersection());
         }
 
         direction_type direction() const {
@@ -76,7 +80,7 @@ namespace animray {
                     return inter.direction();
                 }
             };
-            return boost::apply_visitor(forwarder(), geometry);
+            return boost::apply_visitor(forwarder(), wrapped_intersection());
         }
     };
 
@@ -165,6 +169,27 @@ namespace animray {
         };
     };
 
+
+    template<typename C, typename O, typename RI, typename RL,
+        typename G, typename... Os>
+    struct surface_interaction<C, intersection<compound<O, Os...>>, RI, RL, G> {
+        surface_interaction() {}
+        C operator() (
+            const RI &observer, const RL &light,
+            const intersection< compound<O, Os...> > &intersection,
+            const C &incident,
+            const G &geometry
+        ) const {
+            struct forwarder : public boost::static_visitor<C>{
+                template<typename I>
+                C operator () (const I &inter) const {
+                    return shader(observer, light, inter, incident, geometry);
+                }
+            };
+            return boost::apply_visitor(forwarder(),
+                intersection.wrapped_intersection());
+        }
+    };
 
 }
 
