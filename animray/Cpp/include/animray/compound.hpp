@@ -64,24 +64,25 @@ namespace animray {
         }
 
         end_type from() const {
-            struct forwarder : public boost::static_visitor<end_type>{
-                template<typename I>
-                end_type operator () (const I &inter) const {
-                    return inter.from();
-                }
-            };
-            return boost::apply_visitor(forwarder(), wrapped_intersection());
+            return boost::apply_visitor(end_forwarder(), wrapped_intersection());
         }
 
         direction_type direction() const {
-            struct forwarder : public boost::static_visitor<direction_type>{
-                template<typename I>
-                direction_type operator () (const I &inter) const {
-                    return inter.direction();
-                }
-            };
-            return boost::apply_visitor(forwarder(), wrapped_intersection());
+            return boost::apply_visitor(dir_forwarder(), wrapped_intersection());
         }
+    private:
+        struct end_forwarder : public boost::static_visitor<end_type>{
+            template<typename I>
+            end_type operator () (const I &inter) const {
+                return inter.from();
+            }
+        };
+        struct dir_forwarder : public boost::static_visitor<direction_type>{
+            template<typename I>
+            direction_type operator () (const I &inter) const {
+                return inter.direction();
+            }
+        };
     };
 
 
