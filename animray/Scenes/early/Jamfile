@@ -13,6 +13,11 @@ fost-exe five-spheres-coloured-lights
         five-spheres-coloured-lights.cpp
     ;
 
+fost-exe reflections
+    :
+        reflections.cpp
+    ;
+
 fost-exe simple-specular-highlight
     :
         simple-specular-highlight.cpp
