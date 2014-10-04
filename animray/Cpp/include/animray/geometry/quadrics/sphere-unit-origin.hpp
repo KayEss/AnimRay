@@ -70,8 +70,8 @@ namespace animray {
         }
 
         /// Returns true if the ray hits the sphere
-        template< typename R >
-        bool occludes(const R &by, const D epsilon) const {
+        template<typename R, typename E>
+        bool occludes(const R &by, const E epsilon) const {
             const D b = D(2) * dot(by.from(), by.direction());
             const D c = by.from().dot() - D(1);
             const D discriminant = b * b - D(4) * c;
