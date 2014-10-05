@@ -101,17 +101,15 @@ FSL_MAIN(
     std::get<1>(scene.geometry().instances()) =
         metallic_sphere_type(
                 animray::rgb<float>(0, 0.4f, 0.4f),
-                animray::rgb<float>(0, 0.3f, 0.3f))(
-            animray::translate<world>(-1.0, -1.0, 0.0));
-    std::get<2>(scene.geometry().instances()).insert(
-        gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
-            animray::translate<world>(1.0, -1.0, 0.0)));
-    std::get<2>(scene.geometry().instances()).insert(
-        gloss_sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
-            animray::translate<world>(-1.0, 1.0, 0.0)));
-    std::get<2>(scene.geometry().instances()).insert(
-        gloss_sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
-            animray::translate<world>(1.0, 1.0, 0.0)));
+                animray::rgb<float>(0, 0.3f, 0.3f));
+    for ( auto count = 0; count != 100; ++count ) {
+        std::get<2>(scene.geometry().instances()).insert(
+            gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
+                animray::translate<world>(
+                    8 * (count / 10 - 4.5f),
+                    4 * (count % 10 - 4.5f),
+                    0.0)));
+    }
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
@@ -135,12 +133,8 @@ FSL_MAIN(
             animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
     camera
-        (animray::rotate_z<world>(25_deg))
         (animray::rotate_x<world>(-65_deg))
-        (animray::translate<world>(0.0, 0.0, -8.5))
-        (animray::rotate_x<world>(2_deg))
-        (animray::rotate_y<world>(-1_deg))
-        (animray::translate<world>(0.0, 0.0, -1.5));
+        (animray::translate<world>(0.0, -4.0, -40));
 
     typedef animray::film<animray::rgb<uint8_t>> film_type;
 
@@ -168,7 +162,7 @@ FSL_MAIN(
     fostlib::cli::monitor(out, tracking, result,
         [](const fostlib::meter::reading &current) {
             fostlib::stringstream out;
-            out << "\x1B[0m] "
+            out << "] "
                 << current.done() << "/" << current.work().value(0);
             if ( current.meta().size() && not current.meta()[0].isnull() ) {
                 fostlib::json meta(current.meta()[0]);
@@ -181,7 +175,7 @@ FSL_MAIN(
             return out.str();
         },
         [](const fostlib::meter::reading &) {
-            return "[\x1B[1m";
+            return "[";
         });
     animray::targa(output_filename, result());
 
