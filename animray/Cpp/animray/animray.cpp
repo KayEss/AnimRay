@@ -71,13 +71,12 @@ FSL_MAIN(
         >> reflective_sphere_type;
     typedef animray::movable<animray::surface<
             animray::sphere< animray::ray< world > >,
-            animray::reflective< animray::rgb<float> >,
-            animray::matte< animray::rgb<float> >
+            animray::reflective< animray::rgb<float> >
         >> metallic_sphere_type;
     typedef animray::scene<
         animray::compound<
             reflective_sphere_type,
-            metallic_sphere_type,
+            animray::collection<metallic_sphere_type>,
             animray::collection<gloss_sphere_type>
         >,
         animray::light<
@@ -99,22 +98,27 @@ FSL_MAIN(
             reflective_sphere_type(0.4f, animray::rgb<float>(0.3f))
                 (animray::translate<world>(0.0, 0.0, scale + 1.0))
                 (animray::scale<world>(scale, scale, scale));
-    std::get<1>(scene.geometry().instances()) =
-        metallic_sphere_type(
-                animray::rgb<float>(0, 0.4f, 0.4f),
-                animray::rgb<float>(0, 0.3f, 0.3f));
 
     std::default_random_engine generator;
+    std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_real_distribution<world>
         hue(0, 360),
         x_position(-40, 40), y_position(-20, 20);
     for ( auto count = 0; count != 100; ++count ) {
-        animray::hls<float> colour(hue(generator), 0.5f, 1.0f);
-        std::get<2>(scene.geometry().instances()).insert(
-            gloss_sphere_type(10.0f,
-                    fostlib::coerce<animray::rgb<float>>(colour))
-                (animray::translate<world>(
-                    x_position(generator), y_position(generator), 0.0)));
+        animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
+        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
+        auto location(animray::translate<world>(
+            x_position(generator), y_position(generator), 0.0));
+        switch ( surface(generator) ) {
+        case 1:
+            std::get<1>(scene.geometry().instances()).insert(
+                metallic_sphere_type(colour)(location));
+            break;
+        case 2:
+        default:
+            std::get<2>(scene.geometry().instances()).insert(
+                gloss_sphere_type(10.0f, colour)(location));
+        }
     }
 
     std::get<0>(scene.light()).color(50);
