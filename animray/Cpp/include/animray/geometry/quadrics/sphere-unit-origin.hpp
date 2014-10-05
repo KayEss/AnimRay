@@ -25,6 +25,7 @@
 
 
 #include <animray/ray.hpp>
+#include <animray/maths/quadratic.hpp>
 
 
 namespace animray {
@@ -56,17 +57,16 @@ namespace animray {
         ) const {
             const D b = D(2) * dot(by.from(), by.direction());
             const D c = by.from().dot() - D(1);
-            const D discriminant = b * b - D(4) * c;
-            if ( discriminant < D(0) ) return fostlib::null;
-            const D disc_root = std::sqrt( discriminant );
-            const D t0 = (-b - disc_root) / D(2);
-            const D t1 = (-b + disc_root) / D(2);
-            const D t = t0 < D(0) ? t1 : t0;
-            if ( t < epsilon ) return fostlib::null;
-            typedef typename ray<D>::end_type end_type;
-            typedef typename ray<D>::direction_type direction_type;
-            direction_type normal(by.from() + by.direction() * t);
-            return intersection_type(end_type(normal), normal);
+            const fostlib::nullable<D> t(
+                first_positive_quadratic_solution(D(1), b, c, epsilon));
+            if ( t.isnull() ) {
+                return fostlib::null;
+            } else {
+                typedef typename ray<D>::end_type end_type;
+                typedef typename ray<D>::direction_type direction_type;
+                direction_type normal(by.from() + by.direction() * t.value());
+                return intersection_type(end_type(normal), normal);
+            }
         }
 
         /// Returns true if the ray hits the sphere
