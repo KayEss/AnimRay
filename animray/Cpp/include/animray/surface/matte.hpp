@@ -51,6 +51,14 @@ namespace animray {
                     dot(light.direction(), intersection.direction());
             return incident * attenuation * costheta;
         }
+
+        /// This material is non-emissive
+        template<typename CI, typename RI, typename I, typename G>
+        CI operator () (
+            const C &, const CI &, const RI &, const I &, const G &
+        ) const {
+            return CI();
+        }
     };
 
 

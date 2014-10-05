@@ -59,6 +59,14 @@ namespace animray {
                 return CI();
             }
         }
+
+        /// This material is non-emissive
+        template<typename CI, typename RI, typename I, typename G>
+        CI operator () (
+            const W &, const CI &, const RI &, const I &, const G &
+        ) const {
+            return CI();
+        }
     };
 
 
