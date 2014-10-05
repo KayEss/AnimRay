@@ -47,7 +47,7 @@ namespace animray {
         /// The colour of the light
         fostlib::accessors< color_type > color;
 
-        /// Default construct a light with no illumincation
+        /// Default construct a light with no illumination
         light()
         : color() {
         }
@@ -172,7 +172,6 @@ namespace animray {
                     *this, observer, intersection, scene);
         };
     };
-
 
 
 }
