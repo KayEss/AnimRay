@@ -37,6 +37,7 @@
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
+#include <animray/hls.hpp>
 
 
 FSL_MAIN(
@@ -102,13 +103,18 @@ FSL_MAIN(
         metallic_sphere_type(
                 animray::rgb<float>(0, 0.4f, 0.4f),
                 animray::rgb<float>(0, 0.3f, 0.3f));
+
+    std::default_random_engine generator;
+    std::uniform_real_distribution<world>
+        hue(0, 360),
+        x_position(-40, 40), y_position(-20, 20);
     for ( auto count = 0; count != 100; ++count ) {
+        animray::hls<float> colour(hue(generator), 0.5f, 1.0f);
         std::get<2>(scene.geometry().instances()).insert(
-            gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
-                animray::translate<world>(
-                    8 * (count / 10 - 4.5f),
-                    4 * (count % 10 - 4.5f),
-                    0.0)));
+            gloss_sphere_type(10.0f,
+                    fostlib::coerce<animray::rgb<float>>(colour))
+                (animray::translate<world>(
+                    x_position(generator), y_position(generator), 0.0)));
     }
 
     std::get<0>(scene.light()).color(50);
