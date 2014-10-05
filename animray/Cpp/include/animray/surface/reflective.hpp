@@ -74,7 +74,7 @@ namespace animray {
         template< typename RI, typename RL, typename I,
             typename CI, typename G >
         CI reflected(
-            const RI &observer, const RL &light,
+            const RI &observer, const RL &,
             const I &intersection, const CI &, const G &scene
         ) const {
             typedef typename RI::local_coord_type accuracy;
@@ -85,12 +85,12 @@ namespace animray {
             typename detail::ref_type<RI>::type refray(
                 observer, intersection.from(), ri);
             if ( refray.depth() > 5 ) {
-                return CI();
+                return scene.background();
             }
             fostlib::nullable<typename G::intersection_type>
                 reflected(scene.geometry().intersects(refray, epsilon<I>::value));
             if ( reflected.isnull() ) {
-                return CI();
+                return scene.background();
             } else {
                 return scene.light()(refray, reflected.value(), scene);
             }
