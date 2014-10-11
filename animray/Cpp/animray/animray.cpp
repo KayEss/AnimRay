@@ -103,7 +103,7 @@ FSL_MAIN(
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_real_distribution<world>
         hue(0, 360),
-        x_position(-40, 40), y_position(-20, 20);
+        x_position(-20, 20), y_position(-20, 20);
     for ( auto count = 0; count != 100; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
