@@ -50,9 +50,9 @@ FSL_MAIN(
         args.commandSwitch("ss").value("6")));
 
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("100") );
-    const int height = fostlib::coerce< int >( args[3].value("100") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("spheres.tga"));
+    const int width = fostlib::coerce< int >( args[2].value("300") );
+    const int height = fostlib::coerce< int >( args[3].value("200") );
 
     typedef double world;
     const world aspect = double(width) / height;
