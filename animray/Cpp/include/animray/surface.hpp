@@ -100,6 +100,13 @@ namespace animray {
         /// Capture the surface physics model
         fostlib::accessors< surface_parameters_type > surface_parameters;
 
+        /// Pass on affine transformation to the geometry
+        template<typename T>
+        surface &operator () (const T &t) {
+            geometry()(t);
+            return *this;
+        }
+
         /// Calculate the intersection of the ray on the instance
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(

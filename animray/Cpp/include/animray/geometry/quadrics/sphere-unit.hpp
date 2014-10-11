@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/affine.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 
 
@@ -43,17 +44,32 @@ namespace animray {
         /// Set the position of the sphere
         fostlib::accessors<point3d<D>> position;
 
+        /// Allow the sphere to be moved
+        unit_sphere &operator () (const translate<local_coord_type> &t) {
+            position(t());
+            return *this;
+        }
+
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(
-            const R &by, const E epsilon
-        ) const {
+        fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
+            by.from(by.from() - position());
+            fostlib::nullable< intersection_type > hit
+                (origin.intersects(by, epsilon));
+            if ( hit.isnull() ) {
+                return fostlib::null;
+            } else {
+                hit.value().from(hit.value().from() + position());
+                return hit;
+            }
         }
 
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
-        bool occludes(const R &by, const E epsilon) const {
+        bool occludes(R by, const E epsilon) const {
+            by.from(by.from() - position());
+            return origin.occludes(by, epsilon);
         }
     };
 

@@ -59,20 +59,20 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
-            animray::unit_sphere_at_origin< animray::ray< world > >,
+    typedef animray::surface<
+            animray::unit_sphere< animray::ray< world > >,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
-        >> gloss_sphere_type;
+        > gloss_sphere_type;
     typedef animray::movable<animray::surface<
-            animray::unit_sphere_at_origin< animray::ray< world > >,
+            animray::unit_sphere< animray::ray< world > >,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
-    typedef animray::movable<animray::surface<
-            animray::unit_sphere_at_origin< animray::ray< world > >,
+    typedef animray::surface<
+            animray::unit_sphere< animray::ray< world > >,
             animray::reflective< animray::rgb<float> >
-        >> metallic_sphere_type;
+        > metallic_sphere_type;
     typedef animray::scene<
         animray::compound<
             reflective_sphere_type,
@@ -107,8 +107,8 @@ FSL_MAIN(
     for ( auto count = 0; count != 100; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        auto location(animray::translate<world>(
-            x_position(generator), y_position(generator), 0.0));
+        animray::translate<world> location
+            (x_position(generator), y_position(generator), 0.0);
         switch ( surface(generator) ) {
         case 1:
             std::get<1>(scene.geometry().instances()).insert(

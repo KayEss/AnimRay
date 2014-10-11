@@ -41,6 +41,10 @@ namespace animray {
         : x(tx), y(ty), z(tz) {
         }
 
+        point3d<W> operator () () const {
+            return point3d<W>(x, y, z);
+        }
+
         /// Return the forward matrix for the translation
         matrix<W> forward() const {
             matrix<W> f;
