@@ -33,15 +33,32 @@ namespace animray {
 
     /// Return matrices for moving the co-ordinate system by the requested amounts
     template<typename W>
-    std::pair<matrix<W>, matrix<W>> translate(
-            const W &tx, const W &ty, const W &tz
-    ) {
-        matrix<W> f, b;
-        f[0][3] = tx; b[0][3] = -tx;
-        f[1][3] = ty; b[1][3] = -ty;
-        f[2][3] = tz; b[2][3] = -tz;
-        return std::make_pair(f, b);
-    }
+    class translate {
+        const W x, y, z;
+    public:
+        /// Construct a translation of the requested amount
+        translate(const W &tx, const W &ty, const W &tz)
+        : x(tx), y(ty), z(tz) {
+        }
+
+        /// Return the forward matrix for the translation
+        matrix<W> forward() const {
+            matrix<W> f;
+            f[0][3] = x;
+            f[1][3] = y;
+            f[2][3] = z;
+            return f;
+        }
+
+        /// Return the backward matrix for the translation
+        matrix<W> backward() const {
+            matrix<W> b;
+            b[0][3] = -x;
+            b[1][3] = -y;
+            b[2][3] = -z;
+            return b;
+        }
+    };
 
 
     /// Return matrices for scaling along each axis.

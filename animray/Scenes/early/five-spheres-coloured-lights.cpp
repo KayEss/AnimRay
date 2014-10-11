@@ -63,15 +63,15 @@ FSL_MAIN(
     scene.background(animray::rgb<float>(10, 50, 70));
 
     scene.geometry().insert(movable_sphere()(
-        animray::translate(0.0, 0.0, 5.0)));
+        animray::translate<world>(0.0, 0.0, 5.0)));
     scene.geometry().insert(movable_sphere()(
-        animray::translate(-1.0, -1.0, 0.0)));
+        animray::translate<world>(-1.0, -1.0, 0.0)));
     scene.geometry().insert(movable_sphere()(
-        animray::translate(1.0, -1.0, 0.0)));
+        animray::translate<world>(1.0, -1.0, 0.0)));
     scene.geometry().insert(movable_sphere()(
-        animray::translate(-1.0, 1.0, 0.0)));
+        animray::translate<world>(-1.0, 1.0, 0.0)));
     scene.geometry().insert(movable_sphere()(
-        animray::translate(1.0, 1.0, 0.0)));
+        animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
@@ -89,7 +89,7 @@ FSL_MAIN(
 
     animray::movable<animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
-    camera(animray::translate(0.0, 0.0, -8.5));
+    camera(animray::translate<world>(0.0, 0.0, -8.5));
     typedef animray::film<animray::rgb<uint8_t>> film_type;
     film_type output(width, height,
         [&scene, &camera](const film_type::size_type x, const film_type::size_type y) {

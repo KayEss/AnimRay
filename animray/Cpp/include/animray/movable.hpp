@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/affine.hpp>
 #include <animray/ray.hpp>
 #include <animray/matrix.hpp>
 
@@ -46,6 +47,14 @@ namespace animray {
             // going from world to local
             forward = t.second * forward;
             backward *= t.first;
+            return *this;
+        }
+
+        /// Apply a transformation
+        template<typename T>
+        transformable &operator () (const T &t) {
+            forward = t.backward() * forward;
+            backward *= t.forward();
             return *this;
         }
     };
@@ -76,6 +85,12 @@ namespace animray {
 
         /// Apply a transformation
         movable &operator () (const transform_type &t) {
+            superclass::operator()(t);
+            return *this;
+        }
+
+        /// Apply a translation
+        movable &operator () (const translate<local_coord_type> &t) {
             superclass::operator()(t);
             return *this;
         }
