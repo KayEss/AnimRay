@@ -74,12 +74,7 @@ namespace animray {
         bool occludes(const R &by, const E epsilon) const {
             const D b = D(2) * dot(by.from(), by.direction());
             const D c = by.from().dot() - D(1);
-            const D discriminant = b * b - D(4) * c;
-            if ( discriminant < D(0) ) return false;
-            const D disc_root = std::sqrt( discriminant );
-            if ( -b - disc_root >= epsilon ) return true;
-            if ( -b + disc_root >= epsilon ) return true;
-            return false;
+            return quadratic_has_solution(D(1), b, c, epsilon);
         }
     };
 
