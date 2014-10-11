@@ -59,25 +59,27 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
-            animray::gloss< world >,
-            animray::matte< animray::rgb<float> >
-        > gloss_sphere_type;
     typedef animray::movable<animray::surface<
             animray::unit_sphere< animray::ray< world > >,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
     typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::collection<
+                animray::unit_sphere< animray::ray< world > > >,
+            animray::gloss< world >,
+            animray::matte< animray::rgb<float> >
+        > gloss_sphere_type;
+    typedef animray::surface<
+            animray::collection<
+                animray::unit_sphere< animray::ray< world > > >,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<
         animray::compound<
             reflective_sphere_type,
-            animray::collection<metallic_sphere_type>,
-            animray::collection<gloss_sphere_type>
+            metallic_sphere_type,
+            gloss_sphere_type
         >,
         animray::light<
             std::tuple<
@@ -98,6 +100,9 @@ FSL_MAIN(
             reflective_sphere_type(0.4f, animray::rgb<float>(0.3f))
                 (animray::translate<world>(0.0, 0.0, scale + 1.0))
                 (animray::scale<world>(scale, scale, scale));
+    std::get<1>(scene.geometry().instances()) =
+            std::tuple_element<1, scene_type::geometry_type::instances_type>::type
+                (animray::rgb<float>(1.0, 0.8, 0.8));
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
@@ -106,18 +111,18 @@ FSL_MAIN(
         x_position(-20, 20), y_position(-20, 20);
     for ( auto count = 0; count != 100; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
-        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
+        // auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         animray::translate<world> location
             (x_position(generator), y_position(generator), 0.0);
         switch ( surface(generator) ) {
         case 1:
-            std::get<1>(scene.geometry().instances()).insert(
-                metallic_sphere_type(colour)(location));
+            std::get<1>(scene.geometry().instances()).geometry().insert(
+                animray::unit_sphere< animray::ray< world > >()(location));
             break;
         case 2:
         default:
-            std::get<2>(scene.geometry().instances()).insert(
-                gloss_sphere_type(10.0f, colour)(location));
+            std::get<2>(scene.geometry().instances()).geometry().insert(
+                animray::unit_sphere< animray::ray< world > >()(location));
         }
     }
 
