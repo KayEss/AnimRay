@@ -28,6 +28,11 @@ fost-exe spheres
         spheres.cpp
     ;
 
+fost-exe spheres-positionable
+    :
+        spheres-positionable.cpp
+    ;
+
 fost-exe white-sphere
     :
         white-sphere.cpp
