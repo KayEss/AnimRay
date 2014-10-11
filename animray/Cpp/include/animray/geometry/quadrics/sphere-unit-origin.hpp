@@ -49,16 +49,21 @@ namespace animray {
             return false;
         }
 
+        /// Returns the b c values for the quadratic given a start and direction
+        template<typename P, typename N> static
+        std::pair<D, D> quadratic_b_c(const P &from, const N &direction) {
+            return std::make_pair(D(2) * dot(from, direction), from.dot() - D(1));
+        }
+
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(
             const R &by, const E epsilon
         ) const {
-            const D b = D(2) * dot(by.from(), by.direction());
-            const D c = by.from().dot() - D(1);
-            const fostlib::nullable<D> t(
-                first_positive_quadratic_solution(D(1), b, c, epsilon));
+            const std::pair<D, D> bc(quadratic_b_c(by.from(), by.direction()));
+            const fostlib::nullable<D> t
+                (first_positive_quadratic_solution(D(1), bc.first, bc.second, epsilon));
             if ( t.isnull() ) {
                 return fostlib::null;
             } else {
@@ -72,9 +77,8 @@ namespace animray {
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
         bool occludes(const R &by, const E epsilon) const {
-            const D b = D(2) * dot(by.from(), by.direction());
-            const D c = by.from().dot() - D(1);
-            return quadratic_has_solution(D(1), b, c, epsilon);
+            const std::pair<D, D> bc(quadratic_b_c(by.from(), by.direction()));
+            return quadratic_has_solution(D(1), bc.first, bc.second, epsilon);
         }
     };
 
