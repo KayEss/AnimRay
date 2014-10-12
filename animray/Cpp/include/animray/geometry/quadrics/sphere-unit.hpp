@@ -55,8 +55,7 @@ namespace animray {
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
             by.from(by.from() - position());
-            fostlib::nullable< intersection_type > hit
-                (origin.intersects(by, epsilon));
+            fostlib::nullable< intersection_type > hit(origin.intersects(by, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
