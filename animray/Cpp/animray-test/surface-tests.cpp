@@ -21,7 +21,7 @@
 
 #include <animray/surface/matte.hpp>
 #include <animray/sphere.hpp>
-#include <animray/rgb.hpp>
+#include <animray/color/rgb.hpp>
 #include <fost/test>
 
 

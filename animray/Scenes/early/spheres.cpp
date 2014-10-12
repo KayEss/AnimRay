@@ -37,7 +37,7 @@
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
-#include <animray/hls.hpp>
+#include <animray/color/hls.hpp>
 
 
 FSL_MAIN(

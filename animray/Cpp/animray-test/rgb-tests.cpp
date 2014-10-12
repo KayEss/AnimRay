@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/rgb.hpp>
+#include <animray/color/rgb.hpp>
 #include "test-json.hpp"
 
 

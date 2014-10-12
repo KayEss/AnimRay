@@ -79,7 +79,7 @@ namespace animray {
 }
 
 
-#include <animray/rgb.hpp>
+#include <animray/color/rgb.hpp>
 
 
 namespace fostlib {
