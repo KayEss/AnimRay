@@ -111,7 +111,7 @@ FSL_MAIN(
         x_position(-20, 20), y_position(-20, 20);
     for ( auto count = 0; count != 100; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
-        // auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
+        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         animray::translate<world> location
             (x_position(generator), y_position(generator), 0.0);
         switch ( surface(generator) ) {
