@@ -25,6 +25,7 @@
 
 
 #include <animray/surface.hpp>
+#include <boost/math/constants/constants.hpp>
 
 
 namespace animray {
@@ -47,9 +48,10 @@ namespace animray {
             const C &attenuation, const RI &, const RL &light,
             const I &intersection, const CI &incident, const G &
         ) const {
-            const typename RI::local_coord_type costheta =
-                    dot(light.direction(), intersection.direction());
-            return incident * attenuation * costheta;
+            typedef typename RI::local_coord_type D;
+            const D costheta = dot(light.direction(), intersection.direction());
+            return incident * attenuation *
+                (costheta / boost::math::constants::pi<D>());
         }
 
         /// This material is non-emissive
