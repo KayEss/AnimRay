@@ -48,6 +48,8 @@ FSL_MAIN(
         args.commandSwitch("t").value("2")));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
+    const std::size_t spheres(fostlib::coerce<int>(
+        args.commandSwitch("sp").value("100")));
 
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("spheres-positionable.tga"));
@@ -104,7 +106,7 @@ FSL_MAIN(
     std::uniform_real_distribution<world>
         hue(0, 360),
         x_position(-20, 20), y_position(-20, 20);
-    for ( auto count = 0; count != 100; ++count ) {
+    for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         animray::translate<world> location
