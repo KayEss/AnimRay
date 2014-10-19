@@ -102,7 +102,10 @@ FSL_MAIN(
                 (animray::scale<world>(scale, scale, scale));
     std::get<1>(scene.geometry().instances()) =
             std::tuple_element<1, scene_type::geometry_type::instances_type>::type
-                (animray::rgb<float>(1.0, 0.8, 0.8));
+                (animray::rgb<float>(1, 1, 1));
+    std::get<2>(scene.geometry().instances()) =
+            std::tuple_element<2, scene_type::geometry_type::instances_type>::type
+                (10, animray::rgb<float>(1, 1, 1));
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
