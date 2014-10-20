@@ -95,13 +95,13 @@ FSL_MAIN(
 
     const world scale(200.0);
     std::get<0>(scene.geometry().instances()) =
-            reflective_sphere_type(0.4f, animray::rgb<float>(0.3f))
+            reflective_sphere_type(0.4f, animray::rgb<float>(0.5f))
                 (animray::translate<world>(0.0, 0.0, scale + 1.0))
                 (animray::scale<world>(scale, scale, scale));
     std::get<1>(scene.geometry().instances()) =
         metallic_sphere_type(
-                animray::rgb<float>(0, 0.4f, 0.4f),
-                animray::rgb<float>(0, 0.3f, 0.3f))(
+                animray::rgb<float>(0, 0.8f, 0.8f),
+                animray::rgb<float>(0, 0.9f, 0.9f))(
             animray::translate<world>(-1.0, -1.0, 0.0));
     std::get<2>(scene.geometry().instances()).insert(
         gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
