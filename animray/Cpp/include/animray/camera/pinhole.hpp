@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/camera.hpp>
+#include <animray/camera/flat.hpp>
 
 
 namespace animray {

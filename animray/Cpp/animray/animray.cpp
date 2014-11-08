@@ -22,6 +22,7 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/camera.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
 #include <animray/collection.hpp>
