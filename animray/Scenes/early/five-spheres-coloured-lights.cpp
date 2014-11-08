@@ -22,7 +22,7 @@
 #include <fost/main>
 #include <fost/unicode>
 #include <animray/camera.hpp>
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/collection.hpp>
 #include <animray/movable.hpp>
 #include <animray/scene.hpp>
@@ -45,7 +45,7 @@ FSL_MAIN(
 
     typedef double world;
     typedef animray::movable<
-        animray::sphere<animray::ray<world>>> movable_sphere;
+        animray::unit_sphere_at_origin<animray::ray<world>>> movable_sphere;
     typedef animray::scene<
         animray::collection<movable_sphere>,
         animray::light<

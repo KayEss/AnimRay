@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/ray.hpp>
 #include <fost/test>
 
@@ -29,15 +29,15 @@ FSL_TEST_SUITE( sphere );
 
 FSL_TEST_FUNCTION( constructor_default_tests ) {
     fostlib::test::default_copy_constructable<
-        animray::sphere< animray::ray< int>  > >();
+        animray::unit_sphere_at_origin< animray::ray< int>  > >();
     fostlib::test::default_copy_constructable<
-        animray::sphere< animray::ray< int64_t > > >();
+        animray::unit_sphere_at_origin< animray::ray< int64_t > > >();
     fostlib::test::default_copy_constructable<
-        animray::sphere< animray::ray<float > > >();
+        animray::unit_sphere_at_origin< animray::ray<float > > >();
     fostlib::test::default_copy_constructable<
-        animray::sphere< animray::ray<double > > >();
+        animray::unit_sphere_at_origin< animray::ray<double > > >();
     fostlib::test::default_copy_constructable<
-        animray::sphere< animray::ray<long double > > >();
+        animray::unit_sphere_at_origin< animray::ray<long double > > >();
 }
 
 
@@ -47,7 +47,7 @@ namespace {
         try {
             typedef typename animray::ray< D >::end_type end_type;
             typedef animray::ray< D > ray;
-            animray::sphere< animray::ray< D > > s;
+            animray::unit_sphere_at_origin< animray::ray< D > > s;
             FSL_CHECK( s.occludes(
                 ray( end_type( 0, 0, 10 ), end_type() ), 0
             ) );

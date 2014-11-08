@@ -20,7 +20,7 @@
 
 
 #include <animray/surface/matte.hpp>
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/color/rgb.hpp>
 #include <fost/test>
 
@@ -30,7 +30,7 @@ FSL_TEST_SUITE( surface );
 
 FSL_TEST_FUNCTION(matte_rgb) {
     animray::surface<
-            animray::sphere<animray::ray<float>>,
+            animray::unit_sphere_at_origin<animray::ray<float>>,
             animray::matte< animray::rgb<float> >
         > red_ball(animray::rgb<float>(1, 0, 0));
 
@@ -55,7 +55,7 @@ FSL_TEST_FUNCTION(matte_rgb) {
 FSL_TEST_FUNCTION(matte_gray) {
     FSL_CHECK_EQ(10 * 0.5f, 5); // Check the maths will work out
     animray::surface<
-            animray::sphere<animray::ray<float>>,
+            animray::unit_sphere_at_origin<animray::ray<float>>,
             animray::matte< float >
         > gray_ball(0.5);
 
