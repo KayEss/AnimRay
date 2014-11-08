@@ -19,8 +19,8 @@
 */
 
 
-#ifndef ANIMRAY_COLLECTION_HPP
-#define ANIMRAY_COLLECTION_HPP
+#ifndef ANIMRAY_GEOMETRY_COLLECTION_HPP
+#define ANIMRAY_GEOMETRY_COLLECTION_HPP
 #pragma once
 
 
@@ -95,4 +95,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_COLLECTION_HPP
+#endif // ANIMRAY_GEOMETRY_COLLECTION_HPP

@@ -25,7 +25,7 @@
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
-#include <animray/collection.hpp>
+#include <animray/geometry/collection.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
