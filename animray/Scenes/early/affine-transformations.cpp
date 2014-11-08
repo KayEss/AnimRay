@@ -21,7 +21,7 @@
 
 #include <fost/main>
 #include <fost/unicode>
-#include <animray/camera.hpp>
+#include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/collection.hpp>
 #include <animray/movable.hpp>
