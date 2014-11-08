@@ -23,7 +23,7 @@
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
 #include <animray/targa.hpp>
-#include <animray/hls.hpp>
+#include <animray/color/hls.hpp>
 #include <boost/random.hpp>
 
 

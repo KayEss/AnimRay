@@ -22,7 +22,7 @@
 #include <fost/main>
 #include <fost/unicode>
 #include <animray/epsilon.hpp>
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/targa.hpp>
 
 
@@ -36,7 +36,7 @@ FSL_MAIN(
     int height = fostlib::coerce< int >( args[3].value("100") );
 
     typedef animray::ray<double> ray;
-    animray::sphere<ray> sphere;
+    animray::unit_sphere_at_origin<ray> sphere;
     typedef animray::film< animray::rgb< uint8_t > > film_type;
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {

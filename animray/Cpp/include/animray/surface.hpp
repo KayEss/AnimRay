@@ -27,6 +27,7 @@
 #include <fost/core>
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
+#include <animray/emission.hpp>
 #include <tuple>
 
 
@@ -99,6 +100,13 @@ namespace animray {
         /// Capture the surface physics model
         fostlib::accessors< surface_parameters_type > surface_parameters;
 
+        /// Pass on affine transformation to the geometry
+        template<typename T>
+        surface &operator () (const T &t) {
+            geometry()(t);
+            return *this;
+        }
+
         /// Calculate the intersection of the ray on the instance
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(
@@ -129,12 +137,21 @@ namespace animray {
             template< typename RI, typename RL, typename I, typename G >
             C operator () (
                 const RI &observer, const RL &light, const I &intersection,
-                const C &incident, const G &geometry
+                const C &incident, const G &scene
             ) const {
                 return n(std::get<item>(intersection.parameters()),
-                        observer, light, intersection, incident, geometry) +
+                        observer, light, intersection, incident, scene) +
                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
-                        observer, light, intersection, incident, geometry);
+                        observer, light, intersection, incident, scene);
+            }
+            template<typename RI, typename I, typename G>
+            C operator() (
+                const RI &observer, const I &intersection, const G &scene
+            ) const {
+                return n(std::get<item>(intersection.parameters()),
+                        C(), observer, intersection, scene) +
+                    surface_calculation<sizeof...(S), item + 1, C, S...>()(
+                        observer, intersection, scene);
             }
         };
 
@@ -145,10 +162,17 @@ namespace animray {
             template< typename RI, typename RL, typename I, typename G >
             C operator () (
                 const RI &observer, const RL &light, const I &intersection,
-                const C &incident, const G &geometry
+                const C &incident, const G &scene
             ) const {
                 return n(std::get<item>(intersection.parameters()),
-                    observer, light, intersection, incident, geometry);
+                    observer, light, intersection, incident, scene);
+            }
+            template<typename RI, typename I, typename G>
+            C operator() (
+                const RI &observer, const I &intersection, const G &scene
+            ) const {
+                return n(std::get<item>(intersection.parameters()),
+                        C(), observer, intersection, scene);
             }
         };
     }
@@ -163,10 +187,26 @@ namespace animray {
             const RI &observer, const RL &light,
             const intersection< surface<O, S...> > &intersection,
             const C &incident,
-            const G &geometry
+            const G &scene
         ) const {
-            return detail::surface_calculation<sizeof...(S), 0, C, S...>()(
-                observer, light, intersection, incident, geometry);
+            return detail::surface_calculation<sizeof...(S), 0, C, S...>()
+                (observer, light, intersection, incident, scene);
+        }
+    };
+
+
+    /// Specialisation of the surface emjssion that will use all of the surface layers
+    template<typename C, typename O, typename RI, typename G,
+        typename... S>
+    struct surface_emission<C, RI, intersection<surface<O, S...>>, G> {
+        surface_emission() {}
+        C operator() (
+            const RI &observer,
+            const intersection<surface<O, S...>> &intersection,
+            const G &scene
+        ) const {
+            return detail::surface_calculation<sizeof...(S), 0, C, S...>()
+                (observer, intersection, scene);
         }
     };
 

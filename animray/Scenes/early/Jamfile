@@ -23,6 +23,16 @@ fost-exe simple-specular-highlight
         simple-specular-highlight.cpp
     ;
 
+fost-exe spheres
+    :
+        spheres.cpp
+    ;
+
+fost-exe spheres-positionable
+    :
+        spheres-positionable.cpp
+    ;
+
 fost-exe white-sphere
     :
         white-sphere.cpp

@@ -47,9 +47,17 @@ namespace animray {
             const C &attenuation, const RI &, const RL &light,
             const I &intersection, const CI &incident, const G &
         ) const {
-            const typename RI::local_coord_type costheta =
-                    dot(light.direction(), intersection.direction());
+            typedef typename RI::local_coord_type D;
+            const D costheta = dot(light.direction(), intersection.direction());
             return incident * attenuation * costheta;
+        }
+
+        /// This material is non-emissive
+        template<typename CI, typename RI, typename I, typename G>
+        CI operator () (
+            const C &, const CI &, const RI &, const I &, const G &
+        ) const {
+            return CI();
         }
     };
 

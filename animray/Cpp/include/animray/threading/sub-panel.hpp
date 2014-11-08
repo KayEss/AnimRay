@@ -48,7 +48,7 @@ namespace animray {
             /// Calculate the next power of 2
             template< typename S >
             S bigestodd(S n) {
-                while ( (n & 1) == 0 ) {
+                while ( (n & 1) == 0 && n > S(20)) {
                     n /= 2;
                 }
                 return n;

@@ -25,6 +25,7 @@
 
 
 #include <animray/epsilon.hpp>
+#include <animray/emission.hpp>
 
 
 namespace animray {
@@ -57,13 +58,20 @@ namespace animray {
         template< typename M, typename S >
         color_type operator() (const M &camera, S x, S y) const {
             typename M::intersection_type observer(camera(x, y));
+            return (*this)(observer);
+        }
+
+        /// Given a ray work out how much light is returned along it
+        template<typename R>
+        color_type operator() (const R &observer) const {
             fostlib::nullable<intersection_type>
                 intersection(
                     geometry().intersects(
                         observer,
                         epsilon<intersection_type>::value));
             if ( !intersection.isnull() ) {
-                return color_type(light()(observer, intersection.value(), *this));
+                return color_type(light()(observer, intersection.value(), *this)) +
+                    emission<color_type>(observer, intersection.value(), *this);
             } else {
                 return background();
             }

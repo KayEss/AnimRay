@@ -22,7 +22,7 @@
 #include <fost/main>
 #include <fost/unicode>
 #include <animray/camera.hpp>
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/collection.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
@@ -50,7 +50,7 @@ FSL_MAIN(
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef animray::movable<animray::surface<
-            animray::sphere< animray::ray< world > >,
+            animray::unit_sphere_at_origin< animray::ray< world > >,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         >> sphere_type;

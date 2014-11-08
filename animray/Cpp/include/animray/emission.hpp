@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -19,26 +19,32 @@
 */
 
 
-#include <animray/color/rgba.hpp>
-#include <fost/test>
+#ifndef ANIMRAY_EMISSION_HPP
+#define ANIMRAY_EMISSION_HPP
+#pragma once
 
 
-FSL_TEST_SUITE( rgba );
+namespace animray {
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::rgba< int > >();
-    fostlib::test::default_copy_constructable< animray::rgba< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::rgba< float > >();
-    fostlib::test::default_copy_constructable< animray::rgba< double > >();
-    fostlib::test::default_copy_constructable< animray::rgba< long double > >();
+    /// Non-emissive surface
+    template<typename C, typename RI, typename I, typename G>
+    struct surface_emission {
+        surface_emission() {}
+        C operator() (const RI&, const I &, const G &) const {
+            return C();
+        }
+    };
+
+
+    /// Calls in to the relevant surface emission handler
+    template<typename C, typename RI, typename I, typename G>
+    C emission(const RI &observer, const I &intersection, const G &scene) {
+        return surface_emission<C, RI, I, G>()(observer, intersection, scene);
+    }
+
+
 }
 
 
-FSL_TEST_FUNCTION( json ) {
-    FSL_CHECK_EQ(
-        fostlib::coerce< fostlib::json >( animray::rgba< int64_t >() ),
-        fostlib::json::parse(L"[0, 0, 0, 0]")
-    );
-}
-
+#endif // ANIMRAY_EMISSION_HPP

@@ -23,7 +23,7 @@
 #include <fost/progress-cli>
 #include <fost/unicode>
 #include <animray/camera.hpp>
-#include <animray/sphere.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/collection.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
@@ -49,9 +49,9 @@ FSL_MAIN(
         args.commandSwitch("ss").value("6")));
 
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("100") );
-    const int height = fostlib::coerce< int >( args[3].value("100") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("reflections.tga"));
+    const int width = fostlib::coerce< int >( args[2].value("200") );
+    const int height = fostlib::coerce< int >( args[3].value("300") );
 
     typedef double world;
     const world aspect = double(width) / height;
@@ -59,17 +59,17 @@ FSL_MAIN(
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef animray::movable<animray::surface<
-            animray::sphere< animray::ray< world > >,
+            animray::unit_sphere_at_origin< animray::ray< world > >,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         >> gloss_sphere_type;
     typedef animray::movable<animray::surface<
-            animray::sphere< animray::ray< world > >,
+            animray::unit_sphere_at_origin< animray::ray< world > >,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
     typedef animray::movable<animray::surface<
-            animray::sphere< animray::ray< world > >,
+            animray::unit_sphere_at_origin< animray::ray< world > >,
             animray::reflective< animray::rgb<float> >,
             animray::matte< animray::rgb<float> >
         >> metallic_sphere_type;
@@ -95,13 +95,13 @@ FSL_MAIN(
 
     const world scale(200.0);
     std::get<0>(scene.geometry().instances()) =
-            reflective_sphere_type(0.4f, animray::rgb<float>(0.3f))
+            reflective_sphere_type(0.4f, animray::rgb<float>(0.5f))
                 (animray::translate<world>(0.0, 0.0, scale + 1.0))
                 (animray::scale<world>(scale, scale, scale));
     std::get<1>(scene.geometry().instances()) =
         metallic_sphere_type(
-                animray::rgb<float>(0, 0.4f, 0.4f),
-                animray::rgb<float>(0, 0.3f, 0.3f))(
+                animray::rgb<float>(0, 0.8f, 0.8f),
+                animray::rgb<float>(0, 0.9f, 0.9f))(
             animray::translate<world>(-1.0, -1.0, 0.0));
     std::get<2>(scene.geometry().instances()).insert(
         gloss_sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(

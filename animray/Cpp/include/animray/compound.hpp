@@ -27,6 +27,7 @@
 #include <fost/core>
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
+#include <animray/emission.hpp>
 #include <tuple>
 
 
@@ -205,6 +206,35 @@ namespace animray {
                 intersection.wrapped_intersection());
         }
     };
+
+
+    template<typename C, typename O, typename RI,
+        typename G, typename... Os>
+    struct surface_emission<C, RI, intersection<compound<O, Os...>>, G> {
+        struct forwarder : public boost::static_visitor<C>{
+            const RI &observer;
+            const G &geometry;
+            forwarder(const RI &observer, const G &geometry)
+            : observer(observer), geometry(geometry) {
+            }
+
+            template<typename I>
+            C operator () (const I &inter) const {
+                return emission<C>(observer, inter, geometry);
+            }
+        };
+        surface_emission() {}
+        C operator() (
+            const RI &observer,
+            const intersection< compound<O, Os...> > &intersection,
+            const G &geometry
+        ) const {
+            return boost::apply_visitor(
+                forwarder(observer, geometry),
+                intersection.wrapped_intersection());
+        }
+    };
+
 
 }
 

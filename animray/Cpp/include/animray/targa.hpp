@@ -25,7 +25,7 @@
 
 
 #include <animray/film.hpp>
-#include <animray/rgb.hpp>
+#include <animray/color/rgb.hpp>
 
 #include <boost/lambda/bind.hpp>
 #include <boost/filesystem/fstream.hpp>

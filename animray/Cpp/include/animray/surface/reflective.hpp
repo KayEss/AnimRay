@@ -71,11 +71,9 @@ namespace animray {
         typedef C parameters;
 
         /// Calculate the light coming from the reflected ray
-        template< typename RI, typename RL, typename I,
-            typename CI, typename G >
+        template<typename RI, typename I, typename CI, typename G>
         CI reflected(
-            const RI &observer, const RL &light,
-            const I &intersection, const CI &, const G &scene
+            const CI &, const RI &observer, const I &intersection, const G &scene
         ) const {
             typedef typename RI::local_coord_type accuracy;
             const accuracy ci = -dot(observer.direction(), intersection.direction());
@@ -85,14 +83,9 @@ namespace animray {
             typename detail::ref_type<RI>::type refray(
                 observer, intersection.from(), ri);
             if ( refray.depth() > 5 ) {
-                return CI();
-            }
-            fostlib::nullable<typename G::intersection_type>
-                reflected(scene.geometry().intersects(refray, epsilon<I>::value));
-            if ( reflected.isnull() ) {
-                return CI();
+                return scene.background();
             } else {
-                return scene.light()(refray, reflected.value(), scene);
+                return scene(refray);
             }
         }
 
@@ -100,11 +93,19 @@ namespace animray {
         template< typename RI, typename RL, typename I,
             typename CI, typename G >
         CI operator () (
-            const C &attenuation, const RI &observer, const RL &light,
-            const I &intersection, const CI &incident, const G &scene
+            const C &, const RI &, const RL &, const I &, const CI &, const G &
         ) const {
-            return reflected(observer, light, intersection, incident, scene)
-                * attenuation;
+            // There is never any light due to illumination
+            return CI();
+        }
+
+        /// This material is non-emissive
+        template<typename CI, typename RI, typename I, typename G>
+        CI operator () (
+            const C &attenuation, const CI &c,
+            const RI &observer, const I &intersection, const G &scene
+        ) const {
+            return reflected(c, observer, intersection, scene) * attenuation;
         }
     };
 

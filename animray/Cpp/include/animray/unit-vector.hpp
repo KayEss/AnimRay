@@ -34,6 +34,8 @@ namespace animray {
     template < typename D >
     class unit_vector : private point3d< D > {
         typedef point3d< D > superclass;
+
+        friend class point3d<D>;
     public:
         /// The value type
         typedef D value_type;
@@ -77,8 +79,19 @@ namespace animray {
     D dot(const unit_vector<D> &d1, const unit_vector<D> &d2) {
         return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
     }
+    /// Dot product for unit vectors and point
+    template< typename D >
+    D dot(const point3d<D> &d1, const unit_vector<D> &d2) {
+        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
+    }
 
 
+}
+
+
+template<typename D>
+animray::point3d<D>::point3d(const unit_vector<value_type> &v)
+: superclass(v) {
 }
 
 

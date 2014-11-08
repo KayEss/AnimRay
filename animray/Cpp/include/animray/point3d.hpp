@@ -40,6 +40,11 @@ namespace std {
 namespace animray {
 
 
+    /// A unit vector shows direction
+    template < typename D >
+    class unit_vector;
+
+
     /// Homogeneous coordinates store a location or a vector
     template < typename D >
     class point3d : private detail::array_based< D, 4 > {
@@ -95,6 +100,8 @@ namespace animray {
             superclass::array[2] = z;
             superclass::array[3] = h;
         }
+        /// Constructor taking a unit_vector
+        explicit point3d(const unit_vector<value_type> &);
 
         /// Compare for equality
         bool operator == ( const point3d &r ) const {
