@@ -46,7 +46,7 @@ FSL_TEST_FUNCTION(matte_rgb) {
     animray::rgb<float> final(animray::shader(
         animray::ray<float>(),
         illumination, hit, animray::rgb<float>(255, 255, 255), red_ball));
-    FSL_CHECK_ERROR(final.red(), 81.169f, 0.001f);
+    FSL_CHECK_ERROR(final.red(), 255.f, 0.001f);
     FSL_CHECK_EQ(final.green(), 0);
     FSL_CHECK_EQ(final.blue(), 0);
 }
@@ -71,8 +71,8 @@ FSL_TEST_FUNCTION(matte_gray) {
     animray::rgb<float> final(animray::shader(
         animray::ray<float>(),
         illumination, hit, animray::rgb<float>(10, 10, 10), gray_ball));
-    FSL_CHECK_ERROR(final.red(), 1.59155f, 0.0001f);
-    FSL_CHECK_ERROR(final.green(), 1.59155f, 0.0001f);
-    FSL_CHECK_ERROR(final.blue(), 1.59155f, 0.0001f);
+    FSL_CHECK_ERROR(final.red(), 5.f, 0.0001f);
+    FSL_CHECK_ERROR(final.green(), 5.f, 0.0001f);
+    FSL_CHECK_ERROR(final.blue(), 5.f, 0.0001f);
 }
 
