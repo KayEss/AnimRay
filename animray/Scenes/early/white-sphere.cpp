@@ -31,9 +31,9 @@ FSL_MAIN(
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    int width = fostlib::coerce< int >( args[2].value("100") );
-    int height = fostlib::coerce< int >( args[3].value("100") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("white-sphere.tga"));
+    int width = fostlib::coerce< int >( args[2].value("1920") );
+    int height = fostlib::coerce< int >( args[3].value("1080") );
 
     typedef animray::ray<double> ray;
     animray::unit_sphere_at_origin<ray> sphere;
