@@ -1,4 +1,6 @@
 include $(TOP)/../fost-base/fost.jam ;
+import path ;
+import utility ;
 
 
 rule scene ( name ) {
@@ -10,47 +12,12 @@ rule scene ( name ) {
             $(name)-static-lib
         :
             $(TARGET_REQUIREMENTS)
-            <tag>@fost-tag-output
             <target-os>linux:<testing.launcher>time
         ;
     fost-exe $(name) : $(name)-static-lib ;
 }
 
 
-fost-exe affine-transformations
-    :
-        affine-transformations.cpp
-    ;
-
-fost-exe coloured-matte-surfaces
-    :
-        coloured-matte-surfaces.cpp
-    ;
-
-fost-exe five-spheres-coloured-lights
-    :
-        five-spheres-coloured-lights.cpp
-    ;
-
-fost-exe reflections
-    :
-        reflections.cpp
-    ;
-
-fost-exe simple-specular-highlight
-    :
-        simple-specular-highlight.cpp
-    ;
-
-fost-exe spheres
-    :
-        spheres.cpp
-    ;
-
-fost-exe spheres-positionable
-    :
-        spheres-positionable.cpp
-    ;
-
-scene white-sphere ;
-scene white-sphere-ortho ;
+for local cpp in [ path.glob $(TOP)/Scenes/early/ : *.cpp ] {
+    scene [ utility.basename $(cpp) ] ;
+}

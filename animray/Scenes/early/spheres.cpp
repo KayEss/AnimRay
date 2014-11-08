@@ -45,17 +45,18 @@ FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
-    const std::size_t threads(fostlib::coerce<int>(
-        args.commandSwitch("t").value("2")));
+    const std::size_t threads(
+        fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
+            boost::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
-        args.commandSwitch("sp").value("100")));
+        args.commandSwitch("sp").value("10")));
 
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("spheres.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("300") );
-    const int height = fostlib::coerce< int >( args[3].value("200") );
+    const int width = fostlib::coerce< int >( args[2].value("96") );
+    const int height = fostlib::coerce< int >( args[3].value("54") );
 
     typedef double world;
     const world aspect = double(width) / height;
