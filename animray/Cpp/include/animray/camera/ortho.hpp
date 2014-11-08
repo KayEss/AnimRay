@@ -32,7 +32,7 @@ namespace animray {
 
     /// Camera with parallel 3d rays
     template< typename R,
-            typename C = flat_camera< typename R::value_type > >
+            typename C = flat_camera< typename R::local_coord_type > >
     class ortho_camera {
         /// The 2d camera
         C camera;
