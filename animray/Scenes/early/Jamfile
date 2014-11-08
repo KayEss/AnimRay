@@ -11,6 +11,7 @@ rule scene ( name ) {
         :
             $(TARGET_REQUIREMENTS)
             <tag>@fost-tag-output
+            <target-os>linux:<testing.launcher>time
         ;
     fost-exe $(name) : $(name)-static-lib ;
 }
