@@ -29,7 +29,7 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde\nwhite-sphere-ortho"
+    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("white-sphere-ortho.tga"));
