@@ -1,3 +1,22 @@
+include $(TOP)/../fost-base/fost.jam ;
+
+
+rule scene ( name ) {
+    lib $(name)-static-lib : $(name).cpp : <link>static ;
+    unit-test $(name)-test
+        :
+            $(TARGET_INPUTS)
+            $(TOP)/../fost-base/Cpp/fost-cli//fost-cli
+            $(name)-static-lib
+        :
+            $(TARGET_REQUIREMENTS)
+            <tag>@fost-tag-output
+            <target-os>linux:<testing.launcher>time
+        ;
+    fost-exe $(name) : $(name)-static-lib ;
+}
+
+
 fost-exe affine-transformations
     :
         affine-transformations.cpp
@@ -33,7 +52,5 @@ fost-exe spheres-positionable
         spheres-positionable.cpp
     ;
 
-fost-exe white-sphere
-    :
-        white-sphere.cpp
-    ;
+scene white-sphere ;
+scene white-sphere-ortho ;

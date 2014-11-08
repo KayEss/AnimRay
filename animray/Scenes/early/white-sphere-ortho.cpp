@@ -22,6 +22,7 @@
 #include <fost/main>
 #include <fost/unicode>
 #include <animray/epsilon.hpp>
+#include <animray/camera/ortho.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/targa.hpp>
 
@@ -31,19 +32,21 @@ FSL_MAIN(
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("white-sphere.tga"));
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("white-sphere-ortho.tga"));
     int width = fostlib::coerce< int >( args[2].value("1920") );
     int height = fostlib::coerce< int >( args[3].value("1080") );
+
+    const double aspect = double(width) / height;
+    const double fw = width > height ? aspect * 2.0 : 2.0;
+    const double fh = width > height ? 2.0 : 2.0 / aspect;
 
     typedef animray::ray<double> ray;
     animray::unit_sphere_at_origin<ray> sphere;
     typedef animray::film< animray::rgb< uint8_t > > film_type;
+    animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
     film_type output(width, height,
         [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
-            const double limit = std::min(width, height) / 2.0;
-            const double cx = (double(x) + 0.5 - width/2.0) / limit;
-            const double cy = -(double(y) + 0.5 - height/2.0) / limit;
-            ray r(ray::end_type(cx, cy, -10.0), ray::end_type(cx, cy, -9.0));
+            ray r(camera(x, y));
             fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
             if ( !intersection.isnull() ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
