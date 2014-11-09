@@ -27,6 +27,7 @@
 #include <animray/movable.hpp>
 #include <animray/scene.hpp>
 #include <animray/light.hpp>
+#include <animray/light/ambient.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 

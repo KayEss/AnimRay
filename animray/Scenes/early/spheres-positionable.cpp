@@ -35,6 +35,7 @@
 #include <animray/surface/gloss.hpp>
 #include <animray/surface/reflective.hpp>
 #include <animray/light.hpp>
+#include <animray/light/ambient.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>

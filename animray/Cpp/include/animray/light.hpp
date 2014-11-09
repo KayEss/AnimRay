@@ -27,41 +27,10 @@
 #include <tuple>
 #include <animray/epsilon.hpp>
 #include <animray/shader.hpp>
+#include <animray/light/light.hpp>
 
 
 namespace animray {
-
-
-    /// Lights allow illumination of the scene
-    template< typename L, typename C >
-    class light;
-
-
-    /// Void lights are ambient
-    template< typename C >
-    class light<void, C> {
-    public:
-        /// The colour type
-        typedef C color_type;
-
-        /// The colour of the light
-        fostlib::accessors< color_type > color;
-
-        /// Default construct a light with no illumination
-        light()
-        : color() {
-        }
-        /// Construct with a given color
-        explicit light(const color_type &c)
-        : color(c) {
-        }
-
-        /// Calculate the illumination given by this light
-        template< typename O, typename R, typename G >
-        color_type operator () (const O &, const R &, const G &) const {
-            return color();
-        }
-    };
 
 
     /// Point lights
