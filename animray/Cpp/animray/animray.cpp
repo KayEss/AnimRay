@@ -45,8 +45,9 @@ FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
-    const std::size_t threads(fostlib::coerce<int>(
-        args.commandSwitch("t").value("2")));
+    const std::size_t threads(
+        fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
+            boost::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
