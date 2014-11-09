@@ -53,10 +53,10 @@ FSL_MAIN(
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
-        args.commandSwitch("sp").value("30")));
+        args.commandSwitch("sp").value("10")));
 
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("spheres-positionable-surface-collection.tga"));
     const int width = fostlib::coerce< int >( args[2].value("180") );
     const int height = fostlib::coerce< int >( args[3].value("135") );
 

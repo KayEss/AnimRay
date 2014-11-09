@@ -34,7 +34,6 @@ namespace animray {
     /// A simple collection of objects
     template<typename O, typename V = std::vector<O>>
     class collection {
-        V instances;
     public:
         /// The type of objects that can be inserted
         typedef O instance_type;
@@ -45,10 +44,15 @@ namespace animray {
         /// The type of the ray output by the instance
         typedef typename O::intersection_type intersection_type;
 
+        /// The instances
+        fostlib::accessors<collection_type, fostlib::lvalue> instances;
+
         /// Insert a new object into the compound
         template<typename G>
         collection &insert(const G &instance) {
-            instances.push_back(instance);
+            // Other code may depend on this being a push_back,
+            // at least for collections that use std::vector
+            instances().push_back(instance);
             return *this;
         }
 
@@ -59,7 +63,7 @@ namespace animray {
         ) const {
             fostlib::nullable< intersection_type > result;
             local_coord_type result_dot;
-            for ( const auto &instance : instances ) {
+            for ( const auto &instance : instances() ) {
                 if ( result.isnull() ) {
                     result = instance.intersects(by, epsilon);
                     if ( !result.isnull() ) {
@@ -86,10 +90,10 @@ namespace animray {
         bool occludes(
             const R &by, const typename R::local_coord_type epsilon
         ) const {
-            return std::find_if(instances.begin(), instances.end(),
+            return std::find_if(instances().begin(), instances().end(),
                 [&](const instance_type &instance) {
                     return instance.occludes(by, epsilon);
-                }) != instances.end();
+                }) != instances().end();
         }
     };
 
