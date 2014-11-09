@@ -19,8 +19,8 @@
 */
 
 
-#ifndef ANIMRAY_COLLECTION_HPP
-#define ANIMRAY_COLLECTION_HPP
+#ifndef ANIMRAY_GEOMETRY_COLLECTION_HPP
+#define ANIMRAY_GEOMETRY_COLLECTION_HPP
 #pragma once
 
 
@@ -32,12 +32,14 @@ namespace animray {
 
 
     /// A simple collection of objects
-    template<typename O>
+    template<typename O, typename V = std::vector<O>>
     class collection {
-        std::vector<O> instances;
+        V instances;
     public:
         /// The type of objects that can be inserted
         typedef O instance_type;
+        /// The type of the collection
+        typedef V collection_type;
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
         /// The type of the ray output by the instance
@@ -95,4 +97,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_COLLECTION_HPP
+#endif // ANIMRAY_GEOMETRY_COLLECTION_HPP

@@ -23,10 +23,13 @@
 #include <fost/unicode>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
-#include <animray/collection.hpp>
+#include <animray/geometry/collection.hpp>
 #include <animray/movable.hpp>
 #include <animray/scene.hpp>
-#include <animray/light.hpp>
+#include <animray/light/ambient.hpp>
+#include <animray/light/collection.hpp>
+#include <animray/light/point.hpp>
+#include <animray/shader.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 

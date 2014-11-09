@@ -25,7 +25,7 @@
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
-#include <animray/collection.hpp>
+#include <animray/geometry/collection.hpp>
 #include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
@@ -34,7 +34,9 @@
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
 #include <animray/surface/reflective.hpp>
-#include <animray/light.hpp>
+#include <animray/light/ambient.hpp>
+#include <animray/light/collection.hpp>
+#include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
@@ -45,8 +47,9 @@ FSL_MAIN(
     "animray",
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
-    const std::size_t threads(fostlib::coerce<int>(
-        args.commandSwitch("t").value("2")));
+    const std::size_t threads(
+        fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
+            boost::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
