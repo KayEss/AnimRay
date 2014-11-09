@@ -19,14 +19,11 @@
 */
 
 
-#ifndef ANIMRAY_LIGHT_HPP
-#define ANIMRAY_LIGHT_HPP
+#ifndef ANIMRAY_LIGHT_COLLECTION_HPP
+#define ANIMRAY_LIGHT_COLLECTION_HPP
 #pragma once
 
 
-#include <tuple>
-#include <animray/epsilon.hpp>
-#include <animray/shader.hpp>
 #include <animray/light/light.hpp>
 
 
@@ -114,4 +111,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_LIGHT_HPP
+#endif // ANIMRAY_LIGHT_COLLECTION_HPP

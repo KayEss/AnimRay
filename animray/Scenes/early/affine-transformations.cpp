@@ -30,8 +30,8 @@
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
-#include <animray/light.hpp>
 #include <animray/light/ambient.hpp>
+#include <animray/light/collection.hpp>
 #include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
