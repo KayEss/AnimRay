@@ -25,6 +25,7 @@
 #include <animray/targa.hpp>
 #include <animray/color/hls.hpp>
 #include <boost/random.hpp>
+#include <boost/math/constants/constants.hpp>
 
 
 namespace {
