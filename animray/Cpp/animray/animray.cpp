@@ -24,6 +24,7 @@
 #include <fost/unicode>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/geometry/planar/plane.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
 #include <animray/geometry/collection-surface.hpp>
 #include <animray/compound.hpp>
@@ -65,23 +66,23 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
+    typedef animray::movable<animray::surface<
+            animray::plane< animray::ray< world > >,
+            animray::reflective< float >,
+            animray::matte< animray::rgb<float> >
+        >> reflective_plane_type;
     typedef animray::surface<
             animray::unit_sphere< animray::ray< world > >,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
-    typedef animray::movable<animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
-            animray::reflective< float >,
-            animray::matte< animray::rgb<float> >
-        >> reflective_sphere_type;
     typedef animray::surface<
             animray::unit_sphere< animray::ray< world > >,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<
         animray::compound<
-            reflective_sphere_type,
+            reflective_plane_type,
             animray::collection<metallic_sphere_type>,
             animray::collection<gloss_sphere_type>
         >,
@@ -99,11 +100,8 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
 
-    const world scale(200.0);
     std::get<0>(scene.geometry().instances()) =
-            reflective_sphere_type(0.4f, animray::rgb<float>(0.3f))
-                (animray::translate<world>(0.0, 0.0, scale + 1.0))
-                (animray::scale<world>(scale, scale, scale));
+            reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
