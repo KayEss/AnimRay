@@ -65,12 +65,12 @@ namespace animray {
         }
 
         /// Compare for equality
-        bool operator == ( const ray &r ) const {
+        bool operator == (const ray &r) const {
             return direction() == r.direction() && from() == r.from();
         }
         /// Compare for inequality
-        bool operator != ( const ray &r ) const {
-            return ! ( *this == r );
+        bool operator != (const ray &r) const {
+            return direction() != r.direction() || from() != r.from();
         }
 
         /// Transform a ray by a matrix

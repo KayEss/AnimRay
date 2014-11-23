@@ -105,7 +105,7 @@ namespace animray {
 
         /// Compare for equality
         bool operator == ( const point3d &r ) const {
-            return x() == x() && y() == y() && z() == z();
+            return x() == r.x() && y() == r.y() && z() == r.z();
         }
         /// Compare for inequality
         bool operator != ( const point3d &r ) const {
