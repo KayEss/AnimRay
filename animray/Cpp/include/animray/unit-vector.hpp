@@ -34,7 +34,6 @@ namespace animray {
     template < typename D >
     class unit_vector : private point3d< D > {
         typedef point3d< D > superclass;
-
         friend class point3d<D>;
     public:
         /// The value type
@@ -42,13 +41,14 @@ namespace animray {
 
         /// Constructs a unit vector pointing along the x axis.
         unit_vector()
-        : superclass( 1, 0, 0 ) {
+        : superclass(0, 0, 1) {
+        }
         /// Constructs a unit vector (already normalised)
         unit_vector(value_type x, value_type y, value_type z)
         : superclass(x, y, z) {
         }
         /// Constructs a unit vector from a point relative to the origin
-        unit_vector( const point3d< D > &p )
+        unit_vector(const point3d< D > &p)
         : superclass( p.unit() ) {
         }
 
