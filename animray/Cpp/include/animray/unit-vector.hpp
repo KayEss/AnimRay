@@ -43,6 +43,9 @@ namespace animray {
         /// Constructs a unit vector pointing along the x axis.
         unit_vector()
         : superclass( 1, 0, 0 ) {
+        /// Constructs a unit vector (already normalised)
+        unit_vector(value_type x, value_type y, value_type z)
+        : superclass(x, y, z) {
         }
         /// Constructs a unit vector from a point relative to the origin
         unit_vector( const point3d< D > &p )
