@@ -20,7 +20,16 @@
 
 
 #include <animray/geometry/planar/plane.hpp>
+#include <animray/ray.hpp>
 #include <fost/test>
 
 
 FSL_TEST_SUITE( plane );
+
+
+FSL_TEST_FUNCTION(plane_constructor) {
+    animray::plane<animray::ray<int>> board;
+    FSL_CHECK_EQ(board.center(), animray::point3d<int>(0, 0, 0));
+    FSL_CHECK_EQ(board.normal(),
+        animray::unit_vector<int>(animray::point3d<int>(0, 0, 1)));
+}
