@@ -84,4 +84,17 @@ namespace animray {
 }
 
 
+namespace std {
+
+
+    /// Output to a stream
+    template<typename D>
+    ostream &operator << (ostream &o, const animray::ray<D> &r) {
+        return o << r.from() << " -> " << r.direction();
+    }
+
+
+}
+
+
 #endif // ANIMRAY_RAY_HPP
