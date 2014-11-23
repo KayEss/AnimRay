@@ -66,11 +66,11 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
+    typedef animray::surface<
             animray::plane< animray::ray< world > >,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
-        >> reflective_plane_type;
+        > reflective_plane_type;
     typedef animray::surface<
             animray::unit_sphere< animray::ray< world > >,
             animray::gloss< world >,
@@ -102,6 +102,8 @@ FSL_MAIN(
 
     std::get<0>(scene.geometry().instances()) =
             reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
+    std::get<0>(scene.geometry().instances()).geometry().center(
+        animray::point3d<world>(0, 0, 4));
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
