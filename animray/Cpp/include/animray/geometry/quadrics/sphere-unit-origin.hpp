@@ -25,6 +25,7 @@
 
 
 #include <animray/ray.hpp>
+#include <animray/maths/dot.hpp>
 #include <animray/maths/quadratic.hpp>
 
 
