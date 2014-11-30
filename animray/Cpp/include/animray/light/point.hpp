@@ -25,6 +25,7 @@
 
 
 #include <animray/light/light.hpp>
+#include <animray/shader.hpp>
 
 
 namespace animray {
