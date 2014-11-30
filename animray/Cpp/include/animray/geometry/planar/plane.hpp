@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <animray/unit-vector.hpp>
+#include <animray/maths/dot.hpp>
 
 
 namespace animray {
@@ -46,13 +46,24 @@ namespace animray {
         /// Calculate the intersection point
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
-            throw fostlib::exceptions::not_implemented("plane intersection");
+            const local_coord_type dot_normal(animray::dot(by.direction(), normal()));
+            if ( dot_normal == local_coord_type() ) {
+                return fostlib::null;
+            }
+            const local_coord_type numerator(animray::dot(normal(), center() - by.from()));
+            const local_coord_type t(numerator / dot_normal);
+            if ( t > epsilon ) {
+                return intersection_type(by.from() + by.direction() * t,
+                    dot_normal < 0 ? normal() : -normal());
+            } else {
+                return fostlib::null;
+            }
         }
 
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
-            throw fostlib::exceptions::not_implemented("plane occlusion");
+            return not intersects(by, epsilon).isnull();
         }
     };
 
