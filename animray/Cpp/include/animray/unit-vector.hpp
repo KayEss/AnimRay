@@ -32,9 +32,8 @@ namespace animray {
 
     /// A unit vector shows direction
     template < typename D >
-    class unit_vector : private point3d< D > {
+    class unit_vector : protected point3d< D > {
         typedef point3d< D > superclass;
-
         friend class point3d<D>;
     public:
         /// The value type
@@ -42,17 +41,19 @@ namespace animray {
 
         /// Constructs a unit vector pointing along the x axis.
         unit_vector()
-        : superclass( 1, 0, 0 ) {
+        : superclass(0, 0, 1) {
+        }
+        /// Constructs a unit vector (already normalised)
+        unit_vector(value_type x, value_type y, value_type z)
+        : superclass(x, y, z) {
         }
         /// Constructs a unit vector from a point relative to the origin
-        unit_vector( const point3d< D > &p )
+        unit_vector(const point3d< D > &p)
         : superclass( p.unit() ) {
         }
 
         /// Multiply by a scalar
-        point3d<value_type> operator * (D scalar) const {
-            return point3d<value_type>(*this) * scalar;
-        }
+        point3d<value_type> operator * (const value_type scalar) const;
         /// Add a vector
         point3d<value_type> operator + (const point3d<value_type> &r) const {
             return point3d<value_type>(*this) + r;
@@ -67,23 +68,17 @@ namespace animray {
             return this->superclass::operator != ( v );
         }
 
+        /// Unary minus
+        unit_vector operator- () const {
+            return (*this) * -1;
+        }
+
         using superclass::x;
         using superclass::y;
         using superclass::z;
         using superclass::print_on;
+        using superclass::to_json;
     };
-
-
-    /// Dot product for two unit vectors
-    template< typename D >
-    D dot(const unit_vector<D> &d1, const unit_vector<D> &d2) {
-        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
-    }
-    /// Dot product for unit vectors and point
-    template< typename D >
-    D dot(const point3d<D> &d1, const unit_vector<D> &d2) {
-        return d1.x() * d2.x() + d1.y() * d2.y() + d1.z() * d2.z();
-    }
 
 
 }
@@ -93,6 +88,35 @@ template<typename D>
 animray::point3d<D>::point3d(const unit_vector<value_type> &v)
 : superclass(v) {
 }
+
+
+template<typename D>
+animray::point3d<D> animray::unit_vector<D>::operator * (const D scalar) const {
+    return point3d<D>(
+        superclass::superclass::array[0] * scalar,
+        superclass::superclass::array[1] * scalar,
+        superclass::superclass::array[2] * scalar,
+        superclass::superclass::array[3]);
+}
+
+// template<typename D>
+// typename std::enable_if<std::is_floating_point<D>::value, animray::point3d<D>>::type
+//         animray::unit_vector<D>::operator * (const D scalar) const {
+//     return point3d<D>(
+//         superclass::superclass::array[0],
+//         superclass::superclass::array[1],
+//         superclass::superclass::array[2],
+//         superclass::superclass::array[3] / scalar);
+// }
+// template<typename D>
+// typename std::enable_if<std::is_integral<D>::value, animray::point3d<D>>::type
+//         animray::unit_vector<D>::operator * (const D scalar) const {
+//     return point3d<D>(
+//         superclass::superclass::array[0] * scalar,
+//         superclass::superclass::array[1] * scalar,
+//         superclass::superclass::array[2] * scalar,
+//         superclass::superclass::array[3]);
+// }
 
 
 #endif // ANIMRAY_UNIT_VECTOR_HPP

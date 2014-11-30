@@ -65,12 +65,12 @@ namespace animray {
         }
 
         /// Compare for equality
-        bool operator == ( const ray &r ) const {
+        bool operator == (const ray &r) const {
             return direction() == r.direction() && from() == r.from();
         }
         /// Compare for inequality
-        bool operator != ( const ray &r ) const {
-            return ! ( *this == r );
+        bool operator != (const ray &r) const {
+            return direction() != r.direction() || from() != r.from();
         }
 
         /// Transform a ray by a matrix
@@ -79,6 +79,33 @@ namespace animray {
             return ray(right * from(), right * ends());
         }
     };
+
+
+}
+
+
+namespace fostlib {
+    /// Coerce a ray to JSON
+    template< typename D >
+    struct coercer< json, animray::ray<D> > {
+        json coerce( const animray::ray<D> &l ) {
+            json r;
+            jcursor("from").insert(r, fostlib::coerce<json>(l.from()));
+            jcursor("direction").insert(r, fostlib::coerce<json>(l.direction()));
+            return r;
+        }
+    };
+}
+
+
+namespace std {
+
+
+    /// Output to a stream
+    template<typename D>
+    ostream &operator << (ostream &o, const animray::ray<D> &r) {
+        return o << r.from() << " -> " << r.direction();
+    }
 
 
 }

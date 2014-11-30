@@ -47,7 +47,8 @@ namespace animray {
 
     /// Homogeneous coordinates store a location or a vector
     template < typename D >
-    class point3d : private detail::array_based< D, 4 > {
+    class point3d : protected detail::array_based< D, 4 > {
+    protected:
         typedef detail::array_based< D, 4 > superclass;
 
         /// Allow this class to construct from the superclass
@@ -86,7 +87,7 @@ namespace animray {
 
         /// Constructor makes a point at the origin
         point3d() {
-            superclass::array.c_array()[3] = 1;
+            superclass::array[3] = 1;
         }
         /// Constructor for making a point at a given location
         point3d(
@@ -105,7 +106,7 @@ namespace animray {
 
         /// Compare for equality
         bool operator == ( const point3d &r ) const {
-            return x() == x() && y() == y() && z() == z();
+            return x() == r.x() && y() == r.y() && z() == r.z();
         }
         /// Compare for inequality
         bool operator != ( const point3d &r ) const {
