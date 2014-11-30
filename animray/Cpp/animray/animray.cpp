@@ -24,24 +24,16 @@
 #include <fost/unicode>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
-#include <animray/geometry/planar/plane.hpp>
-#include <animray/geometry/quadrics/sphere-unit.hpp>
-#include <animray/geometry/collection-surface.hpp>
-#include <animray/compound.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
+#include <animray/geometry/collection.hpp>
+#include <animray/geometry/planar/triangle.hpp>
 #include <animray/scene.hpp>
-#include <animray/shader.hpp>
-#include <animray/surface/matte.hpp>
-#include <animray/surface/gloss.hpp>
-#include <animray/surface/reflective.hpp>
 #include <animray/light/ambient.hpp>
 #include <animray/light/collection.hpp>
 #include <animray/light/point.hpp>
 #include <animray/targa.hpp>
-#include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
-#include <animray/color/hls.hpp>
 
 
 FSL_MAIN(
@@ -53,8 +45,6 @@ FSL_MAIN(
             boost::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
-    const std::size_t spheres(fostlib::coerce<int>(
-        args.commandSwitch("sp").value("30")));
 
     boost::filesystem::wpath output_filename =
         fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
@@ -66,26 +56,9 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::surface<
-            animray::plane< animray::ray< world > >,
-            animray::reflective< float >,
-            animray::matte< animray::rgb<float> >
-        > reflective_plane_type;
-    typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
-            animray::gloss< world >,
-            animray::matte< animray::rgb<float> >
-        > gloss_sphere_type;
-    typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
-            animray::reflective< animray::rgb<float> >
-        > metallic_sphere_type;
+    typedef animray::triangle<animray::ray<world>> triangle;
     typedef animray::scene<
-        animray::compound<
-            reflective_plane_type,
-            animray::collection<metallic_sphere_type>,
-            animray::collection<gloss_sphere_type>
-        >,
+        animray::collection<triangle>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
@@ -100,32 +73,17 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
 
-    std::get<0>(scene.geometry().instances()) =
-            reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
-    std::get<0>(scene.geometry().instances()).geometry().center(
-        animray::point3d<world>(0, 0, 4));
+    animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1),
+        north(1, 0, 0), south(-1, 0, 0), east(1, 0, 0), west(-1, 0, 0);
 
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> surface(1, 2);
-    std::uniform_real_distribution<world>
-        hue(0, 360),
-        x_position(-20, 20), y_position(-20, 20);
-    for ( auto count = 0; count != spheres; ++count ) {
-        animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
-        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        animray::translate<world> location
-            (x_position(generator), y_position(generator), 0.0);
-        switch ( surface(generator) ) {
-        case 1:
-            std::get<1>(scene.geometry().instances()).insert(
-                metallic_sphere_type(colour)(location));
-            break;
-        case 2:
-        default:
-            std::get<2>(scene.geometry().instances()).insert(
-                gloss_sphere_type(10.0f, colour)(location));
-        }
-    }
+    scene.geometry().insert(triangle(top, north, east));
+    scene.geometry().insert(triangle(top, east, south));
+    scene.geometry().insert(triangle(top, south, west));
+    scene.geometry().insert(triangle(top, west, north));
+    scene.geometry().insert(triangle(bottom, north, east));
+    scene.geometry().insert(triangle(bottom, east, south));
+    scene.geometry().insert(triangle(bottom, south, west));
+    scene.geometry().insert(triangle(bottom, west, north));
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
