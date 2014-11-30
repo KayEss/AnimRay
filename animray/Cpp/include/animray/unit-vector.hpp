@@ -68,6 +68,11 @@ namespace animray {
             return this->superclass::operator != ( v );
         }
 
+        /// Unary minus
+        unit_vector operator- () const {
+            return (*this) * -1;
+        }
+
         using superclass::x;
         using superclass::y;
         using superclass::z;
