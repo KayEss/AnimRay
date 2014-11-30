@@ -18,8 +18,8 @@ install:
     - export OPTIONS="install --layout=versioned --without-mpi --prefix=$(pwd)/Boost/boost"
     - echo "./bjam -j$CPUCOUNT toolset=clang debug link=shared $OPTIONS" > Boost/compile
     - chmod +x Boost/compile
-    - Boost/build 57 0
-    - Boost/install 57 0
+    - Boost/build 55 0
+    - Boost/install 55 0
 
 script:
     - ./animray/compile toolset=$CC -q animray tests examples scenes
