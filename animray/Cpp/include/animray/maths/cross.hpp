@@ -36,7 +36,7 @@ namespace animray {
         return point3d<D>(
             b.y() * c.z() - b.z() * c.y(),
             b.z() * c.x() - b.x() * c.z(),
-            -(b.x() * c.y() - b.y() * c.x()));
+            b.x() * c.y() - b.y() * c.x());
     }
     /// Cross product for points
     template<typename D>
@@ -44,7 +44,7 @@ namespace animray {
         return point3d<D>(
             b.y() * c.z() - b.z() * c.y(),
             b.z() * c.x() - b.x() * c.z(),
-            -(b.x() * c.y() - b.y() * c.x()));
+            b.x() * c.y() - b.y() * c.x());
     }
 
 

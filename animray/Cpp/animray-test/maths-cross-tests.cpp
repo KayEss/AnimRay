@@ -30,9 +30,9 @@ FSL_TEST_FUNCTION(simple) {
     FSL_CHECK_EQ(cross(
         animray::unit_vector<int>(0, 1, 0),
         animray::point3d<int>(1, 0, 0)),
-        animray::point3d<int>(0, 0, 1));
+        animray::point3d<int>(0, 0, -1));
     FSL_CHECK_EQ(cross(
         animray::unit_vector<int>(1, 0, 0),
         animray::point3d<int>(0, 1, 0)),
-        animray::point3d<int>(0, 0, -1));
+        animray::point3d<int>(0, 0, 1));
 }
