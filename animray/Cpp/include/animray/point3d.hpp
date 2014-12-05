@@ -137,8 +137,8 @@ namespace animray {
         }
 
         /// Return the homogeneous with unit length
-        point3d unit() const {
-            return point3d(
+        unit_vector<value_type> unit() const {
+            return unit_vector<value_type>(
                 superclass::array[0], superclass::array[1], superclass::array[2],
                 magnitude());
         }
