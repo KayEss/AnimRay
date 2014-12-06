@@ -86,12 +86,10 @@ namespace animray {
         }
 
         /// Occlusion check
-        template<typename R>
-        bool occludes(
-            const R &by, const typename R::local_coord_type epsilon
-        ) const {
+        template<typename R, typename E>
+        bool occludes(const R &by, const E epsilon) const {
             return std::find_if(instances().begin(), instances().end(),
-                [&](const instance_type &instance) {
+                [&by, epsilon](const instance_type &instance) {
                     return instance.occludes(by, epsilon);
                 }) != instances().end();
         }
