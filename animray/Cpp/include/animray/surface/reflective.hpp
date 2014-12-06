@@ -26,38 +26,10 @@
 
 #include <animray/epsilon.hpp>
 #include <animray/surface.hpp>
+#include <animray/mixins/depth-count.hpp>
 
 
 namespace animray {
-
-
-    namespace detail {
-        template<typename RI>
-        class reflected_ray : public RI {
-        public:
-            reflected_ray(const reflected_ray &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(ray.depth() + 1) {
-            }
-            reflected_ray(const RI &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(1) {
-            }
-
-            fostlib::accessors<std::size_t> depth;
-        };
-
-        template<typename R>
-        struct ref_type {
-            typedef reflected_ray<R> type;
-        };
-        template<typename R>
-        struct ref_type<reflected_ray<R>> {
-            typedef reflected_ray<R> type;
-        };
-    }
 
 
     /// The matte surface intersection type
