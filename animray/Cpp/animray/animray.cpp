@@ -74,7 +74,7 @@ FSL_MAIN(
     scene.background(animray::rgb<float>(20, 70, 100));
 
     animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1),
-        north(1, 0, 0), south(-1, 0, 0), east(1, 0, 0), west(-1, 0, 0);
+        north(0, 1, 0), south(0, -1, 0), east(1, 0, 0), west(-1, 0, 0);
 
     scene.geometry().insert(triangle(top, north, east));
     scene.geometry().insert(triangle(top, east, south));
@@ -88,15 +88,15 @@ FSL_MAIN(
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-5.0, 5.0, -5.0),
+            animray::point3d<world>(-3.0, 5.0, -5.0),
             animray::rgb<float>(0x40, 0xa0, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-5.0, -5.0, -5.0),
+            animray::point3d<world>(-5.0, -3.0, -5.0),
             animray::rgb<float>(0xa0, 0x40, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(5.0, -5.0, -5.0),
+            animray::point3d<world>(3.0, -3.0, -5.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
@@ -107,8 +107,8 @@ FSL_MAIN(
             animray::ray<world>>
         camera(fw, fh, width, height, 0.05);
     camera
-        (animray::rotate_x<world>(-65_deg))
-        (animray::translate<world>(0.0, -4.0, -40));
+        (animray::rotate_x<world>(-15_deg))
+        (animray::translate<world>(0.0, 0.0, -4));
 
     typedef animray::film<animray::rgb<uint8_t>> film_type;
 
