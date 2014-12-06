@@ -52,8 +52,8 @@ namespace animray {
             const unit_vector< accuracy > ri(
                 observer.direction() +
                     intersection.direction() * accuracy(2) * ci);
-            typename detail::ref_type<RI>::type refray(
-                observer, intersection.from(), ri);
+            typename detail::ref_type<RI>::type
+                refray(observer, intersection.from(), ri);
             if ( refray.depth() > 5 ) {
                 return scene.background();
             } else {
@@ -62,8 +62,8 @@ namespace animray {
         }
 
         /// Calculate the light/surface interaction
-        template< typename RI, typename RL, typename I,
-            typename CI, typename G >
+        template<typename RI, typename RL, typename I,
+            typename CI, typename G>
         CI operator () (
             const C &, const RI &, const RL &, const I &, const CI &, const G &
         ) const {
