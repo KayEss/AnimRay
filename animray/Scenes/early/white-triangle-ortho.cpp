@@ -26,6 +26,8 @@
 #include <animray/camera/ortho.hpp>
 #include <animray/geometry/planar/triangle.hpp>
 #include <animray/targa.hpp>
+#include <animray/movable.hpp>
+#include <animray/affine.hpp>
 
 
 FSL_MAIN(
@@ -48,9 +50,16 @@ FSL_MAIN(
         animray::point3d<double>(-1.9, 0, 0),
         animray::point3d<double>(0, -1.9, 0));
     typedef animray::film< animray::rgb< uint8_t > > film_type;
-    animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
+
+    animray::movable<
+            animray::ortho_camera<ray>,
+            animray::ray<double>
+        > camera(fw, fh, width, height, 0, 1);
+    camera
+        (animray::translate<double>(0, 0, -9));
+
     film_type output(width, height,
-        [=, &triangle](const film_type::size_type x, const film_type::size_type y) {
+        [=, &triangle, &camera](const film_type::size_type x, const film_type::size_type y) {
             ray r(camera(x, y));
             fostlib::nullable<ray> intersection(triangle.intersects(r, 0.0));
             if ( !intersection.isnull() ) {
