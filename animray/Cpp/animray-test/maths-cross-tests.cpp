@@ -36,3 +36,13 @@ FSL_TEST_FUNCTION(simple) {
         animray::point3d<int>(0, 1, 0)),
         animray::point3d<int>(0, 0, 1));
 }
+
+
+FSL_TEST_FUNCTION(inverse) {
+    animray::point3d<double> e1(5, 0, 0), e2(0, 3, 0);
+    FSL_CHECK_EQ(cross(e1, e2), animray::point3d<double>(0, 0, 15));
+    FSL_CHECK_EQ(-cross(e1, e2), animray::point3d<double>(0, 0, -15));
+    FSL_CHECK_EQ(cross(e2, e1), animray::point3d<double>(0, 0, -15));
+    FSL_CHECK_EQ(-cross(e2, e1), animray::point3d<double>(0, 0, 15));
+}
+
