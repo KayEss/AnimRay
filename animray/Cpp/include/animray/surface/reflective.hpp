@@ -71,7 +71,7 @@ namespace animray {
             return CI();
         }
 
-        /// This material is non-emissive
+        /// The specular light is emissive
         template<typename CI, typename RI, typename I, typename G>
         CI operator () (
             const C &attenuation, const CI &c,
