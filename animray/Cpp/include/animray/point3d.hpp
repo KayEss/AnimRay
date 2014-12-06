@@ -110,7 +110,7 @@ namespace animray {
         }
         /// Compare for inequality
         bool operator != ( const point3d &r ) const {
-            return not operator == (r);
+            return x() != r.x() || y() != r.y() || z() != r.z();
         }
 
         /// Binary subtraction
