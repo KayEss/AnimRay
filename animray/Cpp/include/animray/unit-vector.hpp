@@ -72,7 +72,11 @@ namespace animray {
 
         /// Unary minus
         unit_vector operator- () const {
-            return (*this) * -1;
+            return unit_vector(
+                superclass::superclass::array[0],
+                superclass::superclass::array[1],
+                superclass::superclass::array[2],
+                -superclass::superclass::array[3]);
         }
 
         using superclass::x;
