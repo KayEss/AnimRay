@@ -56,31 +56,32 @@ namespace animray {
         /// Calculate the intersection point
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
+            // Möller–Trumbore intersection algorithm
             const corner_type e1(superclass::array[1] - superclass::array[0]);
             const corner_type e2(superclass::array[2] - superclass::array[0]);
 
-            const corner_type cross_d_e2(cross(by.direction(), e2));
-            const local_coord_type determinant(dot(e1, cross_d_e2));
+            const corner_type P(cross(by.direction(), e2));
+            const local_coord_type determinant(dot(e1, P));
             if ( determinant > -epsilon && determinant < epsilon ) {
                 return fostlib::null;
             }
             const local_coord_type inv_determinant(local_coord_type(1) / determinant);
 
-            const corner_type t(by.from() - superclass::array[0]);
-            const local_coord_type u(dot(t, cross_d_e2) * inv_determinant);
+            const corner_type T(by.from() - superclass::array[0]);
+            const local_coord_type u(dot(T, P) * inv_determinant);
             if ( u < local_coord_type() || u > local_coord_type(1) ) {
                 return fostlib::null;
             }
 
-            const corner_type q(cross(t, e1));
-            const local_coord_type v(dot(by.direction(), q) * inv_determinant);
+            const corner_type Q(cross(T, e1));
+            const local_coord_type v(dot(by.direction(), Q) * inv_determinant);
             if ( v < local_coord_type() || u + v > local_coord_type(1) ) {
                 return fostlib::null;
             }
 
-            const local_coord_type s(dot(e2, q) * inv_determinant);
-            if ( s > epsilon ) {
-                throw fostlib::exceptions::not_implemented("triangle::intersects");
+            const local_coord_type t(dot(e2, Q) * inv_determinant);
+            if ( t > epsilon ) {
+                return intersection_type(by.from() + by.direction() * t, cross(e2, e1));
             } else {
                 return fostlib::null;
             }
