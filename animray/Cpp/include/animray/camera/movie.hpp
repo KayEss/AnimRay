@@ -24,7 +24,17 @@
 #pragma once
 
 
+#include <animray/mixins/time.hpp>
+
+
 namespace animray {
+
+
+    /// Movie cameras take a succession of shots
+    class movie_camera {
+    };
+
+
 }
 
 

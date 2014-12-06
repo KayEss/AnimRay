@@ -19,14 +19,20 @@
 */
 
 
-#include <animray/camera/movie.hpp>
-#include <fost/test>
+#ifndef ANIMRAY_MIXINS_TIME_HPP
+#define ANIMRAY_MIXINS_TIME_HPP
+#pragma once
 
 
-FSL_TEST_SUITE(camera_movie);
+namespace animray {
 
 
-FSL_TEST_FUNCTION(constructors) {
-    animray::movie_camera camera;
+    /// Mixin for recording a time stamp
+    class with_time {
+    };
+
+
 }
 
+
+#endif // ANIMRAY_MIXINS_TIME_HPP
