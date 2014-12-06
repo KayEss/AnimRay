@@ -39,16 +39,16 @@ FSL_MAIN(
     int width = fostlib::coerce< int >( args[2].value("1920") );
     int height = fostlib::coerce< int >( args[3].value("1080") );
 
-    const double size = 4.0;
+    const double size = 40;
     const double aspect = double(width) / height;
     const double fw = width > height ? aspect * size : size;
     const double fh = width > height ? size : size / aspect;
 
     typedef animray::ray<double> ray;
     animray::triangle<ray> triangle(
-        animray::point3d<double>(1.9, 1.9, 0),
-        animray::point3d<double>(-1.9, 0, 0),
-        animray::point3d<double>(0, -1.9, 0));
+        animray::point3d<double>(19, 19, 0),
+        animray::point3d<double>(-19, 0, 0),
+        animray::point3d<double>(0, -19, 0));
     typedef animray::film< animray::rgb< uint8_t > > film_type;
 
     animray::movable<
