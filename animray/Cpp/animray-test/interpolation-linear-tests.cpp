@@ -27,5 +27,29 @@ FSL_TEST_SUITE(interpolation_linear);
 
 
 FSL_TEST_FUNCTION(rising) {
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 0, 2), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 2, 2), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 1, 2), 15);
 
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 0, 2), 10.0);
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 2, 2), 20.0);
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 1, 2), 15.0);
+
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 0.0, 2.0), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 2.0, 2.0), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 1.0, 2.0), 15);
+
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20,
+        fostlib::milliseconds(0), fostlib::milliseconds(2)), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20,
+        fostlib::milliseconds(2), fostlib::milliseconds(2)), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(10, 20,
+        fostlib::milliseconds(1), fostlib::milliseconds(2)), 15);
+
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0,
+        fostlib::milliseconds(0), fostlib::milliseconds(2)), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0,
+        fostlib::milliseconds(2), fostlib::milliseconds(2)), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0,
+        fostlib::milliseconds(1), fostlib::milliseconds(2)), 15);
 }
