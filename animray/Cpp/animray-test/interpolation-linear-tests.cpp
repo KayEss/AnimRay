@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
+    Copyright s2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -53,3 +53,18 @@ FSL_TEST_FUNCTION(rising) {
     FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0,
         fostlib::milliseconds(1), fostlib::milliseconds(2)), 15);
 }
+
+
+FSL_TEST_FUNCTION(falling) {
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 0, 2), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 2, 2), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 1, 2), 15);
+
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10,
+        fostlib::milliseconds(0), fostlib::milliseconds(2)), 20);
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10,
+        fostlib::milliseconds(2), fostlib::milliseconds(2)), 10);
+    FSL_CHECK_EQ(animray::interpolation::linear(20, 10,
+        fostlib::milliseconds(1), fostlib::milliseconds(2)), 15);
+}
+
