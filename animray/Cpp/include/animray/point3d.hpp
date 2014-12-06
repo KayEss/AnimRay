@@ -144,7 +144,7 @@ namespace animray {
         }
 
         /// The dot product of the location as vector with itself
-        D dot() const {
+        value_type dot() const {
             return (
                 superclass::array[0] * superclass::array[0]
                 + superclass::array[1] * superclass::array[1]
@@ -152,7 +152,7 @@ namespace animray {
             ) / (superclass::array[3] * superclass::array[3]);
         }
         /// The length of the location as vectro
-        D magnitude() const {
+        value_type magnitude() const {
             return std::sqrt(dot());
         }
     };
