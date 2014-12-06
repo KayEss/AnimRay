@@ -136,6 +136,11 @@ namespace animray {
             return point3d(superclass::operator *(r));
         }
 
+        /// Unary minus
+        point3d operator- () const {
+            return (*this) * -1;
+        }
+
         /// Return the homogeneous with unit length
         unit_vector<value_type> unit() const {
             return unit_vector<value_type>(
