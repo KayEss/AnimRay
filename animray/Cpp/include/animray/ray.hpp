@@ -32,15 +32,15 @@ namespace animray {
 
 
     /// Represents a ray starting at a point and going to infinity along a given vector
-    template< typename D >
+    template<typename D, typename F=point3d<D>, typename V=unit_vector<D>>
     class ray {
     public:
         /// The value type of the line
         typedef D local_coord_type;
         /// The type of the end point
-        typedef point3d< local_coord_type > end_type;
+        typedef F end_type;
         /// Unit vector type describing the direction
-        typedef unit_vector< local_coord_type > direction_type;
+        typedef V direction_type;
 
         /// Construct a null ray
         ray() {

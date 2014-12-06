@@ -110,7 +110,7 @@ namespace animray {
         }
         /// Compare for inequality
         bool operator != ( const point3d &r ) const {
-            return not operator == (r);
+            return x() != r.x() || y() != r.y() || z() != r.z();
         }
 
         /// Binary subtraction
@@ -136,15 +136,20 @@ namespace animray {
             return point3d(superclass::operator *(r));
         }
 
+        /// Unary minus
+        point3d operator- () const {
+            return (*this) * -1;
+        }
+
         /// Return the homogeneous with unit length
-        point3d unit() const {
-            return point3d(
+        unit_vector<value_type> unit() const {
+            return unit_vector<value_type>(
                 superclass::array[0], superclass::array[1], superclass::array[2],
                 magnitude());
         }
 
         /// The dot product of the location as vector with itself
-        D dot() const {
+        value_type dot() const {
             return (
                 superclass::array[0] * superclass::array[0]
                 + superclass::array[1] * superclass::array[1]
@@ -152,7 +157,7 @@ namespace animray {
             ) / (superclass::array[3] * superclass::array[3]);
         }
         /// The length of the location as vectro
-        D magnitude() const {
+        value_type magnitude() const {
             return std::sqrt(dot());
         }
     };

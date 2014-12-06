@@ -67,5 +67,11 @@ FSL_TEST_FUNCTION(comparison) {
         animray::ray<int>(animray::point3d<int>(0, 0, 0), animray::point3d<int>(0, 0, 1)));
     FSL_CHECK_NEQ(animray::ray<int>(),
         animray::ray<int>(animray::point3d<int>(1, 0, 0), animray::point3d<int>(2, 0, 0)));
+    FSL_CHECK_EQ(
+        animray::ray<int>(animray::point3d<int>(5, 5, 0), animray::point3d<int>(5, 5, 1)),
+        animray::ray<int>(animray::point3d<int>(5, 5, 0), animray::unit_vector<int>(0, 0, 1)));
+    FSL_CHECK_EQ(
+        animray::ray<float>(animray::point3d<float>(0, 0, 1), animray::point3d<float>(1, 1, 0)),
+        animray::ray<float>(animray::point3d<float>(0, 0, 1), animray::unit_vector<float>(1, 1, -1, 1.7320508075688772)));
 }
 

@@ -44,12 +44,14 @@ namespace animray {
         : superclass(0, 0, 1) {
         }
         /// Constructs a unit vector (already normalised)
-        unit_vector(value_type x, value_type y, value_type z)
-        : superclass(x, y, z) {
+        unit_vector(
+            const value_type x, const value_type y, const value_type z,
+            const value_type m = value_type(1)
+        ) : superclass(x, y, z, m) {
         }
         /// Constructs a unit vector from a point relative to the origin
         unit_vector(const point3d< D > &p)
-        : superclass( p.unit() ) {
+        : superclass(p.unit()) {
         }
 
         /// Multiply by a scalar
@@ -70,7 +72,11 @@ namespace animray {
 
         /// Unary minus
         unit_vector operator- () const {
-            return (*this) * -1;
+            return unit_vector(
+                superclass::superclass::array[0],
+                superclass::superclass::array[1],
+                superclass::superclass::array[2],
+                -superclass::superclass::array[3]);
         }
 
         using superclass::x;
