@@ -81,7 +81,12 @@ namespace animray {
 
             const local_coord_type t(dot(e2, Q) * inv_determinant);
             if ( t > epsilon ) {
-                return intersection_type(by.from() + by.direction() * t, cross(e2, e1));
+                typename intersection_type::direction_type normal(cross(e2, e1));
+                if ( dot(normal, by.direction()) < local_coord_type() ) {
+                    return intersection_type(by.from() + by.direction() * t, normal);
+                } else {
+                    return intersection_type(by.from() + by.direction() * t, -normal);
+                }
             } else {
                 return fostlib::null;
             }

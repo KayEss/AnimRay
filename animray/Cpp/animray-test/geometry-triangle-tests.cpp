@@ -44,10 +44,24 @@ namespace {
             animray::ray<double>(
                 animray::point3d<double>(1, 1, 1),
                 animray::unit_vector<double>(0, 0, -1)), 0));
+        FSL_CHECK_EQ(g.intersects(
+            animray::ray<double>(
+                animray::point3d<double>(1, 1, 1),
+                animray::unit_vector<double>(0, 0, -1)), 0).value().direction(),
+            animray::unit_vector<double>(0, 0, 1));
         FSL_CHECK(g.occludes(
             animray::ray<double>(
                 animray::point3d<double>(0, 0, 1),
                 animray::point3d<double>(1, 1, 0)), 0));
+        FSL_CHECK(g.occludes(
+            animray::ray<double>(
+                animray::point3d<double>(0, 0, -1),
+                animray::point3d<double>(1, 1, 0)), 0));
+        FSL_CHECK_EQ(g.intersects(
+            animray::ray<double>(
+                animray::point3d<double>(0, 0, -1),
+                animray::point3d<double>(1, 1, 0)), 0).value().direction(),
+            animray::unit_vector<double>(0, 0, -1));
         FSL_CHECK(not g.occludes(
             animray::ray<double>(
                 animray::point3d<double>(-1, 1, -1),
