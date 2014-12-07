@@ -24,36 +24,39 @@
 #pragma once
 
 
+#include <fost/core>
+#include <animray/mixins/mixin.hpp>
+
+
 namespace animray {
 
 
     namespace detail {
-        template<typename RI>
-        class reflected_ray : public RI {
+        class depth_counted {
         public:
-            reflected_ray(const reflected_ray &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(ray.depth() + 1) {
+            depth_counted()
+            : depth_count(1) {
             }
-            reflected_ray(const RI &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(1) {
+            template<typename R, typename... A>
+            depth_counted(const R &, A&&...)
+            : depth_count(1) {
+            }
+            template<typename... A>
+            depth_counted(const depth_counted &item, A&&...)
+            : depth_count(item.depth_count() + 1) {
             }
 
-            fostlib::accessors<std::size_t> depth;
-        };
-
-        template<typename R>
-        struct ref_type {
-            typedef reflected_ray<R> type;
-        };
-        template<typename R>
-        struct ref_type<reflected_ray<R>> {
-            typedef reflected_ray<R> type;
+            fostlib::accessors<std::size_t> depth_count;
         };
     }
+
+
+    template<typename T>
+    struct with_depth_count {
+        typedef typename std::conditional<
+            std::is_base_of<detail::depth_counted, T>::value,
+            T, mixin<T, detail::depth_counted>>::type type;
+    };
 
 
 }

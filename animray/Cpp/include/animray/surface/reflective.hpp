@@ -52,9 +52,9 @@ namespace animray {
             const unit_vector< accuracy > ri(
                 observer.direction() +
                     intersection.direction() * accuracy(2) * ci);
-            typename detail::ref_type<RI>::type
+            typename animray::with_depth_count<RI>::type
                 refray(observer, intersection.from(), ri);
-            if ( refray.depth() > 5 ) {
+            if ( refray.depth_count() > 5 ) {
                 return scene.background();
             } else {
                 return scene(refray);
