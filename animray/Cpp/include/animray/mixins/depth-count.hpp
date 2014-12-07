@@ -37,12 +37,22 @@ namespace animray {
             depth_counted()
             : depth_count(1) {
             }
-            template<typename R, typename... A>
+            template<
+                typename R, typename... A,
+                typename std::enable_if<
+                        not std::is_base_of<depth_counted, R>::value
+                    >::type *E = nullptr
+            >
             depth_counted(const R &, A&&...)
             : depth_count(1) {
             }
-            template<typename... A>
-            depth_counted(const depth_counted &item, A&&...)
+            template<
+                typename R, typename... A,
+                typename std::enable_if<
+                        std::is_base_of<depth_counted, R>::value
+                    >::type *E = nullptr
+            >
+            depth_counted(const R &item, A&&...)
             : depth_count(item.depth_count() + 1) {
             }
 
@@ -54,8 +64,10 @@ namespace animray {
     template<typename T>
     struct with_depth_count {
         typedef typename std::conditional<
-            std::is_base_of<detail::depth_counted, T>::value,
-            T, mixin<T, detail::depth_counted>>::type type;
+                std::is_base_of<detail::depth_counted, T>::value,
+                T,
+                mixin<T, detail::depth_counted>
+            >::type type;
     };
 
 

@@ -28,8 +28,16 @@ FSL_TEST_SUITE(mixins);
 
 FSL_TEST_FUNCTION(depth_count) {
     class base {};
-    static_assert(not std::is_same<animray::with_depth_count<base>::type, base>::value);
-    animray::with_depth_count<base>::type counted;
+    static_assert(
+        not std::is_same<animray::with_depth_count<base>::type, base>::value,
+        "We should get different types when we add in the depth count");
+    typedef animray::with_depth_count<base>::type with_count;
+    with_count counted;
     FSL_CHECK_EQ(counted.depth_count(), 1u);
+    static_assert(
+        std::is_same<with_count, animray::with_depth_count<with_count>::type>::value,
+        "The depth count is already added, so expect the same type");
+    animray::with_depth_count<with_count>::type two(counted);
+    FSL_CHECK_EQ(two.depth_count(), 2u);
 }
 
