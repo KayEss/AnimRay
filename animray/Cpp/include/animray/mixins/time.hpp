@@ -24,11 +24,33 @@
 #pragma once
 
 
+#include <fost/datetime>
+#include <animray/mixins/mixin.hpp>
+
+
 namespace animray {
 
 
+    namespace detail {
+        class at_time {
+        public:
+            at_time()
+            : time(2010, 10, 10, 10, 0, 0) {
+            }
+
+            fostlib::accessors<fostlib::timestamp> time;
+        };
+    }
+
+
     /// Mixin for recording a time stamp
-    class with_time {
+    template<typename T>
+    struct with_time {
+        typedef typename std::conditional<
+                std::is_base_of<detail::at_time, T>::value,
+                T,
+                mixin<T, detail::at_time>
+            >::type type;
     };
 
 

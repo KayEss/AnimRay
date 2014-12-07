@@ -20,6 +20,7 @@
 
 
 #include <animray/mixins/depth-count.hpp>
+#include <animray/mixins/time.hpp>
 #include <fost/test>
 
 
@@ -39,5 +40,19 @@ FSL_TEST_FUNCTION(depth_count) {
         "The depth count is already added, so expect the same type");
     animray::with_depth_count<with_count>::type two(counted);
     FSL_CHECK_EQ(two.depth_count(), 2u);
+}
+
+
+FSL_TEST_FUNCTION(time) {
+    class base {};
+    static_assert(
+        not std::is_same<animray::with_time<base>::type, base>::value,
+        "We should get different types when we add in the time information");
+    typedef animray::with_time<base>::type with_time;
+    with_time at_time;
+    FSL_CHECK_EQ(at_time.time(), fostlib::timestamp(2010, 10, 10, 10));
+    static_assert(
+        std::is_same<with_time, animray::with_time<with_time>::type>::value,
+        "The time is already added, so expect the same type");
 }
 
