@@ -19,8 +19,8 @@
 */
 
 
-#ifndef ANIMRAY_MIXINS_TIME_HPP
-#define ANIMRAY_MIXINS_TIME_HPP
+#ifndef ANIMRAY_MIXINS_DEPTH_COUNT_HPP
+#define ANIMRAY_MIXINS_DEPTH_COUNT_HPP
 #pragma once
 
 
@@ -74,4 +74,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_MIXINS_TIME_HPP
+#endif // ANIMRAY_MIXINS_DEPTH_COUNT_HPP
