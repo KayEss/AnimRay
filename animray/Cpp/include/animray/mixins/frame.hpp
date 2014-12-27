@@ -31,24 +31,23 @@ namespace animray {
 
 
     namespace detail {
+        template<typename F>
         class at_frame {
         public:
-            at_frame()
-            : frame(0) {
+            at_frame() {
             }
-
-            fostlib::accessors<std::size_t> frame;
+            fostlib::accessors<F> frame;
         };
     }
 
 
     /// Mixin for recording a frame number
-    template<typename T>
+    template<typename T, typename F = std::size_t>
     struct with_frame {
         typedef typename std::conditional<
-                std::is_base_of<detail::at_frame, T>::value,
+                std::is_base_of<detail::at_frame<F>, T>::value,
                 T,
-                mixin<T, detail::at_frame>
+                mixin<T, detail::at_frame<F>>
             >::type type;
     };
 
