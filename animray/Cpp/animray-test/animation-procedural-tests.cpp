@@ -65,6 +65,19 @@ FSL_TEST_FUNCTION(linear_frames_std_function) {
 }
 
 
+namespace {
+    int linear_frames_function(const ray_type &r) {
+        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
+    }
+}
+FSL_TEST_FUNCTION(linear_frames_function) {
+    ray_type ray;
+    FSL_CHECK_EQ(animray::value(linear_frames_function, ray), -5);
+    ray.frame(1);
+    FSL_CHECK_EQ(animray::value(linear_frames_function, ray), -4);
+}
+
+
 FSL_TEST_FUNCTION(linear_frames_auto) {
     auto f = [](const ray_type &r) {
         return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));

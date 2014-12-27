@@ -30,9 +30,44 @@
 namespace animray {
 
 
+    namespace detail {
+        template < class T >
+        class HasMember_op_call
+        {
+        private:
+            using Yes = char[2];
+            using  No = char[1];
+
+            struct Fallback { int operator()(); };
+            struct Derived : T, Fallback { };
+
+            template < class U >
+            static No& test ( decltype(U::operator()())* );
+            template < typename U >
+            static Yes& test ( U* );
+
+        public:
+            static constexpr bool RESULT = sizeof(test<Derived>(nullptr)) == sizeof(Yes);
+        };
+
+        template < class T >
+        struct is_callable_impl
+        : public std::integral_constant<bool, HasMember_op_call<T>::RESULT>
+        { };
+    }
+    template<typename T>
+    struct is_callable
+        : std::conditional<
+            std::is_class<T>::value,
+            detail::is_callable_impl<T>,
+            std::is_function<T>
+        >::type
+    {};
+
+
     /// Allow parameters to be applied such as to calculate some value
     template<typename V, typename... P>
-    typename std::enable_if<std::is_arithmetic<V>::value, V>::type value(const V &v, const P &...) {
+    typename std::enable_if<not is_callable<V>::value, V>::type value(const V &v, const P &...) {
         return v;
     }
 
