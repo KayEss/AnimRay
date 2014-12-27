@@ -38,7 +38,7 @@ FSL_TEST_SUITE(animation_procedural);
 FSL_TEST_FUNCTION(constant) {
     ray_type ray;
     FSL_CHECK_EQ(ray.frame(), 0);
-//     FSL_CHECK_EQ(animray::value(0, ray), 0);
+    FSL_CHECK_EQ(animray::value(0, ray), 0);
 }
 
 

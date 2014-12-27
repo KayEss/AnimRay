@@ -65,17 +65,25 @@ namespace animray {
     {};
 
 
-    /// Allow parameters to be applied such as to calculate some value
-    template<typename V, typename... P>
-    typename std::enable_if<not is_callable<V>::value, V>::type value(const V &v, const P &...) {
-        return v;
+    namespace detail {
+        /// Allow parameters to be applied such as to calculate some value
+        template<typename V, typename... P>
+        V value(const V &v, typename std::enable_if<not is_callable<V>::value>::type*, const P &...) {
+            return v;
+        }
+
+
+        /// Apply the parameters to the function
+        template<typename F, typename... P>
+        decltype(auto) value(const F &f, typename std::enable_if<is_callable<F>::value>::type*, const P &...ps) {
+            return f(ps...);
+        }
     }
 
 
-    /// Apply the parameters to the function
-    template<typename F, typename... P>
-    decltype(auto) value(const F &f, const P &...ps) {
-        return f(ps...);
+    template<typename C, typename... P>
+    decltype(auto) value(const C &c, const P &...ps) {
+        return detail::value(c, nullptr, ps...);
     }
 
 
