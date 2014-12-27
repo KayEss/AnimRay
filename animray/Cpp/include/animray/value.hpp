@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 2014, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include <functional>
+#include <type_traits>
 
 
 namespace animray {
@@ -32,14 +32,14 @@ namespace animray {
 
     /// Allow parameters to be applied such as to calculate some value
     template<typename V, typename... P>
-    V value(const V &v, const P &...) {
+    typename std::enable_if<std::is_arithmetic<V>::value, V>::type value(const V &v, const P &...) {
         return v;
     }
 
 
     /// Apply the parameters to the function
-    template<typename V, typename... P>
-    V value(const std::function<V(const P &...)> &f, const P &...ps) {
+    template<typename F, typename... P>
+    decltype(auto) value(const F &f, const P &...ps) {
         return f(ps...);
     }
 

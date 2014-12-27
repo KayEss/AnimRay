@@ -38,15 +38,40 @@ FSL_TEST_SUITE(animation_procedural);
 FSL_TEST_FUNCTION(constant) {
     ray_type ray;
     FSL_CHECK_EQ(ray.frame(), 0);
-    FSL_CHECK_EQ(animray::value(0, ray), 0);
+//     FSL_CHECK_EQ(animray::value(0, ray), 0);
 }
 
 
-FSL_TEST_FUNCTION(linear_frames) {
-    std::function<int(const ray_type &)> f = [](const ray_type &r) {
-        return animray::interpolation::linear(-5, 5, r.frame(), std::size_t(11));
+FSL_TEST_FUNCTION(linear_frames_boost_function) {
+    boost::function<int(const ray_type &)> f{[](const ray_type &r) {
+        return animray::interpolation::linear(5.0, 15.0, r.frame(), std::size_t(11));
+    }};
+    ray_type ray;
+    FSL_CHECK_EQ(animray::value(f, ray), 5);
+    ray.frame(11);
+    FSL_CHECK_EQ(ray.frame(), 11);
+    FSL_CHECK_EQ(animray::value(f, ray), 15);
+}
+
+
+FSL_TEST_FUNCTION(linear_frames_std_function) {
+    std::function<int(const ray_type &)> f{[](const ray_type &r) {
+        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(11));
+    }};
+    ray_type ray;
+    FSL_CHECK_EQ(animray::value(f, ray), -5);
+    ray.frame(1);
+    FSL_CHECK_EQ(animray::value(f, ray), -4);
+}
+
+
+FSL_TEST_FUNCTION(linear_frames_auto) {
+    auto f = [](const ray_type &r) {
+        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(11));
     };
     ray_type ray;
     FSL_CHECK_EQ(animray::value(f, ray), -5);
+    ray.frame(6);
+    FSL_CHECK_EQ(animray::value(f, ray), 0);
 }
 
