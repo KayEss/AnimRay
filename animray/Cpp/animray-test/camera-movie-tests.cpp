@@ -27,6 +27,5 @@ FSL_TEST_SUITE(camera_movie);
 
 
 FSL_TEST_FUNCTION(constructors) {
-    animray::movie_camera camera;
 }
 
