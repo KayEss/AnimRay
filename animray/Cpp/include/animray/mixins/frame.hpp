@@ -37,6 +37,9 @@ namespace animray {
         public:
             at_frame() {
             }
+            template<typename... A>
+            at_frame(A&&...) {
+            }
             fostlib::accessors<F> frame;
         };
     }
