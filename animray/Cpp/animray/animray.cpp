@@ -24,6 +24,7 @@
 #include <fost/unicode>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/camera/movie.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/geometry/collection.hpp>
@@ -100,12 +101,14 @@ FSL_MAIN(
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
-            animray::pinhole_camera<
-                animray::ray<world>,
-                animray::flat_jitter_camera<world>
+            animray::stacatto_movie<
+                animray::pinhole_camera<
+                    animray::ray<world>,
+                    animray::flat_jitter_camera<world>
+                >
             >,
-            animray::ray<world>>
-        camera(fw, fh, width, height, 0.05);
+            animray::ray<world>
+        > camera(fw, fh, width, height, 0.05);
     camera
         (animray::rotate_x<world>(-15_deg))
         (animray::translate<world>(0.0, 0.0, -4));
