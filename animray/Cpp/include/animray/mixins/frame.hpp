@@ -25,6 +25,7 @@
 
 
 #include <animray/mixins/mixin.hpp>
+#include <fost/core>
 
 
 namespace animray {
