@@ -58,7 +58,7 @@ namespace animray {
         template<typename S>
         ray_type operator() (S x, S y) const {
             ray_type ray{frame_camera()(x, y)};
-            ray.at_frame(frame());
+            ray.frame(frame());
             return ray;
         }
     };
