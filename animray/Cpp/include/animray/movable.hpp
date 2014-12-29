@@ -67,7 +67,6 @@ namespace animray {
     >
     class movable : private T {
         typedef T superclass;
-        O instance;
     public:
         /// The type of object that can be moved
         typedef O instance_type;
@@ -77,6 +76,9 @@ namespace animray {
         typedef I intersection_type;
         /// The type of the transformation that needs to be applied
         typedef typename T::transform_type transform_type;
+
+        /// Store the instance
+        fostlib::accessors<instance_type, fostlib::lvalue> instance;
 
         /// Allow the underlying instance to be constructed
         template<typename... A>
@@ -101,7 +103,7 @@ namespace animray {
             const R &by, const E epsilon
         ) const {
             fostlib::nullable< intersection_type >
-                hit(instance.intersects(by * superclass::forward, epsilon));
+                hit(instance().intersects(by * superclass::forward, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
@@ -112,13 +114,13 @@ namespace animray {
         /// Occlusion check
         template< typename R >
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return instance.occludes(by * superclass::forward, epsilon);
+            return instance().occludes(by * superclass::forward, epsilon);
         }
 
         /// Allow the instance to be used as a camera
         template< typename F >
         intersection_type operator() (F x, F y) const {
-            return instance(x, y) * superclass::backward;
+            return instance()(x, y) * superclass::backward;
         }
     };
 
