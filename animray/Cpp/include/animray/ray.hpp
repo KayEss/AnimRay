@@ -88,10 +88,22 @@ namespace animray {
 
         /// Transform a ray by a matrix
         template<typename MD>
-        ray operator * (const matrix<MD> &right) const {
-            return ray(right * from(), right * ends());
+        ray &operator *= (const matrix<MD> &right) {
+            end_type f(right * from()), e(right * ends());
+            from(f);
+            to(e);
+            return *this;
         }
     };
+
+
+    /// Multiply
+    template<typename R, typename D>
+    R operator * (const R &ray, const D &s) {
+        R result(ray);
+        result *= s;
+        return result;
+    }
 
 
 }

@@ -119,7 +119,7 @@ namespace animray {
 
         /// Allow the instance to be used as a camera
         template< typename F >
-        intersection_type operator() (F x, F y) const {
+        intersection_type operator () (F x, F y) const {
             return instance()(x, y) * superclass::backward;
         }
     };
