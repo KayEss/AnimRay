@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/mixins/depth-count.hpp>
 #include <animray/affine.hpp>
 #include <animray/ray.hpp>
 #include <fost/test>
@@ -73,5 +74,16 @@ FSL_TEST_FUNCTION(comparison) {
     FSL_CHECK_EQ(
         animray::ray<float>(animray::point3d<float>(0, 0, 1), animray::point3d<float>(1, 1, 0)),
         animray::ray<float>(animray::point3d<float>(0, 0, 1), animray::unit_vector<float>(1, 1, -1, 1.7320508075688772)));
+}
+
+
+FSL_TEST_FUNCTION(depth_counted) {
+    animray::with_depth_count<animray::ray<int>>::type r(
+        animray::ray< int >::end_type( 0, 0, 0 ),
+        animray::ray< int >::end_type( 0, 0, 1 ));
+    FSL_CHECK_EQ(r.depth_count(), 1);
+    animray::with_depth_count<animray::ray<int>>::type m(
+        r * animray::matrix<int>());
+    FSL_CHECK_EQ(m.depth_count(), 1);
 }
 
