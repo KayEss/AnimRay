@@ -63,7 +63,11 @@ FSL_MAIN(
         animray::animation::affine<
             world,
             animray::rotate_z,
-            animray::collection<triangle>
+            animray::animation::affine<
+                world,
+                animray::rotate_y,
+                animray::collection<triangle>
+            >
         >,
         animray::light<
             std::tuple<
@@ -82,7 +86,7 @@ FSL_MAIN(
     animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1),
         north(0, 1, 0), south(0, -1, 0), east(1, 0, 0), west(-1, 0, 0);
 
-    scene.geometry().instance()
+    scene.geometry().instance().instance()
         .insert(triangle(top, north, east))
         .insert(triangle(top, east, south))
         .insert(triangle(top, south, west))
@@ -93,8 +97,11 @@ FSL_MAIN(
         .insert(triangle(bottom, west, north));
 
     const std::size_t frames(30);
+    const std::size_t angle(20);
     scene.geometry()
-        (40_deg, 80_deg, frames);
+        (40_deg, 1_deg * angle, frames);
+    scene.geometry().instance()
+        (0, 1_deg * 2 * angle, frames);
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
@@ -110,7 +117,7 @@ FSL_MAIN(
             animray::point3d<world>(3.0, -3.0, -5.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
-    for ( std::size_t frame{}; frame != frames; ++frame ) {
+    for ( std::size_t frame{}; frame != frames * 360 / angle; ++frame ) {
         animray::movable<
                 animray::stacatto_movie<
                     animray::pinhole_camera<
