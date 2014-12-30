@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/ray.hpp>
 #include <animray/mixins/depth-count.hpp>
 #include <animray/mixins/time.hpp>
 #include <fost/test>
@@ -40,6 +41,17 @@ FSL_TEST_FUNCTION(depth_count) {
         "The depth count is already added, so expect the same type");
     animray::with_depth_count<with_count>::type two(counted);
     FSL_CHECK_EQ(two.depth_count(), 2u);
+}
+
+
+FSL_TEST_FUNCTION(depth_count_multiply) {
+    animray::with_depth_count<animray::ray<int>>::type r(
+        animray::ray< int >::end_type( 0, 0, 0 ),
+        animray::ray< int >::end_type( 0, 0, 1 ));
+    FSL_CHECK_EQ(r.depth_count(), 1);
+    animray::with_depth_count<animray::ray<int>>::type m(
+        r * animray::matrix<int>());
+    FSL_CHECK_EQ(m.depth_count(), 1);
 }
 
 
