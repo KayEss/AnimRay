@@ -24,14 +24,70 @@
 #pragma once
 
 
+#include <animray/animation/animate.hpp>
+#include <animray/interpolation/linear.hpp>
+
+
 namespace animray {
 
 
     namespace animation {
 
 
-        namespace procedural {
-        }
+        /// Spin an object
+        template<
+            typename W,
+            std::pair<matrix<W>, matrix<W>> A(const W&),
+            typename O
+        >
+        class affine {
+            W start, end;
+            std::size_t frames;
+        public:
+            /// The type of object that can be moved
+            typedef O instance_type;
+            /// Intersection type
+            typedef typename O::intersection_type intersection_type;
+
+            /// Store the instance
+            fostlib::accessors<instance_type, fostlib::lvalue> instance;
+
+            /// Store the animation parameters
+            affine &operator() (const W &s, const W &e, const std::size_t f) {
+                start = s; end = e; frames = f;
+                return *this;
+            }
+
+            /// Calculate the transformation matrix
+            template<typename R>
+            std::pair<matrix<W>, matrix<W>> matrices(const R &ray) const {
+                return A(interpolation::linear(start, end, ray.frame(), frames));
+            }
+
+            /// Ray intersection
+            template<typename R, typename E>
+            fostlib::nullable< intersection_type > intersects(
+                const R &by, const E epsilon
+            ) const {
+                std::pair<matrix<W>, matrix<W>> transform(matrices(by));
+                fostlib::nullable< intersection_type >
+                    hit(instance().intersects(by * transform.first, epsilon));
+                if ( hit.isnull() ) {
+                    return fostlib::null;
+                } else {
+                    return hit.value() * transform.second;
+                }
+            }
+
+            /// Occlusion check
+            template<typename R, typename E>
+            bool occludes(const R &by, const E epsilon) const {
+                std::pair<matrix<W>, matrix<W>> transform(matrices(by));
+                return instance().occludes(by * transform.first, epsilon);
+            }
+
+        private:
+        };
 
 
     }

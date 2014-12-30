@@ -37,10 +37,22 @@ namespace animray {
         mixin()
         : R(), M() {
         }
+
+        mixin(const R &r, const mixin &m)
+        : R(r), M(m) {
+        }
+
         /// Construct by forwarding all arguments to both bases
         template<typename... A>
         explicit mixin(A&&... args)
         : R(std::forward<A>(args)...), M(std::forward<A>(args)...) {
+        }
+
+        /// Allow us to apply an affine transformation
+        template<typename D>
+        mixin operator * (const D &s) const {
+            mixin r(R::operator * (s));
+            return r;
         }
     };
 

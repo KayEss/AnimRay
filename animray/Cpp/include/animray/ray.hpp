@@ -67,6 +67,11 @@ namespace animray {
         /// A unit direction vector
         fostlib::accessors< direction_type > direction;
 
+        /// Set a point the ray must go through
+        void to(const end_type &t) {
+            direction(t - from());
+        }
+
         /// Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {
             return from() + direction() * distance;
