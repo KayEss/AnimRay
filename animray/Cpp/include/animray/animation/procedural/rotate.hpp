@@ -34,6 +34,40 @@ namespace animray {
     namespace animation {
 
 
+        /// Return a point that rotates about a centre position in the x/y plane
+        template<typename P>
+        class rotate_xy {
+        public:
+            /// The type of point that is to be returned
+            typedef P point_type;
+            /// The type of the radius
+            typedef typename point_type::value_type radius_type;
+            /// The type of the speed
+            typedef typename point_type::value_type speed_type;
+
+            /// The centre to rotate about
+            fostlib::accessors<point_type> centre;
+            /// The radius
+            fostlib::accessors<radius_type> radius;
+            /// Rotations per unit time in radians/time unit
+            fostlib::accessors<speed_type> speed;
+
+            /// Construct the rotation parameters
+            rotate_xy(const point_type &c, const radius_type r, const speed_type s)
+            : centre(c), radius(r), speed(s) {
+            }
+
+            /// Calculate the position for the requested frame
+            template<typename T>
+            point_type operator () (const T t) const {
+                return point_type(
+                    centre().x() + radius() * std::cos(t * speed()),
+                    centre().y() + radius() * std::sin(t * speed()),
+                    centre().z());
+            }
+        };
+
+
     }
 
 
