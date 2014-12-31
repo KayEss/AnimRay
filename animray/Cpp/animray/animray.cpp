@@ -189,11 +189,11 @@ FSL_MAIN(
         fostlib::cli::monitor(out, tracking, result,
             [frame](const fostlib::meter::reading &current) {
                 fostlib::stringstream out;
-                out << "] "
+                out << "] f"  << frame << " "
                     << current.done() << "/" << current.work().value(0);
                 if ( current.meta().size() && not current.meta()[0].isnull() ) {
                     fostlib::json meta(current.meta()[0]);
-                    out << " " << frame << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
+                    out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
                         << "x" << fostlib::json::unparse(meta["panels"]["y"], false)
                         << " of size " << fostlib::json::unparse(meta["size"]["x"], false)
                         << "x" << fostlib::json::unparse(meta["size"]["y"], false)
