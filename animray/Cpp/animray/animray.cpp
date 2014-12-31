@@ -126,7 +126,7 @@ FSL_MAIN(
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         animray::animate<animray::animation::rotate_xy<animray::point3d<world>>>
             location(animray::point3d<world>(x_position(generator), y_position(generator), 0),
-                radius(generator), factors[factor(generator)]);
+                radius(generator), 360_deg * factors[factor(generator)] / frames);
         switch ( surface(generator) ) {
             case 1: {
                 metallic_sphere_type m(colour);
