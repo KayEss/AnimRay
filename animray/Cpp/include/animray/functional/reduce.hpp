@@ -19,56 +19,21 @@
 */
 
 
-#ifndef ANIMRAY_VALUE_HPP
-#define ANIMRAY_VALUE_HPP
+#ifndef ANIMRAY_FUNCTIONAL_REDUCE_HPP
+#define ANIMRAY_FUNCTIONAL_REDUCE_HPP
 #pragma once
 
 
-#include <type_traits>
+#include <animray/functional/callable.hpp>
 
 
 namespace animray {
 
 
-    namespace detail {
-        template < class T >
-        class HasMember_op_call
-        {
-        private:
-            using Yes = char[2];
-            using  No = char[1];
-
-            struct Fallback { int operator()(); };
-            struct Derived : T, Fallback { };
-
-            template < class U >
-            static No& test ( decltype(U::operator()())* );
-            template < typename U >
-            static Yes& test ( U* );
-
-        public:
-            static constexpr bool RESULT = sizeof(test<Derived>(nullptr)) == sizeof(Yes);
-        };
-
-        template < class T >
-        struct is_callable_impl
-        : public std::integral_constant<bool, HasMember_op_call<T>::RESULT>
-        { };
-    }
-    template<typename T>
-    struct is_callable
-        : std::conditional<
-            std::is_class<T>::value,
-            detail::is_callable_impl<T>,
-            std::is_function<T>
-        >::type
-    {};
-
-
     /// Allow parameters to be applied such as to calculate some value
     template<typename V, typename... P,
         typename = typename std::enable_if<not is_callable<V>::value>::type>
-    V value(const V &v, const P &...) {
+    V reduce(const V &v, const P &...) {
         return v;
     }
 
@@ -76,7 +41,7 @@ namespace animray {
     /// Apply the parameters to the function
     template<typename F, typename... P,\
         typename = typename std::enable_if<is_callable<F>::value>::type>
-    decltype(auto) value(const F &f, const P &...ps) {
+    decltype(auto) reduce(const F &f, const P &...ps) {
         return f(ps...);
     }
 
@@ -84,4 +49,4 @@ namespace animray {
 }
 
 
-#endif // ANIMRAY_VALUE_HPP
+#endif // ANIMRAY_FUNCTIONAL_REDUCE_HPP

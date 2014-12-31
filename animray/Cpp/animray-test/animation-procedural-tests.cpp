@@ -19,7 +19,7 @@
 */
 
 
-#include <animray/value.hpp>
+#include <animray/functional/reduce.hpp>
 #include <animray/ray.hpp>
 #include <animray/mixins/frame.hpp>
 #include <animray/interpolation/linear.hpp>
@@ -38,7 +38,7 @@ FSL_TEST_SUITE(animation_procedural);
 FSL_TEST_FUNCTION(constant) {
     ray_type ray;
     FSL_CHECK_EQ(ray.frame(), 0);
-    FSL_CHECK_EQ(animray::value(0, ray), 0);
+    FSL_CHECK_EQ(animray::reduce(0, ray), 0);
 }
 
 
@@ -47,10 +47,10 @@ FSL_TEST_FUNCTION(linear_frames_boost_function) {
         return animray::interpolation::linear(5.0, 15.0, r.frame(), std::size_t(10));
     }};
     ray_type ray;
-    FSL_CHECK_EQ(animray::value(f, ray), 5);
+    FSL_CHECK_EQ(animray::reduce(f, ray), 5);
     ray.frame(10);
     FSL_CHECK_EQ(ray.frame(), 10);
-    FSL_CHECK_EQ(animray::value(f, ray), 15);
+    FSL_CHECK_EQ(animray::reduce(f, ray), 15);
 }
 
 
@@ -59,9 +59,9 @@ FSL_TEST_FUNCTION(linear_frames_std_function) {
         return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
     }};
     ray_type ray;
-    FSL_CHECK_EQ(animray::value(f, ray), -5);
+    FSL_CHECK_EQ(animray::reduce(f, ray), -5);
     ray.frame(1);
-    FSL_CHECK_EQ(animray::value(f, ray), -4);
+    FSL_CHECK_EQ(animray::reduce(f, ray), -4);
 }
 
 
@@ -72,9 +72,9 @@ namespace {
 }
 FSL_TEST_FUNCTION(linear_frames_function) {
     ray_type ray;
-    FSL_CHECK_EQ(animray::value(linear_frames_function, ray), -5);
+    FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -5);
     ray.frame(1);
-    FSL_CHECK_EQ(animray::value(linear_frames_function, ray), -4);
+    FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -4);
 }
 
 
@@ -83,8 +83,8 @@ FSL_TEST_FUNCTION(linear_frames_auto) {
         return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
     };
     ray_type ray;
-    FSL_CHECK_EQ(animray::value(f, ray), -5);
+    FSL_CHECK_EQ(animray::reduce(f, ray), -5);
     ray.frame(5);
-    FSL_CHECK_EQ(animray::value(f, ray), 0);
+    FSL_CHECK_EQ(animray::reduce(f, ray), 0);
 }
 
