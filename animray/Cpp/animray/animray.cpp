@@ -57,7 +57,7 @@ FSL_MAIN(
     const std::size_t spheres(fostlib::coerce<int>(
         args.commandSwitch("sp").value("20")));
     const std::size_t frames(fostlib::coerce<int>(
-        args.commandSwitch("frames").value("10")));
+        args.commandSwitch("frames").value("12")));
 
     const int width = fostlib::coerce< int >( args[1].value("180") );
     const int height = fostlib::coerce< int >( args[2].value("135") );
