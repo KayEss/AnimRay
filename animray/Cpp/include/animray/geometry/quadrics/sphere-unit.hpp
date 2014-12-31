@@ -40,19 +40,15 @@ namespace animray {
         /// The sphere at the origin we want to map position to
         unit_sphere_at_origin<I, D> origin;
     public:
+        /// Position type
+        typedef P position_type;
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to return when the sphere is struck
         typedef I intersection_type;
 
         /// Set the position of the sphere
-        fostlib::accessors<point3d<D>> position;
-
-        /// Allow the sphere to be moved
-        unit_sphere &operator () (const translate<local_coord_type> &t) {
-            position(t());
-            return *this;
-        }
+        fostlib::accessors<position_type> position;
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs

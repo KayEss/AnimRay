@@ -121,15 +121,15 @@ FSL_MAIN(
     for ( auto count = 0; count != spheres; ++count ) {
         animray::translate<world> location
             (x_position(generator), y_position(generator), 0.0);
+        animray::unit_sphere<animray::point3d<world>> s;
+        s.position((location()));
         switch ( surface(generator) ) {
         case 1:
-            std::get<1>(scene.geometry().instances()).geometry().insert(
-                animray::unit_sphere<animray::point3d<world>>()(location));
+            std::get<1>(scene.geometry().instances()).geometry().insert(s);
             break;
         case 2:
         default:
-            std::get<2>(scene.geometry().instances()).geometry().insert(
-                animray::unit_sphere<animray::point3d<world>>()(location));
+            std::get<2>(scene.geometry().instances()).geometry().insert(s);
         }
     }
 

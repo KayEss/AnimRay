@@ -116,14 +116,18 @@ FSL_MAIN(
         animray::translate<world> location
             (x_position(generator), y_position(generator), 0.0);
         switch ( surface(generator) ) {
-        case 1:
-            std::get<1>(scene.geometry().instances()).insert(
-                metallic_sphere_type(colour)(location));
-            break;
-        case 2:
-        default:
-            std::get<2>(scene.geometry().instances()).insert(
-                gloss_sphere_type(10.0f, colour)(location));
+            case 1: {
+                metallic_sphere_type m(colour);
+                m.geometry().position(location());
+                std::get<1>(scene.geometry().instances()).insert(m);
+                break;
+            }
+            case 2:
+            default: {
+                gloss_sphere_type g(10.0f, colour);
+                g.geometry().position((location()));
+                std::get<2>(scene.geometry().instances()).insert(g);
+            }
         }
     }
 
