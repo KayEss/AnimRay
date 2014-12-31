@@ -22,7 +22,7 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
-#include <animray/animation/procedural/rotate.hpp>
+#include <animray/animation/procedural/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/camera/movie.hpp>
@@ -63,10 +63,10 @@ FSL_MAIN(
     typedef animray::triangle<animray::ray<world>> triangle;
     typedef animray::scene<
         animray::animation::affine<
-            world,
+            animray::matrix<world>,
             animray::rotate_z,
             animray::animation::affine<
-                world,
+                animray::matrix<world>,
                 animray::rotate_y,
                 animray::collection<triangle>
             >
