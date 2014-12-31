@@ -63,7 +63,7 @@ FSL_MAIN(
     const int width = fostlib::coerce< int >( args[1].value("180") );
     const int height = fostlib::coerce< int >( args[2].value("135") );
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-positionable-over-plane-animated.tga"));
+        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-animated.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;
@@ -113,7 +113,7 @@ FSL_MAIN(
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_real_distribution<world>
         hue(0, 360),
-        x_position(-20, 20), y_position(-20, 20);
+        x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
