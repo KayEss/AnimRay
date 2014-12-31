@@ -29,6 +29,7 @@
 #include <animray/geometry/quadrics/sphere-unit.hpp>
 #include <animray/geometry/collection-surface.hpp>
 #include <animray/compound.hpp>
+#include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>

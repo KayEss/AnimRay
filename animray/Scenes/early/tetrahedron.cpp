@@ -26,6 +26,7 @@
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/camera/movie.hpp>
+#include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/geometry/collection.hpp>
