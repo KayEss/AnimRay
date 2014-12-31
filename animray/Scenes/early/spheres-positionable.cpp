@@ -66,17 +66,17 @@ FSL_MAIN(
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
     typedef animray::movable<animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
     typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<

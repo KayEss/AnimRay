@@ -25,13 +25,17 @@
 
 
 #include <animray/affine.hpp>
+#include <animray/ray.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 
 
 namespace animray {
 
 
-    template<typename I, typename D = typename I::local_coord_type>
+    template<
+        typename P,
+        typename I = animray::ray<typename P::value_type>,
+        typename D = typename P::value_type>
     class unit_sphere {
         /// The sphere at the origin we want to map position to
         unit_sphere_at_origin<I, D> origin;
