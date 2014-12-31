@@ -24,9 +24,9 @@
 #pragma once
 
 
-#include <animray/affine.hpp>
-#include <animray/ray.hpp>
+#include <animray/functional/reduce.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
+#include <animray/ray.hpp>
 
 
 namespace animray {
@@ -54,12 +54,12 @@ namespace animray {
         /// null if no intersection occurs
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
-            by.from(by.from() - position());
+            by.from(by.from() - reduce(position(), by));
             fostlib::nullable< intersection_type > hit(origin.intersects(by, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
-                hit.value().from(hit.value().from() + position());
+                hit.value().from(hit.value().from() + reduce(position(), by));
                 return hit;
             }
         }
@@ -67,7 +67,7 @@ namespace animray {
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
-            by.from(by.from() - position());
+            by.from(by.from() - reduce(position(), by));
             return origin.occludes(by, epsilon);
         }
     };

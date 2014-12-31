@@ -40,6 +40,8 @@ namespace animray {
         public:
             /// The type of point that is to be returned
             typedef P point_type;
+            /// The value type from the point type
+            typedef typename point_type::value_type value_type;
             /// The type of the radius
             typedef typename point_type::value_type radius_type;
             /// The type of the speed
@@ -51,6 +53,11 @@ namespace animray {
             fostlib::accessors<radius_type> radius;
             /// Rotations per unit time in radians/time unit
             fostlib::accessors<speed_type> speed;
+
+            /// Allow default construction
+            rotate_xy()
+            : radius(1), speed(1) {
+            }
 
             /// Construct the rotation parameters
             rotate_xy(const point_type &c, const radius_type r, const speed_type s)

@@ -24,8 +24,7 @@
 #pragma once
 
 
-#include <animray/matrix.hpp>
-#include <boost/math/constants/constants.hpp>
+#include <utility>
 
 
 namespace animray {
@@ -55,7 +54,18 @@ namespace animray {
 
     /// Base for attaching animations to attributes
     template<typename T>
-    class animate {
+    struct animate : public T {
+        /// Pass constructor arguments to superclass
+        template<typename... A>
+        animate(A&&... args)
+        : T(std::forward<A>(args)...) {
+        }
+
+        /// Strip the frame out of the ray type
+        template<typename R>
+        auto operator () (const R &ray) const {
+            return T::operator ()(ray.frame());
+        }
     };
 
 

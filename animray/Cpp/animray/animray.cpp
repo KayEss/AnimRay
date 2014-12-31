@@ -22,6 +22,7 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/animation/procedural/rotate.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/camera/movie.hpp>
@@ -76,12 +77,16 @@ FSL_MAIN(
             animray::matte< animray::rgb<float> >
         > reflective_plane_type;
     typedef animray::surface<
-            animray::unit_sphere<animray::point3d<world>>,
+            animray::unit_sphere<animray::animate<
+                animray::animation::rotate_xy<animray::point3d<world>>
+            >>,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
     typedef animray::surface<
-            animray::unit_sphere<animray::point3d<world>>,
+            animray::unit_sphere<animray::animate<
+                animray::animation::rotate_xy<animray::point3d<world>>
+            >>,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<
@@ -109,27 +114,30 @@ FSL_MAIN(
     std::get<0>(scene.geometry().instances()).geometry().center(
         animray::point3d<world>(0, 0, 4));
 
+    const std::vector<int> factors{1, 2, 3, 4, 6, 12};
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
+    std::uniform_int_distribution<int> factor(0, factors.size());
     std::uniform_real_distribution<world>
-        hue(0, 360),
+        hue(0, 360), radius(0, 10),
         x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        animray::translate<world> location
-            (x_position(generator), y_position(generator), 0.0);
+        animray::animate<animray::animation::rotate_xy<animray::point3d<world>>>
+            location(animray::point3d<world>(x_position(generator), y_position(generator), 0),
+                radius(generator), factors[factor(generator)]);
         switch ( surface(generator) ) {
             case 1: {
                 metallic_sphere_type m(colour);
-                m.geometry().position((location()));
+                m.geometry().position(location);
                 std::get<1>(scene.geometry().instances()).insert(m);
                 break;
             }
             case 2:
             default: {
                 gloss_sphere_type g(10.0f, colour);
-                g.geometry().position((location()));
+                g.geometry().position((location));
                 std::get<2>(scene.geometry().instances()).insert(g);
             }
         }
@@ -157,8 +165,8 @@ FSL_MAIN(
                         animray::flat_jitter_camera<world>
                     >
                 >,
-                animray::ray<world>>
-            camera(fw, fh, width, height, 0.05);
+                typename animray::with_frame<animray::ray<world>>::type
+            > camera(fw, fh, width, height, 0.05);
         camera
             (animray::rotate_x<world>(-65_deg))
             (animray::translate<world>(0.0, -4.0, -40))
