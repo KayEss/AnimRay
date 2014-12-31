@@ -35,25 +35,28 @@ namespace animray {
         class HasMember_op_call
         {
         private:
-            using Yes = char[2];
-            using  No = char[1];
+            typedef char(&yes)[1];
+            typedef char(&no)[2];
 
-            struct Fallback { int operator()(); };
+            struct Fallback { void operator()(); };
             struct Derived : T, Fallback { };
 
-            template < class U >
-            static No& test ( decltype(U::operator()())* );
-            template < typename U >
-            static Yes& test ( U* );
+            template<typename U, U> struct Check;
+
+            template<typename>
+            static yes test(...);
+
+            template<typename C>
+            static no test(Check<void (Fallback::*)(), &C::operator()>*);
 
         public:
-            static constexpr bool RESULT = sizeof(test<Derived>(nullptr)) == sizeof(Yes);
+            static const bool value = sizeof(test<Derived>(0)) == sizeof(yes);
         };
 
         template < class T >
         struct is_callable_impl
-        : public std::integral_constant<bool, HasMember_op_call<T>::RESULT>
-        { };
+        : public std::integral_constant<bool, HasMember_op_call<T>::value>
+        {};
     }
 
     /// Returns the type or the value true if the item is callable
