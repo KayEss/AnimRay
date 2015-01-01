@@ -114,12 +114,12 @@ FSL_MAIN(
     std::get<0>(scene.geometry().instances()).geometry().center(
         animray::point3d<world>(0, 0, 4));
 
-    const std::vector<int> factors{1, 2, 3, 4, 6};
+    const std::vector<int> factors{1, 2, 3, 4, 6, 12};
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
-    std::uniform_int_distribution<int> factor(0, factors.size());
+    std::uniform_int_distribution<int> factor(0, factors.size() - 1);
     std::uniform_real_distribution<world>
-        hue(0, 360), radius(0, 10),
+        hue(0, 360), radius(2, 10),
         x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
