@@ -119,14 +119,14 @@ FSL_MAIN(
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_int_distribution<int> factor(0, factors.size() - 1);
     std::uniform_real_distribution<world>
-        hue(0, 360), radius(2, 10),
+        hue(0, 360), radius(2, 10), phase(0_deg, 360_deg),
         x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         animray::animate<animray::animation::rotate_xy<animray::point3d<world>>>
             location(animray::point3d<world>(x_position(generator), y_position(generator), 0),
-                radius(generator), 360_deg * factors[factor(generator)] / frames);
+                radius(generator), 360_deg * factors[factor(generator)] / frames, phase(generator));
         switch ( surface(generator) ) {
             case 1: {
                 metallic_sphere_type m(colour);

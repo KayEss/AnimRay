@@ -93,11 +93,16 @@ FSL_TEST_FUNCTION(linear_frames_auto) {
 
 FSL_TEST_FUNCTION(rotate) {
     animray::animation::rotate_xy<animray::point3d<double>> rot(
-        animray::point3d<double>(1, 1, 1), 2, 90_deg);
+        animray::point3d<double>(1, 1, 1), 2, 90_deg, 0_deg);
     check_close(rot(0), animray::point3d<double>(3, 1, 1));
     check_close(rot(1), animray::point3d<double>(1, 3, 1));
     check_close(rot(2), animray::point3d<double>(-1, 1, 1));
     check_close(rot(3), animray::point3d<double>(1, -1, 1));
     check_close(rot(4), animray::point3d<double>(3, 1, 1));
+    rot.phase(90_deg);
+    check_close(rot(0), animray::point3d<double>(1, 3, 1));
+    check_close(rot(1), animray::point3d<double>(-1, 1, 1));
+    check_close(rot(2), animray::point3d<double>(1, -1, 1));
+    check_close(rot(3), animray::point3d<double>(3, 1, 1));
 }
 

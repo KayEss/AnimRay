@@ -46,6 +46,8 @@ namespace animray {
             typedef typename point_type::value_type radius_type;
             /// The type of the speed
             typedef typename point_type::value_type speed_type;
+            /// The type of the phase offset
+            typedef typename point_type::value_type phase_type;
 
             /// The centre to rotate about
             fostlib::accessors<point_type> centre;
@@ -53,6 +55,8 @@ namespace animray {
             fostlib::accessors<radius_type> radius;
             /// Rotations per unit time in radians/time unit
             fostlib::accessors<speed_type> speed;
+            /// Phase offset
+            fostlib::accessors<phase_type> phase;
 
             /// Allow default construction
             rotate_xy()
@@ -60,16 +64,17 @@ namespace animray {
             }
 
             /// Construct the rotation parameters
-            rotate_xy(const point_type &c, const radius_type r, const speed_type s)
-            : centre(c), radius(r), speed(s) {
+            rotate_xy(
+                const point_type &c, const radius_type r, const speed_type s, const phase_type p
+            ) : centre(c), radius(r), speed(s), phase(p) {
             }
 
             /// Calculate the position for the requested frame
             template<typename T>
             point_type operator () (const T t) const {
                 return point_type(
-                    centre().x() + radius() * std::cos(t * speed()),
-                    centre().y() + radius() * std::sin(t * speed()),
+                    centre().x() + radius() * std::cos(t * speed() + phase()),
+                    centre().y() + radius() * std::sin(t * speed() + phase()),
                     centre().z());
             }
         };
