@@ -35,16 +35,20 @@ namespace animray {
         class depth_counted {
         public:
             depth_counted()
-            : depth_count(1) {
+            : depth_count() {
             }
+            template<typename... A>
+            depth_counted(A&&...) {
+            }
+
             template<
                 typename R, typename... A,
                 typename std::enable_if<
                         not std::is_base_of<depth_counted, R>::value
                     >::type *E = nullptr
             >
-            depth_counted(const R &, A&&...)
-            : depth_count(1) {
+            void add_count(const R &) {
+                depth_count(depth_count() + 1);
             }
             template<
                 typename R, typename... A,
@@ -52,8 +56,8 @@ namespace animray {
                         std::is_base_of<depth_counted, R>::value
                     >::type *E = nullptr
             >
-            depth_counted(const R &item, A&&...)
-            : depth_count(item.depth_count() + 1) {
+            void add_count(const R &r) {
+                depth_count(depth_count() + 1 + r.depth_count());
             }
 
             fostlib::accessors<std::size_t> depth_count;
