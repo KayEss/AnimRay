@@ -114,7 +114,7 @@ FSL_MAIN(
     std::get<0>(scene.geometry().instances()).geometry().center(
         animray::point3d<world>(0, 0, 4));
 
-    const std::vector<int> factors{1, 2, 3, 4, 6, 12};
+    const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_int_distribution<int> factor(0, factors.size() - 1);
