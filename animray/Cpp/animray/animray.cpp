@@ -60,6 +60,8 @@ FSL_MAIN(
         args.commandSwitch("sp").value("20")));
     const std::size_t frames(fostlib::coerce<int>(
         args.commandSwitch("frames").value("12")));
+    const std::size_t start_frame(fostlib::coerce<int>(
+        args.commandSwitch("frames-start").value("0")));
 
     const int width = fostlib::coerce< int >( args[1].value("180") );
     const int height = fostlib::coerce< int >( args[2].value("135") );
@@ -157,7 +159,7 @@ FSL_MAIN(
             animray::point3d<world>(5.0, -5.0, -5.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
-    for ( std::size_t frame{}; frame != frames; ++frame ) {
+    for ( std::size_t frame{start_frame}; frame != frames; ++frame ) {
         animray::movable<
                 animray::stacatto_movie<
                     animray::pinhole_camera<
