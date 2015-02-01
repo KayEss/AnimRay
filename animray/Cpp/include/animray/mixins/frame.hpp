@@ -53,6 +53,7 @@ namespace animray {
                 T,
                 mixin<T, detail::at_frame<F>>
             >::type type;
+        typedef F frame_type;
     };
 
 
