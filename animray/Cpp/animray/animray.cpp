@@ -73,24 +73,16 @@ FSL_MAIN(
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
+    typedef std::function<
+        animray::point3d<world>(
+            typename animray::with_frame<animray::ray<world>>::frame_type)> position_function;
     typedef animray::surface<
-            animray::unit_sphere<animray::animate<
-                animray::animation::rotate_xy<animray::point3d<world>>
-            >>,
+            animray::unit_sphere<animray::animate<position_function>>,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
-    typedef animray::surface<
-            animray::unit_sphere<animray::animate<
-                animray::animation::rotate_xy<animray::point3d<world>>
-            >>,
-            animray::reflective< animray::rgb<float> >
-        > metallic_sphere_type;
     typedef animray::scene<
-        animray::compound<
-            animray::collection<metallic_sphere_type>,
-            animray::collection<gloss_sphere_type>
-        >,
+        animray::collection<gloss_sphere_type>,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
@@ -107,31 +99,24 @@ FSL_MAIN(
 
     const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> surface(0, 2);
-    std::uniform_int_distribution<int> factor(0, factors.size() - 1);
+    std::uniform_int_distribution<int> surface(0, 2), factor(0, factors.size() - 1), phase(0, frames);
     std::uniform_real_distribution<world>
-        hue(0, 360), radius(2, 10), phase(0_deg, 360_deg),
-        x_position(-10, 10), y_position(-20, 20);
+        hue(0, 360), x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        animray::animate<animray::animation::rotate_xy<animray::point3d<world>>>
-            location(animray::point3d<world>(x_position(generator), y_position(generator), 0),
-                radius(generator), 360_deg * factors[factor(generator)] / frames, phase(generator));
-        switch ( surface(generator) % 2 ) {
-            case 0: {
-                metallic_sphere_type m(colour);
-                m.geometry().position(location);
-                std::get<0>(scene.geometry().instances()).insert(m);
-                break;
-            }
-            case 1:
-            default: {
-                gloss_sphere_type g(10.0f, colour);
-                g.geometry().position((location));
-                std::get<1>(scene.geometry().instances()).insert(g);
-            }
-        }
+        auto x_location(x_position(generator)), y_location(y_position(generator));
+        auto start_phase(phase(generator));
+        position_function position = [x_location, y_location, start_phase, frames](
+            typename animray::with_frame<animray::ray<world>>::frame_type frame
+        ) {
+            return animray::point3d<world>(
+                x_location, y_location, world(-12) + world((start_phase + frame) % frames));
+        };
+        animray::animate<position_function> location(position);
+        gloss_sphere_type g(10.0f, colour);
+        g.geometry().position((location));
+        scene.geometry().insert(g);
     }
 
     std::get<0>(scene.light()).color(50);
