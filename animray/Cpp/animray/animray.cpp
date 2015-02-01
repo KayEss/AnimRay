@@ -59,7 +59,7 @@ FSL_MAIN(
     const std::size_t spheres(fostlib::coerce<int>(
         args.commandSwitch("sp").value("20")));
     const std::size_t frames(fostlib::coerce<int>(
-        args.commandSwitch("frames").value("12")));
+        args.commandSwitch("frames").value("60")));
     const std::size_t start_frame(fostlib::coerce<int>(
         args.commandSwitch("frames-start").value("0")));
 
