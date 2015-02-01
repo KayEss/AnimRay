@@ -62,6 +62,7 @@ FSL_MAIN(
         args.commandSwitch("frames").value("60")));
     const std::size_t start_frame(fostlib::coerce<int>(
         args.commandSwitch("frames-start").value("0")));
+    const std::size_t cycle(60);
 
     const int width = fostlib::coerce< int >( args[1].value("180") );
     const int height = fostlib::coerce< int >( args[2].value("135") );
@@ -72,6 +73,8 @@ FSL_MAIN(
     const world aspect = double(width) / height;
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
+
+    const world speed(world(cycle) / world(frames));
 
     typedef std::function<
         animray::point3d<world>(
@@ -99,19 +102,18 @@ FSL_MAIN(
 
     const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> surface(0, 2), factor(0, factors.size() - 1), phase(0, frames);
-    std::uniform_real_distribution<world>
-        hue(0, 360), x_position(-10, 10), y_position(-20, 20);
-    for ( auto count = 0; count != spheres; ++count ) {
+    std::uniform_int_distribution<int> surface(0, 2), factor(0, factors.size() - 1), phase(0, cycle);
+    std::uniform_real_distribution<world> hue(0, 360), x_position(-10, 10), y_position(-20, 20);
+    for ( auto count = 0u; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
         auto x_location(x_position(generator)), y_location(y_position(generator));
         auto start_phase(phase(generator));
-        position_function position = [x_location, y_location, start_phase, frames](
+        position_function position = [x_location, y_location, start_phase, frames, speed](
             typename animray::with_frame<animray::ray<world>>::frame_type frame
         ) {
             return animray::point3d<world>(
-                x_location, y_location, world(-12) + world((start_phase + frame) % frames));
+                x_location, y_location, world(-12) + std::fmod(start_phase + frame * speed, cycle));
         };
         animray::animate<position_function> location(position);
         gloss_sphere_type g(10.0f, colour);
