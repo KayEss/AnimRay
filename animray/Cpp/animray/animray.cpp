@@ -137,15 +137,15 @@ FSL_MAIN(
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-5.0, 5.0, -5.0),
+            animray::point3d<world>(-25.0, 25.0, -25.0),
             animray::rgb<float>(0x40, 0xa0, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-5.0, -5.0, -5.0),
+            animray::point3d<world>(-25.0, -25.0, -25.0),
             animray::rgb<float>(0xa0, 0x40, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(5.0, -5.0, -5.0),
+            animray::point3d<world>(25.0, -25.0, -25.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     for ( std::size_t frame{start_frame}; frame != frames; ++frame ) {
