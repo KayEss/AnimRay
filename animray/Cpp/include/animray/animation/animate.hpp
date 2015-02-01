@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -25,6 +25,7 @@
 
 
 #include <utility>
+#include <functional>
 
 
 namespace animray {
@@ -54,7 +55,8 @@ namespace animray {
 
     /// Base for attaching animations to attributes
     template<typename T>
-    struct animate : public T {
+    class animate : public T {
+    public:
         /// Pass constructor arguments to superclass
         template<typename... A>
         animate(A&&... args)
@@ -65,6 +67,36 @@ namespace animray {
         template<typename R>
         auto operator () (const R &ray) const {
             return T::operator ()(ray.frame());
+        }
+    };
+
+
+    /// Specialisation for animating using a functor
+    template<typename T, typename F>
+    class animate<std::function<T(F)>> {
+        std::function<T(F)> function;
+    public:
+        /// Default construct return a default T
+        animate<std::function<T(F)>>()
+        : function([](F) { return T(); }) {
+        }
+        /// Initialise with the lambda to use
+        animate<std::function<T(F)>>(std::function<T(F)> f)
+        : function(f) {
+        }
+
+        /// The type of the value of R
+        /// TODO: We don't really want this here
+        typedef typename T::value_type value_type;
+
+        /// Strip the frame out of the ray type
+        template<typename R>
+        auto operator () (const R &ray) const {
+            return function(ray.frame());
+        }
+        /// We already have a frame number
+        auto operator () (const F f) const {
+            return function(f);
         }
     };
 
