@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -49,7 +49,7 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2015 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(
         fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
@@ -66,18 +66,13 @@ FSL_MAIN(
     const int width = fostlib::coerce< int >( args[1].value("180") );
     const int height = fostlib::coerce< int >( args[2].value("135") );
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-animated.tga"));
+        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-falling.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::surface<
-            animray::plane< animray::ray< world > >,
-            animray::reflective< float >,
-            animray::matte< animray::rgb<float> >
-        > reflective_plane_type;
     typedef animray::surface<
             animray::unit_sphere<animray::animate<
                 animray::animation::rotate_xy<animray::point3d<world>>
@@ -93,7 +88,6 @@ FSL_MAIN(
         > metallic_sphere_type;
     typedef animray::scene<
         animray::compound<
-            reflective_plane_type,
             animray::collection<metallic_sphere_type>,
             animray::collection<gloss_sphere_type>
         >,
@@ -110,11 +104,6 @@ FSL_MAIN(
             scene_type;
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
-
-    std::get<0>(scene.geometry().instances()) =
-            reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
-    std::get<0>(scene.geometry().instances()).geometry().center(
-        animray::point3d<world>(0, 0, 4));
 
     const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
@@ -133,14 +122,14 @@ FSL_MAIN(
             case 0: {
                 metallic_sphere_type m(colour);
                 m.geometry().position(location);
-                std::get<1>(scene.geometry().instances()).insert(m);
+                std::get<0>(scene.geometry().instances()).insert(m);
                 break;
             }
             case 1:
             default: {
                 gloss_sphere_type g(10.0f, colour);
                 g.geometry().position((location));
-                std::get<2>(scene.geometry().instances()).insert(g);
+                std::get<1>(scene.geometry().instances()).insert(g);
             }
         }
     }
