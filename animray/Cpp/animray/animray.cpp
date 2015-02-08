@@ -100,9 +100,8 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
 
-    const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> surface(0, 2), factor(0, factors.size() - 1), phase(0, cycle);
+    std::uniform_int_distribution<int> phase(0, cycle);
     std::uniform_real_distribution<world> hue(0, 360), x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0u; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
