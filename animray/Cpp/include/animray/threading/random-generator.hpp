@@ -28,7 +28,16 @@
 namespace animray {
 
 
-    thread_local std::mt19937 random_generator{std::random_device{}()};
+    /// Wrapper for a std:: random engine so it can be used as a template
+    /// argument and will be initialised properly and be thread safe
+    template< typename E = std::mt19937 >
+    struct random_engine {
+        thread_local static E engine;
+    };
+
+
+    template< typename E >
+    thread_local E random_engine<E>::engine{std::random_device{}()};
 
 
 }

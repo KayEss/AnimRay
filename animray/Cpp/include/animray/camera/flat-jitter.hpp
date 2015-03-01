@@ -34,7 +34,8 @@ namespace animray {
     /// Camera that introduces random 2d jitter on the sample locations
     template<
         typename E,
-        typename C = flat_camera< E >
+        typename C = flat_camera< E >,
+        typename G = animray::random_engine<>
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
@@ -59,8 +60,8 @@ namespace animray {
                 resolution_type x, resolution_type y) const {
             return inner_camera(x, y) +
                 point2d< extents_type >(
-                    jitter(random_generator) * inner_camera.pixel_width(),
-                    jitter(random_generator) * inner_camera.pixel_height());
+                    jitter(G::engine) * inner_camera.pixel_width(),
+                    jitter(G::engine) * inner_camera.pixel_height());
         }
     };
 
