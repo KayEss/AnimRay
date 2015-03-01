@@ -33,7 +33,10 @@ namespace animray {
 
         /// Wrapper for a std:: random engine so it can be used as a template
         /// argument and will be initialised properly and be thread safe
-        template< typename E = std::mt19937 >
+        template<
+            typename E = std::mt19937,
+            typename D = std::random_device
+        >
         struct engine {
             /// The type of the engine
             typedef E engine_type;
@@ -43,8 +46,8 @@ namespace animray {
         };
 
 
-        template< typename E >
-        thread_local E engine<E>::e{std::random_device{}()};
+        template< typename E, typename D >
+        thread_local E engine<E, D>::e{D{}()};
 
 
         /// Wrapper for a distribution so it can be used as a template
