@@ -28,32 +28,38 @@
 namespace animray {
 
 
-    /// Wrapper for a std:: random engine so it can be used as a template
-    /// argument and will be initialised properly and be thread safe
-    template< typename E = std::mt19937 >
-    struct random_engine {
-        /// The type of the engine
-        typedef E engine_type;
-
-        /// The engine itself
-        thread_local static E engine;
-    };
+    inline namespace random {
 
 
-    template< typename E >
-    thread_local E random_engine<E>::engine{std::random_device{}()};
+        /// Wrapper for a std:: random engine so it can be used as a template
+        /// argument and will be initialised properly and be thread safe
+        template< typename E = std::mt19937 >
+        struct engine {
+            /// The type of the engine
+            typedef E engine_type;
+
+            /// The engine itself
+            thread_local static E e;
+        };
 
 
-    /// Wrapper for a distribution so it can be used as a template
-    /// argument and produce numbers in a thread safe manner
-    template< typename D, typename D::param_type *P,
-        typename E = random_engine<> >
-    struct random_distribution {
-        static typename D::result_type value() {
-            thread_local D distribution(*P);
-            return distribution(E::engine);
-        }
-    };
+        template< typename E >
+        thread_local E engine<E>::e{std::random_device{}()};
+
+
+        /// Wrapper for a distribution so it can be used as a template
+        /// argument and produce numbers in a thread safe manner
+        template< typename D, typename D::param_type *P,
+            typename E = engine<> >
+        struct distribution {
+            static typename D::result_type value() {
+                thread_local D d(*P);
+                return d(E::e);
+            }
+        };
+
+
+    }
 
 
 }
