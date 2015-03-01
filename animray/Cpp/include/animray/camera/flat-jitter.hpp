@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -25,20 +25,22 @@
 
 
 #include <animray/camera/flat.hpp>
+#include <animray/threading/random-generator.hpp>
 
 
 namespace animray {
 
 
     /// Camera that introduces random 2d jitter on the sample locations
-    template< typename E, typename C = flat_camera< E > >
+    template<
+        typename E,
+        typename C = flat_camera< E >
+    >
     class flat_jitter_camera {
         /// The camera performing the base mapping
         C inner_camera;
-        /// The entropy generator
-        mutable std::default_random_engine generator;
         /// The distribution for the jitter
-        mutable std::uniform_real_distribution<E> jitter;
+        mutable std::uniform_real_distribution<E> jitter; // TODO: Not thread safe
     public:
         /// The type used to measure the height of the camera image
         typedef E extents_type;
@@ -57,8 +59,8 @@ namespace animray {
                 resolution_type x, resolution_type y) const {
             return inner_camera(x, y) +
                 point2d< extents_type >(
-                    jitter(generator) * inner_camera.pixel_width(),
-                    jitter(generator) * inner_camera.pixel_height());
+                    jitter(random_generator) * inner_camera.pixel_width(),
+                    jitter(random_generator) * inner_camera.pixel_height());
         }
     };
 
