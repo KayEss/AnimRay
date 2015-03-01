@@ -52,7 +52,7 @@ namespace animray {
 
         /// Wrapper for a distribution so it can be used as a template
         /// argument and produce numbers in a thread safe manner
-        template< typename D, typename D::param_type *P,
+        template< typename D, const typename D::param_type *P,
             typename E = engine<> >
         struct distribution {
             static typename D::result_type value() {
@@ -60,6 +60,35 @@ namespace animray {
                 return d(E::e);
             }
         };
+
+
+        inline namespace parameters {
+
+
+            /// Template wrapper to store distribution arguments so that they
+            /// can be used as arguments for a template parameter.
+            template< typename D >
+            struct plus_minus_half {
+                static const typename D::param_type parameter;
+            };
+
+
+            /// Specialisations for use by the camera
+            template<>
+            const std::uniform_real_distribution<float>::param_type
+                plus_minus_half<std::uniform_real_distribution<float>>::
+                    parameter{-0.5f, 0.5f};
+            template<>
+            const std::uniform_real_distribution<double>::param_type
+                plus_minus_half<std::uniform_real_distribution<double>>::
+                    parameter{-0.5, 0.5};
+            template<>
+            const std::uniform_real_distribution<long double>::param_type
+                plus_minus_half<std::uniform_real_distribution<long double>>::
+                    parameter{-0.5l, 0.5l};
+
+
+        }
 
 
     }

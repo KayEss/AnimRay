@@ -31,15 +31,13 @@
 namespace animray {
 
 
-    std::uniform_real_distribution<double>::param_type plus_minus_half{-0.5, 0.5};
-
-
     /// Camera that introduces random 2D jitter on the sample locations
     template<
         typename E,
         typename C = flat_camera< E >,
         typename D = std::uniform_real_distribution<E>,
-        typename J = animray::random::distribution<D, &plus_minus_half>
+        const typename D::param_type *P = &plus_minus_half<D>::parameter,
+        typename J = animray::random::distribution<D, P>
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
