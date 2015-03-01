@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -30,7 +30,7 @@
 
 namespace {
     typedef animray::ray<int> base_ray;
-    typedef animray::with_frame<base_ray>::type ray_type;
+    typedef animray::with_frame<base_ray, std::size_t>::type ray_type;
 }
 
 

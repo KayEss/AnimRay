@@ -167,7 +167,7 @@ FSL_MAIN(
                         animray::flat_jitter_camera<world>
                     >
                 >,
-                typename animray::with_frame<animray::ray<world>>::type
+                typename animray::with_frame<animray::ray<world>, std::size_t>::type
             > camera(fw, fh, width, height, 0.05);
         camera
             (animray::rotate_x<world>(-65_deg))

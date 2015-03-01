@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -127,7 +127,7 @@ FSL_MAIN(
                         animray::flat_jitter_camera<world>
                     >
                 >,
-                typename animray::with_frame<animray::ray<world>>::type
+                typename animray::with_frame<animray::ray<world>, std::size_t>::type
             > camera(fw, fh, width, height, 0.05);
         camera
             (animray::rotate_x<world>(-15_deg))

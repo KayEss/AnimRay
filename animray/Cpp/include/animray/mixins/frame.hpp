@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -46,7 +46,7 @@ namespace animray {
 
 
     /// Mixin for recording a frame number
-    template<typename T, typename F = std::size_t>
+    template<typename T, typename F>
     struct with_frame {
         typedef typename std::conditional<
                 std::is_base_of<detail::at_frame<F>, T>::value,
