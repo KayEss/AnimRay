@@ -62,18 +62,35 @@ namespace animray {
         };
 
 
+        /// Template wrapper to store distribution arguments so that they
+        /// can be used as arguments for a template parameter.
         inline namespace parameters {
 
 
-            /// Template wrapper to store distribution arguments so that they
-            /// can be used as arguments for a template parameter.
+            /// One unit
+            template< typename D >
+            struct zero_to_one {
+                static const typename D::param_type parameter;
+            };
+            template<>
+            const std::uniform_real_distribution<float>::param_type
+                zero_to_one<std::uniform_real_distribution<float>>::
+                    parameter{0.f, 1.f};
+            template<>
+            const std::uniform_real_distribution<double>::param_type
+                zero_to_one<std::uniform_real_distribution<double>>::
+                    parameter{-0., 1.};
+            template<>
+            const std::uniform_real_distribution<long double>::param_type
+                zero_to_one<std::uniform_real_distribution<long double>>::
+                    parameter{-0.l, 1.l};
+
+
+            /// One unit distributed about the zero point
             template< typename D >
             struct plus_minus_half {
                 static const typename D::param_type parameter;
             };
-
-
-            /// Specialisations for use by the camera
             template<>
             const std::uniform_real_distribution<float>::param_type
                 plus_minus_half<std::uniform_real_distribution<float>>::
