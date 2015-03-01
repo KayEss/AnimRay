@@ -31,17 +31,19 @@
 namespace animray {
 
 
-    /// Camera that introduces random 2d jitter on the sample locations
+    std::uniform_real_distribution<double>::param_type plus_minus_half{-0.5, 0.5};
+
+
+    /// Camera that introduces random 2D jitter on the sample locations
     template<
         typename E,
         typename C = flat_camera< E >,
-        typename G = animray::random_engine<>
+        typename D = std::uniform_real_distribution<E>,
+        typename J = animray::random_distribution<D, &plus_minus_half>
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
         C inner_camera;
-        /// The distribution for the jitter
-        mutable std::uniform_real_distribution<E> jitter; // TODO: Not thread safe
     public:
         /// The type used to measure the height of the camera image
         typedef E extents_type;
@@ -51,8 +53,7 @@ namespace animray {
         /// Constructs a camera whose film is a particular size
         flat_jitter_camera(extents_type w, extents_type h,
                 resolution_type c, resolution_type r)
-        : inner_camera(w, h, c, r),
-                jitter(-inner_camera.half(), +inner_camera.half()) {
+        : inner_camera(w, h, c, r) {
         }
 
         /// Map between pixel co-ordinates and world co-ordinates
@@ -60,8 +61,8 @@ namespace animray {
                 resolution_type x, resolution_type y) const {
             return inner_camera(x, y) +
                 point2d< extents_type >(
-                    jitter(G::engine) * inner_camera.pixel_width(),
-                    jitter(G::engine) * inner_camera.pixel_height());
+                    J::value() * inner_camera.pixel_width(),
+                    J::value() * inner_camera.pixel_height());
         }
     };
 
