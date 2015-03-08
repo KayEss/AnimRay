@@ -19,8 +19,6 @@
 */
 
 
-#ifndef ANIMRAY_CAMERA_FLAT_JITTER_HPP
-#define ANIMRAY_CAMERA_FLAT_JITTER_HPP
 #pragma once
 
 
@@ -35,13 +33,17 @@ namespace animray {
     template<
         typename E,
         typename C = flat_camera< E >,
-        typename D = std::uniform_real_distribution<E>,
-        const typename D::param_type *P = &plus_minus_half<D>::parameter,
-        typename J = animray::random::distribution<D, P>
+        typename D = random::with_engine<std::uniform_real_distribution<E>>,
+        int... P
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
         C inner_camera;
+        /// The jitter function
+        static auto jitter() {
+            thread_local static typename D::distribution d(P...);
+            return d(D::engine::e);
+        }
     public:
         /// The type used to measure the height of the camera image
         typedef E extents_type;
@@ -59,13 +61,11 @@ namespace animray {
                 resolution_type x, resolution_type y) const {
             return inner_camera(x, y) +
                 point2d< extents_type >(
-                    J::value() * inner_camera.pixel_width(),
-                    J::value() * inner_camera.pixel_height());
+                    jitter() * inner_camera.pixel_width(),
+                    jitter() * inner_camera.pixel_height());
         }
     };
 
 
 }
 
-
-#endif // ANIMRAY_CAMERA_FLAT_JITTER_HPP
