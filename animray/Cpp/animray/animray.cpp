@@ -78,7 +78,7 @@ FSL_MAIN(
 
     typedef std::function<
         animray::point3d<world>(
-            typename animray::with_frame<animray::ray<world>>::frame_type)> position_function;
+            typename animray::with_frame<animray::ray<world>, float>::frame_type)> position_function;
     typedef animray::surface<
             animray::unit_sphere<animray::animate<position_function>>,
             animray::gloss< world >,
@@ -109,7 +109,7 @@ FSL_MAIN(
         auto x_location(x_position(generator)), y_location(y_position(generator));
         auto start_phase(phase(generator));
         position_function position = [x_location, y_location, start_phase, frames, speed](
-            typename animray::with_frame<animray::ray<world>>::frame_type frame
+            typename animray::with_frame<animray::ray<world>, float>::frame_type frame
         ) {
             return animray::point3d<world>(
                 x_location, y_location, world(-12) + std::fmod(start_phase + frame * speed, cycle));
@@ -136,18 +136,18 @@ FSL_MAIN(
 
     for ( std::size_t frame{start_frame}; frame != frames; ++frame ) {
         animray::movable<
-                animray::stacatto_movie<
+                animray::movie<
                     animray::pinhole_camera<
                         animray::ray<world>,
                         animray::flat_jitter_camera<world>
                     >
                 >,
-                typename animray::with_frame<animray::ray<world>>::type
+                typename animray::with_frame<animray::ray<world>, float>::type
             > camera(fw, fh, width, height, 0.05);
         camera
             (animray::rotate_x<world>(-65_deg))
-            (animray::translate<world>(0.0, -4.0, -40))
-            .instance().frame(frame);
+            (animray::translate<world>(0.0, -4.0, -40));
+        camera.instance().frame(frame);
 
         typedef animray::film<animray::rgb<uint8_t>> film_type;
 
