@@ -33,7 +33,7 @@ namespace animray {
     template<
         typename E,
         typename C = flat_camera< E >,
-        typename J = random::jitter<std::uniform_real_distribution<E>>
+        typename J = random::jitter<std::normal_distribution<E>>
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
