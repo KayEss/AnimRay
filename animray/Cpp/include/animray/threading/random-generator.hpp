@@ -51,11 +51,17 @@ namespace animray {
         thread_local E engine<E, D>::e{D{}()};
 
 
-        /// Tie together a distribution with the default engine
-        template< typename D, typename E = engine<> >
-        struct with_engine {
-            typedef D distribution;
-            typedef E engine;
+        /// A distribution that returns a sample with ints as parameters
+        template<
+            typename D,
+            typename E = engine<>,
+            int... P
+        >
+        struct jitter {
+            static auto sample() {
+                thread_local static D d(P...);
+                return d(E::e);
+            }
         };
 
 

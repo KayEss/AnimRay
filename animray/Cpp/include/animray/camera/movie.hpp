@@ -68,15 +68,9 @@ namespace animray {
     /// Movie camera that adds in motion blur
     template <
         typename C, typename F = std::size_t, typename T = float,
-        typename D = random::with_engine<std::uniform_real_distribution<T>>,
-        int... P
+        typename J = random::jitter<std::uniform_real_distribution<T>>
     >
     class movie {
-        /// The jitter function
-        static auto jitter() {
-            thread_local static typename D::distribution d(P...);
-            return d(D::engine::e);
-        }
     public:
         /// The type of the frame camera
         typedef C frame_camera_type;
@@ -104,7 +98,7 @@ namespace animray {
         template<typename S>
         ray_type operator() (S x, S y) const {
             ray_type ray{frame_camera()(x, y)};
-            ray.frame(frame() + jitter() * shutter());
+            ray.frame(frame() + J::sample() * shutter());
             return ray;
         }
     };
