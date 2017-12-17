@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2015, Kirit Saelensminde.
+    Copyright 2014-2017, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -45,7 +45,7 @@ FSL_TEST_FUNCTION(constant) {
 
 
 FSL_TEST_FUNCTION(linear_frames_boost_function) {
-    boost::function<int(const ray_type &)> f{[](const ray_type &r) {
+    const auto f{[](const ray_type &r) {
         return animray::interpolation::linear(5.0, 15.0, r.frame(), std::size_t(10));
     }};
     ray_type ray;

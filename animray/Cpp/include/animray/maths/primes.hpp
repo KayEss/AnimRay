@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
+    Copyright 2010-2017, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -63,17 +63,19 @@ namespace animray {
 
     /// A meta-function that returns a prime number generator
     template< typename I >
-    boost::function0< I > prime_generator() {
+    auto prime_generator() {
         // This doesn't work with boost::lambda::bind as the closure is const there
-        return boost::bind( detail::next_prime< I >, I(2) );
+        return [n = I(2)]() mutable {
+            return detail::next_prime<I>(n);
+        };
     }
 
 
     /// Returns a list of prime factors for a value
-    template< typename I >
-    std::vector< I > prime_factors( I v ) {
-        std::vector< I > factors;
-        boost::function0< I > gen( prime_generator< I >() );
+    template<typename I>
+    std::vector<I> prime_factors(I v) {
+        std::vector<I> factors;
+        auto gen = prime_generator<I>();
         I factor = gen();
         while ( v > 1 ) {
             if ( v % factor == 0 ) {

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2017, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -95,7 +95,7 @@ namespace animray {
     struct texture_policy<
         C,
         animray::point2d< S >,
-        boost::function2< R, S, S >
+        std::function<R(S, S)>
     > {
         /// The colour type
         typedef C color_type;
