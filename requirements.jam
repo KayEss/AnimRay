@@ -1,8 +1,5 @@
 
 PROJECT_REQUIREMENTS =
-        <toolset>clang:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-Wno-deprecated-declarations
         <toolset>clang:<cxxflags>-Wno-deprecated-register
-        <toolset>clang:<cxxflags>-DBOOST_ASIO_DISABLE_MOVE
-        <toolset>clang:<cxxflags>-DFOST_HAS_MOVE
     ;

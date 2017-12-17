@@ -24,42 +24,42 @@
 #pragma once
 
 
-#include <animray/affine.hpp>
+#include <animray/functional/reduce.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
+#include <animray/ray.hpp>
 
 
 namespace animray {
 
 
-    template<typename I, typename D = typename I::local_coord_type>
+    template<
+        typename P,
+        typename I = animray::ray<typename P::value_type>,
+        typename D = typename P::value_type>
     class unit_sphere {
         /// The sphere at the origin we want to map position to
         unit_sphere_at_origin<I, D> origin;
     public:
+        /// Position type
+        typedef P position_type;
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to return when the sphere is struck
         typedef I intersection_type;
 
         /// Set the position of the sphere
-        fostlib::accessors<point3d<D>> position;
-
-        /// Allow the sphere to be moved
-        unit_sphere &operator () (const translate<local_coord_type> &t) {
-            position(t());
-            return *this;
-        }
+        fostlib::accessors<position_type> position;
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
-            by.from(by.from() - position());
+            by.from(by.from() - reduce(position(), by));
             fostlib::nullable< intersection_type > hit(origin.intersects(by, epsilon));
             if ( hit.isnull() ) {
                 return fostlib::null;
             } else {
-                hit.value().from(hit.value().from() + position());
+                hit.value().from(hit.value().from() + reduce(position(), by));
                 return hit;
             }
         }
@@ -67,7 +67,7 @@ namespace animray {
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
-            by.from(by.from() - position());
+            by.from(by.from() - reduce(position(), by));
             return origin.occludes(by, epsilon);
         }
     };

@@ -24,6 +24,7 @@
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
+#include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>

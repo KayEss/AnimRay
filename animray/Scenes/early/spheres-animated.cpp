@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2015, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -22,8 +22,10 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/animation/procedural/rotate.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/camera/movie.hpp>
 #include <animray/geometry/planar/plane.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
 #include <animray/geometry/collection-surface.hpp>
@@ -47,7 +49,7 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2015 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(
         fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
@@ -56,11 +58,15 @@ FSL_MAIN(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
         args.commandSwitch("sp").value("20")));
+    const std::size_t frames(fostlib::coerce<int>(
+        args.commandSwitch("frames").value("12")));
+    const std::size_t start_frame(fostlib::coerce<int>(
+        args.commandSwitch("frames-start").value("0")));
 
+    const int width = fostlib::coerce< int >( args[1].value("36") );
+    const int height = fostlib::coerce< int >( args[2].value("27") );
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("spheres-positionable-over-plane.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("180") );
-    const int height = fostlib::coerce< int >( args[3].value("135") );
+        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-animated.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;
@@ -73,12 +79,16 @@ FSL_MAIN(
             animray::matte< animray::rgb<float> >
         > reflective_plane_type;
     typedef animray::surface<
-            animray::unit_sphere<animray::point3d<world>>,
+            animray::unit_sphere<animray::animate<
+                animray::animation::rotate_xy<animray::point3d<world>>
+            >>,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
     typedef animray::surface<
-            animray::unit_sphere<animray::point3d<world>>,
+            animray::unit_sphere<animray::animate<
+                animray::animation::rotate_xy<animray::point3d<world>>
+            >>,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<
@@ -106,27 +116,30 @@ FSL_MAIN(
     std::get<0>(scene.geometry().instances()).geometry().center(
         animray::point3d<world>(0, 0, 4));
 
+    const std::vector<int> factors{1, 2, 3, 4, 6, 12, -12, -6, -4, -3, -2, -1};
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> surface(1, 2);
+    std::uniform_int_distribution<int> surface(0, 2);
+    std::uniform_int_distribution<int> factor(0, factors.size() - 1);
     std::uniform_real_distribution<world>
-        hue(0, 360),
-        x_position(-20, 20), y_position(-20, 20);
+        hue(0, 360), radius(2, 10), phase(0_deg, 360_deg),
+        x_position(-10, 10), y_position(-20, 20);
     for ( auto count = 0; count != spheres; ++count ) {
         animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        animray::translate<world> location
-            (x_position(generator), y_position(generator), 0.0);
-        switch ( surface(generator) ) {
-            case 1: {
+        animray::animate<animray::animation::rotate_xy<animray::point3d<world>>>
+            location(animray::point3d<world>(x_position(generator), y_position(generator), 0),
+                radius(generator), 360_deg * factors[factor(generator)] / frames, phase(generator));
+        switch ( surface(generator) % 2 ) {
+            case 0: {
                 metallic_sphere_type m(colour);
-                m.geometry().position(location());
+                m.geometry().position(location);
                 std::get<1>(scene.geometry().instances()).insert(m);
                 break;
             }
-            case 2:
+            case 1:
             default: {
                 gloss_sphere_type g(10.0f, colour);
-                g.geometry().position(location());
+                g.geometry().position((location));
                 std::get<2>(scene.geometry().instances()).insert(g);
             }
         }
@@ -146,59 +159,68 @@ FSL_MAIN(
             animray::point3d<world>(5.0, -5.0, -5.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
-    animray::movable<
-            animray::pinhole_camera<
-                animray::ray<world>,
-                animray::flat_jitter_camera<world>
-            >,
-            animray::ray<world>>
-        camera(fw, fh, width, height, 0.05);
-    camera
-        (animray::rotate_x<world>(-65_deg))
-        (animray::translate<world>(0.0, -4.0, -40));
+    for ( std::size_t frame{start_frame}; frame != frames; ++frame ) {
+        animray::movable<
+                animray::stacatto_movie<
+                    animray::pinhole_camera<
+                        animray::ray<world>,
+                        animray::flat_jitter_camera<world>
+                    >
+                >,
+                typename animray::with_frame<animray::ray<world>, std::size_t>::type
+            > camera(fw, fh, width, height, 0.05);
+        camera
+            (animray::rotate_x<world>(-65_deg))
+            (animray::translate<world>(0.0, -4.0, -40))
+            .instance().frame(frame);
 
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+        typedef animray::film<animray::rgb<uint8_t>> film_type;
 
-    fostlib::worker worker;
-    fostlib::meter tracking;
-    fostlib::future<film_type> result(worker.run<film_type>(
-        [threads, samples, width, height, &scene, &camera] () {
-            return animray::threading::sub_panel<film_type>(
-                threads, width, height,
-                [samples, &scene, &camera](
-                    const film_type::size_type x, const film_type::size_type y
-                ) {
-                    animray::rgb<float> photons;
-                    for ( std::size_t sample{}; sample != samples; ++sample ) {
-                        photons += scene(camera, x, y) /= samples;
-                    }
-                    const float exposure = 1.4f;
-                    photons /= exposure;
-                    return animray::rgb<uint8_t>(
-                        uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                        uint8_t(photons.green() > 255 ? 255 : photons.green()),
-                        uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
-                });
-            }));
-    fostlib::cli::monitor(out, tracking, result,
-        [](const fostlib::meter::reading &current) {
-            fostlib::stringstream out;
-            out << "] "
-                << current.done() << "/" << current.work().value(0);
-            if ( current.meta().size() && not current.meta()[0].isnull() ) {
-                fostlib::json meta(current.meta()[0]);
-                out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
-                    << "x" << fostlib::json::unparse(meta["panels"]["y"], false)
-                    << " of size " << fostlib::json::unparse(meta["size"]["x"], false)
-                    << "x" << fostlib::json::unparse(meta["size"]["y"], false)
-                    << ")";
-            }
-            return out.str();
-        },
-        [](const fostlib::meter::reading &) {
-            return "[";
-        });
-    animray::targa(output_filename, result());
+        fostlib::worker worker;
+        fostlib::meter tracking;
+        fostlib::future<film_type> result(worker.run<film_type>(
+            [threads, samples, width, height, &scene, &camera] () {
+                return animray::threading::sub_panel<film_type>(
+                    threads, width, height,
+                    [samples, &scene, &camera](
+                        const film_type::size_type x, const film_type::size_type y
+                    ) {
+                        animray::rgb<float> photons;
+                        for ( std::size_t sample{}; sample != samples; ++sample ) {
+                            photons += scene(camera, x, y) /= samples;
+                        }
+                        const float exposure = 1.4f;
+                        photons /= exposure;
+                        return animray::rgb<uint8_t>(
+                            uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                            uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                            uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+                    });
+                }));
+        fostlib::cli::monitor(out, tracking, result,
+            [frame](const fostlib::meter::reading &current) {
+                fostlib::stringstream out;
+                out << "] f"  << frame << " "
+                    << current.done() << "/" << current.work().value(0);
+                if ( current.meta().size() && not current.meta()[0].isnull() ) {
+                    fostlib::json meta(current.meta()[0]);
+                    out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
+                        << "x" << fostlib::json::unparse(meta["panels"]["y"], false)
+                        << " of size " << fostlib::json::unparse(meta["size"]["x"], false)
+                        << "x" << fostlib::json::unparse(meta["size"]["y"], false)
+                        << ")";
+                }
+                return out.str();
+            },
+            [](const fostlib::meter::reading &) {
+                return "[";
+            });
+        boost::filesystem::wpath filename(output_filename);
+        filename.replace_extension(
+            fostlib::coerce<boost::filesystem::wpath>(
+                fostlib::coerce<fostlib::string>(frame) + ".tga"));
+        animray::targa(filename, result());
+    }
 
     return 0;
 }

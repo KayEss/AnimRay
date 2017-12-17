@@ -62,13 +62,6 @@ namespace animray {
         const surface_parameters_type &parameters() const {
             return *m_parameters;
         }
-
-        /// Multiply by something
-        template< typename D >
-        intersection operator * ( const D &s ) const {
-            superclass r(superclass::operator * (s));
-            return intersection(r, *m_parameters);
-        }
     };
 
 

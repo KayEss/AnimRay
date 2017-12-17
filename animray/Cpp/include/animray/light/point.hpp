@@ -54,8 +54,9 @@ namespace animray {
         typename superclass::color_type operator () (
             const O &observer, const I &intersection, const G &scene
         ) const {
-            ray<typename O::local_coord_type> illumination(
-                intersection.from(), geometry());
+            O illumination(observer);
+            illumination.from(intersection.from());
+            illumination.to(geometry());
             if ( not scene.geometry().occludes(illumination, epsilon<I>::value ) ) {
                 return shader(observer, illumination, intersection, superclass::color(), scene);
             } else {

@@ -53,11 +53,24 @@ namespace animray {
         ray( const end_type &from, const direction_type &dir )
         : from(from), direction(dir) {
         }
+        /// Construct a follow on ray between two locations
+        ray(const ray &, const end_type &from, const end_type &to)
+        : from(from), direction(to - from) {
+        }
+        /// Construct a follow on ray from a location in the specified direction
+        ray(const ray &, const end_type &from, const direction_type &dir)
+        : from(from), direction(dir) {
+        }
 
         /// The start of the ray
         fostlib::accessors< end_type > from;
         /// A unit direction vector
         fostlib::accessors< direction_type > direction;
+
+        /// Set a point the ray must go through
+        void to(const end_type &t) {
+            direction(t - from());
+        }
 
         /// Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {
@@ -75,10 +88,22 @@ namespace animray {
 
         /// Transform a ray by a matrix
         template<typename MD>
-        ray operator * (const matrix<MD> &right) const {
-            return ray(right * from(), right * ends());
+        ray &operator *= (const matrix<MD> &right) {
+            end_type f(right * from()), e(right * ends());
+            from(f);
+            to(e);
+            return *this;
         }
     };
+
+
+    /// Multiply
+    template<typename R, typename D>
+    R operator * (const R &ray, const D &s) {
+        R result(ray);
+        result *= s;
+        return result;
+    }
 
 
 }

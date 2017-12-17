@@ -22,70 +22,56 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
-#include <animray/animation/procedural/rotate.hpp>
+#include <animray/animation/procedural/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/camera/movie.hpp>
-#include <animray/geometry/planar/plane.hpp>
-#include <animray/geometry/quadrics/sphere-unit.hpp>
-#include <animray/geometry/collection-surface.hpp>
-#include <animray/compound.hpp>
 #include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
+#include <animray/geometry/collection.hpp>
+#include <animray/geometry/planar/triangle.hpp>
 #include <animray/scene.hpp>
-#include <animray/shader.hpp>
-#include <animray/surface/matte.hpp>
-#include <animray/surface/gloss.hpp>
-#include <animray/surface/reflective.hpp>
 #include <animray/light/ambient.hpp>
 #include <animray/light/collection.hpp>
 #include <animray/light/point.hpp>
 #include <animray/targa.hpp>
-#include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
-#include <animray/color/hls.hpp>
 
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2015 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(
         fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
             boost::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
-        args.commandSwitch("ss").value("6")));
-    const std::size_t spheres(fostlib::coerce<int>(
-        args.commandSwitch("sp").value("20")));
+        args.commandSwitch("ss").value("2")));
     const std::size_t frames(fostlib::coerce<int>(
-        args.commandSwitch("frames").value("60")));
-    const std::size_t start_frame(fostlib::coerce<int>(
-        args.commandSwitch("frames-start").value("0")));
-    const std::size_t cycle(60);
+        args.commandSwitch("frames").value("2")));
 
-    const int width = fostlib::coerce< int >( args[1].value("180") );
-    const int height = fostlib::coerce< int >( args[2].value("135") );
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[3].value("spheres-falling.tga"));
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value("tetrahedron.tga"));
+    const int width = fostlib::coerce< int >( args[2].value("96") );
+    const int height = fostlib::coerce< int >( args[3].value("54") );
 
     typedef double world;
     const world aspect = double(width) / height;
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    const world speed(world(cycle) / world(frames));
-
-    typedef std::function<
-        animray::point3d<world>(
-            typename animray::with_frame<animray::ray<world>, float>::frame_type)> position_function;
-    typedef animray::surface<
-            animray::unit_sphere<animray::animate<position_function>>,
-            animray::gloss< world >,
-            animray::matte< animray::rgb<float> >
-        > gloss_sphere_type;
+    typedef animray::triangle<animray::ray<world>> triangle;
     typedef animray::scene<
-        animray::collection<gloss_sphere_type>,
+        animray::animation::affine<
+            animray::matrix<world>,
+            animray::rotate_z,
+            animray::animation::affine<
+                animray::matrix<world>,
+                animray::rotate_y,
+                animray::collection<triangle>
+            >
+        >,
         animray::light<
             std::tuple<
                 animray::light<void, float>,
@@ -100,54 +86,53 @@ FSL_MAIN(
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
 
-    std::default_random_engine generator;
-    std::uniform_int_distribution<int> phase(0, cycle);
-    std::uniform_real_distribution<world> hue(0, 360), x_position(-10, 10), y_position(-20, 20);
-    for ( auto count = 0u; count != spheres; ++count ) {
-        animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
-        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
-        auto x_location(x_position(generator)), y_location(y_position(generator));
-        auto start_phase(phase(generator));
-        position_function position = [x_location, y_location, start_phase, frames, speed](
-            typename animray::with_frame<animray::ray<world>, float>::frame_type frame
-        ) {
-            return animray::point3d<world>(
-                x_location, y_location, world(-12) + std::fmod(start_phase + frame * speed, cycle));
-        };
-        animray::animate<position_function> location(position);
-        gloss_sphere_type g(10.0f, colour);
-        g.geometry().position((location));
-        scene.geometry().insert(g);
-    }
+    animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1),
+        north(0, 1, 0), south(0, -1, 0), east(1, 0, 0), west(-1, 0, 0);
+
+    scene.geometry().instance().instance()
+        .insert(triangle(top, north, east))
+        .insert(triangle(top, east, south))
+        .insert(triangle(top, south, west))
+        .insert(triangle(top, west, north))
+        .insert(triangle(bottom, north, east))
+        .insert(triangle(bottom, east, south))
+        .insert(triangle(bottom, south, west))
+        .insert(triangle(bottom, west, north));
+
+    const std::size_t angle(20);
+    scene.geometry()
+        (40_deg, 1_deg * angle, frames);
+    scene.geometry().instance()
+        (0, 2_deg * angle, frames);
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-25.0, 25.0, -25.0),
+            animray::point3d<world>(-3.0, 5.0, -5.0),
             animray::rgb<float>(0x40, 0xa0, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(-25.0, -25.0, -25.0),
+            animray::point3d<world>(-5.0, -3.0, -5.0),
             animray::rgb<float>(0xa0, 0x40, 0x40)));
     std::get<1>(scene.light()).push_back(
         animray::light<animray::point3d<world>, animray::rgb<float>>(
-            animray::point3d<world>(25.0, -25.0, -25.0),
+            animray::point3d<world>(3.0, -3.0, -5.0),
             animray::rgb<float>(0x40, 0x40, 0xa0)));
 
-    for ( std::size_t frame{start_frame}; frame != frames; ++frame ) {
+    for ( std::size_t frame{}; frame != frames * 360 / angle; ++frame ) {
         animray::movable<
-                animray::movie<
+                animray::stacatto_movie<
                     animray::pinhole_camera<
                         animray::ray<world>,
                         animray::flat_jitter_camera<world>
                     >
                 >,
-                typename animray::with_frame<animray::ray<world>, float>::type
+                typename animray::with_frame<animray::ray<world>, std::size_t>::type
             > camera(fw, fh, width, height, 0.05);
         camera
-            (animray::rotate_x<world>(-65_deg))
-            (animray::translate<world>(0.0, -4.0, -40));
-        camera.instance().frame(frame);
+            (animray::rotate_x<world>(-15_deg))
+            (animray::translate<world>(0.0, 0.0, -4))
+            .instance().frame(frame);
 
         typedef animray::film<animray::rgb<uint8_t>> film_type;
 

@@ -1,3 +1,4 @@
+include $(TOP)/../fost-base/fost.jam ;
 
 python-extension _animray :
         ../../../Boost//boost-filesystem-dll
@@ -9,6 +10,7 @@ python-extension _animray :
         animray-py.cpp
     :
         <include>../../../fost-py/Cpp/include
+        $(TARGET_REQUIREMENTS)
     ;
 
 run-py-test load-test : _animray load-test.py ;

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2017, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -50,7 +50,7 @@ FSL_TEST_FUNCTION( square_texture ) {
     typedef animray::point2d< double > location_type;
     typedef animray::texture<
         uint8_t, location_type,
-        boost::function2< int, double, double >
+        std::function<int(double, double)>
     > texture_type;
     texture_type t( square );
     FSL_CHECK_EQ( t( location_type() ), 1 );

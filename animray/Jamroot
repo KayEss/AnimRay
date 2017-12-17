@@ -15,7 +15,6 @@ alias animray :
         Cpp/animray
         Cpp/animray-py
         Cpp/animray-test
-        Cpp/ar-view
         Python
     ;
 

@@ -22,3 +22,9 @@
 [submodule "fost-py"]
 	path = fost-py
 	url = git@github.com:KayEss/fost-py.git
+[submodule "threading"]
+	path = threading
+	url = git@github.com:KayEss/f5-threading.git
+[submodule "cord"]
+	path = cord
+	url = git@github.com:KayEss/f5-cord.git

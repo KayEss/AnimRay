@@ -27,6 +27,7 @@
 #include <animray/geometry/quadrics/sphere-unit.hpp>
 #include <animray/geometry/collection-surface.hpp>
 #include <animray/compound.hpp>
+#include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/intersection.hpp>
 #include <animray/scene.hpp>
@@ -66,17 +67,17 @@ FSL_MAIN(
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::gloss< world >,
             animray::matte< animray::rgb<float> >
         > gloss_sphere_type;
     typedef animray::movable<animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::reflective< float >,
             animray::matte< animray::rgb<float> >
         >> reflective_sphere_type;
     typedef animray::surface<
-            animray::unit_sphere< animray::ray< world > >,
+            animray::unit_sphere<animray::point3d<world>>,
             animray::reflective< animray::rgb<float> >
         > metallic_sphere_type;
     typedef animray::scene<
@@ -116,14 +117,18 @@ FSL_MAIN(
         animray::translate<world> location
             (x_position(generator), y_position(generator), 0.0);
         switch ( surface(generator) ) {
-        case 1:
-            std::get<1>(scene.geometry().instances()).insert(
-                metallic_sphere_type(colour)(location));
-            break;
-        case 2:
-        default:
-            std::get<2>(scene.geometry().instances()).insert(
-                gloss_sphere_type(10.0f, colour)(location));
+            case 1: {
+                metallic_sphere_type m(colour);
+                m.geometry().position(location());
+                std::get<1>(scene.geometry().instances()).insert(m);
+                break;
+            }
+            case 2:
+            default: {
+                gloss_sphere_type g(10.0f, colour);
+                g.geometry().position(location());
+                std::get<2>(scene.geometry().instances()).insert(g);
+            }
         }
     }
 

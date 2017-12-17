@@ -19,6 +19,7 @@
 */
 
 
+#include <animray/maths/angles.hpp>
 #include <animray/affine.hpp>
 #include <animray/ray.hpp>
 #include "test-json.hpp"

@@ -137,7 +137,7 @@ namespace animray {
         }
 
         /// Unary minus
-        point3d operator- () const {
+        point3d operator - () const {
             return (*this) * -1;
         }
 

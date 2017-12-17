@@ -26,38 +26,10 @@
 
 #include <animray/epsilon.hpp>
 #include <animray/surface.hpp>
+#include <animray/mixins/depth-count.hpp>
 
 
 namespace animray {
-
-
-    namespace detail {
-        template<typename RI>
-        class reflected_ray : public RI {
-        public:
-            reflected_ray(const reflected_ray &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(ray.depth() + 1) {
-            }
-            reflected_ray(const RI &ray,
-                    const typename RI::end_type &starts,
-                    const typename RI::direction_type &dir)
-            : RI(starts, dir), depth(1) {
-            }
-
-            fostlib::accessors<std::size_t> depth;
-        };
-
-        template<typename R>
-        struct ref_type {
-            typedef reflected_ray<R> type;
-        };
-        template<typename R>
-        struct ref_type<reflected_ray<R>> {
-            typedef reflected_ray<R> type;
-        };
-    }
 
 
     /// The matte surface intersection type
@@ -80,9 +52,11 @@ namespace animray {
             const unit_vector< accuracy > ri(
                 observer.direction() +
                     intersection.direction() * accuracy(2) * ci);
-            typename detail::ref_type<RI>::type refray(
-                observer, intersection.from(), ri);
-            if ( refray.depth() > 5 ) {
+            typename animray::with_depth_count<RI>::type refray(observer);
+            refray.add_count(observer);
+            refray.from(intersection.from());
+            refray.direction(ri);
+            if ( refray.depth_count() > 5 ) {
                 return scene.background();
             } else {
                 return scene(refray);
@@ -90,8 +64,8 @@ namespace animray {
         }
 
         /// Calculate the light/surface interaction
-        template< typename RI, typename RL, typename I,
-            typename CI, typename G >
+        template<typename RI, typename RL, typename I,
+            typename CI, typename G>
         CI operator () (
             const C &, const RI &, const RL &, const I &, const CI &, const G &
         ) const {
@@ -99,7 +73,7 @@ namespace animray {
             return CI();
         }
 
-        /// This material is non-emissive
+        /// The specular light is emissive
         template<typename CI, typename RI, typename I, typename G>
         CI operator () (
             const C &attenuation, const CI &c,
