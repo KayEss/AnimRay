@@ -6,7 +6,6 @@ export VARIANTS=$*
 if test -e /proc/
 then {
     export CPUCOUNT=`grep -c ^processor /proc/cpuinfo`
-    export TOOLSET=toolset=clang
 }
 else {
     export CPUCOUNT=`sysctl -n hw.ncpu`
