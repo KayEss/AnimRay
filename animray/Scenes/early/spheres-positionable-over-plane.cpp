@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -47,11 +47,11 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(
         fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
-            boost::thread::hardware_concurrency()));
+            std::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
         args.commandSwitch("ss").value("6")));
     const std::size_t spheres(fostlib::coerce<int>(
