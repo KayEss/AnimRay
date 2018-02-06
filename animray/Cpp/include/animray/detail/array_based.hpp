@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
+    Copyright 2010-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -24,9 +24,9 @@
 #pragma once
 
 
+#include <array>
 #include <numeric>
 #include <fost/core>
-#include <boost/array.hpp>
 
 
 namespace animray {
@@ -46,7 +46,7 @@ namespace animray {
             /// Type to use as a parameter
             typedef const D &const_value_parameter_type;
             /// The type of the array
-            typedef boost::array< D, S > array_type;
+            using array_type = std::array<D, S>;
             /// The number of elements in the array
             static const std::size_t c_array_size = S;
 
@@ -153,7 +153,7 @@ namespace animray {
 
     /// Return the sum of the values
     template<typename D, std::size_t S>
-    D sum(const boost::array< D, S > &arr) {
+    D sum(const std::array< D, S > &arr) {
         return std::accumulate(arr.begin(), arr.end(), D());
     }
 
