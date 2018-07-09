@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -60,17 +60,10 @@ namespace animray {
             fostlib::nullable<std::pair<typename instances_collection_type::intersection_type, std::size_t>> result;
             local_coord_type result_dot;
             for ( std::size_t index(0); index != instances.instances().size(); ++index ) {
-                if ( result.isnull() ) {
+                if ( result ) {
                     fostlib::nullable< typename instances_collection_type::intersection_type >
                         intersection(instances.instances()[index].intersects(by, epsilon));
-                    if ( !intersection.isnull() ) {
-                        result = std::make_pair(intersection.value(), index);
-                        result_dot = (intersection.value().from() - by.from()).dot();
-                    }
-                } else {
-                    fostlib::nullable< typename instances_collection_type::intersection_type >
-                        intersection(instances.instances()[index].intersects(by, epsilon));
-                    if ( !intersection.isnull() ) {
+                    if ( intersection ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
                         if ( dot < result_dot ) {
@@ -78,12 +71,19 @@ namespace animray {
                             result_dot = dot;
                         }
                     }
+                } else {
+                    fostlib::nullable< typename instances_collection_type::intersection_type >
+                        intersection(instances.instances()[index].intersects(by, epsilon));
+                    if ( intersection ) {
+                        result = std::make_pair(intersection.value(), index);
+                        result_dot = (intersection.value().from() - by.from()).dot();
+                    }
                 }
             }
-            if ( result.isnull() ) {
-                return fostlib::null;
-            } else {
+            if ( result ) {
                 return intersection_type(result.value().first, surfaces[result.value().second]);
+            } else {
+                return fostlib::null;
             }
         }
 

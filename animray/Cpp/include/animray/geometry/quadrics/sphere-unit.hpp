@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -56,11 +56,11 @@ namespace animray {
         fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
             by.from(by.from() - reduce(position(), by));
             fostlib::nullable< intersection_type > hit(origin.intersects(by, epsilon));
-            if ( hit.isnull() ) {
-                return fostlib::null;
-            } else {
+            if ( hit ) {
                 hit.value().from(hit.value().from() + reduce(position(), by));
                 return hit;
+            } else {
+                return fostlib::null;
             }
         }
 

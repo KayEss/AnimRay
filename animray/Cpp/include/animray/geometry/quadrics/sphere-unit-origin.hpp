@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2014, Kirit Saelensminde.
+    Copyright 1995-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -67,13 +67,13 @@ namespace animray {
             const std::pair<D, D> bc(quadratic_b_c(by));
             const fostlib::nullable<D> t
                 (first_positive_quadratic_solution(D(1), bc.first, bc.second, epsilon));
-            if ( t.isnull() ) {
-                return fostlib::null;
-            } else {
+            if ( t ) {
                 typedef typename ray<D>::end_type end_type;
                 typedef typename ray<D>::direction_type direction_type;
                 direction_type normal(by.from() + by.direction() * t.value());
                 return intersection_type(end_type(normal), normal);
+            } else {
+                return fostlib::null;
             }
         }
 

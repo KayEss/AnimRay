@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -69,7 +69,7 @@ namespace animray {
                     geometry().intersects(
                         observer,
                         epsilon<intersection_type>::value));
-            if ( !intersection.isnull() ) {
+            if ( intersection ) {
                 return color_type(light()(observer, intersection.value(), *this)) +
                     emission<color_type>(observer, intersection.value(), *this);
             } else {
