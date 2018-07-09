@@ -1,0 +1,29 @@
+add_library(animray-smoke-test
+        animation-animate-tests.cpp
+        animation-procedural-tests.cpp
+        camera-movie-tests.cpp
+        colour-hls-tests.cpp
+        colour-rgba-tests.cpp
+        colour-rgb-tests.cpp
+        extents2d-tests.cpp
+        film-tests.cpp
+        functional-callable-tests.cpp
+        geometry-plane-tests.cpp
+        geometry-sphere-tests.cpp
+        geometry-triangle-tests.cpp
+        interpolation-linear-tests.cpp
+        line-tests.cpp
+        maths-cross-tests.cpp
+        maths-matrix-tests.cpp
+        maths-prime-tests.cpp
+        mixins-tests.cpp
+        point2d-tests.cpp
+        point3d-tests.cpp
+        ray-tests.cpp
+        surface-tests.cpp
+        texture-tests.cpp
+        unit-vector-tests.cpp
+    )
+target_link_libraries(animray-smoke-test fost-test animray)
+smoke_test(animray-smoke-test)
+
