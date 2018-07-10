@@ -1,6 +1,7 @@
 function(scene  name)
     add_executable(${name} ${name}.cpp)
     target_link_libraries(${name} animray fost-cli)
+    install(TARGETS ${name} EXPORT ${name} RUNTIME DESTINATION bin)
 endfunction()
 
 scene(affine-transformations)
