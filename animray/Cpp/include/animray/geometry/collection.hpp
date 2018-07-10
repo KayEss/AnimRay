@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -64,21 +64,21 @@ namespace animray {
             fostlib::nullable< intersection_type > result;
             local_coord_type result_dot;
             for ( const auto &instance : instances() ) {
-                if ( result.isnull() ) {
-                    result = instance.intersects(by, epsilon);
-                    if ( !result.isnull() ) {
-                        result_dot = (result.value().from() - by.from()).dot();
-                    }
-                } else {
+                if ( result ) {
                     fostlib::nullable< intersection_type >
                         intersection(instance.intersects(by, epsilon));
-                    if ( !intersection.isnull() ) {
+                    if ( intersection ) {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
                         if ( dot < result_dot ) {
                             result = intersection;
                             result_dot = dot;
                         }
+                    }
+                } else {
+                    result = instance.intersects(by, epsilon);
+                    if ( result ) {
+                        result_dot = (result.value().from() - by.from()).dot();
                     }
                 }
             }

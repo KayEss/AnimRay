@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -95,7 +95,7 @@ namespace animray {
         /// Returns true if the ray hits the triangle
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
-            return not intersects(by, epsilon).isnull();
+            return intersects(by, epsilon).has_value();
         }
     };
 

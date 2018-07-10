@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -107,10 +107,10 @@ namespace animray {
         ) const {
             fostlib::nullable< typename O::intersection_type >
                 hit(geometry().intersects(by, epsilon));
-            if ( hit.isnull() ) {
-                return fostlib::null;
-            } else {
+            if ( hit ) {
                 return intersection_type(hit.value(), surface_parameters());
+            } else {
+                return fostlib::null;
             }
         }
 

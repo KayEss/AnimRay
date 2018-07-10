@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -25,6 +25,11 @@
 #include <fost/test>
 
 
+namespace {
+    const fostlib::module c_mod{__FILE__};
+}
+
+
 FSL_TEST_SUITE( plane );
 
 
@@ -39,14 +44,14 @@ FSL_TEST_FUNCTION(plane_constructor) {
 namespace {
     void check_intersection(animray::ray<int> ray,
             fostlib::nullable<animray::ray<int>> hit) {
-        fostlib::log::debug()
+        fostlib::log::debug(c_mod)
             ("ray", ray)("hit", hit.value());
         animray::plane<animray::ray<int>> board;
         fostlib::nullable<animray::ray<int>> intersection(board.intersects(ray, 0));
-        if ( hit.isnull() ) {
-            FSL_CHECK(intersection.isnull());
-        } else {
+        if ( hit ) {
             FSL_CHECK_EQ(intersection.value(), hit.value());
+        } else {
+            FSL_CHECK(not intersection);
         }
     }
 }

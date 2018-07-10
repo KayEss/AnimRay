@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -32,12 +32,12 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("white-triangle-ortho.tga"));
-    int width = fostlib::coerce< int >( args[2].value("1920") );
-    int height = fostlib::coerce< int >( args[3].value("1080") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("white-triangle-ortho.tga"));
+    int width = fostlib::coerce< int >( args[2].value_or("1920") );
+    int height = fostlib::coerce< int >( args[3].value_or("1080") );
 
     const double size = 40;
     const double aspect = double(width) / height;
@@ -62,7 +62,7 @@ FSL_MAIN(
         [=, &triangle, &camera](const film_type::size_type x, const film_type::size_type y) {
             ray r(camera(x, y));
             fostlib::nullable<ray> intersection(triangle.intersects(r, 0.0));
-            if ( !intersection.isnull() ) {
+            if ( intersection ) {
                 ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
                 if ( triangle.occludes(light, 1e-9) ) {
                     return animray::rgb< uint8_t >(50);

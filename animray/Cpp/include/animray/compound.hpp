@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -128,9 +128,9 @@ namespace animray {
                 fostlib::nullable<intersection_type> intersection2
                     (intersection_calculation<left - 1, item + 1>()
                         (geometry, by, epsilon));
-                if ( intersection1.isnull() ) {
+                if ( not intersection1 ) {
                     return intersection2;
-                } else if ( intersection2.isnull() ) {
+                } else if ( not intersection2 ) {
                     return intersection1;
                 } else {
                     if ( (intersection1.value().from() - by.from()).dot() <

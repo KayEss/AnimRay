@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -41,22 +41,23 @@
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
+#include <thread>
 
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     const std::size_t threads(
-        fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value(
-            boost::thread::hardware_concurrency()));
+        fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t")).value_or(
+            std::thread::hardware_concurrency()));
     const std::size_t samples(fostlib::coerce<int>(
-        args.commandSwitch("ss").value("6")));
+        args.commandSwitch("ss").value_or("6")));
 
-    boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("reflections.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("100") );
-    const int height = fostlib::coerce< int >( args[3].value("150") );
+    boost::filesystem::path output_filename =
+        fostlib::coerce<boost::filesystem::path>(args[1].value_or("reflections.tga"));
+    const int width = fostlib::coerce< int >( args[2].value_or("100") );
+    const int height = fostlib::coerce< int >( args[3].value_or("150") );
 
     typedef double world;
     const world aspect = double(width) / height;
@@ -174,7 +175,7 @@ FSL_MAIN(
         [](const fostlib::meter::reading &current) {
             fostlib::stringstream out;
             out << "\x1B[0m] "
-                << current.done() << "/" << current.work().value(0);
+                << current.done() << "/" << current.work().value_or(0);
             if ( current.meta().size() && not current.meta()[0].isnull() ) {
                 fostlib::json meta(current.meta()[0]);
                 out << " (" << fostlib::json::unparse(meta["panels"]["x"], false)
