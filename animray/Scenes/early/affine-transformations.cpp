@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -43,9 +43,9 @@ FSL_MAIN(
     "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("affine-transformations.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("200") );
-    const int height = fostlib::coerce< int >( args[3].value("300") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("affine-transformations.tga"));
+    const int width = fostlib::coerce< int >( args[2].value_or("200") );
+    const int height = fostlib::coerce< int >( args[3].value_or("300") );
 
     typedef double world;
     const world aspect = double(width) / height;

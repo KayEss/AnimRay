@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -36,12 +36,12 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("five-spheres-coloured-lights.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("300") );
-    const int height = fostlib::coerce< int >( args[3].value("200") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("five-spheres-coloured-lights.tga"));
+    const int width = fostlib::coerce< int >( args[2].value_or("300") );
+    const int height = fostlib::coerce< int >( args[3].value_or("200") );
     const double aspect = double(width) / height;
     const double fw = width > height ? aspect * 0.024 : 0.024;
     const double fh = width > height ? 0.024 : 0.024 / aspect;

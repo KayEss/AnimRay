@@ -71,7 +71,7 @@ namespace animray {
                         local_coord_type dot(
                             (intersection.value().from() - by.from()).dot());
                         if ( dot < result_dot ) {
-                            result = intersection;
+                            result = std::move(intersection);
                             result_dot = dot;
                         }
                     }

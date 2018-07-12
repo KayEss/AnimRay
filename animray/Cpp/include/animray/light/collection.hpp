@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -36,14 +36,14 @@ namespace animray {
         typedef light<void, C> superclass;
     public:
         /// The container type
-        typedef std::vector<L> container_type;
+        using container_type = std::vector<L>;
         /// The type of the light
-        typedef L light_type;
+        using light_type = L;
         /// The colour model
-        typedef C color_type;
+        using color_type = C;
 
         /// Add a light to this collection
-        light<std::vector<L>, C> &push_back(const light_type &light) {
+        auto &push_back(const light_type &light) {
             _lights.push_back(light);
             return *this;
         }
@@ -72,25 +72,25 @@ namespace animray {
         typedef light<void, C> superclass;
         typedef std::tuple<L1, Ls...> tuple_type;
 
-        template<typename O, typename R, typename G, std::size_t S>
-        struct helper {
-            typename std::tuple_element<S, tuple_type>::type::color_type lighting(
-                const tuple_type &lights, const O &observer,
-                const R &intersection, const G &scene
-            ) const {
-                return helper<O, R, G, S - 1>().lighting(lights, observer, intersection, scene) +
-                    std::get<S>(lights)(observer, intersection, scene);
-            }
-        };
-        template<typename O, typename R, typename G>
-        struct helper<O, R, G, 0> {
-            typename std::tuple_element<0, tuple_type>::type::color_type lighting(
-                const tuple_type &lights, const O &observer,
-                    const R &intersection, const G &scene
-            ) const {
-                return std::get<0>(lights)(observer, intersection, scene);
-            }
-        };
+//         template<typename O, typename R, typename G, std::size_t S>
+//         struct helper {
+//             typename std::tuple_element<S, tuple_type>::type::color_type lighting(
+//                 const tuple_type &lights, const O &observer,
+//                 const R &intersection, const G &scene
+//             ) const {
+//                 return helper<O, R, G, S - 1>().lighting(lights, observer, intersection, scene) +
+//                     std::get<S>(lights)(observer, intersection, scene);
+//             }
+//         };
+//         template<typename O, typename R, typename G>
+//         struct helper<O, R, G, 0> {
+//             typename std::tuple_element<0, tuple_type>::type::color_type lighting(
+//                 const tuple_type &lights, const O &observer,
+//                     const R &intersection, const G &scene
+//             ) const {
+//                 return std::get<0>(lights)(observer, intersection, scene);
+//             }
+//         };
 
     public:
         /// The colour model
@@ -101,9 +101,10 @@ namespace animray {
         color_type operator () (
             const O &observer, const R &intersection, const G &scene
         ) const {
-            return superclass::color() +
-                helper<O, R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
-                    *this, observer, intersection, scene);
+//             return superclass::color() +
+//                 helper<O, R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
+//                     *this, observer, intersection, scene);
+            return color_type{};
         };
     };
 

@@ -1,5 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
+    Copyright 2014-2018, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -39,12 +39,12 @@
 
 FSL_MAIN(
     "animray",
-    "AnimRay. Copyright 2010-2014 Kirit Saelensminde"
+    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("simple-specular-highlight.tga"));
-    const int width = fostlib::coerce< int >( args[2].value("600") );
-    const int height = fostlib::coerce< int >( args[3].value("400") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("simple-specular-highlight.tga"));
+    const int width = fostlib::coerce< int >( args[2].value_or("600") );
+    const int height = fostlib::coerce< int >( args[3].value_or("400") );
 
     typedef double world;
     const world aspect = double(width) / height;
