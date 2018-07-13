@@ -122,53 +122,53 @@ namespace animray {
     };
 
 
-    namespace detail {
-        template< std::size_t left, std::size_t item, typename C, typename N, typename... S >
-        struct surface_calculation {
-            surface_calculation() {}
-            const N n;
-            template< typename RI, typename RL, typename I, typename G >
-            C operator () (
-                const RI &observer, const RL &light, const I &intersection,
-                const C &incident, const G &scene
-            ) const {
-                return n(std::get<item>(intersection.parameters()),
-                        observer, light, intersection, incident, scene) +
-                    surface_calculation<sizeof...(S), item + 1, C, S...>()(
-                        observer, light, intersection, incident, scene);
-            }
-            template<typename RI, typename I, typename G>
-            C operator() (
-                const RI &observer, const I &intersection, const G &scene
-            ) const {
-                return n(std::get<item>(intersection.parameters()),
-                        C(), observer, intersection, scene) +
-                    surface_calculation<sizeof...(S), item + 1, C, S...>()(
-                        observer, intersection, scene);
-            }
-        };
-
-        template< std::size_t item, typename C, typename N >
-        struct surface_calculation<1, item, C, N > {
-            surface_calculation() {}
-            const N n;
-            template< typename RI, typename RL, typename I, typename G >
-            C operator () (
-                const RI &observer, const RL &light, const I &intersection,
-                const C &incident, const G &scene
-            ) const {
-                return n(std::get<item>(intersection.parameters()),
-                    observer, light, intersection, incident, scene);
-            }
-            template<typename RI, typename I, typename G>
-            C operator() (
-                const RI &observer, const I &intersection, const G &scene
-            ) const {
-                return n(std::get<item>(intersection.parameters()),
-                        C(), observer, intersection, scene);
-            }
-        };
-    }
+//     namespace detail {
+//         template< std::size_t left, std::size_t item, typename C, typename N, typename... S >
+//         struct surface_calculation {
+//             surface_calculation() {}
+//             const N n;
+//             template< typename RI, typename RL, typename I, typename G >
+//             C operator () (
+//                 const RI &observer, const RL &light, const I &intersection,
+//                 const C &incident, const G &scene
+//             ) const {
+//                 return n(std::get<item>(intersection.parameters()),
+//                         observer, light, intersection, incident, scene) +
+//                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
+//                         observer, light, intersection, incident, scene);
+//             }
+//             template<typename RI, typename I, typename G>
+//             C operator() (
+//                 const RI &observer, const I &intersection, const G &scene
+//             ) const {
+//                 return n(std::get<item>(intersection.parameters()),
+//                         C(), observer, intersection, scene) +
+//                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
+//                         observer, intersection, scene);
+//             }
+//         };
+//
+//         template< std::size_t item, typename C, typename N >
+//         struct surface_calculation<1, item, C, N > {
+//             surface_calculation() {}
+//             const N n;
+//             template< typename RI, typename RL, typename I, typename G >
+//             C operator () (
+//                 const RI &observer, const RL &light, const I &intersection,
+//                 const C &incident, const G &scene
+//             ) const {
+//                 return n(std::get<item>(intersection.parameters()),
+//                     observer, light, intersection, incident, scene);
+//             }
+//             template<typename RI, typename I, typename G>
+//             C operator() (
+//                 const RI &observer, const I &intersection, const G &scene
+//             ) const {
+//                 return n(std::get<item>(intersection.parameters()),
+//                         C(), observer, intersection, scene);
+//             }
+//         };
+//     }
 
 
     /// Specialisation of the surface interaction that will use all of the surface layers
@@ -182,8 +182,9 @@ namespace animray {
             const C &incident,
             const G &scene
         ) const {
-            return detail::surface_calculation<sizeof...(S), 0, C, S...>()
-                (observer, light, intersection, incident, scene);
+//             return detail::surface_calculation<sizeof...(S), 0, C, S...>()
+//                 (observer, light, intersection, incident, scene);
+            return C{};
         }
     };
 
@@ -198,8 +199,9 @@ namespace animray {
             const intersection<surface<O, S...>> &intersection,
             const G &scene
         ) const {
-            return detail::surface_calculation<sizeof...(S), 0, C, S...>()
-                (observer, intersection, scene);
+//             return detail::surface_calculation<sizeof...(S), 0, C, S...>()
+//                 (observer, intersection, scene);
+            return C{};
         }
     };
 
