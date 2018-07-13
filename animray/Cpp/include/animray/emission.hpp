@@ -32,7 +32,7 @@ namespace animray {
     struct surface_emission {
         surface_emission() {}
         C operator() (const RI&, const I &, const G &) const {
-            return C();
+            return C{};
         }
     };
 
@@ -40,7 +40,7 @@ namespace animray {
     /// Calls in to the relevant surface emission handler
     template<typename C, typename RI, typename I, typename G>
     C emission(const RI &observer, const I &intersection, const G &scene) {
-        return surface_emission<C, RI, I, G>()(observer, intersection, scene);
+        return surface_emission<C, RI, I, G>{}(observer, intersection, scene);
     }
 
 

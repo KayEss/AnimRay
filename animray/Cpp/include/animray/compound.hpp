@@ -50,7 +50,7 @@ namespace animray {
 
     /// Partial specialisation of the intersection type for compound
     template< typename O, typename... Os >
-    class intersection< compound<O, Os...> > {
+    class intersection<compound<O, Os...>> {
     public:
         /// The type of the local coordinate system
         using local_coord_type =
@@ -223,31 +223,23 @@ namespace animray {
 //     };
 
 
+    /**
+     * Returns the emission characteristics for the light that was
+     * struck by the intersection.
+     */
     template<typename C, typename O, typename RI,
         typename G, typename... Os>
     struct surface_emission<C, RI, intersection<compound<O, Os...>>, G> {
-//         struct forwarder : public boost::static_visitor<C>{
-//             const RI &observer;
-//             const G &geometry;
-//             forwarder(const RI &observer, const G &geometry)
-//             : observer(observer), geometry(geometry) {
-//             }
-//
-//             template<typename I>
-//             C operator () (const I &inter) const {
-//                 return emission<C>(observer, inter, geometry);
-//             }
-//         };
         surface_emission() {}
         C operator() (
             const RI &observer,
-            const intersection< compound<O, Os...> > &intersection,
+            const intersection<compound<O, Os...>> &intersection,
             const G &geometry
         ) const {
-//             return boost::apply_visitor(
-//                 forwarder(observer, geometry),
-//                 intersection.wrapped_intersection());
-            return C{};
+            return std::visit(
+                [&observer, &geometry](const auto &inter) {
+                    return emission<C>(observer, inter, geometry);
+                }, intersection.wrapped_intersection());
         }
     };
 
