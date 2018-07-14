@@ -28,7 +28,7 @@
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
 #include <animray/emission.hpp>
-#include <tuple>
+#include <animray/maths/zip.hpp>
 
 
 namespace animray {
@@ -127,16 +127,6 @@ namespace animray {
 //         struct surface_calculation {
 //             surface_calculation() {}
 //             const N n;
-//             template< typename RI, typename RL, typename I, typename G >
-//             C operator () (
-//                 const RI &observer, const RL &light, const I &intersection,
-//                 const C &incident, const G &scene
-//             ) const {
-//                 return n(std::get<item>(intersection.parameters()),
-//                         observer, light, intersection, incident, scene) +
-//                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
-//                         observer, light, intersection, incident, scene);
-//             }
 //             template<typename RI, typename I, typename G>
 //             C operator() (
 //                 const RI &observer, const I &intersection, const G &scene
@@ -152,14 +142,6 @@ namespace animray {
 //         struct surface_calculation<1, item, C, N > {
 //             surface_calculation() {}
 //             const N n;
-//             template< typename RI, typename RL, typename I, typename G >
-//             C operator () (
-//                 const RI &observer, const RL &light, const I &intersection,
-//                 const C &incident, const G &scene
-//             ) const {
-//                 return n(std::get<item>(intersection.parameters()),
-//                     observer, light, intersection, incident, scene);
-//             }
 //             template<typename RI, typename I, typename G>
 //             C operator() (
 //                 const RI &observer, const I &intersection, const G &scene
@@ -172,19 +154,19 @@ namespace animray {
 
 
     /// Specialisation of the surface interaction that will use all of the surface layers
-    template< typename C, typename O, typename RI, typename RL,
-        typename G, typename... S >
-    struct surface_interaction< C, intersection< surface<O, S...> >, RI, RL, G > {
+    template<typename C, typename O, typename RI, typename RL,
+        typename G, typename... S>
+    struct surface_interaction<C, intersection<surface<O, S...>>, RI, RL, G> {
         surface_interaction() {}
         C operator() (
             const RI &observer, const RL &light,
-            const intersection< surface<O, S...> > &intersection,
+            const intersection<surface<O, S...>> &intersection,
             const C &incident,
             const G &scene
         ) const {
-//             return detail::surface_calculation<sizeof...(S), 0, C, S...>()
-//                 (observer, light, intersection, incident, scene);
-            return C{};
+            return std::apply([&](auto... pair) {
+                return (pair.first(pair.second, observer, light, intersection, incident, scene) + ...);
+            }, zip(std::tuple<S...>{}, intersection.parameters()));
         }
     };
 
