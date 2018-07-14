@@ -129,31 +129,11 @@ namespace animray {
         /// Calculate whether this object occludes the ray or not
         template< typename R >
         bool occludes(const R &by, const local_coord_type epsilon) const {
-//             return occlusion_calculation<1 + sizeof...(Os), 0>()(*this, by, epsilon);
+            return std::apply([&by, epsilon](auto... geom) -> bool {
+                return (geom.occludes(by, epsilon) || ...);
+            }, instances());
             return false;
         }
-
-//         template< std::size_t left, std::size_t item >
-//         struct occlusion_calculation {
-//             template<typename R>
-//             bool operator () (
-//                 const compound &geometry, const R &by,
-//                 const local_coord_type epsilon
-//             ) const {
-//                 return std::get<item>(geometry.instances()).occludes(by, epsilon) ||
-//                     occlusion_calculation<left - 1, item + 1>()(geometry, by, epsilon);
-//             }
-//         };
-//         template< std::size_t item >
-//         struct occlusion_calculation< 1, item > {
-//             template<typename R>
-//             bool operator () (
-//                 const compound &geometry, const R &by,
-//                 const local_coord_type epsilon
-//             ) const {
-//                 return std::get<item>(geometry.instances()).occludes(by, epsilon);
-//             }
-//         };
     };
 
 
