@@ -28,6 +28,7 @@
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
 #include <animray/emission.hpp>
+#include <animray/maths/fold.hpp>
 #include <tuple>
 #include <variant>
 
@@ -86,22 +87,6 @@ namespace animray {
     };
 
 
-    namespace detail {
-        namespace compound_intersect {
-            template<typename Pair>
-            Pair collapse(Pair i1, Pair i2) {
-                if ( not i1.first ) return i2;
-                else if ( not i2.first ) return i1;
-                else if ( i1.first.value() < i2.first.value() ) return i2;
-                else return i1;
-            }
-            template<typename Pair, typename... Pack>
-            Pair collapse(Pair i1, Pair i2, Pack... ip) {
-                return collapse(collapse(i1, i2), ip...);
-            }
-        }
-    }
-
     /// Stores geometry objects of different types
     template< typename O, typename... Os >
     class compound {
@@ -126,12 +111,17 @@ namespace animray {
                     std::optional<local_coord_type>,
                     std::optional<intersection_type>>;
             return std::apply([&by, epsilon](auto... geom) {
-                const auto dot = [&by](auto i) -> mid_type
-                {
-                    if ( i ) return std::make_pair((i.value().from() - by.from()).dot(), i.value());
-                    else return std::make_pair(std::nullopt, std::nullopt);
+                const auto dot = [&by](auto i) -> mid_type {
+                    if ( i ) return {(i.value().from() - by.from()).dot(), i.value()};
+                    else return {std::nullopt, std::nullopt};
                 };
-                return detail::compound_intersect::collapse<mid_type>(
+                return foldl(
+                    [](auto i1, auto i2) -> mid_type {
+                        if ( not i1.first ) return i2;
+                        else if ( not i2.first ) return i1;
+                        else if ( i1.first.value() < i2.first.value() ) return i2;
+                        else return i1;
+                    },
                     dot(geom.intersects(by, epsilon))...);
             }, instances()).second;
         };
