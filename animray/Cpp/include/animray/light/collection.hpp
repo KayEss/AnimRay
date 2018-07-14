@@ -1,6 +1,6 @@
 /*
     Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -69,42 +69,22 @@ namespace animray {
     template<typename C, typename L1, typename... Ls>
     class light<std::tuple<L1, Ls...>, C>
             : public light<void, C>, public std::tuple<L1, Ls...> {
-        typedef light<void, C> superclass;
-        typedef std::tuple<L1, Ls...> tuple_type;
-
-//         template<typename O, typename R, typename G, std::size_t S>
-//         struct helper {
-//             typename std::tuple_element<S, tuple_type>::type::color_type lighting(
-//                 const tuple_type &lights, const O &observer,
-//                 const R &intersection, const G &scene
-//             ) const {
-//                 return helper<O, R, G, S - 1>().lighting(lights, observer, intersection, scene) +
-//                     std::get<S>(lights)(observer, intersection, scene);
-//             }
-//         };
-//         template<typename O, typename R, typename G>
-//         struct helper<O, R, G, 0> {
-//             typename std::tuple_element<0, tuple_type>::type::color_type lighting(
-//                 const tuple_type &lights, const O &observer,
-//                     const R &intersection, const G &scene
-//             ) const {
-//                 return std::get<0>(lights)(observer, intersection, scene);
-//             }
-//         };
+        using superclass = light<void, C>;
+        using tuple_type = std::tuple<L1, Ls...>;
 
     public:
         /// The colour model
-        typedef C color_type;
+        using color_type = C;
 
         /// Calculate the illumination given by this light
         template< typename O, typename R, typename G >
         color_type operator () (
             const O &observer, const R &intersection, const G &scene
         ) const {
-//             return superclass::color() +
-//                 helper<O, R, G, std::tuple_size<tuple_type>::value - 1>().lighting(
-//                     *this, observer, intersection, scene);
-            return color_type{};
+            return superclass::color() +
+                std::apply([&observer, &intersection, &scene](auto... light) -> color_type {
+                    return (light(observer, intersection, scene) + ...);
+                }, static_cast<const tuple_type&>(*this));
         };
     };
 
