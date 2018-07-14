@@ -86,19 +86,21 @@ namespace animray {
     };
 
 
-//     namespace detail {
-//         namespace compound_intersect {
-//             /**
-//              * Used to support finding the closest intersection to a base point
-//              */
-//             template<typename I>
-//             inline fostlib::nullable<I> operator < (
-//                 fostlib::nullable<I> int1, fostlib::nullable<I> int2
-//             ) {
-//                 return int1;
-//             }
-//         }
-//     }
+    namespace detail {
+        namespace compound_intersect {
+            template<typename Pair>
+            Pair collapse(Pair i1, Pair i2) {
+                if ( not i1.first ) return i2;
+                else if ( not i2.first ) return i1;
+                else if ( i1.first.value() < i2.first.value() ) return i2;
+                else return i1;
+            }
+            template<typename Pair, typename... Pack>
+            Pair collapse(Pair i1, Pair i2, Pack... ip) {
+                return collapse(collapse(i1, i2), ip...);
+            }
+        }
+    }
 
     /// Stores geometry objects of different types
     template< typename O, typename... Os >
@@ -120,10 +122,18 @@ namespace animray {
         fostlib::nullable<intersection_type> intersects(
             const R &by, const E epsilon
         ) const {
-//             return intersection_calculation<1 + sizeof...(Os), 0>()
-//                 (*this, by, epsilon);
-//             using namespace detail::compound_intersect;
-            return fostlib::null;
+            using mid_type = std::pair<
+                    std::optional<local_coord_type>,
+                    std::optional<intersection_type>>;
+            return std::apply([&by, epsilon](auto... geom) {
+                const auto dot = [&by](auto i) -> mid_type
+                {
+                    if ( i ) return std::make_pair((i.value().from() - by.from()).dot(), i.value());
+                    else return std::make_pair(std::nullopt, std::nullopt);
+                };
+                return detail::compound_intersect::collapse<mid_type>(
+                    dot(geom.intersects(by, epsilon))...);
+            }, instances()).second;
         };
 
         /// Calculate whether this object occludes the ray or not
@@ -132,42 +142,6 @@ namespace animray {
 //             return occlusion_calculation<1 + sizeof...(Os), 0>()(*this, by, epsilon);
             return false;
         }
-
-//     private:
-//         template< std::size_t left, std::size_t item >
-//         struct intersection_calculation {
-//             template<typename R, typename E>
-//             fostlib::nullable<intersection_type> operator () (
-//                 const compound &geometry, const R &by, const E epsilon
-//             ) const {
-//                 fostlib::nullable<intersection_type> intersection1
-//                     (std::get<item>(geometry.instances()).intersects(by, epsilon));
-//                 fostlib::nullable<intersection_type> intersection2
-//                     (intersection_calculation<left - 1, item + 1>()
-//                         (geometry, by, epsilon));
-//                 if ( not intersection1 ) {
-//                     return intersection2;
-//                 } else if ( not intersection2 ) {
-//                     return intersection1;
-//                 } else {
-//                     if ( (intersection1.value().from() - by.from()).dot() <
-//                             (intersection2.value().from() - by.from()).dot() ) {
-//                         return intersection1;
-//                     }  else {
-//                         return intersection2;
-//                     }
-//                 }
-//             }
-//         };
-//         template< std::size_t item >
-//         struct intersection_calculation< 1, item > {
-//             template<typename R, typename E>
-//             fostlib::nullable<intersection_type> operator () (
-//                 const compound &geometry, const R &by, const E epsilon
-//             ) const {
-//                 return std::get<item>(geometry.instances()).intersects(by, epsilon);
-//             }
-//         };
 
 //         template< std::size_t left, std::size_t item >
 //         struct occlusion_calculation {
