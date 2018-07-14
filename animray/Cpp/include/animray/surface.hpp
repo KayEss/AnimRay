@@ -122,37 +122,6 @@ namespace animray {
     };
 
 
-//     namespace detail {
-//         template< std::size_t left, std::size_t item, typename C, typename N, typename... S >
-//         struct surface_calculation {
-//             surface_calculation() {}
-//             const N n;
-//             template<typename RI, typename I, typename G>
-//             C operator() (
-//                 const RI &observer, const I &intersection, const G &scene
-//             ) const {
-//                 return n(std::get<item>(intersection.parameters()),
-//                         C(), observer, intersection, scene) +
-//                     surface_calculation<sizeof...(S), item + 1, C, S...>()(
-//                         observer, intersection, scene);
-//             }
-//         };
-//
-//         template< std::size_t item, typename C, typename N >
-//         struct surface_calculation<1, item, C, N > {
-//             surface_calculation() {}
-//             const N n;
-//             template<typename RI, typename I, typename G>
-//             C operator() (
-//                 const RI &observer, const I &intersection, const G &scene
-//             ) const {
-//                 return n(std::get<item>(intersection.parameters()),
-//                         C(), observer, intersection, scene);
-//             }
-//         };
-//     }
-
-
     /// Specialisation of the surface interaction that will use all of the surface layers
     template<typename C, typename O, typename RI, typename RL,
         typename G, typename... S>
@@ -181,9 +150,9 @@ namespace animray {
             const intersection<surface<O, S...>> &intersection,
             const G &scene
         ) const {
-//             return detail::surface_calculation<sizeof...(S), 0, C, S...>()
-//                 (observer, intersection, scene);
-            return C{};
+            return std::apply([&](auto... pair) {
+                return (pair.first(pair.second, C{}, observer, intersection, scene) + ...);
+            }, zip(std::tuple<S...>{}, intersection.parameters()));
         }
     };
 
