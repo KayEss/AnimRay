@@ -82,7 +82,7 @@ namespace animray {
             const O &observer, const R &intersection, const G &scene
         ) const {
             return superclass::color() +
-                std::apply([&observer, &intersection, &scene](auto... light) -> color_type {
+                std::apply([&observer, &intersection, &scene](auto&&... light) -> color_type {
                     return (light(observer, intersection, scene) + ...);
                 }, static_cast<const tuple_type&>(*this));
         };
