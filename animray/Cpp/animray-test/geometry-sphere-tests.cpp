@@ -1,6 +1,6 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2010-2018, Kirit Saelensminde.
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -21,6 +21,7 @@
 
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/ray.hpp>
+#include <fost/insert>
 #include <fost/test>
 
 
@@ -61,8 +62,8 @@ namespace {
                 ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) ), 0
             ) );
         } catch ( fostlib::exceptions::exception &e ) {
-            e.info() << "Type under test " <<
-                fostlib::coerce< fostlib::string >(typeid(D).name()) << "\n";
+            fostlib::insert(e.data(), "Type under test",
+                fostlib::coerce< fostlib::string >(typeid(D).name()));;
             throw;
         }
     }
