@@ -1,6 +1,6 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2010-2018, Kirit Saelensminde.
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -77,9 +77,9 @@ FSL_MAIN(
     L"LandMaker, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    int width = fostlib::coerce< int >( args[2].value("100") );
-    int height = fostlib::coerce< int >( args[3].value("100") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("out.tga"));
+    int width = fostlib::coerce< int >( args[2].value_or("100") );
+    int height = fostlib::coerce< int >( args[3].value_or("100") );
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
     std::vector< ::circle > circles;

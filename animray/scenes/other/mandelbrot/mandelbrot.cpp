@@ -1,6 +1,6 @@
 /*
-    Copyright 2010-2014 Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2010-2018 Kirit Saelensminde.
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -32,23 +32,23 @@ FSL_MAIN(
     L"Mandelbrot, Copyright 2010-2014 Kirit Saelensminde"
 )( fostlib::ostream &out, fostlib::arguments &args ) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value("out.tga"));
-    int width = fostlib::coerce< int >( args[2].value("100") );
-    int height = fostlib::coerce< int >( args[3].value("100") );
+        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("out.tga"));
+    int width = fostlib::coerce< int >( args[2].value_or("100") );
+    int height = fostlib::coerce< int >( args[3].value_or("100") );
     out << "Creating image " << output_filename
         <<", size " << width << " x " << height << std::endl;
 
     typedef double precision;
     precision centre_x = fostlib::coerce< precision >(
-        args.commandSwitch("cx").value("0"));
+        args.commandSwitch("cx").value_or("0"));
     precision centre_y = fostlib::coerce< precision >(
-        args.commandSwitch("cy").value("0"));
+        args.commandSwitch("cy").value_or("0"));
     precision diameter = fostlib::coerce< precision >(
-        args.commandSwitch("d").value("2"));
+        args.commandSwitch("d").value_or("2"));
     std::size_t bits = fostlib::coerce< int >(
-        args.commandSwitch("bits").value("8"));
+        args.commandSwitch("bits").value_or("8"));
     double hue = fostlib::coerce<double>(
-        args.commandSwitch("h").value("0.0"));
+        args.commandSwitch("h").value_or("0.0"));
 
     out << "Centre image at " << centre_x << ", " << centre_y <<
         " with diameter of " << diameter <<
