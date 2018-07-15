@@ -119,8 +119,8 @@ namespace animray {
                     [](auto i1, auto i2) -> mid_type {
                         if ( not i1.first ) return i2;
                         else if ( not i2.first ) return i1;
-                        else if ( i1.first.value() < i2.first.value() ) return i2;
-                        else return i1;
+                        else if ( i1.first.value() < i2.first.value() ) return i1;
+                        else return i2;
                     },
                     dot(geom.intersects(by, epsilon))...);
             }, instances()).second;
