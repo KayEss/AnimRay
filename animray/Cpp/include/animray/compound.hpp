@@ -116,13 +116,13 @@ namespace animray {
             using mid_type = std::pair<
                     std::optional<local_coord_type>,
                     std::optional<intersection_type>>;
-            return std::apply([&by, epsilon](auto... geom) {
+            return std::apply([&by, epsilon](const auto &... geom) {
                 const auto dot = [&by](auto i) -> mid_type {
                     if ( i ) return {(i.value().from() - by.from()).dot(), i.value()};
                     else return {std::nullopt, std::nullopt};
                 };
                 return foldl(
-                    [](auto i1, auto i2) -> mid_type {
+                    [](const auto &i1, const auto &i2) -> const mid_type & {
                         if ( not i1.first ) return i2;
                         else if ( not i2.first ) return i1;
                         else if ( i1.first.value() < i2.first.value() ) return i1;
@@ -135,7 +135,7 @@ namespace animray {
         /// Calculate whether this object occludes the ray or not
         template< typename R >
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return std::apply([&by, epsilon](auto... geom) -> bool {
+            return std::apply([&by, epsilon](const auto &... geom) -> bool {
                 return (geom.occludes(by, epsilon) || ...);
             }, instances());
             return false;
@@ -152,7 +152,7 @@ namespace animray {
             const intersection< compound<O, Os...> > &intersection,
             const C &incident, const G &geometry
         ) const {
-            return std::visit([&](auto inter) {
+            return std::visit([&](const auto & inter) {
                 return shader(observer, light, inter, incident, geometry);
             }, intersection.wrapped_intersection());
         }
@@ -172,10 +172,9 @@ namespace animray {
             const intersection<compound<O, Os...>> &intersection,
             const G &geometry
         ) const {
-            return std::visit(
-                [&observer, &geometry](const auto &inter) {
-                    return emission<C>(observer, inter, geometry);
-                }, intersection.wrapped_intersection());
+            return std::visit([&](const auto &inter) {
+                return emission<C>(observer, inter, geometry);
+            }, intersection.wrapped_intersection());
         }
     };
 
