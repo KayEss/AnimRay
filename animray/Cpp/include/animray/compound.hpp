@@ -59,9 +59,15 @@ namespace animray {
                 typename O::local_coord_type,
                 typename Os::local_coord_type...>::type;
         /// The type of the strike location
-        using end_type = typename O::intersection_type::end_type;
+        using end_type =
+            typename std::common_type<
+                typename O::intersection_type::end_type,
+                typename Os::intersection_type::end_type...>::type;
         /// The type of the strike location
-        using direction_type = typename O::intersection_type::direction_type;
+        using direction_type =
+            typename std::common_type<
+                typename O::intersection_type::direction_type,
+                typename Os::intersection_type::direction_type...>::type;
 
         /// The wrapped intersection
         fostlib::accessors<
