@@ -1,10 +1,5 @@
+/build.tmp/
+/dist/
+/dist-*/
 *.tga
 *.mkv
-bjam
-bjam.run
-boost-build.jam
-boost-version.jam
-build.tmp
-dist
-dist-*
-python.opts.sh
