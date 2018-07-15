@@ -74,9 +74,7 @@ namespace animray {
             std::variant<
                 typename O::intersection_type,
                 typename Os::intersection_type...
-            >, fostlib::lvalue> wrapped_intersection;
-
-        intersection() {}
+            >> wrapped_intersection;
 
         template<typename I>
         intersection(I &&i)
@@ -118,11 +116,11 @@ namespace animray {
                     std::optional<intersection_type>>;
             return std::apply([&by, epsilon](const auto &... geom) {
                 const auto dot = [&by](auto i) -> mid_type {
-                    if ( i ) return {(i.value().from() - by.from()).dot(), i.value()};
+                    if ( i ) return {(i.value().from() - by.from()).dot(), std::move(i.value())};
                     else return {std::nullopt, std::nullopt};
                 };
                 return foldl(
-                    [](const auto &i1, const auto &i2) -> const mid_type & {
+                    [](auto i1, auto i2) -> mid_type {
                         if ( not i1.first ) return i2;
                         else if ( not i2.first ) return i1;
                         else if ( i1.first.value() < i2.first.value() ) return i1;
