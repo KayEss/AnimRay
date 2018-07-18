@@ -31,16 +31,16 @@ namespace animray {
 
 
     /// A 2d point
-    template< typename C >
+    template<typename C>
     class point2d {
     public:
         /// The type of the location values
-        typedef C value_type;
+        using value_type = C;
 
         /// The x location
-        fostlib::accessors< C > x;
+        fostlib::accessors<C> x;
         /// The y location
-        fostlib::accessors< C > y;
+        fostlib::accessors<C> y;
 
         /// Construct an empty point
         point2d() {
@@ -75,50 +75,38 @@ namespace animray {
     };
 
 
-}
+    /// Allow two points to be added together
+    template<typename C> inline
+    auto operator + (const point2d<C> &a, const point2d<C> &b) {
+        return point2d<C>(a.x() + b.x(), a.y() + b.y());
+    }
+    /// Allow two points to be subracted
+    template<typename C> inline
+    auto operator - (const point2d<C> &a, const point2d<C> &b) {
+        return point2d<C>(a.x() - b.x(), a.y() - b.y());
+    }
+    /// Allow us to scale a point location by a scalar
+    template<typename C> inline
+    auto operator * (const C &a, const point2d< C > &b) {
+        return point2d<C>(a * b.x(), a * b.y());
+    }
+    /// Allow us to scale a point location by a scalar
+    template<typename C> inline
+    auto operator * (const point2d<C> &a, const C &b) {
+        return point2d<C>(a.x() * b, a.y() * b);
+    }
+    /// Allow us to divide a point location by a scalar
+    template<typename C> inline
+    auto operator / (const C &a, const point2d<C> &b) {
+        return point2d<C>(a / b.x(), a / b.y());
+    }
+    /// Allow us to divide a point location by a scalar
+    template<typename C> inline
+    auto operator / (const point2d<C> &a, const C &b) {
+        return point2d<C>(a.x() / b, a.y() / b);
+    }
 
 
-/// Allow two points to be added together
-template< typename C > inline
-animray::point2d< C > operator + (
-    const animray::point2d< C > &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a.x() + b.x(), a.y() + b.y() );
-}
-/// Allow two points to be subracted
-template< typename C > inline
-animray::point2d< C > operator - (
-    const animray::point2d< C > &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a.x() - b.x(), a.y() - b.y() );
-}
-/// Allow us to scale a point location by a scalar
-template< typename C > inline
-animray::point2d< C > operator * (
-    const C &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a * b.x(), a * b.y() );
-}
-/// Allow us to scale a point location by a scalar
-template< typename C > inline
-animray::point2d< C > operator * (
-    const animray::point2d< C > &a, const C &b
-) {
-    return animray::point2d< C >( a.x() * b, a.y() * b );
-}
-/// Allow us to divide a point location by a scalar
-template< typename C > inline
-animray::point2d< C > operator / (
-    const C &a, const animray::point2d< C > &b
-) {
-    return animray::point2d< C >( a / b.x(), a / b.y() );
-}
-/// Allow us to divide a point location by a scalar
-template< typename C > inline
-animray::point2d< C > operator / (
-    const animray::point2d< C > &a, const C &b
-) {
-    return animray::point2d< C >( a.x() / b, a.y() / b );
 }
 
 
