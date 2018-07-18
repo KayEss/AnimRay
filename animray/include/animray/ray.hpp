@@ -94,16 +94,15 @@ namespace animray {
             to(e);
             return *this;
         }
+
+        /// Multiply
+        template<typename MD>
+        ray operator * (const matrix<MD> &right) const {
+            ray res(*this);
+            res *= right;
+            return res;
+        }
     };
-
-
-    /// Multiply
-    template<typename R, typename D>
-    R operator * (const R &ray, const D &s) {
-        R result(ray);
-        result *= s;
-        return result;
-    }
 
 
 }

@@ -1,6 +1,6 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2018, Kirit Saelensminde.
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -30,18 +30,36 @@
 namespace animray {
 
 
-    /// Handle two way mixins
+    /// # Mixins
+    /**
+     * These are used to annotate some type `R` with extra information and
+     * APIs provided by `M`. In all cases where this is used the intention is
+     * that the main ray tracer object may need to carry with it extra
+     * information that is then used later on. For example, a ray emitted by
+     * a camera may add a frame number used by later geometry that uses
+     * the frame number to move its location -- this is how animation is
+     * performed in AnimRay.
+     */
     template<typename R, typename M>
     struct mixin : public R, public M {
         /// Default constructor
         mixin()
-        : R(), M() {
+        : R{}, M{} {
         }
 
         /// Construct by forwarding all arguments to both bases
         template<typename... A>
         explicit mixin(A&&... args)
-        : R(std::forward<A>(args)...), M(std::forward<A>(args)...) {
+        : R{args...}, M{args...} {
+        }
+
+        /// These operations always go to `R` because that is where geometry etc.
+        /// lives.
+        template<typename B>
+        auto operator * (const B &by) const {
+            mixin r{*this};
+            r.R::operator *= (by);
+            return r;
         }
     };
 

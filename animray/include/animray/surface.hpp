@@ -62,6 +62,14 @@ namespace animray {
         const surface_parameters_type &parameters() const {
             return *m_parameters;
         }
+
+        /// Handle multiplication for transformaion of co-ordinate spaces
+        template<typename B>
+        intersection operator * (const B &by) const {
+            intersection r{*this};
+            r.superclass::operator *= (by);
+            return r;
+        }
     };
 
 
