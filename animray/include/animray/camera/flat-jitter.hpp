@@ -33,7 +33,7 @@ namespace animray {
     template<
         typename E,
         typename C = flat_camera<E>,
-        typename J = random::jitter<std::normal_distribution<E>>
+        typename J = random::jitter<std::uniform_real_distribution<E>>
     >
     class flat_jitter_camera {
         /// The camera performing the base mapping
@@ -51,9 +51,7 @@ namespace animray {
         }
 
         /// Map between pixel co-ordinates and world co-ordinates
-        point2d<extents_type> operator () (
-                resolution_type x, resolution_type y
-        ) const {
+        auto operator () (resolution_type x, resolution_type y) const {
             return inner_camera(x, y) +
                 point2d<extents_type>(
                     J::sample() * inner_camera.pixel_width(),
