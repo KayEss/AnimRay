@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.7)
+project(animray)
+
 enable_testing()
 
 add_subdirectory(Boost)
