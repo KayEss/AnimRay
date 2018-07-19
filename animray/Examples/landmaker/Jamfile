@@ -1,5 +1,0 @@
-
-fost-exe landmaker
-    :
-        landmaker.cpp
-    ;

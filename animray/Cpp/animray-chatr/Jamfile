@@ -1,7 +1,0 @@
-
-fost-lib-autotest animray-chatr
-    :
-        Cpp/animray-chatr
-    :
-        ../../../metachatr/Cpp/metachatr-runtime
-    ;
