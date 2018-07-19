@@ -1,6 +1,6 @@
 /*
     Copyright 2010-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -50,7 +50,7 @@ FSL_TEST_FUNCTION( is_prime ) {
 
 
 FSL_TEST_FUNCTION( prime_generator ) {
-    auto gen(animray::prime_generator<int>());
+    auto gen = animray::prime_generator<int>();
     FSL_CHECK_EQ( gen(), 2 );
     FSL_CHECK_EQ( gen(), 3 );
     FSL_CHECK_EQ( gen(), 5 );

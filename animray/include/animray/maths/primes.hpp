@@ -1,6 +1,6 @@
 /*
     Copyright 2010-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -71,10 +71,10 @@ namespace animray {
 
 
     /// Returns a list of prime factors for a value
-    template< typename I >
-    std::vector< I > prime_factors( I v ) {
-        std::vector< I > factors;
-        auto gen(prime_generator<I>());
+    template<typename I>
+    std::vector<I> prime_factors(I v) {
+        std::vector<I> factors;
+        auto gen = prime_generator<I>();
         I factor = gen();
         while ( v > 1 ) {
             if ( v % factor == 0 ) {

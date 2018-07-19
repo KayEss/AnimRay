@@ -1,6 +1,6 @@
 /*
     Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    <https://kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
