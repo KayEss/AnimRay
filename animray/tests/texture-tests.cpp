@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2010-2018, Kirit Saelensminde.
     <https://kirit.com/AnimRay>
 

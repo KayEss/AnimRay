@@ -1,29 +1,36 @@
 language: cpp
+sudo: required
+dist: xenial
 
 git:
   submodules: false
 
 compiler:
+    - gcc
     - clang
 
+env:
+    - CMAKE_BUILD_TYPE=Debug
+    - CMAKE_BUILD_TYPE=Release
+
+cache:
+  directories:
+    boost-cache
+
 before_install:
-    - sed -i 's/git@github.com:/git:\/\/github.com\//' .gitmodules
-    - git submodule init
-    - git submodule sync --recursive
+    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
     - git submodule update --init --recursive
+    - ln -s ../boost-cache Boost/boost
 
 install:
-    - sudo apt-get install time libbz2-dev libssl-dev python-dev uuid-dev libglew-dev freeglut3-dev
-    - export CPUCOUNT=$(grep -c ^processor /proc/cpuinfo)
-    - export OPTIONS="install --layout=versioned --without-mpi --prefix=$(pwd)/Boost/boost"
-    - echo "./bjam -j$CPUCOUNT toolset=clang debug link=shared $OPTIONS" > Boost/compile
-    - chmod +x Boost/compile
-    - Boost/build 55 0
-    - Boost/install 55 0
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq -y ninja-build g++-8
 
 script:
-    - ./animray/compile toolset=$CC -q animray tests examples scenes
+    - mkdir build.tmp && cd build.tmp
+    - 'if [ "$CXX" = "g++" ]; then export CC=gcc-8; export CXX=g++-8; fi'
+    - cmake .. -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -G Ninja
+    - ninja
+    - ninja check
 
-matrix:
-    allow_failures:
-        - compiler: gcc

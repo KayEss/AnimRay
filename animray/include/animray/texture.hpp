@@ -1,6 +1,6 @@
-/*
-    Copyright 1995-2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2018, Kirit Saelensminde.
+    <http://www.kirit.com/AnimRay>
 
     This file is part of AnimRay.
 
@@ -24,7 +24,6 @@
 #pragma once
 
 
-#include <fost/functor>
 #include <animray/point2d.hpp>
 #include <animray/detail/texture-policy.hpp>
 
@@ -35,7 +34,7 @@ namespace animray {
     /// Handles a texture by managing generating and mapping functions
     template<
         typename C, typename L,
-        typename F = fostlib::functor::const_value< C >,
+        typename F = const_value< C >,
         typename P = texture_policy< C, L, F >
     > class texture {
         F function;
@@ -51,10 +50,10 @@ namespace animray {
         /// The type of the functor
         typedef typename P::functor_type functor_type;
         /// The type of color conversion functor
-        typedef typename P::color_conversion_functor_type \
+        typedef typename P::color_conversion_functor_type
             color_conversion_functor_type;
         /// The type of the location conversion functor
-        typedef typename P::location_mapping_functor_type \
+        typedef typename P::location_mapping_functor_type
             location_mapping_functor_type;
         /// The type of the first argument to the constructor (which creates the functor)
         typedef typename P::texture_constructor_arg1_type constructor_arg1_type;

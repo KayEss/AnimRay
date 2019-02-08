@@ -1,12 +1,16 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.9)
+project(animray)
+
 enable_testing()
+add_custom_target(check)
+include(fost-base/smoke_test.cmake)
+include(fost-base/stress_test.cmake)
 
 add_subdirectory(Boost)
 add_subdirectory(cord)
 add_subdirectory(threading)
-add_subdirectory(crypto++)
-add_subdirectory(fost-base)
+add_subdirectory(fost-base/Cpp/fost-cli)
+add_subdirectory(fost-base/Cpp/fost-core)
+add_subdirectory(fost-base/Cpp/fost-test)
 add_subdirectory(animray)
-
-target_compile_features(f5-cord INTERFACE cxx_std_17)
 

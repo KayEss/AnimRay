@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2010-2018, Kirit Saelensminde.
     <https://kirit.com/AnimRay>
 
@@ -33,6 +33,82 @@
 namespace animray {
 
 
+    /// A functor which holds a single value
+    template< typename V >
+    struct const_value {
+        /// The value type
+        typedef V result_type;
+        /// Construct the functor with a provided value
+        const_value( const result_type &v )
+        : value( v ) {
+        }
+        /// Stores the value
+        fostlib::accessors< result_type > value;
+        /// Call the functor
+        const result_type &operator () () const {
+            return value();
+        }
+    };
+
+
+    /// Identiry functor
+    template< typename V >
+    struct identity {
+        /// The result type
+        typedef V result_type;
+        /// The argument type
+        typedef V arg1_type;
+        /// The identity function
+        const result_type &operator () ( const result_type &v ) const {
+            return v;
+        }
+    };
+
+
+    /// A functor that calls coerce -- (TODO maybe to be generalised)
+    template< typename T, typename F >
+    struct coercer {
+        /// The result type
+        typedef T result_type;
+        /// The argument type
+        typedef F arg1_type;
+        /// The coercion function
+        result_type operator () ( const F &f ) const {
+            return fostlib::coerce< T >( f );
+        }
+    };
+
+
+    /// A unary functor that calls another unary functor
+    template< typename R, typename A1 >
+    struct apply {
+        /// The result type
+        typedef R result_type;
+        /// The argument type
+        typedef A1 arg1_type;
+        /// The functor itself
+        template< typename F >
+        result_type operator () ( F f, const arg1_type &a1 ) const {
+            return f(a1);
+        }
+    };
+
+
+    /// A unary functor that calls another nullary functor dropping the argument
+    template< typename R, typename A1 >
+    struct apply_without_arguments {
+        /// The result type
+        typedef R result_type;
+        /// The argument type
+        typedef A1 arg1_type;
+        /// The functor itself
+        template< typename F >
+        result_type operator () ( F f, const arg1_type & ) const {
+            return f();
+        }
+    };
+
+
     /// A policy class used to implement a texture.
     template<
         typename C, typename L, typename F
@@ -44,10 +120,10 @@ namespace animray {
         /// The functor type
         typedef F functor_type;
         /// The colour conversion functor type
-        typedef fostlib::functor::coercer< C, typename F::result_type >
+        typedef coercer< C, typename F::result_type >
             color_conversion_functor_type;
         /// The location mapping type
-        typedef fostlib::functor::apply< typename F::result_type, L >
+        typedef apply< typename F::result_type, L >
             location_mapping_functor_type;
         /// Texture constructor functor type
         typedef F texture_constructor_arg1_type;
@@ -56,19 +132,17 @@ namespace animray {
 
     /// Specialisation of the policy where there a constant value in the texture
     template< typename C, typename L >
-    struct texture_policy<
-        C, L, fostlib::functor::const_value< C >
-    > {
+    struct texture_policy<C, L, const_value< C >> {
         /// The colour type
         typedef C color_type;
         /// The location co-ordinate type
         typedef L location_type;
         /// The functor type
-        typedef fostlib::functor::const_value< C > functor_type;
+        typedef const_value< C > functor_type;
         /// The colour conversion functor type
-        typedef fostlib::functor::identity< C > color_conversion_functor_type;
+        typedef identity< C > color_conversion_functor_type;
         /// The location mapping type
-        typedef fostlib::functor::apply_without_arguments< C, L >
+        typedef apply_without_arguments< C, L >
             location_mapping_functor_type;
         /// Texture constructor functor type
         typedef C texture_constructor_arg1_type;
@@ -104,7 +178,7 @@ namespace animray {
         /// The functor type
         typedef std::pointer_to_binary_function< S, S, R > functor_type;
         /// The colour conversion functor type
-        typedef fostlib::functor::coercer< C, R > color_conversion_functor_type;
+        typedef coercer< C, R > color_conversion_functor_type;
         /// The location mapping type
         typedef detail::location_mapper_binary_op< R, animray::point2d< S > >
             location_mapping_functor_type;
