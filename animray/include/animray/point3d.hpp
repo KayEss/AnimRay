@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -26,15 +25,7 @@
 
 #include <animray/detail/array_based.hpp>
 
-
-#ifdef _MSC_VER
-namespace std {
-    template<typename I>
-    typename boost::enable_if<boost::is_integral<I>, I>::type sqrt(I i) {
-        return I(sqrt(double(i)));
-    }
-}
-#endif
+#include <cmath>
 
 
 namespace animray {

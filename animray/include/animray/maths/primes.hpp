@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+/**
+    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -26,7 +25,7 @@
 
 #include <fost/core>
 
-#include <boost/bind.hpp>
+#include <cmath>
 
 
 namespace animray {
@@ -35,10 +34,10 @@ namespace animray {
     /// A simple prime number test that is fairly efficient
     template<typename I>
     bool is_prime(I v) {
-        if (v % 2 == 0)
+        if (v % 2 == 0) {
             return v == 2;
-        else {
-            I u(std::sqrt(double(v)));
+        } else {
+            I const u = std::sqrt(double(v));
             for (I i = 3; i <= u; i += 2)
                 if (v % i == 0) return false;
             return true;
