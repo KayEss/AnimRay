@@ -63,7 +63,7 @@ namespace {
 }
 
 
-FSL_MAIN(L"landmaker", L"LandMaker, Copyright 2010-2019 Kirit Saelensminde")
+FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     fostlib::fs::path output_filename =
             fostlib::coerce<fostlib::fs::path>(args[1].value_or("out.tga"));
@@ -81,18 +81,18 @@ FSL_MAIN(L"landmaker", L"LandMaker, Copyright 2010-2019 Kirit Saelensminde")
     out << "Creating image " << output_filename << ", size " << width << " x "
         << height << " using " << circles.size() << " circles" << std::endl;
 
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
-    film_type output(
+    double const scale = std::sqrt(0.05 * width * height) / circles.size();
+    using film_type = animray::film<animray::rgb<uint8_t>>;
+    auto output = film_type(
             width, height,
-            [&circles](film_type::size_type x, film_type::size_type y) {
-                double weight = 0.0025
+            [&circles, scale](film_type::size_type x, film_type::size_type y) {
+                double const weight = scale
                         * std::count_if(circles.begin(), circles.end(),
                                         [=](const circle &c) -> bool {
                                             return c.contains(x, y);
                                         });
                 animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
-                animray::rgb<double> c(
-                        fostlib::coerce<animray::rgb<double>>(h));
+                auto const c = fostlib::coerce<animray::rgb<double>>(h);
                 return animray::rgb<uint8_t>(
                         c.red() * 255, c.green() * 255, c.blue() * 255);
             });
