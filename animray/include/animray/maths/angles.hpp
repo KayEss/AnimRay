@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -24,17 +23,22 @@
 #pragma once
 
 
-#include <boost/math/constants/constants.hpp>
+namespace animray {
 
+
+    constexpr long double const pi =
+            3.14159265358979323846264338327950288419716939937510L;
+
+
+}
 
 /// Define a way to use degree literals (converted to radians)
 constexpr long double operator"" _deg(long double d) {
-    return boost::math::constants::pi<long double>() / (long double)(180.0) * d;
+    return animray::pi / (long double)(180.0) * d;
 }
 /// Define a way to use degree literals (converted to radians)
 constexpr long double operator""_deg(unsigned long long d) {
-    return boost::math::constants::pi<long double>() / (long double)(180.0)
-            * (long double)(d);
+    return animray::pi / (long double)(180.0) * (long double)(d);
 }
 
 
