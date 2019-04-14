@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+/**
+    Copyright 2010-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -24,14 +23,11 @@
 #include <fost/coerce/ints.hpp>
 #include <animray/targa.hpp>
 #include <animray/color/hls.hpp>
-#include <boost/random.hpp>
-#include <boost/math/constants/constants.hpp>
+#include <animray/threading/random-generator.hpp>
+#include <animray/maths/angles.hpp>
 
 
 namespace {
-
-
-    const double pi = boost::math::constants::pi<double>();
 
 
     template<typename V>
@@ -49,14 +45,12 @@ namespace {
 
 
     void more_circles(
-            boost::mt19937 &rng,
+            animray::random::engine<> &rng,
             const ::circle &within,
             std::vector<::circle> &circles) {
-        boost::uniform_real<float> r_radians(0, 2 * pi),
-                r_distance(0, within.r);
-        boost::variate_generator<boost::mt19937 &, boost::uniform_real<float>>
-                radians(rng, r_radians), distance(rng, r_distance);
-        float theta{radians()}, length{distance()};
+        std::uniform_real_distribution<float> radians(0, 2 * animray::pi),
+                distance(0, within.r);
+        float theta{radians(rng.e)}, length{distance(rng.e)};
         for (auto i = 0; i < 3; ++i) {
             circle next{within.cx + length * std::cos(theta),
                         within.cy + length * std::sin(theta), within.r / 2.f};
@@ -69,15 +63,14 @@ namespace {
 }
 
 
-FSL_MAIN(L"landmaker", L"LandMaker, Copyright 2010-2014 Kirit Saelensminde")
+FSL_MAIN(L"landmaker", L"LandMaker, Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    boost::filesystem::wpath output_filename =
-            fostlib::coerce<boost::filesystem::wpath>(
-                    args[1].value_or("out.tga"));
+    fostlib::fs::path output_filename =
+            fostlib::coerce<fostlib::fs::path>(args[1].value_or("out.tga"));
     int width = fostlib::coerce<int>(args[2].value_or("100"));
     int height = fostlib::coerce<int>(args[3].value_or("100"));
 
-    boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
+    animray::random::engine<> rng;
     std::vector<::circle> circles;
     circle start{width / 2.f, height / 2.f, std::min(width, height) / 4.f};
     for (auto i = 0; i != 3; ++i) {
