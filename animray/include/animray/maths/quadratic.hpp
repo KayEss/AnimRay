@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -25,7 +24,6 @@
 
 
 #include <cmath>
-#include <boost/math/constants/constants.hpp>
 
 
 namespace animray {
@@ -50,10 +48,10 @@ namespace animray {
             const D a, const D b, const D c, const E range) {
         const D discrim = b * b - D(4) * a * c;
         if (discrim < D(0)) { return fostlib::null; }
-        typedef decltype(std::sqrt(discrim)) S;
-        const S root_discrim(std::sqrt(discrim));
-        const S q(
-                -boost::math::constants::half<S>()
+        using S = decltype(std::sqrt(discrim));
+        S const root_discrim(std::sqrt(discrim));
+        S const q(
+                -(S{1} / S{2})
                 * (b + (b < S(0) ? -root_discrim : +root_discrim)));
         S t0 = q / a, t1 = c / q;
         if (t1 < t0) { std::swap(t0, t1); }
