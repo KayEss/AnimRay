@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -27,9 +26,6 @@
 #include <animray/film.hpp>
 #include <animray/color/rgb.hpp>
 
-#include <boost/lambda/bind.hpp>
-#include <boost/filesystem/fstream.hpp>
-
 
 namespace animray {
 
@@ -43,11 +39,9 @@ namespace animray {
 
     /// Save a film as a Targa file
     template<typename C, typename E>
-    void
-            targa(const boost::filesystem::wpath &filename,
-                  const film<C, E> &image) {
+    void targa(const fostlib::fs::path &filename, const film<C, E> &image) {
         detail::targa_saver<C, E> saver;
-        boost::filesystem::ofstream file(filename, std::ios::binary);
+        fostlib::fs::ofstream file(filename, std::ios::binary);
         // Header
         file.put(0); // 0 identsize
         file.put(0); // Has no colour map
