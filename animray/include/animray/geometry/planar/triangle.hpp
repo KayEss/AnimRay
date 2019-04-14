@@ -32,9 +32,10 @@ namespace animray {
 
 
     template<typename I, typename D = typename I::local_coord_type>
-    class triangle : private detail::array_based< point3d<D>, 3 > {
-        typedef detail::array_based< point3d<D>, 3 > superclass;
-    public:
+    class triangle : private detail::array_based<point3d<D>, 3> {
+        typedef detail::array_based<point3d<D>, 3> superclass;
+
+      public:
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to be returned
@@ -44,10 +45,9 @@ namespace animray {
 
         /// Construct a triangle from three points
         triangle(
-            const corner_type &one,
-            const corner_type &two,
-            const corner_type &three
-        ) {
+                const corner_type &one,
+                const corner_type &two,
+                const corner_type &three) {
             superclass::array[0] = one;
             superclass::array[1] = two;
             superclass::array[2] = three;
@@ -55,37 +55,42 @@ namespace animray {
 
         /// Calculate the intersection point
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
+        fostlib::nullable<intersection_type>
+                intersects(R by, const E epsilon) const {
             // Möller–Trumbore intersection algorithm
             const corner_type e1(superclass::array[1] - superclass::array[0]);
             const corner_type e2(superclass::array[2] - superclass::array[0]);
 
             const corner_type P(cross(by.direction(), e2));
             const local_coord_type determinant(dot(e1, P));
-            if ( determinant > -epsilon && determinant < epsilon ) {
+            if (determinant > -epsilon && determinant < epsilon) {
                 return fostlib::null;
             }
-            const local_coord_type inv_determinant(local_coord_type(1) / determinant);
+            const local_coord_type inv_determinant(
+                    local_coord_type(1) / determinant);
 
             const corner_type T(by.from() - superclass::array[0]);
             const local_coord_type u(dot(T, P) * inv_determinant);
-            if ( u < local_coord_type() || u > local_coord_type(1) ) {
+            if (u < local_coord_type() || u > local_coord_type(1)) {
                 return fostlib::null;
             }
 
             const corner_type Q(cross(T, e1));
             const local_coord_type v(dot(by.direction(), Q) * inv_determinant);
-            if ( v < local_coord_type() || u + v > local_coord_type(1) ) {
+            if (v < local_coord_type() || u + v > local_coord_type(1)) {
                 return fostlib::null;
             }
 
             const local_coord_type t(dot(e2, Q) * inv_determinant);
-            if ( t > epsilon ) {
-                typename intersection_type::direction_type normal(cross(e2, e1));
-                if ( dot(normal, by.direction()) < local_coord_type() ) {
-                    return intersection_type(by.from() + by.direction() * t, normal);
+            if (t > epsilon) {
+                typename intersection_type::direction_type normal(
+                        cross(e2, e1));
+                if (dot(normal, by.direction()) < local_coord_type()) {
+                    return intersection_type(
+                            by.from() + by.direction() * t, normal);
                 } else {
-                    return intersection_type(by.from() + by.direction() * t, -normal);
+                    return intersection_type(
+                            by.from() + by.direction() * t, -normal);
                 }
             } else {
                 return fostlib::null;

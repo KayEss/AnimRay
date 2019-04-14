@@ -34,31 +34,32 @@ namespace animray {
 
 
     /// Point lights
-    template< typename C, typename W >
+    template<typename C, typename W>
     class light<point3d<W>, C> : public light<void, C> {
         typedef light<void, C> superclass;
-    public:
+
+      public:
         /// The light geometry
         typedef point3d<W> geometry_type;
 
         /// The geometry of the light
-        fostlib::accessors< geometry_type > geometry;
+        fostlib::accessors<geometry_type> geometry;
 
         /// Construct from a position and color
         light(const geometry_type &p, const typename superclass::color_type &c)
-        : superclass(c), geometry(p) {
-        }
+        : superclass(c), geometry(p) {}
 
         /// Calculate the illumination given by this light
-        template< typename O, typename I, typename G >
-        typename superclass::color_type operator () (
-            const O &observer, const I &intersection, const G &scene
-        ) const {
+        template<typename O, typename I, typename G>
+        typename superclass::color_type operator()(
+                const O &observer, const I &intersection, const G &scene) const {
             O illumination(observer);
             illumination.from(intersection.from());
             illumination.to(geometry());
-            if ( not scene.geometry().occludes(illumination, epsilon<I>::value ) ) {
-                return shader(observer, illumination, intersection, superclass::color(), scene);
+            if (not scene.geometry().occludes(illumination, epsilon<I>::value)) {
+                return shader(
+                        observer, illumination, intersection,
+                        superclass::color(), scene);
             } else {
                 return typename superclass::color_type();
             }

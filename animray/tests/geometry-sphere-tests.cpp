@@ -25,53 +25,49 @@
 #include <fost/test>
 
 
-FSL_TEST_SUITE( sphere );
+FSL_TEST_SUITE(sphere);
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
+FSL_TEST_FUNCTION(constructor_default_tests) {
     fostlib::test::default_copy_constructable<
-        animray::unit_sphere_at_origin< animray::ray< int>  > >();
+            animray::unit_sphere_at_origin<animray::ray<int>>>();
     fostlib::test::default_copy_constructable<
-        animray::unit_sphere_at_origin< animray::ray< int64_t > > >();
+            animray::unit_sphere_at_origin<animray::ray<int64_t>>>();
     fostlib::test::default_copy_constructable<
-        animray::unit_sphere_at_origin< animray::ray<float > > >();
+            animray::unit_sphere_at_origin<animray::ray<float>>>();
     fostlib::test::default_copy_constructable<
-        animray::unit_sphere_at_origin< animray::ray<double > > >();
+            animray::unit_sphere_at_origin<animray::ray<double>>>();
     fostlib::test::default_copy_constructable<
-        animray::unit_sphere_at_origin< animray::ray<long double > > >();
+            animray::unit_sphere_at_origin<animray::ray<long double>>>();
 }
 
 
 namespace {
-    template< typename D >
+    template<typename D>
     void sphere_occlude() {
         try {
-            typedef typename animray::ray< D >::end_type end_type;
-            typedef animray::ray< D > ray;
-            animray::unit_sphere_at_origin< animray::ray< D > > s;
-            FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type() ), 0
-            ) );
-            FSL_CHECK( s.occludes(
-                ray( end_type(), end_type( 0, 0, 10 ) ), 0
-            ) );
-            FSL_CHECK( !s.occludes(
-                ray( end_type( 0, 0, 5 ), end_type( 0, 0, 10 ) ), 0
-            ) );
-            FSL_CHECK( s.occludes(
-                ray( end_type( 0, 0, 10 ), end_type( 0, 0, 5 ) ), 0
-            ) );
-        } catch ( fostlib::exceptions::exception &e ) {
-            fostlib::insert(e.data(), "Type under test",
-                fostlib::coerce< fostlib::string >(typeid(D).name()));;
+            typedef typename animray::ray<D>::end_type end_type;
+            typedef animray::ray<D> ray;
+            animray::unit_sphere_at_origin<animray::ray<D>> s;
+            FSL_CHECK(s.occludes(ray(end_type(0, 0, 10), end_type()), 0));
+            FSL_CHECK(s.occludes(ray(end_type(), end_type(0, 0, 10)), 0));
+            FSL_CHECK(
+                    !s.occludes(ray(end_type(0, 0, 5), end_type(0, 0, 10)), 0));
+            FSL_CHECK(
+                    s.occludes(ray(end_type(0, 0, 10), end_type(0, 0, 5)), 0));
+        } catch (fostlib::exceptions::exception &e) {
+            fostlib::insert(
+                    e.data(), "Type under test",
+                    fostlib::coerce<fostlib::string>(typeid(D).name()));
+            ;
             throw;
         }
     }
 }
-FSL_TEST_FUNCTION( occlusion ) {
-    sphere_occlude< int >();
-    sphere_occlude< int64_t >();
-    sphere_occlude< float >();
-    sphere_occlude< double >();
-    sphere_occlude< long double >();
+FSL_TEST_FUNCTION(occlusion) {
+    sphere_occlude<int>();
+    sphere_occlude<int64_t>();
+    sphere_occlude<float>();
+    sphere_occlude<double>();
+    sphere_occlude<long double>();
 }

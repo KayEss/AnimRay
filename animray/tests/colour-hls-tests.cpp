@@ -23,34 +23,34 @@
 #include "test-json.hpp"
 
 
-FSL_TEST_SUITE( hls );
+FSL_TEST_SUITE(hls);
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::hls< int > >();
-    fostlib::test::default_copy_constructable< animray::hls< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::hls< float > >();
-    fostlib::test::default_copy_constructable< animray::hls< double > >();
-    fostlib::test::default_copy_constructable< animray::hls< long double > >();
+FSL_TEST_FUNCTION(constructor_default_tests) {
+    fostlib::test::default_copy_constructable<animray::hls<int>>();
+    fostlib::test::default_copy_constructable<animray::hls<int64_t>>();
+    fostlib::test::default_copy_constructable<animray::hls<float>>();
+    fostlib::test::default_copy_constructable<animray::hls<double>>();
+    fostlib::test::default_copy_constructable<animray::hls<long double>>();
 }
 
 
-FSL_TEST_FUNCTION( json ) {
-    json_roundtrip( animray::hls< int64_t >(), "[0, 0, 0]" );
-    json_roundtrip( animray::hls< uint8_t >( 1, 2, 3 ), "[1,2,3]" );
+FSL_TEST_FUNCTION(json) {
+    json_roundtrip(animray::hls<int64_t>(), "[0, 0, 0]");
+    json_roundtrip(animray::hls<uint8_t>(1, 2, 3), "[1,2,3]");
 }
 
 
 namespace {
     void check(float h, float l, float s, float r, float g, float b) {
-        animray::hls< float > f(h, l, s);
-        animray::rgb< float > t( fostlib::coerce< animray::rgb< float > >( f ) );
+        animray::hls<float> f(h, l, s);
+        animray::rgb<float> t(fostlib::coerce<animray::rgb<float>>(f));
         FSL_CHECK_EQ(int(t.array()[0] * 1000 + .5f), int(r * 1000 + .5f));
         FSL_CHECK_EQ(int(t.array()[1] * 1000 + .5f), int(g * 1000 + .5f));
         FSL_CHECK_EQ(int(t.array()[2] * 1000 + .5f), int(b * 1000 + .5f));
     }
 }
-FSL_TEST_FUNCTION( to_rgb ) {
+FSL_TEST_FUNCTION(to_rgb) {
     // Test data taken from http://en.wikipedia.org/wiki/HSL_and_HSV
     check(0, 0, 0, 0, 0, 0); // black
     check(0, 1, 0, 1, 1, 1); // white

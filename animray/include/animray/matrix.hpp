@@ -31,16 +31,16 @@ namespace animray {
 
 
     /// This 4D matrix class represents transformations in 3D space
-    template< typename D >
-    class matrix : private detail::array_based< D, 16 > {
-        typedef detail::array_based< D, 16 > superclass;
+    template<typename D>
+    class matrix : private detail::array_based<D, 16> {
+        typedef detail::array_based<D, 16> superclass;
         using superclass::at;
-    public:
+
+      public:
         typedef typename superclass::value_type value_type;
         typedef typename superclass::array_type array_type;
-        typedef typename
-            superclass::const_value_parameter_type
-            const_value_parameter_type;
+        typedef typename superclass::const_value_parameter_type
+                const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
 
         /// Construct an identity transform matrix
@@ -52,98 +52,90 @@ namespace animray {
             superclass::array[15] = D(1);
         }
         /// Construct a matrix from its JSON representation
-        matrix( const fostlib::json &js ) {
-            for ( std::size_t c = 0; c < 4; ++c )
-                for ( std::size_t r = 0; r < 4; ++r )
-                    superclass::array[ r * 4 + c ] = fostlib::coerce< value_type >( js[r][c] );
+        matrix(const fostlib::json &js) {
+            for (std::size_t c = 0; c < 4; ++c)
+                for (std::size_t r = 0; r < 4; ++r)
+                    superclass::array[r * 4 + c] =
+                            fostlib::coerce<value_type>(js[r][c]);
         }
 
         /// Allows us to fetch values from rows then columns
         class row_proxy {
             friend class matrix;
-            matrix &m; const std::size_t r;
-            row_proxy(matrix &m, std::size_t r)
-            : m(m), r(r) {
-            }
-        public:
-            value_type &operator [] (std::size_t c) {
-                return m.at(r * 4 + c);
-            }
+            matrix &m;
+            const std::size_t r;
+            row_proxy(matrix &m, std::size_t r) : m(m), r(r) {}
+
+          public:
+            value_type &operator[](std::size_t c) { return m.at(r * 4 + c); }
         };
         friend row_proxy;
         class const_row_proxy {
             friend class matrix;
-            const matrix &m; const std::size_t r;
-            const_row_proxy(const matrix &m, std::size_t r)
-            : m(m), r(r) {
-            }
-        public:
-            value_type operator [] (std::size_t c) {
-                return m.at(r * 4 + c);
-            }
-            point3d<matrix::value_type> operator * (
-                const point3d<matrix::value_type> &by
-            ) {
+            const matrix &m;
+            const std::size_t r;
+            const_row_proxy(const matrix &m, std::size_t r) : m(m), r(r) {}
+
+          public:
+            value_type operator[](std::size_t c) { return m.at(r * 4 + c); }
+            point3d<matrix::value_type>
+                    operator*(const point3d<matrix::value_type> &by) {
                 return point3d<matrix::value_type>(
-                    m.at(r * 4) * by.array()[0],
-                    m.at(r * 4 + 1) * by.array()[1],
-                    m.at(r * 4 + 2) * by.array()[2],
-                    m.at(r * 4 + 3) * by.array()[3]);
+                        m.at(r * 4) * by.array()[0],
+                        m.at(r * 4 + 1) * by.array()[1],
+                        m.at(r * 4 + 2) * by.array()[2],
+                        m.at(r * 4 + 3) * by.array()[3]);
             }
         };
         friend row_proxy;
 
         /// Allow a row to be fetched from the matrix
-        const_row_proxy operator [] (std::size_t r) const {
+        const_row_proxy operator[](std::size_t r) const {
             return const_row_proxy(*this, r);
         }
         /// Allow a row to be fetched from the matrix
-        row_proxy operator [] (std::size_t r) {
-            return row_proxy(*this, r);
-        }
+        row_proxy operator[](std::size_t r) { return row_proxy(*this, r); }
 
         /// Compare for equality
-        bool operator == ( const matrix &r ) const {
+        bool operator==(const matrix &r) const {
             return superclass::array == r.array;
         }
         /// Compare for inequality
-        bool operator != ( const matrix &r ) const {
+        bool operator!=(const matrix &r) const {
             return superclass::array != r.array;
         }
 
         /// Fetch a column as a vector
         point3d<value_type> column(std::size_t col) const {
             return point3d<value_type>(
-                at(col), at(col+4), at(col+8), at(col+12));
+                    at(col), at(col + 4), at(col + 8), at(col + 12));
         }
 
         /// Multiply two matrixes
-        matrix operator * (const matrix &r) const {
+        matrix operator*(const matrix &r) const {
             matrix result;
-            const point3d<value_type> cols[4] = {
-                r.column(0), r.column(1), r.column(2), r.column(3)};
-            for ( std::size_t row(0); row < 4; ++row ) {
+            const point3d<value_type> cols[4] = {r.column(0), r.column(1),
+                                                 r.column(2), r.column(3)};
+            for (std::size_t row(0); row < 4; ++row) {
                 const_row_proxy my_row((*this)[row]);
                 row_proxy res_row(result[row]);
-                for ( std::size_t col(0); col < 4; ++col ) {
+                for (std::size_t col(0); col < 4; ++col) {
                     res_row[col] = sum((my_row * cols[col]).array());
                 }
             }
             return result;
         }
         /// Multiply by a vector
-        point3d<value_type> operator * (
-            const point3d<value_type> v
-        ) const {
+        point3d<value_type> operator*(const point3d<value_type> v) const {
             return point3d<value_type>(
-                sum(((*this)[0] * v).array()),
-                sum(((*this)[1] * v).array()),
-                sum(((*this)[2] * v).array()),
-                sum(((*this)[3] * v).array()));
+                    sum(((*this)[0] * v).array()),
+                    sum(((*this)[1] * v).array()),
+                    sum(((*this)[2] * v).array()),
+                    sum(((*this)[3] * v).array()));
         }
 
         /// Multiply by another matrix
-        matrix &operator *= ( const matrix &r ) {
+        matrix &operator*=(const matrix &r) {
             matrix result(*this * r);
             return *this = result;
         }
@@ -151,9 +143,9 @@ namespace animray {
         /// The matrix has a special JSON representation
         fostlib::json to_json() const {
             fostlib::json ret, line;
-            for ( std::size_t i = 0; i < 16; ++ i ) {
-                fostlib::jcursor().push_back( line, superclass::array[i] );
-                if ( ( i + 1 ) % 4 == 0 ) {
+            for (std::size_t i = 0; i < 16; ++i) {
+                fostlib::jcursor().push_back(line, superclass::array[i]);
+                if ((i + 1) % 4 == 0) {
                     fostlib::jcursor().push_back(ret, line);
                     line = fostlib::json();
                 }
@@ -162,10 +154,9 @@ namespace animray {
         }
 
         /// Just print out the (pretty printed) JSON for now
-        fostlib::ostream &print_on( fostlib::ostream &o ) const {
+        fostlib::ostream &print_on(fostlib::ostream &o) const {
             return o << fostlib::json::unparse(
-                fostlib::coerce< fostlib::json >( *this ), true
-            );
+                           fostlib::coerce<fostlib::json>(*this), true);
         }
     };
 

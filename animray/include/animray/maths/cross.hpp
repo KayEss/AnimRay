@@ -34,17 +34,15 @@ namespace animray {
     template<typename D>
     point3d<D> cross(const unit_vector<D> &b, const point3d<D> &c) {
         return point3d<D>(
-            b.y() * c.z() - b.z() * c.y(),
-            b.z() * c.x() - b.x() * c.z(),
-            b.x() * c.y() - b.y() * c.x());
+                b.y() * c.z() - b.z() * c.y(), b.z() * c.x() - b.x() * c.z(),
+                b.x() * c.y() - b.y() * c.x());
     }
     /// Cross product for points
     template<typename D>
     point3d<D> cross(const point3d<D> &b, const point3d<D> &c) {
         return point3d<D>(
-            b.y() * c.z() - b.z() * c.y(),
-            b.z() * c.x() - b.x() * c.z(),
-            b.x() * c.y() - b.y() * c.x());
+                b.y() * c.z() - b.z() * c.y(), b.z() * c.x() - b.x() * c.z(),
+                b.x() * c.y() - b.y() * c.x());
     }
 
 

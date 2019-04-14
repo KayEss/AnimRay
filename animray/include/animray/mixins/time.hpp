@@ -33,10 +33,8 @@ namespace animray {
 
     namespace detail {
         class at_time {
-        public:
-            at_time()
-            : time(2010, 10, 10, 10, 0, 0) {
-            }
+          public:
+            at_time() : time(2010, 10, 10, 10, 0, 0) {}
 
             fostlib::accessors<fostlib::timestamp> time;
         };
@@ -49,8 +47,7 @@ namespace animray {
         typedef typename std::conditional<
                 std::is_base_of<detail::at_time, T>::value,
                 T,
-                mixin<T, detail::at_time>
-            >::type type;
+                mixin<T, detail::at_time>>::type type;
     };
 
 

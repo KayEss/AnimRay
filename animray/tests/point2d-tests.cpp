@@ -23,35 +23,35 @@
 #include "test-json.hpp"
 
 
-FSL_TEST_SUITE( point2d );
+FSL_TEST_SUITE(point2d);
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
+FSL_TEST_FUNCTION(constructor_default_tests) {
     using fostlib::test::default_copy_constructable;
-    default_copy_constructable< animray::point2d< int > >();
-    default_copy_constructable< animray::point2d< int64_t > >();
-    default_copy_constructable< animray::point2d< float > >();
-    default_copy_constructable< animray::point2d< double > >();
-    default_copy_constructable< animray::point2d< long double > >();
+    default_copy_constructable<animray::point2d<int>>();
+    default_copy_constructable<animray::point2d<int64_t>>();
+    default_copy_constructable<animray::point2d<float>>();
+    default_copy_constructable<animray::point2d<double>>();
+    default_copy_constructable<animray::point2d<long double>>();
 }
 
 
-FSL_TEST_FUNCTION( json ) {
-    json_roundtrip( animray::point2d< int64_t >(), "[0, 0]" );
-    json_roundtrip( animray::point2d< int >(1,2), "[1,2]" );
-    json_roundtrip( animray::point2d< int >(2,-5), "[2,-5]" );
+FSL_TEST_FUNCTION(json) {
+    json_roundtrip(animray::point2d<int64_t>(), "[0, 0]");
+    json_roundtrip(animray::point2d<int>(1, 2), "[1,2]");
+    json_roundtrip(animray::point2d<int>(2, -5), "[2,-5]");
 }
 
 
-FSL_TEST_FUNCTION( operator_add ) {
-    animray::point2d<int> p1, p2 = animray::point2d<int>(1,2);
-    FSL_CHECK_EQ(p1 += p2, animray::point2d<int>(1,2));
-    FSL_CHECK_EQ(p1 += p2, 2 * animray::point2d<int>(1,2));
+FSL_TEST_FUNCTION(operator_add) {
+    animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
+    FSL_CHECK_EQ(p1 += p2, animray::point2d<int>(1, 2));
+    FSL_CHECK_EQ(p1 += p2, 2 * animray::point2d<int>(1, 2));
 }
 
 
-FSL_TEST_FUNCTION( operator_mul ) {
-    animray::point2d<int> p1, p2 = animray::point2d<int>(1,2);
+FSL_TEST_FUNCTION(operator_mul) {
+    animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
     FSL_CHECK_EQ(p1 * 4, p1);
-    FSL_CHECK_EQ(p2 *= 3, animray::point2d<int>(3,6));
+    FSL_CHECK_EQ(p2 *= 3, animray::point2d<int>(3, 6));
 }

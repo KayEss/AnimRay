@@ -31,35 +31,33 @@ namespace animray {
 
 
     /// Camera for 2d imaging
-    template< typename E, typename R = std::size_t >
+    template<typename E, typename R = std::size_t>
     class flat_camera {
-    public:
+      public:
         /// The type used to measure the height of the camera image
         typedef E extents_type;
         /// The type used to measure the physical resolution of the camera
         typedef R resolution_type;
 
         /// Constructs a camera whose film is a particular size
-        flat_camera(extents_type w, extents_type h,
-                resolution_type c, resolution_type r)
-        : width(w), height(h), columns(c), rows(r) {
-        }
+        flat_camera(
+                extents_type w,
+                extents_type h,
+                resolution_type c,
+                resolution_type r)
+        : width(w), height(h), columns(c), rows(r) {}
 
         /// Give a value for the width of a pixel in world co-ordinates
-        extents_type pixel_width() const {
-            return width() / columns();
-        }
+        extents_type pixel_width() const { return width() / columns(); }
         /// Give a value for the height of a pixel in world co-ordinates
-        extents_type pixel_height() const {
-            return height() / rows();
-        }
+        extents_type pixel_height() const { return height() / rows(); }
 
         /// Convert from resolution co-ordinates to world co-ordinates
-        point2d< extents_type > operator() (
-                resolution_type x, resolution_type y) const {
-            return point2d< extents_type >(
-                width() * ((extents_type(x) + half()) / columns() - half()),
-                -height() * ((extents_type(y) + half()) / rows() - half()));
+        point2d<extents_type>
+                operator()(resolution_type x, resolution_type y) const {
+            return point2d<extents_type>(
+                    width() * ((extents_type(x) + half()) / columns() - half()),
+                    -height() * ((extents_type(y) + half()) / rows() - half()));
         }
 
         /// The width of the camera

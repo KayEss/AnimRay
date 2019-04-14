@@ -31,10 +31,11 @@ namespace animray {
 
 
     /// Collection of lights of a single type
-    template< typename C, typename L >
-    class light<std::vector<L>, C> : public light<void, C > {
+    template<typename C, typename L>
+    class light<std::vector<L>, C> : public light<void, C> {
         typedef light<void, C> superclass;
-    public:
+
+      public:
         /// The container type
         using container_type = std::vector<L>;
         /// The type of the light
@@ -49,42 +50,45 @@ namespace animray {
         }
 
         /// Calculate the illumination given by this light
-        template< typename O, typename R, typename G >
-        color_type operator () (
-            const O &observer, const R &intersection, const G &scene
-        ) const {
+        template<typename O, typename R, typename G>
+        color_type operator()(
+                const O &observer, const R &intersection, const G &scene) const {
             color_type c(superclass::color());
-            for ( const auto &i : _lights ) {
+            for (const auto &i : _lights) {
                 c += i(observer, intersection, scene);
             }
             return c;
         }
 
-    private:
+      private:
         container_type _lights;
     };
 
 
     /// A collection of lights of differing types
     template<typename C, typename L1, typename... Ls>
-    class light<std::tuple<L1, Ls...>, C>
-            : public light<void, C>, public std::tuple<L1, Ls...> {
+    class light<std::tuple<L1, Ls...>, C> :
+    public light<void, C>,
+            public std::tuple<L1, Ls...> {
         using superclass = light<void, C>;
         using tuple_type = std::tuple<L1, Ls...>;
 
-    public:
+      public:
         /// The colour model
         using color_type = C;
 
         /// Calculate the illumination given by this light
-        template< typename O, typename R, typename G >
-        color_type operator () (
-            const O &observer, const R &intersection, const G &scene
-        ) const {
-            return superclass::color() +
-                std::apply([&observer, &intersection, &scene](auto&&... light) -> color_type {
-                    return (light(observer, intersection, scene) + ...);
-                }, static_cast<const tuple_type&>(*this));
+        template<typename O, typename R, typename G>
+        color_type operator()(
+                const O &observer, const R &intersection, const G &scene) const {
+            return superclass::color()
+                    + std::apply(
+                            [&observer, &intersection,
+                             &scene](auto &&... light) -> color_type {
+                                return (light(observer, intersection, scene)
+                                        + ...);
+                            },
+                            static_cast<const tuple_type &>(*this));
         };
     };
 

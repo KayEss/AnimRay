@@ -28,14 +28,13 @@
 
 
 /// Define a way to use degree literals (converted to radians)
-constexpr long double operator "" _deg(long double d) {
-    return boost::math::constants::pi<long double>()
-        / (long double)(180.0) * d;
+constexpr long double operator"" _deg(long double d) {
+    return boost::math::constants::pi<long double>() / (long double)(180.0) * d;
 }
 /// Define a way to use degree literals (converted to radians)
-constexpr long double operator ""_deg(unsigned long long d) {
-    return boost::math::constants::pi<long double>()
-        / (long double)(180.0) * (long double)(d);
+constexpr long double operator""_deg(unsigned long long d) {
+    return boost::math::constants::pi<long double>() / (long double)(180.0)
+            * (long double)(d);
 }
 
 

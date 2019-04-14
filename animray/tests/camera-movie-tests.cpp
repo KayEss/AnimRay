@@ -26,6 +26,4 @@
 FSL_TEST_SUITE(camera_movie);
 
 
-FSL_TEST_FUNCTION(constructors) {
-}
-
+FSL_TEST_FUNCTION(constructors) {}

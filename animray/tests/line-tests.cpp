@@ -23,54 +23,51 @@
 #include "test-json.hpp"
 
 
-FSL_TEST_SUITE( line );
+FSL_TEST_SUITE(line);
 
 
-FSL_TEST_FUNCTION( constructor_default_tests ) {
-    fostlib::test::default_copy_constructable< animray::line< int > >();
-    fostlib::test::default_copy_constructable< animray::line< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::line< float > >();
-    fostlib::test::default_copy_constructable< animray::line< double > >();
-    fostlib::test::default_copy_constructable< animray::line< long double > >();
+FSL_TEST_FUNCTION(constructor_default_tests) {
+    fostlib::test::default_copy_constructable<animray::line<int>>();
+    fostlib::test::default_copy_constructable<animray::line<int64_t>>();
+    fostlib::test::default_copy_constructable<animray::line<float>>();
+    fostlib::test::default_copy_constructable<animray::line<double>>();
+    fostlib::test::default_copy_constructable<animray::line<long double>>();
 }
 
 
-FSL_TEST_FUNCTION( constructor_simple ) {
-    animray::line< int > l1(
-        animray::line< int >::end_type( 0, 0, 1 ),
-        animray::line< int >::end_type( 0, 0, 10 )
-    );
+FSL_TEST_FUNCTION(constructor_simple) {
+    animray::line<int> l1(
+            animray::line<int>::end_type(0, 0, 1),
+            animray::line<int>::end_type(0, 0, 10));
 }
 
 
-FSL_TEST_FUNCTION( json ) {
+FSL_TEST_FUNCTION(json) {
     json_roundtrip(
-        animray::line< int >(
-            animray::line< int >::end_type( -1, -2, -3 ),
-            animray::line< int >::end_type( 1, 2, 3 )
-        ),
-        "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}"
-    );
+            animray::line<int>(
+                    animray::line<int>::end_type(-1, -2, -3),
+                    animray::line<int>::end_type(1, 2, 3)),
+            "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}");
 }
 
 
-FSL_TEST_FUNCTION( length_squared ) {
+FSL_TEST_FUNCTION(length_squared) {
     FSL_CHECK_EQ(
-        animray::line< int >(
-            animray::line< int >::end_type(),
-            animray::line< int >::end_type( 1, 0, 0 )
-        ).length_squared(), 1
-    );
+            animray::line<int>(
+                    animray::line<int>::end_type(),
+                    animray::line<int>::end_type(1, 0, 0))
+                    .length_squared(),
+            1);
     FSL_CHECK_EQ(
-        animray::line< int >(
-            animray::line< int >::end_type(),
-            animray::line< int >::end_type( 0, 2, 0 )
-        ).length_squared(), 4
-    );
+            animray::line<int>(
+                    animray::line<int>::end_type(),
+                    animray::line<int>::end_type(0, 2, 0))
+                    .length_squared(),
+            4);
     FSL_CHECK_EQ(
-        animray::line< int >(
-            animray::line< int >::end_type(),
-            animray::line< int >::end_type( 3, 0, 4 )
-        ).length_squared(), 25
-    );
+            animray::line<int>(
+                    animray::line<int>::end_type(),
+                    animray::line<int>::end_type(3, 0, 4))
+                    .length_squared(),
+            25);
 }

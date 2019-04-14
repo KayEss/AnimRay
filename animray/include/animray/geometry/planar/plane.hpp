@@ -32,7 +32,7 @@ namespace animray {
 
     template<typename I, typename D = typename I::local_coord_type>
     class plane {
-    public:
+      public:
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to be returned
@@ -45,16 +45,18 @@ namespace animray {
 
         /// Calculate the intersection point
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
-            const local_coord_type dot_normal(animray::dot(by.direction(), normal()));
-            if ( dot_normal == local_coord_type() ) {
-                return fostlib::null;
-            }
-            const local_coord_type numerator(animray::dot(normal(), center() - by.from()));
+        fostlib::nullable<intersection_type>
+                intersects(R by, const E epsilon) const {
+            const local_coord_type dot_normal(
+                    animray::dot(by.direction(), normal()));
+            if (dot_normal == local_coord_type()) { return fostlib::null; }
+            const local_coord_type numerator(
+                    animray::dot(normal(), center() - by.from()));
             const local_coord_type t(numerator / dot_normal);
-            if ( t > epsilon ) {
-                return intersection_type(by.from() + by.direction() * t,
-                    dot_normal < 0 ? normal() : -normal());
+            if (t > epsilon) {
+                return intersection_type(
+                        by.from() + by.direction() * t,
+                        dot_normal < 0 ? normal() : -normal());
             } else {
                 return fostlib::null;
             }

@@ -34,12 +34,10 @@ namespace animray {
     namespace detail {
         template<typename F>
         class at_frame {
-        public:
-            at_frame() {
-            }
+          public:
+            at_frame() {}
             template<typename... A>
-            at_frame(A&&...) {
-            }
+            at_frame(A &&...) {}
             fostlib::accessors<F> frame;
         };
     }
@@ -51,8 +49,7 @@ namespace animray {
         typedef typename std::conditional<
                 std::is_base_of<detail::at_frame<F>, T>::value,
                 T,
-                mixin<T, detail::at_frame<F>>
-            >::type type;
+                mixin<T, detail::at_frame<F>>>::type type;
         typedef F frame_type;
     };
 

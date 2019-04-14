@@ -38,11 +38,7 @@ FSL_TEST_FUNCTION(degenerate) {
 }
 
 
-FSL_TEST_FUNCTION(scalar) {
-    animray::animatable<int> value(2);
-}
+FSL_TEST_FUNCTION(scalar) { animray::animatable<int> value(2); }
 
 
-FSL_TEST_FUNCTION(transformations) {
-}
-
+FSL_TEST_FUNCTION(transformations) {}

@@ -33,16 +33,17 @@ namespace animray {
 
 
     /// Handles forward and backward transformation between 3D co-ordinate systems
-    template< typename M >
+    template<typename M>
     class transformable {
-    protected:
+      protected:
         M forward, backward;
-    public:
+
+      public:
         /// A transformation
         typedef std::pair<M, M> transform_type;
 
         /// Apply an affine transformation
-        transformable &operator () (const transform_type &t) {
+        transformable &operator()(const transform_type &t) {
             // Swap forward and backward here because we're
             // going from world to local
             forward = t.second * forward;
@@ -52,7 +53,7 @@ namespace animray {
 
         /// Apply a transformation
         template<typename T>
-        transformable &operator () (const T &t) {
+        transformable &operator()(const T &t) {
             forward = t.backward() * forward;
             backward *= t.forward();
             return *this;
@@ -61,13 +62,14 @@ namespace animray {
 
 
     /// Concrete type for a given scene object
-    template< typename O,
+    template<
+            typename O,
             typename I = typename O::intersection_type,
-            typename T = transformable< matrix< typename O::local_coord_type > >
-    >
+            typename T = transformable<matrix<typename O::local_coord_type>>>
     class movable : private T {
         typedef T superclass;
-    public:
+
+      public:
         /// The type of object that can be moved
         typedef O instance_type;
         /// The type of the local coordinate system
@@ -82,28 +84,27 @@ namespace animray {
 
         /// Allow the underlying instance to be constructed
         template<typename... A>
-        explicit movable(A&&... args)
-        : instance(std::forward<A>(args)...) {}
+        explicit movable(A &&... args) : instance(std::forward<A>(args)...) {}
 
         /// Apply a transformation
-        movable &operator () (const transform_type &t) {
+        movable &operator()(const transform_type &t) {
             superclass::operator()(t);
             return *this;
         }
 
         /// Apply a translation
-        movable &operator () (const translate<local_coord_type> &t) {
+        movable &operator()(const translate<local_coord_type> &t) {
             superclass::operator()(t);
             return *this;
         }
 
         /// Ray intersection
-        template< typename R, typename E >
-        std::optional<intersection_type> intersects(
-            const R &by, const E epsilon
-        ) const {
-            const auto hit{instance().intersects(by * superclass::forward, epsilon)};
-            if ( hit ) {
+        template<typename R, typename E>
+        std::optional<intersection_type>
+                intersects(const R &by, const E epsilon) const {
+            const auto hit{
+                    instance().intersects(by * superclass::forward, epsilon)};
+            if (hit) {
                 return hit.value() * superclass::backward;
             } else {
                 return {};
@@ -111,14 +112,14 @@ namespace animray {
         }
 
         /// Occlusion check
-        template< typename R >
+        template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
             return instance().occludes(by * superclass::forward, epsilon);
         }
 
         /// Allow the instance to be used as a camera
-        template< typename F >
-        intersection_type operator () (F x, F y) const {
+        template<typename F>
+        intersection_type operator()(F x, F y) const {
             return instance()(x, y) * superclass::backward;
         }
     };

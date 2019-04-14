@@ -27,14 +27,14 @@ FSL_TEST_SUITE(cross_product);
 
 
 FSL_TEST_FUNCTION(simple) {
-    FSL_CHECK_EQ(cross(
-        animray::unit_vector<int>(0, 1, 0),
-        animray::point3d<int>(1, 0, 0)),
-        animray::point3d<int>(0, 0, -1));
-    FSL_CHECK_EQ(cross(
-        animray::unit_vector<int>(1, 0, 0),
-        animray::point3d<int>(0, 1, 0)),
-        animray::point3d<int>(0, 0, 1));
+    FSL_CHECK_EQ(
+            cross(animray::unit_vector<int>(0, 1, 0),
+                  animray::point3d<int>(1, 0, 0)),
+            animray::point3d<int>(0, 0, -1));
+    FSL_CHECK_EQ(
+            cross(animray::unit_vector<int>(1, 0, 0),
+                  animray::point3d<int>(0, 1, 0)),
+            animray::point3d<int>(0, 0, 1));
 }
 
 
@@ -45,4 +45,3 @@ FSL_TEST_FUNCTION(inverse) {
     FSL_CHECK_EQ(cross(e2, e1), animray::point3d<double>(0, 0, -15));
     FSL_CHECK_EQ(-cross(e2, e1), animray::point3d<double>(0, 0, 15));
 }
-

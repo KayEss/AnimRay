@@ -35,19 +35,18 @@ namespace animray {
     template<typename V>
     class animatable {
         V starting_value;
-    public:
+
+      public:
         /// The type of value that is animated
         typedef V value_type;
 
         /// Pass on constructor arguments
         template<typename... A>
-        animatable(A&&...a)
-        : starting_value(std::forward<A>(a)...) {
-        }
+        animatable(A &&... a) : starting_value(std::forward<A>(a)...) {}
 
         /// Return the value
         template<typename T>
-        value_type operator () (const T &) const {
+        value_type operator()(const T &) const {
             return starting_value;
         }
     };
@@ -56,17 +55,15 @@ namespace animray {
     /// Base for attaching animations to attributes
     template<typename T>
     class animate : public T {
-    public:
+      public:
         /// Pass constructor arguments to superclass
         template<typename... A>
-        animate(A&&... args)
-        : T(std::forward<A>(args)...) {
-        }
+        animate(A &&... args) : T(std::forward<A>(args)...) {}
 
         /// Strip the frame out of the ray type
         template<typename R>
-        auto operator () (const R &ray) const {
-            return T::operator ()(ray.frame());
+        auto operator()(const R &ray) const {
+            return T::operator()(ray.frame());
         }
     };
 
@@ -75,15 +72,12 @@ namespace animray {
     template<typename T, typename F>
     class animate<std::function<T(F)>> {
         std::function<T(F)> function;
-    public:
+
+      public:
         /// Default construct return a default T
-        animate<std::function<T(F)>>()
-        : function([](F) { return T(); }) {
-        }
+        animate<std::function<T(F)>>() : function([](F) { return T(); }) {}
         /// Initialise with the lambda to use
-        animate<std::function<T(F)>>(std::function<T(F)> f)
-        : function(f) {
-        }
+        animate<std::function<T(F)>>(std::function<T(F)> f) : function(f) {}
 
         /// The type of the value of R
         /// TODO: We don't really want this here
@@ -91,13 +85,11 @@ namespace animray {
 
         /// Strip the frame out of the ray type
         template<typename R>
-        auto operator () (const R &ray) const {
+        auto operator()(const R &ray) const {
             return function(ray.frame());
         }
         /// We already have a frame number
-        auto operator () (const F f) const {
-            return function(f);
-        }
+        auto operator()(const F f) const { return function(f); }
     };
 
 

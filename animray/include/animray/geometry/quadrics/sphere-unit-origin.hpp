@@ -33,41 +33,36 @@ namespace animray {
 
 
     /// A simple 3D unit sphere primitive at the origin.
-    template< typename I, typename D = typename I::local_coord_type >
+    template<typename I, typename D = typename I::local_coord_type>
     class unit_sphere_at_origin {
-    public:
+      public:
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to return when the sphere is struck
         typedef I intersection_type;
 
         /// Check for equality
-        bool operator == ( const unit_sphere_at_origin & ) const {
-            return true;
-        }
+        bool operator==(const unit_sphere_at_origin &) const { return true; }
         /// Check for inequality
-        bool operator != ( const unit_sphere_at_origin & ) const {
-            return false;
-        }
+        bool operator!=(const unit_sphere_at_origin &) const { return false; }
 
         /// Returns the b c values for the quadratic given a start and direction
-        template<typename R> static
-        std::pair<D, D> quadratic_b_c(const R &by) {
+        template<typename R>
+        static std::pair<D, D> quadratic_b_c(const R &by) {
             return std::make_pair(
-                D(2) * dot(by.from(), by.direction()),
-                by.from().dot() - D(1));
+                    D(2) * dot(by.from(), by.direction()),
+                    by.from().dot() - D(1));
         }
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(
-            const R &by, const E epsilon
-        ) const {
+        fostlib::nullable<intersection_type>
+                intersects(const R &by, const E epsilon) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
-            const fostlib::nullable<D> t
-                (first_positive_quadratic_solution(D(1), bc.first, bc.second, epsilon));
-            if ( t ) {
+            const fostlib::nullable<D> t(first_positive_quadratic_solution(
+                    D(1), bc.first, bc.second, epsilon));
+            if (t) {
                 typedef typename ray<D>::end_type end_type;
                 typedef typename ray<D>::direction_type direction_type;
                 direction_type normal(by.from() + by.direction() * t.value());

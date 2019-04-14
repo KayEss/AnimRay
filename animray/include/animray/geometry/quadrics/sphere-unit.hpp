@@ -33,13 +33,14 @@ namespace animray {
 
 
     template<
-        typename P,
-        typename I = animray::ray<typename P::value_type>,
-        typename D = typename P::value_type>
+            typename P,
+            typename I = animray::ray<typename P::value_type>,
+            typename D = typename P::value_type>
     class unit_sphere {
         /// The sphere at the origin we want to map position to
         unit_sphere_at_origin<I, D> origin;
-    public:
+
+      public:
         /// Position type
         typedef P position_type;
         /// The type of the local coordinates used
@@ -53,10 +54,12 @@ namespace animray {
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(R by, const E epsilon) const {
+        fostlib::nullable<intersection_type>
+                intersects(R by, const E epsilon) const {
             by.from(by.from() - reduce(position(), by));
-            fostlib::nullable< intersection_type > hit(origin.intersects(by, epsilon));
-            if ( hit ) {
+            fostlib::nullable<intersection_type> hit(
+                    origin.intersects(by, epsilon));
+            if (hit) {
                 hit.value().from(hit.value().from() + reduce(position(), by));
                 return hit;
             } else {

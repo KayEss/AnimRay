@@ -57,4 +57,3 @@ FSL_TEST_FUNCTION(point3d) {
     FSL_CHECK(not animray::detail::is_callable_impl<point>::value);
     FSL_CHECK(not animray::is_callable<point>::value);
 }
-

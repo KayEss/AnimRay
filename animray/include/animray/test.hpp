@@ -33,13 +33,14 @@ namespace animray {
     /// Check if two points are close enough to be considered the same
     template<typename D>
     void check_close(
-        const animray::point3d<D> &l, const animray::point3d<D> &r, const D error = 1e-3
-    ) {
+            const animray::point3d<D> &l,
+            const animray::point3d<D> &r,
+            const D error = 1e-3) {
         try {
             FSL_CHECK_ERROR(l.x(), r.x(), error);
             FSL_CHECK_ERROR(l.y(), r.y(), error);
             FSL_CHECK_ERROR(l.z(), r.z(), error);
-        } catch ( fostlib::exceptions::exception &e ) {
+        } catch (fostlib::exceptions::exception &e) {
             fostlib::insert(e.data(), "check_close", "error", error);
             fostlib::insert(e.data(), "check_close", "left", l);
             fostlib::insert(e.data(), "check_close", "right", r);

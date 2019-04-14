@@ -43,22 +43,18 @@ namespace animray {
     template<typename R, typename M>
     struct mixin : public R, public M {
         /// Default constructor
-        mixin()
-        : R{}, M{} {
-        }
+        mixin() : R{}, M{} {}
 
         /// Construct by forwarding all arguments to both bases
         template<typename... A>
-        explicit mixin(A&&... args)
-        : R{args...}, M{args...} {
-        }
+        explicit mixin(A &&... args) : R{args...}, M{args...} {}
 
-        /// These operations always go to `R` because that is where geometry etc.
-        /// lives.
+        /// These operations always go to `R` because that is where geometry
+        /// etc. lives.
         template<typename B>
-        auto operator * (const B &by) const {
+        auto operator*(const B &by) const {
             mixin r{*this};
-            r.R::operator *= (by);
+            r.R::operator*=(by);
             return r;
         }
     };

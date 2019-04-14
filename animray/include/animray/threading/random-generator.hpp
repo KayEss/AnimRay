@@ -33,10 +33,7 @@ namespace animray {
 
         /// Wrapper for a std:: random engine so it can be used as a template
         /// argument and will be initialised properly and be thread safe
-        template<
-            typename E = std::mt19937,
-            typename D = std::random_device
-        >
+        template<typename E = std::mt19937, typename D = std::random_device>
         struct engine {
             /// The type of the engine
             typedef E engine_type;
@@ -47,16 +44,12 @@ namespace animray {
 
 
         /// Define this outside of the template because the rules say so
-        template< typename E, typename D >
+        template<typename E, typename D>
         thread_local E engine<E, D>::e{D{}()};
 
 
         /// A distribution that returns a sample with ints as parameters
-        template<
-            typename D,
-            typename E = engine<>,
-            int... P
-        >
+        template<typename D, typename E = engine<>, int... P>
         struct jitter {
             static auto sample() {
                 thread_local static D d(P...);
@@ -69,4 +62,3 @@ namespace animray {
 
 
 }
-

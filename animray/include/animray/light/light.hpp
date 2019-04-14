@@ -28,7 +28,7 @@ namespace animray {
 
 
     /// Lights allow illumination of the scene
-    template< typename L, typename C >
+    template<typename L, typename C>
     class light;
 
 

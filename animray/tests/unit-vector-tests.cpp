@@ -30,15 +30,14 @@ FSL_TEST_SUITE(unit_vector);
 
 
 FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable< unit_vector< int > >();
-    fostlib::test::default_copy_constructable< unit_vector< int64_t > >();
-    fostlib::test::default_copy_constructable< unit_vector< float > >();
-    fostlib::test::default_copy_constructable< unit_vector< double > >();
-    fostlib::test::default_copy_constructable< unit_vector< long double > >();
+    fostlib::test::default_copy_constructable<unit_vector<int>>();
+    fostlib::test::default_copy_constructable<unit_vector<int64_t>>();
+    fostlib::test::default_copy_constructable<unit_vector<float>>();
+    fostlib::test::default_copy_constructable<unit_vector<double>>();
+    fostlib::test::default_copy_constructable<unit_vector<long double>>();
 }
 
 
 FSL_TEST_FUNCTION(comparison) {
     FSL_CHECK_EQ(unit_vector<int>(), unit_vector<int>(0, 0, 1));
 }
-

@@ -32,8 +32,8 @@ namespace animray {
      * result.
      */
     template<typename Op, typename Var, typename... Pack>
-    decltype(auto) foldl(Op&&op, Var i1, Var i2, Pack... ip) {
-        if constexpr ( sizeof...(ip) ) {
+    decltype(auto) foldl(Op &&op, Var i1, Var i2, Pack... ip) {
+        if constexpr (sizeof...(ip)) {
             return foldl(op, op(i1, i2), ip...);
         } else {
             return op(i1, i2);
@@ -42,4 +42,3 @@ namespace animray {
 
 
 }
-

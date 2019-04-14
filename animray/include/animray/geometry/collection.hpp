@@ -34,7 +34,7 @@ namespace animray {
     /// A simple collection of objects
     template<typename O, typename V = std::vector<O>>
     class collection {
-    public:
+      public:
         /// The type of objects that can be inserted
         typedef O instance_type;
         /// The type of the collection
@@ -58,26 +58,25 @@ namespace animray {
 
         /// Ray intersection with closest item
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(
-            const R &by, const E epsilon
-        ) const {
-            fostlib::nullable< intersection_type > result;
+        fostlib::nullable<intersection_type>
+                intersects(const R &by, const E epsilon) const {
+            fostlib::nullable<intersection_type> result;
             local_coord_type result_dot;
-            for ( const auto &instance : instances() ) {
-                if ( result ) {
-                    fostlib::nullable< intersection_type >
-                        intersection(instance.intersects(by, epsilon));
-                    if ( intersection ) {
+            for (const auto &instance : instances()) {
+                if (result) {
+                    fostlib::nullable<intersection_type> intersection(
+                            instance.intersects(by, epsilon));
+                    if (intersection) {
                         local_coord_type dot(
-                            (intersection.value().from() - by.from()).dot());
-                        if ( dot < result_dot ) {
+                                (intersection.value().from() - by.from()).dot());
+                        if (dot < result_dot) {
                             result = std::move(intersection);
                             result_dot = dot;
                         }
                     }
                 } else {
                     result = instance.intersects(by, epsilon);
-                    if ( result ) {
+                    if (result) {
                         result_dot = (result.value().from() - by.from()).dot();
                     }
                 }
@@ -88,10 +87,12 @@ namespace animray {
         /// Occlusion check
         template<typename R, typename E>
         bool occludes(const R &by, const E epsilon) const {
-            return std::find_if(instances().begin(), instances().end(),
-                [&by, epsilon](const instance_type &instance) {
-                    return instance.occludes(by, epsilon);
-                }) != instances().end();
+            return std::find_if(
+                           instances().begin(), instances().end(),
+                           [&by, epsilon](const instance_type &instance) {
+                               return instance.occludes(by, epsilon);
+                           })
+                    != instances().end();
         }
     };
 

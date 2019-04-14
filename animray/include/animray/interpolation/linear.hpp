@@ -40,11 +40,14 @@ namespace animray {
             return perunit * time;
         }
         template<typename S, boost::int64_t P>
-        S linear(
-            const S end,
-            const boost::date_time::subsecond_duration<boost::posix_time::time_duration, P> time,
-            const boost::date_time::subsecond_duration<boost::posix_time::time_duration, P> outof
-        ) {
+        S
+                linear(const S end,
+                       const boost::date_time::subsecond_duration<
+                               boost::posix_time::time_duration,
+                               P> time,
+                       const boost::date_time::subsecond_duration<
+                               boost::posix_time::time_duration,
+                               P> outof) {
             const S perunit(end * P / outof.ticks());
             return perunit * time.ticks() / P;
         }

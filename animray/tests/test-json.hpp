@@ -23,12 +23,10 @@
 
 
 namespace {
-    template< typename V >
-    inline void json_roundtrip( const V &v, const fostlib::string &js ) {
+    template<typename V>
+    inline void json_roundtrip(const V &v, const fostlib::string &js) {
         const fostlib::json json = fostlib::json::parse(js);
-        FSL_CHECK_EQ(
-            fostlib::coerce< fostlib::json >( v ), json
-        );
-        FSL_CHECK_EQ( fostlib::coerce< V >( json ), v );
+        FSL_CHECK_EQ(fostlib::coerce<fostlib::json>(v), json);
+        FSL_CHECK_EQ(fostlib::coerce<V>(json), v);
     }
 }

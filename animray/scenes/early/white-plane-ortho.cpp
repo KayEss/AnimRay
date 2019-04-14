@@ -28,14 +28,13 @@
 #include <animray/targa.hpp>
 
 
-FSL_MAIN(
-    "animray",
-    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
-)( fostlib::ostream &out, fostlib::arguments &args ) {
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+(fostlib::ostream &out, fostlib::arguments &args) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("white-plane-ortho.tga"));
-    int width = fostlib::coerce< int >( args[2].value_or("1920") );
-    int height = fostlib::coerce< int >( args[3].value_or("1080") );
+            fostlib::coerce<boost::filesystem::wpath>(
+                    args[1].value_or("white-plane-ortho.tga"));
+    int width = fostlib::coerce<int>(args[2].value_or("1920"));
+    int height = fostlib::coerce<int>(args[3].value_or("1080"));
 
     const double size = 20.0;
     const double aspect = double(width) / height;
@@ -44,18 +43,20 @@ FSL_MAIN(
 
     typedef animray::ray<double> ray;
     animray::plane<ray> plane;
-    typedef animray::film< animray::rgb< uint8_t > > film_type;
+    typedef animray::film<animray::rgb<uint8_t>> film_type;
     animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
-    film_type output(width, height,
-        [=, &plane](const film_type::size_type x, const film_type::size_type y) {
-            ray r(camera(x, y));
-            ray intersection(plane.intersects(r, 0.0).value());
-            ray light(intersection.from(), ray::end_type(5.0, 5.0, -5.0));
-            const double costheta = dot(light.direction(), intersection.direction());
-            return animray::rgb< uint8_t >(50 + 205 * costheta);
-        });
+    film_type output(
+            width, height,
+            [=, &plane](
+                    const film_type::size_type x, const film_type::size_type y) {
+                ray r(camera(x, y));
+                ray intersection(plane.intersects(r, 0.0).value());
+                ray light(intersection.from(), ray::end_type(5.0, 5.0, -5.0));
+                const double costheta =
+                        dot(light.direction(), intersection.direction());
+                return animray::rgb<uint8_t>(50 + 205 * costheta);
+            });
     animray::targa(output_filename, output);
 
     return 0;
 }
-

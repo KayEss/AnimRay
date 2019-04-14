@@ -33,15 +33,14 @@ namespace animray {
 
 
     /// A simple prime number test that is fairly efficient
-    template< typename I >
-    bool is_prime( I v ) {
-        if ( v % 2 == 0 )
+    template<typename I>
+    bool is_prime(I v) {
+        if (v % 2 == 0)
             return v == 2;
         else {
-            I u( std::sqrt( double(v) ) );
-            for ( I i = 3; i <= u; i += 2 )
-                if ( v % i == 0 )
-                    return false;
+            I u(std::sqrt(double(v)));
+            for (I i = 3; i <= u; i += 2)
+                if (v % i == 0) return false;
             return true;
         }
     }
@@ -51,9 +50,10 @@ namespace animray {
 
 
         /// A prime number generator with implicit state in a closure
-        template< typename I >
-        I next_prime( I &i ) {
-            while ( !is_prime( i++ ) );
+        template<typename I>
+        I next_prime(I &i) {
+            while (!is_prime(i++))
+                ;
             return i - 1;
         }
 
@@ -62,11 +62,9 @@ namespace animray {
 
 
     /// A meta-function that returns a prime number generator
-    template< typename I >
+    template<typename I>
     auto prime_generator() {
-        return [next=2]() mutable {
-            return detail::next_prime(next);
-        };
+        return [next = 2]() mutable { return detail::next_prime(next); };
     }
 
 
@@ -76,8 +74,8 @@ namespace animray {
         std::vector<I> factors;
         auto gen = prime_generator<I>();
         I factor = gen();
-        while ( v > 1 ) {
-            if ( v % factor == 0 ) {
+        while (v > 1) {
+            if (v % factor == 0) {
                 factors.push_back(factor);
                 v = v / factor;
             } else {

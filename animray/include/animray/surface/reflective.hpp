@@ -35,7 +35,7 @@ namespace animray {
     /// The matte surface intersection type
     template<typename C>
     class reflective {
-    public:
+      public:
         /// Default constructor
         reflective() {}
 
@@ -45,18 +45,21 @@ namespace animray {
         /// Calculate the light coming from the reflected ray
         template<typename RI, typename I, typename CI, typename G>
         CI reflected(
-            const CI &, const RI &observer, const I &intersection, const G &scene
-        ) const {
+                const CI &,
+                const RI &observer,
+                const I &intersection,
+                const G &scene) const {
             typedef typename RI::local_coord_type accuracy;
-            const accuracy ci = -dot(observer.direction(), intersection.direction());
-            const unit_vector< accuracy > ri(
-                observer.direction() +
-                    intersection.direction() * accuracy(2) * ci);
+            const accuracy ci =
+                    -dot(observer.direction(), intersection.direction());
+            const unit_vector<accuracy> ri(
+                    observer.direction()
+                    + intersection.direction() * accuracy(2) * ci);
             typename animray::with_depth_count<RI>::type refray(observer);
             refray.add_count(observer);
             refray.from(intersection.from());
             refray.direction(ri);
-            if ( refray.depth_count() > 5 ) {
+            if (refray.depth_count() > 5) {
                 return scene.background();
             } else {
                 return scene(refray);
@@ -64,21 +67,26 @@ namespace animray {
         }
 
         /// Calculate the light/surface interaction
-        template<typename RI, typename RL, typename I,
-            typename CI, typename G>
-        CI operator () (
-            const C &, const RI &, const RL &, const I &, const CI &, const G &
-        ) const {
+        template<typename RI, typename RL, typename I, typename CI, typename G>
+        CI operator()(
+                const C &,
+                const RI &,
+                const RL &,
+                const I &,
+                const CI &,
+                const G &) const {
             // There is never any light due to illumination
             return CI();
         }
 
         /// The specular light is emissive
         template<typename CI, typename RI, typename I, typename G>
-        CI operator () (
-            const C &attenuation, const CI &c,
-            const RI &observer, const I &intersection, const G &scene
-        ) const {
+        CI operator()(
+                const C &attenuation,
+                const CI &c,
+                const RI &observer,
+                const I &intersection,
+                const G &scene) const {
             return reflected(c, observer, intersection, scene) * attenuation;
         }
     };

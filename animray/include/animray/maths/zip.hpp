@@ -29,8 +29,10 @@ namespace animray {
 
     namespace detail {
         template<typename T1, typename T2, std::size_t... I>
-        constexpr decltype(auto) zipper(T1&& t1, T2&& t2, std::index_sequence<I...>) {
-            return std::make_tuple(std::make_pair(std::get<I>(t1), std::get<I>(t2))...);
+        constexpr decltype(auto)
+                zipper(T1 &&t1, T2 &&t2, std::index_sequence<I...>) {
+            return std::make_tuple(
+                    std::make_pair(std::get<I>(t1), std::get<I>(t2))...);
         }
     }
 
@@ -41,15 +43,18 @@ namespace animray {
      * Zips two tuples of the same size into a single tuple of pairs.
      */
     template<typename T1, typename T2>
-    constexpr decltype(auto) zip(T1&& t1, T2&& t2) {
-        constexpr const std::size_t size1 = std::tuple_size<std::decay_t<T1>>::value;
-        constexpr const std::size_t size2 = std::tuple_size<std::decay_t<T2>>::value;
-        static_assert(size1 == size2, "Tuples that are to be zipped must be same size");
+    constexpr decltype(auto) zip(T1 &&t1, T2 &&t2) {
+        constexpr const std::size_t size1 =
+                std::tuple_size<std::decay_t<T1>>::value;
+        constexpr const std::size_t size2 =
+                std::tuple_size<std::decay_t<T2>>::value;
+        static_assert(
+                size1 == size2,
+                "Tuples that are to be zipped must be same size");
         return detail::zipper(
-            std::forward<T1>(t1), std::forward<T2>(t2),
-            std::make_index_sequence<size1>{});
+                std::forward<T1>(t1), std::forward<T2>(t2),
+                std::make_index_sequence<size1>{});
     }
 
 
 }
-

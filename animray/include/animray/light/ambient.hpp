@@ -31,27 +31,23 @@ namespace animray {
 
 
     /// Void lights are ambient
-    template< typename C >
+    template<typename C>
     class light<void, C> {
-    public:
+      public:
         /// The colour type
         typedef C color_type;
 
         /// The colour of the light
-        fostlib::accessors< color_type > color;
+        fostlib::accessors<color_type> color;
 
         /// Default construct a light with no illumination
-        light()
-        : color() {
-        }
+        light() : color() {}
         /// Construct with a given color
-        explicit light(const color_type &c)
-        : color(c) {
-        }
+        explicit light(const color_type &c) : color(c) {}
 
         /// Calculate the illumination given by this light
-        template< typename O, typename R, typename G >
-        color_type operator () (const O &, const R &, const G &) const {
+        template<typename O, typename R, typename G>
+        color_type operator()(const O &, const R &, const G &) const {
             return color();
         }
     };

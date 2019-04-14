@@ -33,7 +33,7 @@ namespace animray {
     /// The matte surface intersection type
     template<typename C>
     class matte {
-    public:
+      public:
         /// Default constructor
         matte() {}
 
@@ -41,12 +41,14 @@ namespace animray {
         typedef C parameters;
 
         /// Calculate the light/surface interaction
-        template< typename RI, typename RL, typename I,
-            typename CI, typename G >
-        CI operator () (
-            const C &attenuation, const RI &, const RL &light,
-            const I &intersection, const CI &incident, const G &
-        ) const {
+        template<typename RI, typename RL, typename I, typename CI, typename G>
+        CI operator()(
+                const C &attenuation,
+                const RI &,
+                const RL &light,
+                const I &intersection,
+                const CI &incident,
+                const G &) const {
             typedef typename RI::local_coord_type D;
             const D costheta = dot(light.direction(), intersection.direction());
             return incident * attenuation * costheta;
@@ -54,9 +56,8 @@ namespace animray {
 
         /// This material is non-emissive
         template<typename CI, typename RI, typename I, typename G>
-        CI operator () (
-            const C &, const CI &, const RI &, const I &, const G &
-        ) const {
+        CI operator()(
+                const C &, const CI &, const RI &, const I &, const G &) const {
             return CI();
         }
     };

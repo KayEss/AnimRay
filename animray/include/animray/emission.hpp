@@ -31,9 +31,7 @@ namespace animray {
     template<typename C, typename RI, typename I, typename G>
     struct surface_emission {
         surface_emission() {}
-        C operator() (const RI&, const I &, const G &) const {
-            return C{};
-        }
+        C operator()(const RI &, const I &, const G &) const { return C{}; }
     };
 
 

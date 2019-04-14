@@ -31,7 +31,7 @@ namespace animray {
     template<typename I>
     struct epsilon {
         static constexpr typename I::local_coord_type value =
-            epsilon<typename I::local_coord_type>::value;
+                epsilon<typename I::local_coord_type>::value;
     };
 
 

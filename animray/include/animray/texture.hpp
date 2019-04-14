@@ -33,14 +33,16 @@ namespace animray {
 
     /// Handles a texture by managing generating and mapping functions
     template<
-        typename C, typename L,
-        typename F = const_value< C >,
-        typename P = texture_policy< C, L, F >
-    > class texture {
+            typename C,
+            typename L,
+            typename F = const_value<C>,
+            typename P = texture_policy<C, L, F>>
+    class texture {
         F function;
         typename P::color_conversion_functor_type color_converter;
         typename P::location_mapping_functor_type location_converter;
-    public:
+
+      public:
         /// The policy which controls the texture implementation
         typedef P policy_type;
         /// The colour type that is returned by the texture
@@ -51,20 +53,19 @@ namespace animray {
         typedef typename P::functor_type functor_type;
         /// The type of color conversion functor
         typedef typename P::color_conversion_functor_type
-            color_conversion_functor_type;
+                color_conversion_functor_type;
         /// The type of the location conversion functor
         typedef typename P::location_mapping_functor_type
-            location_mapping_functor_type;
-        /// The type of the first argument to the constructor (which creates the functor)
+                location_mapping_functor_type;
+        /// The type of the first argument to the constructor (which creates the
+        /// functor)
         typedef typename P::texture_constructor_arg1_type constructor_arg1_type;
 
         /// Construct a texture from a function
-        texture( constructor_arg1_type f )
-        : function( f ) {
-        }
+        texture(constructor_arg1_type f) : function(f) {}
 
         /// Return the color at the specified location
-        color_type operator () ( const location_type &location ) const {
+        color_type operator()(const location_type &location) const {
             return color_converter(location_converter(function, location));
         }
     };

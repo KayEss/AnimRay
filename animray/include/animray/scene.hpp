@@ -32,9 +32,9 @@ namespace animray {
 
 
     /// A scene featuring a light and a model
-    template< typename G, typename L, typename C >
+    template<typename G, typename L, typename C>
     class scene {
-    public:
+      public:
         /// The geometry type
         typedef G geometry_type;
         /// The light type
@@ -55,23 +55,23 @@ namespace animray {
         fostlib::accessors<color_type> background;
 
         /// Given a position on the camera film, calculate the colour it should be
-        template< typename M, typename S >
-        color_type operator() (const M &camera, S x, S y) const {
+        template<typename M, typename S>
+        color_type operator()(const M &camera, S x, S y) const {
             typename M::intersection_type observer(camera(x, y));
             return (*this)(observer);
         }
 
         /// Given a ray work out how much light is returned along it
         template<typename R>
-        color_type operator() (const R &observer) const {
-            fostlib::nullable<intersection_type>
-                intersection(
+        color_type operator()(const R &observer) const {
+            fostlib::nullable<intersection_type> intersection(
                     geometry().intersects(
-                        observer,
-                        epsilon<intersection_type>::value));
-            if ( intersection ) {
-                return color_type(light()(observer, intersection.value(), *this)) +
-                    emission<color_type>(observer, intersection.value(), *this);
+                            observer, epsilon<intersection_type>::value));
+            if (intersection) {
+                return color_type(
+                               light()(observer, intersection.value(), *this))
+                        + emission<color_type>(
+                                observer, intersection.value(), *this);
             } else {
                 return background();
             }

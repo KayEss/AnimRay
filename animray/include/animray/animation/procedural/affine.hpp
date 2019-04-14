@@ -36,14 +36,14 @@ namespace animray {
 
         /// Apply an animated affine transformation to the object
         template<
-            typename W,
-            std::pair<W, W> A(const typename W::value_type &),
-            typename O
-        >
+                typename W,
+                std::pair<W, W> A(const typename W::value_type &),
+                typename O>
         class affine {
             typename W::value_type start, end;
             std::size_t frames;
-        public:
+
+          public:
             /// The type of object that can be moved
             typedef O instance_type;
             /// Intersection type
@@ -53,30 +53,31 @@ namespace animray {
             fostlib::accessors<instance_type, fostlib::lvalue> instance;
 
             /// Store the animation parameters
-            affine &operator() (
-                const typename W::value_type &s,
-                const typename W::value_type &e,
-                const std::size_t f
-            ) {
-                start = s; end = e; frames = f;
+            affine &operator()(
+                    const typename W::value_type &s,
+                    const typename W::value_type &e,
+                    const std::size_t f) {
+                start = s;
+                end = e;
+                frames = f;
                 return *this;
             }
 
             /// Calculate the transformation matrix
             template<typename R>
             std::pair<W, W> matrices(const R &ray) const {
-                return A(interpolation::linear(start, end, ray.frame(), frames));
+                return A(
+                        interpolation::linear(start, end, ray.frame(), frames));
             }
 
             /// Ray intersection
             template<typename R, typename E>
-            fostlib::nullable< intersection_type > intersects(
-                const R &by, const E epsilon
-            ) const {
+            fostlib::nullable<intersection_type>
+                    intersects(const R &by, const E epsilon) const {
                 std::pair<W, W> transform(matrices(by));
-                fostlib::nullable< intersection_type >
-                    hit(instance().intersects(by * transform.first, epsilon));
-                if ( hit ) {
+                fostlib::nullable<intersection_type> hit(
+                        instance().intersects(by * transform.first, epsilon));
+                if (hit) {
                     return hit.value() * transform.second;
                 } else {
                     return fostlib::null;
@@ -90,7 +91,7 @@ namespace animray {
                 return instance().occludes(by * transform.first, epsilon);
             }
 
-        private:
+          private:
         };
 
 

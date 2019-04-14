@@ -42,29 +42,26 @@ namespace {
 
     struct circle {
         float cx, cy, r;
-        bool contains(std::size_t x, std::size_t y)  const {
+        bool contains(std::size_t x, std::size_t y) const {
             return square(cx - x) + square(cy - y) < square(r);
         }
     };
 
 
-    void more_circles(boost::mt19937 &rng, const ::circle &within,
-            std::vector< ::circle > &circles) {
-        boost::uniform_real<float>
-            r_radians(0, 2 * pi), r_distance(0, within.r);
-        boost::variate_generator<
-            boost::mt19937&, boost::uniform_real<float> >
+    void more_circles(
+            boost::mt19937 &rng,
+            const ::circle &within,
+            std::vector<::circle> &circles) {
+        boost::uniform_real<float> r_radians(0, 2 * pi),
+                r_distance(0, within.r);
+        boost::variate_generator<boost::mt19937 &, boost::uniform_real<float>>
                 radians(rng, r_radians), distance(rng, r_distance);
         float theta{radians()}, length{distance()};
-        for ( auto i = 0; i < 3; ++i ) {
-            circle next{
-                within.cx + length * std::cos(theta),
-                within.cy + length * std::sin(theta),
-                within.r / 2.f};
+        for (auto i = 0; i < 3; ++i) {
+            circle next{within.cx + length * std::cos(theta),
+                        within.cy + length * std::sin(theta), within.r / 2.f};
             circles.push_back(next);
-            if ( within.r > 2.f ) {
-                more_circles(rng, next, circles);
-            }
+            if (within.r > 2.f) { more_circles(rng, next, circles); }
         }
     }
 
@@ -72,43 +69,42 @@ namespace {
 }
 
 
-FSL_MAIN(
-    L"landmaker",
-    L"LandMaker, Copyright 2010-2014 Kirit Saelensminde"
-)( fostlib::ostream &out, fostlib::arguments &args ) {
+FSL_MAIN(L"landmaker", L"LandMaker, Copyright 2010-2014 Kirit Saelensminde")
+(fostlib::ostream &out, fostlib::arguments &args) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("out.tga"));
-    int width = fostlib::coerce< int >( args[2].value_or("100") );
-    int height = fostlib::coerce< int >( args[3].value_or("100") );
+            fostlib::coerce<boost::filesystem::wpath>(
+                    args[1].value_or("out.tga"));
+    int width = fostlib::coerce<int>(args[2].value_or("100"));
+    int height = fostlib::coerce<int>(args[3].value_or("100"));
 
     boost::mt19937 rng(static_cast<unsigned int>(std::time(0)));
-    std::vector< ::circle > circles;
-    circle start{width  / 2.f, height / 2.f, std::min(width, height) / 4.f};
-    for ( auto i = 0; i != 3; ++i ) {
+    std::vector<::circle> circles;
+    circle start{width / 2.f, height / 2.f, std::min(width, height) / 4.f};
+    for (auto i = 0; i != 3; ++i) {
         circles.push_back(start);
         more_circles(rng, start, circles);
     }
 
-    out << "Creating image " << output_filename
-        <<", size " << width << " x " << height
-        << " using " << circles.size() << " circles" << std::endl;
+    out << "Creating image " << output_filename << ", size " << width << " x "
+        << height << " using " << circles.size() << " circles" << std::endl;
 
-    typedef animray::film< animray::rgb< uint8_t > > film_type;
-    film_type output(width, height,
-        [&circles](film_type::size_type x, film_type::size_type y) {
-            double weight = 0.0025 * std::count_if(circles.begin(), circles.end(),
-                [=](const circle &c) -> bool {
-                    return c.contains(x, y);
-                });
-            animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
-            animray::rgb<double> c(
-                fostlib::coerce< animray::rgb<double> >(h));
-            return animray::rgb<uint8_t>(
-                c.red() * 255, c.green() * 255, c.blue() * 255);
-        });
+    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    film_type output(
+            width, height,
+            [&circles](film_type::size_type x, film_type::size_type y) {
+                double weight = 0.0025
+                        * std::count_if(circles.begin(), circles.end(),
+                                        [=](const circle &c) -> bool {
+                                            return c.contains(x, y);
+                                        });
+                animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
+                animray::rgb<double> c(
+                        fostlib::coerce<animray::rgb<double>>(h));
+                return animray::rgb<uint8_t>(
+                        c.red() * 255, c.green() * 255, c.blue() * 255);
+            });
 
     animray::targa(output_filename, output);
 
     return 0;
 }
-

@@ -26,40 +26,44 @@
 #include <animray/targa.hpp>
 
 
-FSL_MAIN(
-    "animray",
-    "AnimRay. Copyright 2010-2018 Kirit Saelensminde"
-)( fostlib::ostream &out, fostlib::arguments &args ) {
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+(fostlib::ostream &out, fostlib::arguments &args) {
     boost::filesystem::wpath output_filename =
-        fostlib::coerce< boost::filesystem::wpath >(args[1].value_or("white-sphere.tga"));
-    int width = fostlib::coerce< int >( args[2].value_or("1920") );
-    int height = fostlib::coerce< int >( args[3].value_or("1080") );
+            fostlib::coerce<boost::filesystem::wpath>(
+                    args[1].value_or("white-sphere.tga"));
+    int width = fostlib::coerce<int>(args[2].value_or("1920"));
+    int height = fostlib::coerce<int>(args[3].value_or("1080"));
 
     typedef animray::ray<double> ray;
     animray::unit_sphere_at_origin<ray> sphere;
-    typedef animray::film< animray::rgb< uint8_t > > film_type;
-    film_type output(width, height,
-        [=, &sphere](const film_type::size_type x, const film_type::size_type y) {
-            const double limit = std::min(width, height) / 2.0;
-            const double cx = (double(x) + 0.5 - width/2.0) / limit;
-            const double cy = -(double(y) + 0.5 - height/2.0) / limit;
-            ray r(ray::end_type(cx, cy, -10.0), ray::end_type(cx, cy, -9.0));
-            fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
-            if ( intersection ) {
-                ray light(intersection.value().from(), ray::end_type(5.0, 5.0, -5.0));
-                if ( sphere.occludes(light, 1e-9) ) {
-                    return animray::rgb< uint8_t >(50);
+    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    film_type output(
+            width, height,
+            [=, &sphere](
+                    const film_type::size_type x, const film_type::size_type y) {
+                const double limit = std::min(width, height) / 2.0;
+                const double cx = (double(x) + 0.5 - width / 2.0) / limit;
+                const double cy = -(double(y) + 0.5 - height / 2.0) / limit;
+                ray r(ray::end_type(cx, cy, -10.0),
+                      ray::end_type(cx, cy, -9.0));
+                fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
+                if (intersection) {
+                    ray light(
+                            intersection.value().from(),
+                            ray::end_type(5.0, 5.0, -5.0));
+                    if (sphere.occludes(light, 1e-9)) {
+                        return animray::rgb<uint8_t>(50);
+                    } else {
+                        const double costheta =
+                                dot(light.direction(),
+                                    intersection.value().direction());
+                        return animray::rgb<uint8_t>(50 + 205 * costheta);
+                    }
                 } else {
-                    const double costheta = dot(light.direction(),
-                        intersection.value().direction());
-                    return animray::rgb< uint8_t >(50 + 205 * costheta);
+                    return animray::rgb<uint8_t>(0);
                 }
-            } else {
-                return animray::rgb< uint8_t >(0);
-            }
-        });
+            });
     animray::targa(output_filename, output);
 
     return 0;
 }
-

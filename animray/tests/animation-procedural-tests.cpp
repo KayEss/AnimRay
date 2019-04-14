@@ -46,7 +46,8 @@ FSL_TEST_FUNCTION(constant) {
 
 FSL_TEST_FUNCTION(linear_frames_boost_function) {
     const auto f{[](const ray_type &r) {
-        return animray::interpolation::linear(5.0, 15.0, r.frame(), std::size_t(10));
+        return animray::interpolation::linear(
+                5.0, 15.0, r.frame(), std::size_t(10));
     }};
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), 5);
@@ -58,7 +59,8 @@ FSL_TEST_FUNCTION(linear_frames_boost_function) {
 
 FSL_TEST_FUNCTION(linear_frames_std_function) {
     const auto f{[](const ray_type &r) {
-        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
+        return animray::interpolation::linear(
+                -5.0, 5.0, r.frame(), std::size_t(10));
     }};
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), -5);
@@ -69,7 +71,8 @@ FSL_TEST_FUNCTION(linear_frames_std_function) {
 
 namespace {
     int linear_frames_function(const ray_type &r) {
-        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
+        return animray::interpolation::linear(
+                -5.0, 5.0, r.frame(), std::size_t(10));
     }
 }
 FSL_TEST_FUNCTION(linear_frames_function) {
@@ -82,7 +85,8 @@ FSL_TEST_FUNCTION(linear_frames_function) {
 
 FSL_TEST_FUNCTION(linear_frames_auto) {
     const auto f = [](const ray_type &r) {
-        return animray::interpolation::linear(-5.0, 5.0, r.frame(), std::size_t(10));
+        return animray::interpolation::linear(
+                -5.0, 5.0, r.frame(), std::size_t(10));
     };
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), -5);
@@ -93,7 +97,7 @@ FSL_TEST_FUNCTION(linear_frames_auto) {
 
 FSL_TEST_FUNCTION(rotate) {
     animray::animation::rotate_xy<animray::point3d<double>> rot(
-        animray::point3d<double>(1, 1, 1), 2, 90_deg, 0_deg);
+            animray::point3d<double>(1, 1, 1), 2, 90_deg, 0_deg);
     check_close(rot(0), animray::point3d<double>(3, 1, 1));
     check_close(rot(1), animray::point3d<double>(1, 3, 1));
     check_close(rot(2), animray::point3d<double>(-1, 1, 1));
@@ -105,4 +109,3 @@ FSL_TEST_FUNCTION(rotate) {
     check_close(rot(2), animray::point3d<double>(1, -1, 1));
     check_close(rot(3), animray::point3d<double>(3, 1, 1));
 }
-

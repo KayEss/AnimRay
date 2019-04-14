@@ -45,56 +45,53 @@ namespace animray {
 
 
     /// Stores geometry objects of different types
-    template< typename O, typename... Os >
+    template<typename O, typename... Os>
     class compound;
 
 
     /// Partial specialisation of the intersection type for compound
-    template< typename O, typename... Os >
+    template<typename O, typename... Os>
     class intersection<compound<O, Os...>> {
-    public:
+      public:
         /// The type of the local coordinate system
-        using local_coord_type =
-            typename std::common_type<
+        using local_coord_type = typename std::common_type<
                 typename O::local_coord_type,
                 typename Os::local_coord_type...>::type;
         /// The type of the strike location
-        using end_type =
-            typename std::common_type<
+        using end_type = typename std::common_type<
                 typename O::intersection_type::end_type,
                 typename Os::intersection_type::end_type...>::type;
         /// The type of the strike location
-        using direction_type =
-            typename std::common_type<
+        using direction_type = typename std::common_type<
                 typename O::intersection_type::direction_type,
                 typename Os::intersection_type::direction_type...>::type;
 
         /// The wrapped intersection
-        fostlib::accessors<
-            std::variant<
+        fostlib::accessors<std::variant<
                 typename O::intersection_type,
-                typename Os::intersection_type...
-            >> wrapped_intersection;
+                typename Os::intersection_type...>>
+                wrapped_intersection;
 
         template<typename I>
-        intersection(I &&i)
-        : wrapped_intersection(std::move(i)) {
-        }
+        intersection(I &&i) : wrapped_intersection(std::move(i)) {}
 
         end_type from() const {
-            return std::visit([](auto i) { return i.from(); }, wrapped_intersection());
+            return std::visit(
+                    [](auto i) { return i.from(); }, wrapped_intersection());
         }
 
         direction_type direction() const {
-            return std::visit([](auto i) { return i.direction(); }, wrapped_intersection());
+            return std::visit(
+                    [](auto i) { return i.direction(); },
+                    wrapped_intersection());
         }
     };
 
 
     /// Stores geometry objects of different types
-    template< typename O, typename... Os >
+    template<typename O, typename... Os>
     class compound {
-    public:
+      public:
         /// The type we use to store the instances
         using instances_type = std::tuple<O, Os...>;
         /// The type of the local coordinate system
@@ -108,51 +105,74 @@ namespace animray {
         /// Forward the intersection check to the geometry instances.
         /// Return the closest intersection, `null` if none are found.
         template<typename R, typename E>
-        fostlib::nullable<intersection_type> intersects(
-            const R &by, const E epsilon
-        ) const {
+        fostlib::nullable<intersection_type>
+                intersects(const R &by, const E epsilon) const {
             using mid_type = std::pair<
                     std::optional<local_coord_type>,
                     std::optional<intersection_type>>;
-            return std::apply([&by, epsilon](const auto &... geom) {
-                const auto dot = [&by](auto i) -> mid_type {
-                    if ( i ) return {(i.value().from() - by.from()).dot(), std::move(i.value())};
-                    else return {std::nullopt, std::nullopt};
-                };
-                return foldl(
-                    [](auto i1, auto i2) -> mid_type {
-                        if ( not i1.first ) return i2;
-                        else if ( not i2.first ) return i1;
-                        else if ( i1.first.value() < i2.first.value() ) return i1;
-                        else return i2;
-                    },
-                    dot(geom.intersects(by, epsilon))...);
-            }, instances()).second;
+            return std::apply(
+                           [&by, epsilon](const auto &... geom) {
+                               const auto dot = [&by](auto i) -> mid_type {
+                                   if (i)
+                                       return {(i.value().from() - by.from())
+                                                       .dot(),
+                                               std::move(i.value())};
+                                   else
+                                       return {std::nullopt, std::nullopt};
+                               };
+                               return foldl(
+                                       [](auto i1, auto i2) -> mid_type {
+                                           if (not i1.first)
+                                               return i2;
+                                           else if (not i2.first)
+                                               return i1;
+                                           else if (
+                                                   i1.first.value()
+                                                   < i2.first.value())
+                                               return i1;
+                                           else
+                                               return i2;
+                                       },
+                                       dot(geom.intersects(by, epsilon))...);
+                           },
+                           instances())
+                    .second;
         };
 
         /// Calculate whether this object occludes the ray or not
-        template< typename R >
+        template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return std::apply([&by, epsilon](const auto &... geom) -> bool {
-                return (geom.occludes(by, epsilon) || ...);
-            }, instances());
+            return std::apply(
+                    [&by, epsilon](const auto &... geom) -> bool {
+                        return (geom.occludes(by, epsilon) || ...);
+                    },
+                    instances());
             return false;
         }
     };
 
 
-    template<typename C, typename O, typename RI, typename RL,
-        typename G, typename... Os>
+    template<
+            typename C,
+            typename O,
+            typename RI,
+            typename RL,
+            typename G,
+            typename... Os>
     struct surface_interaction<C, intersection<compound<O, Os...>>, RI, RL, G> {
         surface_interaction() {}
-        C operator() (
-            const RI &observer, const RL &light,
-            const intersection< compound<O, Os...> > &intersection,
-            const C &incident, const G &geometry
-        ) const {
-            return std::visit([&](const auto & inter) {
-                return shader(observer, light, inter, incident, geometry);
-            }, intersection.wrapped_intersection());
+        C operator()(
+                const RI &observer,
+                const RL &light,
+                const intersection<compound<O, Os...>> &intersection,
+                const C &incident,
+                const G &geometry) const {
+            return std::visit(
+                    [&](const auto &inter) {
+                        return shader(
+                                observer, light, inter, incident, geometry);
+                    },
+                    intersection.wrapped_intersection());
         }
     };
 
@@ -161,18 +181,18 @@ namespace animray {
      * Returns the emission characteristics for the light that was
      * struck by the intersection.
      */
-    template<typename C, typename O, typename RI,
-        typename G, typename... Os>
+    template<typename C, typename O, typename RI, typename G, typename... Os>
     struct surface_emission<C, RI, intersection<compound<O, Os...>>, G> {
         surface_emission() {}
-        C operator() (
-            const RI &observer,
-            const intersection<compound<O, Os...>> &intersection,
-            const G &geometry
-        ) const {
-            return std::visit([&](const auto &inter) {
-                return emission<C>(observer, inter, geometry);
-            }, intersection.wrapped_intersection());
+        C operator()(
+                const RI &observer,
+                const intersection<compound<O, Os...>> &intersection,
+                const G &geometry) const {
+            return std::visit(
+                    [&](const auto &inter) {
+                        return emission<C>(observer, inter, geometry);
+                    },
+                    intersection.wrapped_intersection());
         }
     };
 

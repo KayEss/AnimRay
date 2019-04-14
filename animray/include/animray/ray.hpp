@@ -31,10 +31,11 @@
 namespace animray {
 
 
-    /// Represents a ray starting at a point and going to infinity along a given vector
-    template<typename D, typename F=point3d<D>, typename V=unit_vector<D>>
+    /// Represents a ray starting at a point and going to infinity along a given
+    /// vector
+    template<typename D, typename F = point3d<D>, typename V = unit_vector<D>>
     class ray {
-    public:
+      public:
         /// The value type of the line
         typedef D local_coord_type;
         /// The type of the end point
@@ -43,34 +44,27 @@ namespace animray {
         typedef V direction_type;
 
         /// Construct a null ray
-        ray() {
-        }
+        ray() {}
         /// Construct a line between two locations
-        ray( const end_type &from, const end_type &to )
-        : from(from), direction(to - from) {
-        }
+        ray(const end_type &from, const end_type &to)
+        : from(from), direction(to - from) {}
         /// Construct a line from a location in the specified direction
-        ray( const end_type &from, const direction_type &dir )
-        : from(from), direction(dir) {
-        }
+        ray(const end_type &from, const direction_type &dir)
+        : from(from), direction(dir) {}
         /// Construct a follow on ray between two locations
         ray(const ray &, const end_type &from, const end_type &to)
-        : from(from), direction(to - from) {
-        }
+        : from(from), direction(to - from) {}
         /// Construct a follow on ray from a location in the specified direction
         ray(const ray &, const end_type &from, const direction_type &dir)
-        : from(from), direction(dir) {
-        }
+        : from(from), direction(dir) {}
 
         /// The start of the ray
-        fostlib::accessors< end_type > from;
+        fostlib::accessors<end_type> from;
         /// A unit direction vector
-        fostlib::accessors< direction_type > direction;
+        fostlib::accessors<direction_type> direction;
 
         /// Set a point the ray must go through
-        void to(const end_type &t) {
-            direction(t - from());
-        }
+        void to(const end_type &t) { direction(t - from()); }
 
         /// Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {
@@ -78,17 +72,17 @@ namespace animray {
         }
 
         /// Compare for equality
-        bool operator == (const ray &r) const {
+        bool operator==(const ray &r) const {
             return direction() == r.direction() && from() == r.from();
         }
         /// Compare for inequality
-        bool operator != (const ray &r) const {
+        bool operator!=(const ray &r) const {
             return direction() != r.direction() || from() != r.from();
         }
 
         /// Transform a ray by a matrix
         template<typename MD>
-        ray &operator *= (const matrix<MD> &right) {
+        ray &operator*=(const matrix<MD> &right) {
             end_type f(right * from()), e(right * ends());
             from(f);
             to(e);
@@ -97,7 +91,7 @@ namespace animray {
 
         /// Multiply
         template<typename MD>
-        ray operator * (const matrix<MD> &right) const {
+        ray operator*(const matrix<MD> &right) const {
             ray res(*this);
             res *= right;
             return res;
@@ -110,9 +104,9 @@ namespace animray {
 
 namespace fostlib {
     /// Coerce a ray to JSON
-    template< typename D >
-    struct coercer< json, animray::ray<D> > {
-        json coerce( const animray::ray<D> &l ) {
+    template<typename D>
+    struct coercer<json, animray::ray<D>> {
+        json coerce(const animray::ray<D> &l) {
             json r;
             jcursor("from").insert(r, fostlib::coerce<json>(l.from()));
             jcursor("direction").insert(r, fostlib::coerce<json>(l.direction()));
@@ -127,7 +121,7 @@ namespace std {
 
     /// Output to a stream
     template<typename D>
-    ostream &operator << (ostream &o, const animray::ray<D> &r) {
+    ostream &operator<<(ostream &o, const animray::ray<D> &r) {
         return o << r.from() << " -> " << r.direction();
     }
 

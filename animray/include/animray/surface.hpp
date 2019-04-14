@@ -35,28 +35,25 @@ namespace animray {
 
 
     /// Forward declaration of the surface
-    template< typename O, typename... S >
+    template<typename O, typename... S>
     class surface;
 
 
     /// Partial specialisation of the intersection type for a surface
-    template< typename O, typename... S >
-    class intersection< surface<O, S...> > : public O::intersection_type {
+    template<typename O, typename... S>
+    class intersection<surface<O, S...>> : public O::intersection_type {
         typedef typename O::intersection_type superclass;
         typedef typename surface<O, S...>::surface_parameters_type
-            surface_parameters_type;
+                surface_parameters_type;
         const surface_parameters_type *m_parameters;
-    public:
+
+      public:
         /// Default constructor (no intersection)
-        intersection()
-        : m_parameters(nullptr) {
-        }
+        intersection() : m_parameters(nullptr) {}
 
         /// Have an intersection so store the parameters
-        intersection(const superclass &r,
-            const surface_parameters_type &p)
-        : superclass(r), m_parameters(&p) {
-        }
+        intersection(const superclass &r, const surface_parameters_type &p)
+        : superclass(r), m_parameters(&p) {}
 
         /// Allow access to the parameters
         const surface_parameters_type &parameters() const {
@@ -65,57 +62,54 @@ namespace animray {
 
         /// Handle multiplication for transformaion of co-ordinate spaces
         template<typename B>
-        intersection operator * (const B &by) const {
+        intersection operator*(const B &by) const {
             intersection r{*this};
-            r.superclass::operator *= (by);
+            r.superclass::operator*=(by);
             return r;
         }
     };
 
 
     /// Stores the layers of a surface description
-    template< typename O, typename... S >
+    template<typename O, typename... S>
     class surface {
-    public:
+      public:
         /// The underlying object type
         typedef O instance_type;
         /// The type of the local coordinate system
         typedef typename instance_type::local_coord_type local_coord_type;
         /// The physical model of the surface
-        typedef std::tuple<typename S::parameters... >
-            surface_parameters_type;
+        typedef std::tuple<typename S::parameters...> surface_parameters_type;
         /// The intersection type
-        typedef intersection< surface > intersection_type;
+        typedef intersection<surface> intersection_type;
 
         /// Default construct a surface
         surface() {}
 
         /// Pass the constructor arguments on to the underlying parameters
         surface(typename S::parameters... args)
-        : surface_parameters(std::forward<typename S::parameters>(args)...) {
-        }
+        : surface_parameters(std::forward<typename S::parameters>(args)...) {}
 
         /// The geometry that is being shaded
         fostlib::accessors<instance_type, fostlib::lvalue> geometry;
 
         /// Capture the surface physics model
-        fostlib::accessors< surface_parameters_type > surface_parameters;
+        fostlib::accessors<surface_parameters_type> surface_parameters;
 
         /// Pass on affine transformation to the geometry
         template<typename T>
-        surface &operator () (const T &t) {
+        surface &operator()(const T &t) {
             geometry()(t);
             return *this;
         }
 
         /// Calculate the intersection of the ray on the instance
         template<typename R, typename E>
-        fostlib::nullable< intersection_type > intersects(
-            const R &by, const E epsilon
-        ) const {
-            fostlib::nullable< typename O::intersection_type >
-                hit(geometry().intersects(by, epsilon));
-            if ( hit ) {
+        fostlib::nullable<intersection_type>
+                intersects(const R &by, const E epsilon) const {
+            fostlib::nullable<typename O::intersection_type> hit(
+                    geometry().intersects(by, epsilon));
+            if (hit) {
                 return intersection_type(hit.value(), surface_parameters());
             } else {
                 return fostlib::null;
@@ -123,44 +117,59 @@ namespace animray {
         }
 
         /// Calculate whether this object occludes the ray or not
-        template< typename R >
+        template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
             return geometry().occludes(by, epsilon);
         }
     };
 
 
-    /// Specialisation of the surface interaction that will use all of the surface layers
-    template<typename C, typename O, typename RI, typename RL,
-        typename G, typename... S>
+    /// Specialisation of the surface interaction that will use all of the
+    /// surface layers
+    template<
+            typename C,
+            typename O,
+            typename RI,
+            typename RL,
+            typename G,
+            typename... S>
     struct surface_interaction<C, intersection<surface<O, S...>>, RI, RL, G> {
         surface_interaction() {}
-        C operator() (
-            const RI &observer, const RL &light,
-            const intersection<surface<O, S...>> &intersection,
-            const C &incident,
-            const G &scene
-        ) const {
-            return std::apply([&](auto... pair) {
-                return (pair.first(pair.second, observer, light, intersection, incident, scene) + ...);
-            }, zip(std::tuple<S...>{}, intersection.parameters()));
+        C operator()(
+                const RI &observer,
+                const RL &light,
+                const intersection<surface<O, S...>> &intersection,
+                const C &incident,
+                const G &scene) const {
+            return std::apply(
+                    [&](auto... pair) {
+                        return (pair.first(
+                                        pair.second, observer, light,
+                                        intersection, incident, scene)
+                                + ...);
+                    },
+                    zip(std::tuple<S...>{}, intersection.parameters()));
         }
     };
 
 
-    /// Specialisation of the surface emjssion that will use all of the surface layers
-    template<typename C, typename O, typename RI, typename G,
-        typename... S>
+    /// Specialisation of the surface emjssion that will use all of the surface
+    /// layers
+    template<typename C, typename O, typename RI, typename G, typename... S>
     struct surface_emission<C, RI, intersection<surface<O, S...>>, G> {
         surface_emission() {}
-        C operator() (
-            const RI &observer,
-            const intersection<surface<O, S...>> &intersection,
-            const G &scene
-        ) const {
-            return std::apply([&](auto... pair) {
-                return (pair.first(pair.second, C{}, observer, intersection, scene) + ...);
-            }, zip(std::tuple<S...>{}, intersection.parameters()));
+        C operator()(
+                const RI &observer,
+                const intersection<surface<O, S...>> &intersection,
+                const G &scene) const {
+            return std::apply(
+                    [&](auto... pair) {
+                        return (pair.first(
+                                        pair.second, C{}, observer,
+                                        intersection, scene)
+                                + ...);
+                    },
+                    zip(std::tuple<S...>{}, intersection.parameters()));
         }
     };
 

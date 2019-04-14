@@ -31,19 +31,18 @@ namespace animray {
 
 
     /// Represents the normal 3 channel HLS colour space
-    template< typename D >
-    class hls : private detail::array_based< D, 3 > {
-        typedef detail::array_based< D, 3 > superclass;
-    public:
+    template<typename D>
+    class hls : private detail::array_based<D, 3> {
+        typedef detail::array_based<D, 3> superclass;
+
+      public:
         /// The value type
         typedef typename superclass::value_type value_type;
         /// The array type
         typedef typename superclass::array_type array_type;
         /// The type of a value parameter
-        typedef typename
-            superclass::const_value_parameter_type
-            const_value_parameter_type
-        ;
+        typedef typename superclass::const_value_parameter_type
+                const_value_parameter_type;
         /// The size of the array
         static const std::size_t c_array_size = superclass::c_array_size;
 
@@ -51,26 +50,23 @@ namespace animray {
         using superclass::to_json;
 
         /// Default construct an HLS colour with all channels at zero
-        hls() {
-        }
+        hls() {}
         /// Construct an HLS colour with the specified channel values
-        hls( value_type h, value_type l, value_type s ) {
+        hls(value_type h, value_type l, value_type s) {
             superclass::array[0] = h;
             superclass::array[1] = l;
             superclass::array[2] = s;
         }
 
         /// Return the channel values
-        const array_type &array() const {
-            return superclass::array;
-        }
+        const array_type &array() const { return superclass::array; }
 
         /// Compare for equality
-        bool operator == ( const hls &r ) const {
+        bool operator==(const hls &r) const {
             return superclass::array == r.superclass::array;
         }
         /// Compare for inequality
-        bool operator != ( const hls &r ) const {
+        bool operator!=(const hls &r) const {
             return superclass::array != r.superclass::array;
         }
     };
@@ -86,36 +82,47 @@ namespace fostlib {
 
 
     /// Allow conversion from HLS to RGB for float versions
-    template< typename D >
+    template<typename D>
     struct coercer<
-        animray::rgb< D >, animray::hls< D >,
-        typename boost::enable_if< boost::is_floating_point< D > >::type
-    > {
+            animray::rgb<D>,
+            animray::hls<D>,
+            typename boost::enable_if<boost::is_floating_point<D>>::type> {
         /// Performs the coercion
-        animray::rgb< D > coerce( const animray::hls< D > &hls ) {
+        animray::rgb<D> coerce(const animray::hls<D> &hls) {
             const D h = hls.array()[0], l = hls.array()[1], s = hls.array()[2];
-            const D C = l <= D(0.5) ? D(2) * l * s : ( D(2) - D(2) * l ) * s;
+            const D C = l <= D(0.5) ? D(2) * l * s : (D(2) - D(2) * l) * s;
             const D H = h / D(60);
             D Hmod2 = H;
-            while ( Hmod2 > D(2) )
-                Hmod2 -= D(2);
-            const D X = C * ( D(1) - std::abs(Hmod2 - D(1)) );
+            while (Hmod2 > D(2)) Hmod2 -= D(2);
+            const D X = C * (D(1) - std::abs(Hmod2 - D(1)));
             D r, g, b;
-            if ( H < D(1) ) {
-                r = C; g = X; b = D(0);
-            } else if ( H < D(2) ) {
-                r = X; g = C; b = D(0);
-            } else if ( H < D(3) ) {
-                r = D(0); g = C; b = X;
-            } else if ( H < D(4) ) {
-                r = D(0); g = X; b = C;
-            } else if ( H < D(5) ) {
-                r = X; g = D(0); b = C;
+            if (H < D(1)) {
+                r = C;
+                g = X;
+                b = D(0);
+            } else if (H < D(2)) {
+                r = X;
+                g = C;
+                b = D(0);
+            } else if (H < D(3)) {
+                r = D(0);
+                g = C;
+                b = X;
+            } else if (H < D(4)) {
+                r = D(0);
+                g = X;
+                b = C;
+            } else if (H < D(5)) {
+                r = X;
+                g = D(0);
+                b = C;
             } else {
-                r = C; g = D(0); b = X;
+                r = C;
+                g = D(0);
+                b = X;
             }
             const float m = l - D(0.5) * C;
-            return animray::rgb< D >(r + m, g + m, b + m);
+            return animray::rgb<D>(r + m, g + m, b + m);
         }
     };
 

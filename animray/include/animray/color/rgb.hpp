@@ -31,14 +31,14 @@ namespace animray {
 
 
     /// Represents the normal 3 channel RGB colour space
-    template< typename D >
-    class rgb : private detail::array_based< D, 3 > {
-        typedef detail::array_based< D, 3 > superclass;
-    public:
+    template<typename D>
+    class rgb : private detail::array_based<D, 3> {
+        typedef detail::array_based<D, 3> superclass;
+
+      public:
         typedef typename superclass::value_type value_type;
         typedef typename superclass::array_type array_type;
-        typedef typename
-            superclass::const_value_parameter_type
+        typedef typename superclass::const_value_parameter_type
                 const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::print_on;
@@ -47,81 +47,71 @@ namespace animray {
         /// Default construct an RGB colour with all channels at zero
         rgb() {}
         /// Construct a colour from a luma signal
-        explicit rgb( value_type gray ) {
+        explicit rgb(value_type gray) {
             superclass::array[0] = gray;
             superclass::array[1] = gray;
             superclass::array[2] = gray;
         }
         /// Construct an RGB colour with the specified channel values
-        rgb( value_type r, value_type g, value_type b ) {
+        rgb(value_type r, value_type g, value_type b) {
             superclass::array[0] = r;
             superclass::array[1] = g;
             superclass::array[2] = b;
         }
         /// Construct from a 3 valued array
-        rgb(superclass &&s)
-        : superclass(s) {
-        }
+        rgb(superclass &&s) : superclass(s) {}
 
         /// Return the channel values
-        const array_type &array() const {
-            return superclass::array;
-        }
+        const array_type &array() const { return superclass::array; }
 
         /// Return the red channel value
-        value_type red() const {
-            return superclass::array[0];
-        }
+        value_type red() const { return superclass::array[0]; }
         /// Return the red channel value
-        value_type green() const {
-            return superclass::array[1];
-        }
+        value_type green() const { return superclass::array[1]; }
         /// Return the red channel value
-        value_type blue() const {
-            return superclass::array[2];
-        }
+        value_type blue() const { return superclass::array[2]; }
 
         /// Compare for equality
-        bool operator == ( const rgb &r ) const {
+        bool operator==(const rgb &r) const {
             return superclass::array == r.superclass::array;
         }
         /// Compare for inequality
-        bool operator != ( const rgb &r ) const {
+        bool operator!=(const rgb &r) const {
             return superclass::array != r.superclass::array;
         }
 
         /// Add the same value to each channel
-        rgb operator + (value_type gray) const {
-            return rgb(superclass::operator +(gray));
+        rgb operator+(value_type gray) const {
+            return rgb(superclass::operator+(gray));
         }
         /// Add two colour values together
-        rgb operator + (const rgb &r)  const{
+        rgb operator+(const rgb &r) const {
             return rgb(red() + r.red(), green() + r.green(), blue() + r.blue());
         }
         /// Add two colour values together
-        rgb &operator += (const rgb &r) {
-            superclass::operator +=(r);
+        rgb &operator+=(const rgb &r) {
+            superclass::operator+=(r);
             return *this;
         }
 
         /// In place division by a value
         template<typename S>
-        rgb &operator /= (const S &s) {
-            superclass::operator /=(s);
+        rgb &operator/=(const S &s) {
+            superclass::operator/=(s);
             return *this;
         }
 
         /// Multiply the channel values by a scalar
         template<typename S>
-        rgb operator * (const S weight) const {
-            return rgb(superclass::operator *(weight));
+        rgb operator*(const S weight) const {
+            return rgb(superclass::operator*(weight));
         }
     };
 
 
     /// Add a value to each channel
-    template<typename D> inline
-    rgb<D> operator + (const D d, const rgb<D> &c) {
+    template<typename D>
+    inline rgb<D> operator+(const D d, const rgb<D> &c) {
         return c + d;
     }
 

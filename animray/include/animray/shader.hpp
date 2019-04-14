@@ -28,13 +28,15 @@ namespace animray {
 
 
     /// Basic Lambertian full-white surface
-    template<typename C, typename I, typename RI, typename RL,
-        typename G>
+    template<typename C, typename I, typename RI, typename RL, typename G>
     struct surface_interaction {
         surface_interaction() {}
-        C operator() (
-            const RI &, const RL &light, const I &intersection, const C &incident, const G &
-        ) const {
+        C operator()(
+                const RI &,
+                const RL &light,
+                const I &intersection,
+                const C &incident,
+                const G &) const {
             const typename RI::local_coord_type costheta =
                     dot(light.direction(), intersection.direction());
             return incident * costheta;
@@ -43,12 +45,13 @@ namespace animray {
 
 
     /// Calls into the relevant surface partial specialisation
-    template<typename RI, typename RL, typename C,
-        typename I, typename G>
+    template<typename RI, typename RL, typename C, typename I, typename G>
     C shader(
-        const RI &observer, const RL &light, const I &intersection,
-        const C &incident, const G &geometry
-    ) {
+            const RI &observer,
+            const RL &light,
+            const I &intersection,
+            const C &incident,
+            const G &geometry) {
         const surface_interaction<C, I, RI, RL, G> calculation;
         return calculation(observer, light, intersection, incident, geometry);
     }

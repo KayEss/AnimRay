@@ -31,30 +31,27 @@ namespace animray {
 
 
     /// Represents the normal 3 channel RGB colour space with alpha channel
-    template< typename D >
-    class rgba : private detail::array_based< D, 4 > {
-        typedef detail::array_based< D, 4 > superclass;
-    public:
+    template<typename D>
+    class rgba : private detail::array_based<D, 4> {
+        typedef detail::array_based<D, 4> superclass;
+
+      public:
         typedef typename superclass::value_type value_type;
         typedef typename superclass::array_type array_type;
-        typedef typename
-            superclass::const_value_parameter_type
-            const_value_parameter_type
-        ;
+        typedef typename superclass::const_value_parameter_type
+                const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::to_json;
 
         /// Return the channel values
-        const array_type &array() const {
-            return superclass::array;
-        }
+        const array_type &array() const { return superclass::array; }
 
         /// Compare for equality
-        bool operator == ( const rgba &r ) const {
+        bool operator==(const rgba &r) const {
             return superclass::array == r.superclass::array;
         }
         /// Compare for inequality
-        bool operator != ( const rgba &r ) const {
+        bool operator!=(const rgba &r) const {
             return superclass::array != r.superclass::array;
         }
     };

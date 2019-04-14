@@ -25,27 +25,26 @@
 #include <fost/test>
 
 
-FSL_TEST_SUITE( surface );
+FSL_TEST_SUITE(surface);
 
 
 FSL_TEST_FUNCTION(matte_rgb) {
     animray::surface<
             animray::unit_sphere_at_origin<animray::ray<float>>,
-            animray::matte< animray::rgb<float> >
-        > red_ball(animray::rgb<float>(1, 0, 0));
+            animray::matte<animray::rgb<float>>>
+            red_ball(animray::rgb<float>(1, 0, 0));
 
     // Following based on the light<point3d<W>> class
-    decltype(red_ball)::intersection_type
-        hit(animray::ray<float>(
-                animray::point3d<float>(0, 0, 1),
-                animray::point3d<float>(0, 0, 2)),
+    decltype(red_ball)::intersection_type hit(
+            animray::ray<float>(
+                    animray::point3d<float>(0, 0, 1),
+                    animray::point3d<float>(0, 0, 2)),
             red_ball.surface_parameters());
     animray::ray<float> illumination(
-        animray::point3d<float>(0, 0, 1),
-        animray::point3d<float>(0, 0, 5));
+            animray::point3d<float>(0, 0, 1), animray::point3d<float>(0, 0, 5));
     animray::rgb<float> final(animray::shader(
-        animray::ray<float>(),
-        illumination, hit, animray::rgb<float>(255, 255, 255), red_ball));
+            animray::ray<float>(), illumination, hit,
+            animray::rgb<float>(255, 255, 255), red_ball));
     FSL_CHECK_ERROR(final.red(), 255.f, 0.001f);
     FSL_CHECK_EQ(final.green(), 0);
     FSL_CHECK_EQ(final.blue(), 0);
@@ -56,23 +55,21 @@ FSL_TEST_FUNCTION(matte_gray) {
     FSL_CHECK_EQ(10 * 0.5f, 5); // Check the maths will work out
     animray::surface<
             animray::unit_sphere_at_origin<animray::ray<float>>,
-            animray::matte< float >
-        > gray_ball(0.5);
+            animray::matte<float>>
+            gray_ball(0.5);
 
     // Following based on the light<point3d<W>> class
-    decltype(gray_ball)::intersection_type
-        hit(animray::ray<float>(
-                animray::point3d<float>(0, 0, 1),
-                animray::point3d<float>(0, 0, 2)),
+    decltype(gray_ball)::intersection_type hit(
+            animray::ray<float>(
+                    animray::point3d<float>(0, 0, 1),
+                    animray::point3d<float>(0, 0, 2)),
             gray_ball.surface_parameters());
     animray::ray<float> illumination(
-        animray::point3d<float>(0, 0, 1),
-        animray::point3d<float>(0, 0, 5));
+            animray::point3d<float>(0, 0, 1), animray::point3d<float>(0, 0, 5));
     animray::rgb<float> final(animray::shader(
-        animray::ray<float>(),
-        illumination, hit, animray::rgb<float>(10, 10, 10), gray_ball));
+            animray::ray<float>(), illumination, hit,
+            animray::rgb<float>(10, 10, 10), gray_ball));
     FSL_CHECK_ERROR(final.red(), 5.f, 0.0001f);
     FSL_CHECK_ERROR(final.green(), 5.f, 0.0001f);
     FSL_CHECK_ERROR(final.blue(), 5.f, 0.0001f);
 }
-

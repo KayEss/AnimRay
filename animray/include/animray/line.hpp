@@ -31,42 +31,35 @@ namespace animray {
 
 
     /// Represents part of a line through 3D space
-    template< typename D >
+    template<typename D>
     class line {
-    public:
+      public:
         /// The value type of the line
         typedef D value_type;
         /// The type of the end points
-        typedef point3d< value_type > end_type;
+        typedef point3d<value_type> end_type;
 
         /// Construct a null line
-        line() {
-        }
+        line() {}
         /// Construct a line between two locations
-        line( const end_type &from, const end_type &to )
-        : from( from ), to( to ) {
-        }
+        line(const end_type &from, const end_type &to) : from(from), to(to) {}
 
         /// The start of the line
-        fostlib::accessors< end_type > from;
+        fostlib::accessors<end_type> from;
         /// The end of the line
-        fostlib::accessors< end_type > to;
+        fostlib::accessors<end_type> to;
 
         /// Compare for equality
-        bool operator == ( const line &r ) const {
+        bool operator==(const line &r) const {
             return to() == r.to() && from() == r.from();
         }
         /// Compare for inequality
-        bool operator != ( const line &r ) const {
-            return ! ( *this == r );
-        }
+        bool operator!=(const line &r) const { return !(*this == r); }
 
         /// Returns the square of the length of the line
         value_type length_squared() const {
-            value_type
-                dx = to().x() - from().x(),
-                dy = to().y() - from().y(),
-                dz = to().z() - from().z();
+            value_type dx = to().x() - from().x(), dy = to().y() - from().y(),
+                       dz = to().z() - from().z();
             return dx * dx + dy * dy + dz * dz;
         }
     };
@@ -77,9 +70,9 @@ namespace animray {
 
 namespace fostlib {
     /// Coerce a line to JSON
-    template< typename D >
-    struct coercer< json, animray::line<D> > {
-        json coerce( const animray::line<D> &l ) {
+    template<typename D>
+    struct coercer<json, animray::line<D>> {
+        json coerce(const animray::line<D> &l) {
             json r;
             jcursor("from").insert(r, fostlib::coerce<json>(l.from()));
             jcursor("to").insert(r, fostlib::coerce<json>(l.to()));
@@ -87,13 +80,14 @@ namespace fostlib {
         }
     };
     /// Coerce a line from JSON
-    template< typename D >
-    struct coercer< animray::line<D>, json > {
-        animray::line< D > coerce( const json &js ) {
-            return animray::line< D >(
-                fostlib::coerce< typename animray::line< D >::end_type >( js[L"from"] ),
-                fostlib::coerce< typename animray::line< D >::end_type >( js[L"to"] )
-            );
+    template<typename D>
+    struct coercer<animray::line<D>, json> {
+        animray::line<D> coerce(const json &js) {
+            return animray::line<D>(
+                    fostlib::coerce<typename animray::line<D>::end_type>(
+                            js[L"from"]),
+                    fostlib::coerce<typename animray::line<D>::end_type>(
+                            js[L"to"]));
         }
     };
 }
@@ -101,8 +95,9 @@ namespace fostlib {
 
 namespace std {
     /// Allow the line to be displayed
-    template< typename D >
-    fostlib::ostream &operator << ( fostlib::ostream &o, const animray::line< D > &l ) {
+    template<typename D>
+    fostlib::ostream &
+            operator<<(fostlib::ostream &o, const animray::line<D> &l) {
         return o << l.from() << " -> " << l.to();
     }
 }

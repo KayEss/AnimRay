@@ -29,25 +29,25 @@ FSL_TEST_SUITE(matrix);
 
 
 FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable< animray::matrix< int > >();
-    fostlib::test::default_copy_constructable< animray::matrix< int64_t > >();
-    fostlib::test::default_copy_constructable< animray::matrix< float > >();
-    fostlib::test::default_copy_constructable< animray::matrix< double > >();
-    fostlib::test::default_copy_constructable< animray::matrix< long double > >();
+    fostlib::test::default_copy_constructable<animray::matrix<int>>();
+    fostlib::test::default_copy_constructable<animray::matrix<int64_t>>();
+    fostlib::test::default_copy_constructable<animray::matrix<float>>();
+    fostlib::test::default_copy_constructable<animray::matrix<double>>();
+    fostlib::test::default_copy_constructable<animray::matrix<long double>>();
 }
 
 
 FSL_TEST_FUNCTION(matrix_multiply) {
-    animray::matrix< int > id;
+    animray::matrix<int> id;
     auto aff(animray::translate<int>(10, 23, 54));
     FSL_CHECK_EQ(aff.forward() * aff.backward(), id);
     FSL_CHECK_EQ(id * aff.forward(), aff.forward());
     FSL_CHECK_EQ(id * aff.backward(), aff.backward());
-    animray::point3d< int > pf(aff.forward() * animray::point3d<int>());
+    animray::point3d<int> pf(aff.forward() * animray::point3d<int>());
     FSL_CHECK_EQ(pf.x(), 10);
     FSL_CHECK_EQ(pf.y(), 23);
     FSL_CHECK_EQ(pf.z(), 54);
-    animray::point3d< int > ps(aff.backward() * animray::point3d<int>());
+    animray::point3d<int> ps(aff.backward() * animray::point3d<int>());
     FSL_CHECK_EQ(ps.x(), -10);
     FSL_CHECK_EQ(ps.y(), -23);
     FSL_CHECK_EQ(ps.z(), -54);
@@ -56,21 +56,23 @@ FSL_TEST_FUNCTION(matrix_multiply) {
 
 FSL_TEST_FUNCTION(json) {
     json_roundtrip(
-        animray::matrix< int64_t >(),
-        L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]");
-    animray::matrix< int64_t > m( fostlib::json::parse(
-        L"[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]") );
-    FSL_CHECK_EQ( m[0][0], 1 );
-    FSL_CHECK_EQ( m[0][2], 3 );
-    FSL_CHECK_EQ( m[3][3], 16 );
-    FSL_CHECK_EXCEPTION( m[4][0], fostlib::exceptions::out_of_range<std::size_t>& );
+            animray::matrix<int64_t>(),
+            L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]");
+    animray::matrix<int64_t> m(
+            fostlib::json::parse(L"[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, "
+                                 L"12], [13, 14, 15, 16]]"));
+    FSL_CHECK_EQ(m[0][0], 1);
+    FSL_CHECK_EQ(m[0][2], 3);
+    FSL_CHECK_EQ(m[3][3], 16);
+    FSL_CHECK_EXCEPTION(
+            m[4][0], fostlib::exceptions::out_of_range<std::size_t> &);
 }
 
 
 FSL_TEST_FUNCTION(ray_rotate_forward) {
     animray::ray<double> z(
-        animray::point3d<double>(0, 0, 0),
-        animray::unit_vector<double>(0, 0, 1));
+            animray::point3d<double>(0, 0, 0),
+            animray::unit_vector<double>(0, 0, 1));
     FSL_CHECK_EQ(z.direction(), (z.ends() - z.from()).unit());
 
     animray::matrix<double> rx45(animray::rotate_x<double>(-45_deg).first);
@@ -87,8 +89,8 @@ FSL_TEST_FUNCTION(ray_rotate_forward) {
 
 FSL_TEST_FUNCTION(ray_rotate_backward) {
     animray::ray<double> z(
-        animray::point3d<double>(0, 0, 0),
-        animray::unit_vector<double>(0, 0, 1));
+            animray::point3d<double>(0, 0, 0),
+            animray::unit_vector<double>(0, 0, 1));
     FSL_CHECK_EQ(z.direction(), (z.ends() - z.from()).unit());
 
     animray::matrix<double> rx45(animray::rotate_x<double>(45_deg).second);
@@ -105,12 +107,11 @@ FSL_TEST_FUNCTION(ray_rotate_backward) {
 
 FSL_TEST_FUNCTION(ray_scale) {
     animray::ray<double> all(
-        animray::point3d<double>(0, 0, 0),
-        animray::point3d<double>(1, 1, 1));
+            animray::point3d<double>(0, 0, 0),
+            animray::point3d<double>(1, 1, 1));
     FSL_CHECK_EQ(all.direction(), (all.ends() - all.from()).unit());
 
     animray::matrix<double> halve(animray::scale<double>(0.5, 0.5, 0.5).first);
     animray::ray<double> havled(all * halve);
     FSL_CHECK_EQ(all, havled);
 }
-
