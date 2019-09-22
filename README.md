@@ -4,18 +4,22 @@ AnimRay was a 16 bit Windows 3.0 ray-tracer and animation program. This is a por
 
 You'll need a recent Ubuntu, or at least a recent clang. You will probably need to make sure you have the following:
 
-    sudo apt-get install clang freeglut3-dev libglew-dev
+    sudo apt install build-essential clang
 
 Then you can build a sample test scene:
 
-    git clone git@github.com:KayEss/AnimRay.git
+    git clone --recursive git@github.com:KayEss/AnimRay.git
     cd AnimRay
-    git flow init -d
-    ./build
 
-You should now have a `dist/bin` folder which contains a simple renderer. You can generate an image using
+There is a script that can be used to set up some builds using GCC and Clang:
 
-    dist/bin/animray out.tga 600 400
+    ./config-builds
+
+And then you can build and install:
+
+    ninja -C build.tmp/clang-release install/strip
+
+    dist/clang-release/bin/animray out.tga 600 400 -sp 100
 
 You'll now have an image you can open in an image viewer.
 
