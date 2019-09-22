@@ -58,7 +58,7 @@ namespace animray {
         /// null if no intersection occurs
         template<typename R>
         fostlib::nullable<intersection_type>
-                intersects(const R &by, D const eps = epsilon<D>::value) const {
+                intersects(const R &by, D const eps = epsilon<D>) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
             const fostlib::nullable<D> t(first_positive_quadratic_solution(
                     D(1), bc.first, bc.second, eps));
@@ -74,7 +74,7 @@ namespace animray {
 
         /// Returns true if the ray hits the sphere
         template<typename R>
-        bool occludes(const R &by, D const eps = epsilon<D>::value) const {
+        bool occludes(const R &by, D const eps = epsilon<D>) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
             return quadratic_has_solution(D(1), bc.first, bc.second, eps);
         }

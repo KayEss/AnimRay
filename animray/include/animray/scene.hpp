@@ -1,6 +1,5 @@
 /*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -43,6 +42,7 @@ namespace animray {
         typedef C color_type;
         /// The type of the rays used
         typedef typename geometry_type::intersection_type intersection_type;
+        using local_coord_type = typename intersection_type::local_coord_type;
 
         /// Construct an empty scene
         scene() {}
@@ -64,9 +64,9 @@ namespace animray {
         /// Given a ray work out how much light is returned along it
         template<typename R>
         color_type operator()(const R &observer) const {
-            fostlib::nullable<intersection_type> intersection(
-                    geometry().intersects(
-                            observer, epsilon<intersection_type>::value));
+            fostlib::nullable<intersection_type> intersection(geometry().intersects(
+                    observer,
+                    epsilon<typename intersection_type::local_coord_type>));
             if (intersection) {
                 return color_type(
                                light()(observer, intersection.value(), *this))

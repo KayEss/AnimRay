@@ -1,6 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -26,20 +25,18 @@
 
 namespace animray {
 
+    /**
+     * `epsilon` is used to manage near zero results in a predictable
+     * manner.
+     */
 
-    /// In general we just want the epsilon value for some intersection type
-    template<typename I>
-    struct epsilon {
-        static constexpr typename I::local_coord_type value =
-                epsilon<typename I::local_coord_type>::value;
-    };
-
+    /// The default epsilon is zero
+    template<typename T>
+    constexpr T epsilon = T{};
 
     /// Specialisation for doubles
     template<>
-    struct epsilon<double> {
-        static constexpr double value = 1e-12;
-    };
+    constexpr double epsilon<double> = 1e-12;
 
 
 }

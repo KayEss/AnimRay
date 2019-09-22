@@ -1,6 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -39,6 +38,8 @@ namespace animray {
         typedef light<void, C> superclass;
 
       public:
+        using local_coord_type = W;
+
         /// The light geometry
         typedef point3d<W> geometry_type;
 
@@ -56,7 +57,8 @@ namespace animray {
             O illumination(observer);
             illumination.from(intersection.from());
             illumination.to(geometry());
-            if (not scene.geometry().occludes(illumination, epsilon<I>::value)) {
+            if (not scene.geometry().occludes(
+                        illumination, epsilon<local_coord_type>)) {
                 return shader(
                         observer, illumination, intersection,
                         superclass::color(), scene);
