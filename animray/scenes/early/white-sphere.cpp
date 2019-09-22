@@ -1,6 +1,5 @@
 /*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -21,48 +20,63 @@
 
 #include <fost/main>
 #include <fost/unicode>
-#include <animray/epsilon.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/targa.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    boost::filesystem::wpath output_filename =
-            fostlib::coerce<boost::filesystem::wpath>(
-                    args[1].value_or("white-sphere.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("1920"));
-    int height = fostlib::coerce<int>(args[3].value_or("1080"));
+    fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
+            args[1].value_or("white-sphere.tga"));
+    auto const width = fostlib::coerce<std::size_t>(
+            fostlib::coerce<int>(args[2].value_or("1920")));
+    auto const height = fostlib::coerce<std::size_t>(
+            fostlib::coerce<int>(args[3].value_or("1080")));
 
-    typedef animray::ray<double> ray;
-    animray::unit_sphere_at_origin<ray> sphere;
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
-    film_type output(
-            width, height,
-            [=, &sphere](
-                    const film_type::size_type x, const film_type::size_type y) {
-                const double limit = std::min(width, height) / 2.0;
-                const double cx = (double(x) + 0.5 - width / 2.0) / limit;
-                const double cy = -(double(y) + 0.5 - height / 2.0) / limit;
-                ray r(ray::end_type(cx, cy, -10.0),
-                      ray::end_type(cx, cy, -9.0));
-                fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
+    /**
+     * The sphere has a radius of two units, so we want to make sure we
+     * can fit it into the frame. This calculates the scaling factor to apply.
+     */
+    const double limit = std::min(width, height) / 2.0;
+
+    using ray = animray::ray<double>;
+    auto const sphere = animray::unit_sphere_at_origin<ray>{};
+    auto const light_position = ray::end_type{4.0, 4.0, -5.0};
+    auto const ambient = animray::luma<>{50};
+
+    auto const output = animray::film<animray::luma<>>{
+            width, height, [=](auto const x, auto const y) {
+                /**
+                 * Map the current pixel to a position in the -1 to +1 range
+                 * based on the `limit` which tells us the scaling factor to
+                 * use.
+                 */
+                auto const cx = (double(x) + 0.5 - width / 2.0) / limit;
+                auto const cy = -(double(y) + 0.5 - height / 2.0) / limit;
+                /**
+                 * Fire the rays parallel towards the sphere. This causes us
+                 * to use an orthographic projection of the geometry to
+                 * the camera co-ordinate system.
+                 */
+                ray r({cx, cy, -10.0}, ray::end_type{cx, cy, -9.0});
+                /**
+                 * Calculate the intersections and amount of light.
+                 */
+                auto const intersection = sphere.intersects(r);
                 if (intersection) {
-                    ray light(
-                            intersection.value().from(),
-                            ray::end_type(5.0, 5.0, -5.0));
-                    if (sphere.occludes(light, 1e-9)) {
-                        return animray::rgb<uint8_t>(50);
+                    ray light(intersection.value().from(), light_position);
+                    if (sphere.occludes(light)) {
+                        return ambient;
                     } else {
-                        const double costheta =
+                        auto const costheta =
                                 dot(light.direction(),
                                     intersection.value().direction());
-                        return animray::rgb<uint8_t>(50 + 205 * costheta);
+                        return ambient + animray::luma<>{205 * costheta};
                     }
                 } else {
-                    return animray::rgb<uint8_t>(0);
+                    return animray::luma<>{0};
                 }
-            });
+            }};
     animray::targa(output_filename, output);
 
     return 0;

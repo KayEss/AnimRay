@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,6 +24,7 @@
 
 
 #include <animray/film.hpp>
+#include <animray/color/luma.hpp>
 #include <animray/color/rgb.hpp>
 
 
@@ -80,6 +81,18 @@ namespace animray {
             void operator()(
                     std::ostream &file, const film<uint8_t, E> &image) const {
                 typedef typename film<uint8_t, E>::size_type size_type;
+                for (size_type r = 0; r < image.height(); ++r)
+                    for (size_type c = 0; c < image.width(); ++c)
+                        file.put(image[c][r]);
+            }
+        };
+        template<typename E>
+        struct targa_saver<luma<>, E> {
+            const static char type = 3; // Uncompressed grayscale image
+            const static uint8_t bits = 8;
+            void operator()(
+                    std::ostream &file, const film<luma<>, E> &image) const {
+                typedef typename film<luma<>, E>::size_type size_type;
                 for (size_type r = 0; r < image.height(); ++r)
                     for (size_type c = 0; c < image.width(); ++c)
                         file.put(image[c][r]);

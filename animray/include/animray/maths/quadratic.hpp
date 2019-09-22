@@ -30,8 +30,8 @@ namespace animray {
 
 
     /// Returns true if the quadratic has real solutions within the provided range
-    template<typename D, typename E>
-    bool quadratic_has_solution(const D a, const D b, const D c, const E range) {
+    template<typename D>
+    bool quadratic_has_solution(const D a, const D b, const D c, const D range) {
         const D discriminant = b * b - D(4) * c;
         if (discriminant < D(0)) return false;
         const D disc_root = std::sqrt(discriminant);
@@ -43,9 +43,9 @@ namespace animray {
 
     /// Returns the smallest real solution to the quadratic if it lies inside
     /// the range
-    template<typename D, typename E>
+    template<typename D>
     fostlib::nullable<D> first_positive_quadratic_solution(
-            const D a, const D b, const D c, const E range) {
+            const D a, const D b, const D c, const D range) {
         const D discrim = b * b - D(4) * a * c;
         if (discrim < D(0)) { return fostlib::null; }
         using S = decltype(std::sqrt(discrim));

@@ -1,6 +1,5 @@
 /*
-    Copyright 1995-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,6 +23,7 @@
 #pragma once
 
 
+#include <animray/epsilon.hpp>
 #include <animray/ray.hpp>
 #include <animray/maths/dot.hpp>
 #include <animray/maths/quadratic.hpp>
@@ -56,12 +56,12 @@ namespace animray {
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
-        template<typename R, typename E>
+        template<typename R>
         fostlib::nullable<intersection_type>
-                intersects(const R &by, const E epsilon) const {
+                intersects(const R &by, D const eps = epsilon<D>::value) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
             const fostlib::nullable<D> t(first_positive_quadratic_solution(
-                    D(1), bc.first, bc.second, epsilon));
+                    D(1), bc.first, bc.second, eps));
             if (t) {
                 typedef typename ray<D>::end_type end_type;
                 typedef typename ray<D>::direction_type direction_type;
@@ -73,10 +73,10 @@ namespace animray {
         }
 
         /// Returns true if the ray hits the sphere
-        template<typename R, typename E>
-        bool occludes(const R &by, const E epsilon) const {
+        template<typename R>
+        bool occludes(const R &by, D const eps = epsilon<D>::value) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
-            return quadratic_has_solution(D(1), bc.first, bc.second, epsilon);
+            return quadratic_has_solution(D(1), bc.first, bc.second, eps);
         }
     };
 
