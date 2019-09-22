@@ -1,6 +1,5 @@
 /*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,25 +37,24 @@ namespace animray {
         gloss() {}
 
         /// The width of the specular highlight
-        typedef W parameters;
+        using parameters = W;
 
         /// Calculate the light/surface interaction
         template<typename RI, typename RL, typename I, typename CI, typename G>
         CI operator()(
-                const W &width,
-                const RI &observer,
-                const RL &light,
-                const I &intersection,
-                const CI &incident,
-                const G &) const {
-            typedef typename RI::local_coord_type accuracy;
-            const accuracy ci =
+                parameters const &width,
+                RI const &observer,
+                RL const &light,
+                I const &intersection,
+                CI const &incident,
+                G const &) const {
+            using accuracy = typename RI::local_coord_type;
+            auto const ci =
                     -dot(observer.direction(), intersection.direction());
-            const unit_vector<accuracy> ri(
-                    observer.direction()
-                    + intersection.direction() * accuracy(2) * ci);
-            const accuracy costheta(dot(ri, light.direction()));
-            if (costheta > accuracy()) {
+            auto const ri{observer.direction()
+                          + intersection.direction() * accuracy(2) * ci};
+            auto const costheta(dot(ri, light.direction()));
+            if (costheta > accuracy{}) {
                 return incident * std::pow(costheta, width);
             } else {
                 return CI();
@@ -65,8 +63,12 @@ namespace animray {
 
         /// This material is non-emissive
         template<typename CI, typename RI, typename I, typename G>
-        CI operator()(
-                const W &, const CI &, const RI &, const I &, const G &) const {
+        auto operator()(
+                parameters const &,
+                CI const &,
+                RI const &,
+                I const &,
+                G const &) const {
             return CI();
         }
     };
