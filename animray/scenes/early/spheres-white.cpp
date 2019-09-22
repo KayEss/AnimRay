@@ -1,6 +1,5 @@
 /*
-    Copyright 2014-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -55,9 +54,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const std::size_t spheres(
             fostlib::coerce<int>(args.commandSwitch("sp").value_or("10")));
 
-    boost::filesystem::wpath output_filename =
-            fostlib::coerce<boost::filesystem::wpath>(
-                    args[1].value_or("spheres-white.tga"));
+    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+            args[1].value_or("spheres-white.tga"));
     const int width = fostlib::coerce<int>(args[2].value_or("150"));
     const int height = fostlib::coerce<int>(args[3].value_or("100"));
 

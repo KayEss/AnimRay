@@ -26,7 +26,7 @@
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
             args[1].value_or("white-sphere.tga"));
     auto const width = fostlib::coerce<std::size_t>(
             fostlib::coerce<int>(args[2].value_or("1920")));

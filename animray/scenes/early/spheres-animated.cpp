@@ -1,6 +1,5 @@
 /*
-    Copyright 2014-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -64,9 +63,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     const int width = fostlib::coerce<int>(args[1].value_or("36"));
     const int height = fostlib::coerce<int>(args[2].value_or("27"));
-    boost::filesystem::wpath output_filename =
-            fostlib::coerce<boost::filesystem::wpath>(
-                    args[3].value_or("spheres-animated.tga"));
+    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+            args[3].value_or("spheres-animated.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;
@@ -227,8 +225,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                     return out.str();
                 },
                 [](const fostlib::meter::reading &) { return "["; });
-        boost::filesystem::wpath filename(output_filename);
-        filename.replace_extension(fostlib::coerce<boost::filesystem::wpath>(
+        auto filename = output_filename;
+        filename.replace_extension(fostlib::coerce<fostlib::fs::path>(
                 fostlib::coerce<fostlib::string>(frame) + ".tga"));
         animray::targa(filename, result());
     }

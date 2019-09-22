@@ -1,6 +1,5 @@
 /*
-    Copyright 2014-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -52,9 +51,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const std::size_t samples(
             fostlib::coerce<int>(args.commandSwitch("ss").value_or("6")));
 
-    boost::filesystem::path output_filename =
-            fostlib::coerce<boost::filesystem::path>(
-                    args[1].value_or("reflections.tga"));
+    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+            args[1].value_or("reflections.tga"));
     const int width = fostlib::coerce<int>(args[2].value_or("100"));
     const int height = fostlib::coerce<int>(args[3].value_or("150"));
 
