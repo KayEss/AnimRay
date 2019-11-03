@@ -71,9 +71,10 @@ namespace animray {
         }
 
         /// Constructor makes a point at the origin
-        point3d() { superclass::array[3] = 1; }
+        constexpr point3d() { superclass::array[3] = 1; }
         /// Constructor for making a point at a given location
-        point3d(const_value_parameter_type x,
+        constexpr point3d(
+                const_value_parameter_type x,
                 const_value_parameter_type y,
                 const_value_parameter_type z,
                 const_value_parameter_type h = 1) {

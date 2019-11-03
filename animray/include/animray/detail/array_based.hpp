@@ -42,19 +42,19 @@ namespace animray {
         template<typename D, std::size_t S>
         struct array_based : array_based_base_class {
             /// The type of the values
-            typedef D value_type;
+            using value_type = D;
             /// Type to use as a parameter
-            typedef const D &const_value_parameter_type;
+            using const_value_parameter_type = D const &;
             /// The type of the array
             using array_type = std::array<D, S>;
             /// The number of elements in the array
-            static const std::size_t c_array_size = S;
+            static std::size_t const c_array_size = S;
 
             /// The actual data
             array_type array;
 
             /// Default construct the array members
-            array_based() : array() {}
+            constexpr array_based() : array() {}
 
             /// Fetch a value from the array with bounds checking
             value_type at(std::size_t p) const {

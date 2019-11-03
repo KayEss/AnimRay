@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2018-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
@@ -33,10 +33,10 @@ namespace animray {
       public:
         using value_type = C;
 
-        luma() : _luma{} {}
-        explicit luma(value_type f) : _luma(f) {}
+        constexpr luma() : _luma{} {}
+        explicit constexpr luma(value_type f) : _luma(f) {}
         template<typename V>
-        explicit luma(V v)
+        explicit constexpr luma(V v)
         : _luma{C(std::clamp<V>(
                 v,
                 std::numeric_limits<C>::min(),

@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
@@ -40,9 +40,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
     const double limit = std::min(width, height) / 2.0;
 
     using ray = animray::ray<double>;
-    auto const sphere = animray::unit_sphere_at_origin<ray>{};
-    auto const light_position = ray::end_type{4.0, 4.0, -5.0};
-    auto const ambient = animray::luma<>{50};
+    auto constexpr const sphere = animray::unit_sphere_at_origin<ray>{};
+    auto constexpr const light_position = ray::end_type{4.0, 4.0, -5.0};
+    auto constexpr const ambient = animray::luma<>{50};
 
     auto const output = animray::film<animray::luma<>>{
             width, height, [=](auto const x, auto const y) {
