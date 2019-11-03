@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
@@ -32,11 +32,11 @@ namespace animray {
 
     /// The default epsilon is zero
     template<typename T>
-    constexpr T epsilon = T{};
+    constexpr inline T epsilon = T{};
 
     /// Specialisation for doubles
     template<>
-    constexpr double epsilon<double> = 1e-12;
+    constexpr inline double epsilon<double> = 1e-12;
 
 
 }
