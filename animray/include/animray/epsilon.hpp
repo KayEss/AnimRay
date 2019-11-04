@@ -34,6 +34,10 @@ namespace animray {
     template<typename T>
     constexpr inline T epsilon = T{};
 
+    /// Specialisation for floats
+    template<>
+    constexpr inline float epsilon<float> = 1e-6f;
+
     /// Specialisation for doubles
     template<>
     constexpr inline double epsilon<double> = 1e-12;
