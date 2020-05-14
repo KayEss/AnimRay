@@ -31,9 +31,14 @@ jobs:
             DEBIAN_FRONTEND: noninteractive
           command: |
             apt-get update
-            apt-get install -y build-essential cmake gcc-10 g++-10 clang libssl-dev ninja-build libboost-all-dev
+            apt-get install -y git build-essential cmake gcc-10 g++-10 clang libssl-dev ninja-build libboost-all-dev
             ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
             dpkg-reconfigure --frontend noninteractive tzdata
+      - run:
+          name: submodules
+          command: |
+            sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+            git submodule update --init --recursive
       - run:
           name: cmake
           environment:
