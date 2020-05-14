@@ -49,10 +49,10 @@ jobs:
             cmake .. -G Ninja
       - run:
           name: ninja
-          command: ninja -C build.tmp
+          command: ninja -j1 -C build.tmp
       - run:
           name: check tests
-          command: ninja -C build.tmp check
+          command: ninja -j1 -C build.tmp check
 
 workflows:
   all-tests:
