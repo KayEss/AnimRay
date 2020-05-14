@@ -1,0 +1,64 @@
+version: 2.1
+
+executors:
+  clang:
+    docker:
+    - image: ubuntu:focal
+    environment:
+      CC: clang
+      CXX: clang++
+  gcc:
+    docker:
+    - image: ubuntu:focal
+    environment:
+      CC: gcc-10
+      CXX: g++-10
+
+
+jobs:
+  build:
+    parameters:
+      compiler:
+        type: executor
+      variant:
+        type: string
+    executor: << parameters.compiler >>
+    steps:
+      - checkout
+      - run:
+          name: install
+          environment:
+            DEBIAN_FRONTEND: noninteractive
+          command: |
+            apt-get update
+            apt-get install -y git build-essential cmake gcc-10 g++-10 clang libssl-dev ninja-build libboost-all-dev
+            ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+            dpkg-reconfigure --frontend noninteractive tzdata
+      - run:
+          name: submodules
+          command: |
+            sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+            git submodule update --init --recursive
+      - run:
+          name: cmake
+          environment:
+            CMAKE_BUILD_TYPE: << parameters.variant >>
+          command: |
+            mkdir build.tmp
+            cd build.tmp
+            cmake .. -G Ninja
+      - run:
+          name: ninja
+          command: ninja -j1 -C build.tmp
+      - run:
+          name: check tests
+          command: ninja -j1 -C build.tmp check
+
+workflows:
+  all-tests:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              compiler: [gcc, clang]
+              variant: [Debug, Release]
