@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2014, Kirit Saelensminde.
+    Copyright 1995-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -64,7 +64,7 @@ namespace animray {
         fostlib::accessors<direction_type> direction;
 
         /// Set a point the ray must go through
-        void to(const end_type &t) { direction(t - from()); }
+        void to(const end_type &t) { direction(direction_type{t - from()}); }
 
         /// Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {

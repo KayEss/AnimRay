@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2014, Kirit Saelensminde.
+    Copyright 1995-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -50,7 +50,7 @@ namespace animray {
                 const value_type m = value_type(1))
         : superclass(x, y, z, m) {}
         /// Constructs a unit vector from a point relative to the origin
-        unit_vector(const point3d<D> &p) : superclass(p.unit()) {}
+        explicit unit_vector(const point3d<D> &p) : superclass(p.unit()) {}
 
         /// Multiply by a scalar
         point3d<value_type> operator*(const value_type scalar) const;
@@ -59,14 +59,8 @@ namespace animray {
             return point3d<value_type>(*this) + r;
         }
 
-        /// Compare for equality
-        bool operator==(const unit_vector &v) const {
-            return this->superclass::operator==(v);
-        }
-        /// Compare for inequality
-        bool operator!=(const unit_vector &v) const {
-            return this->superclass::operator!=(v);
-        }
+        /// Comparisons
+        bool operator<=>(unit_vector const &) const = default;
 
         /// Unary minus
         unit_vector operator-() const {
@@ -101,26 +95,6 @@ animray::point3d<D> animray::unit_vector<D>::operator*(const D scalar) const {
             superclass::superclass::array[2] * scalar,
             superclass::superclass::array[3]);
 }
-
-// template<typename D>
-// typename std::enable_if<std::is_floating_point<D>::value,
-// animray::point3d<D>>::type
-//         animray::unit_vector<D>::operator * (const D scalar) const {
-//     return point3d<D>(
-//         superclass::superclass::array[0],
-//         superclass::superclass::array[1],
-//         superclass::superclass::array[2],
-//         superclass::superclass::array[3] / scalar);
-// }
-// template<typename D>
-// typename std::enable_if<std::is_integral<D>::value, animray::point3d<D>>::type
-//         animray::unit_vector<D>::operator * (const D scalar) const {
-//     return point3d<D>(
-//         superclass::superclass::array[0] * scalar,
-//         superclass::superclass::array[1] * scalar,
-//         superclass::superclass::array[2] * scalar,
-//         superclass::superclass::array[3]);
-// }
 
 
 #endif // ANIMRAY_UNIT_VECTOR_HPP

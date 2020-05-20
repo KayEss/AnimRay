@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
+    Copyright 2010-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -50,10 +50,10 @@ FSL_TEST_FUNCTION(transformation) {
     auto aff(animray::translate<int>(10, 23, 54));
     animray::ray<int> rf(r * aff.forward());
     FSL_CHECK_EQ(rf.from(), animray::ray<int>::end_type(10, 23, 54));
-    FSL_CHECK_EQ(rf.direction(), animray::ray<int>::end_type(0, 0, 1));
+    FSL_CHECK_EQ(rf.direction(), animray::ray<int>::direction_type(0, 0, 1));
     animray::ray<int> rb(r * aff.backward());
     FSL_CHECK_EQ(rb.from(), animray::ray<int>::end_type(-10, -23, -54));
-    FSL_CHECK_EQ(rb.direction(), animray::ray<int>::end_type(0, 0, 1));
+    FSL_CHECK_EQ(rb.direction(), animray::ray<int>::direction_type(0, 0, 1));
 
     FSL_CHECK_EQ((r * aff.forward() * aff.backward()).from(), r.from());
     FSL_CHECK_EQ(
