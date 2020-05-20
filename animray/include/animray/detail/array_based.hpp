@@ -27,9 +27,13 @@
 
 #include <array>
 #include <numeric>
+#include <experimental/array>
 
 
 namespace animray {
+
+
+    using std::experimental::make_array;
 
 
     namespace detail {
