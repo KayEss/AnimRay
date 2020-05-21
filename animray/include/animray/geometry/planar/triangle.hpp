@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -44,13 +43,11 @@ namespace animray {
         typedef point3d<local_coord_type> corner_type;
 
         /// Construct a triangle from three points
-        triangle(
-                const corner_type &one,
-                const corner_type &two,
-                const corner_type &three) {
-            superclass::array[0] = one;
-            superclass::array[1] = two;
-            superclass::array[2] = three;
+        constexpr triangle(
+                corner_type one, corner_type two, corner_type three) noexcept {
+            superclass::array[0] = std::move(one);
+            superclass::array[1] = std::move(two);
+            superclass::array[2] = std::move(three);
         }
 
         /// Calculate the intersection point
