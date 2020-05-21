@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -26,7 +26,7 @@
 #include <animray/mandelbrot.hpp>
 
 
-FSL_MAIN(L"mandelbrot", L"Mandelbrot, Copyright 2010-2014 Kirit Saelensminde")
+FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     auto const output_filename =
             fostlib::coerce<fostlib::fs::path>(args[1].value_or("out.tga"));

@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2010, Kirit Saelensminde.
+    Copyright 1995-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -85,9 +85,9 @@ namespace fostlib {
         animray::line<D> coerce(const json &js) {
             return animray::line<D>(
                     fostlib::coerce<typename animray::line<D>::end_type>(
-                            js[L"from"]),
+                            js["from"]),
                     fostlib::coerce<typename animray::line<D>::end_type>(
-                            js[L"to"]));
+                            js["to"]));
         }
     };
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2014, Kirit Saelensminde.
+    Copyright 2010-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -57,10 +57,10 @@ FSL_TEST_FUNCTION(matrix_multiply) {
 FSL_TEST_FUNCTION(json) {
     json_roundtrip(
             animray::matrix<int64_t>(),
-            L"[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]");
+            "[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]");
     animray::matrix<int64_t> m(
-            fostlib::json::parse(L"[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, "
-                                 L"12], [13, 14, 15, 16]]"));
+            fostlib::json::parse("[[1, 2, 3, 4], [5, 6, 7, 8], "
+                                 "[9, 10, 11, 12], [13, 14, 15, 16]]"));
     FSL_CHECK_EQ(m[0][0], 1);
     FSL_CHECK_EQ(m[0][2], 3);
     FSL_CHECK_EQ(m[3][3], 16);

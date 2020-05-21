@@ -1,5 +1,5 @@
 /*
-    Copyright 2010, Kirit Saelensminde.
+    Copyright 2010-2020, Kirit Saelensminde.
     http://www.kirit.com/AnimRay
 
     This file is part of AnimRay.
@@ -38,5 +38,5 @@ FSL_TEST_FUNCTION(constructor_default_tests) {
 FSL_TEST_FUNCTION(json) {
     FSL_CHECK_EQ(
             fostlib::coerce<fostlib::json>(animray::rgba<int64_t>()),
-            fostlib::json::parse(L"[0, 0, 0, 0]"));
+            fostlib::json::parse("[0, 0, 0, 0]"));
 }
