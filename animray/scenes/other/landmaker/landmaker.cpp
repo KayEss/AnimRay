@@ -52,8 +52,9 @@ namespace {
                 distance(0, within.r);
         float theta{radians(rng.e)}, length{distance(rng.e)};
         for (auto i = 0; i < 3; ++i) {
-            circle next{within.cx + length * std::cos(theta),
-                        within.cy + length * std::sin(theta), within.r / 2.f};
+            circle next{
+                    within.cx + length * std::cos(theta),
+                    within.cy + length * std::sin(theta), within.r / 2.f};
             circles.push_back(next);
             if (within.r > 2.f) { more_circles(rng, next, circles); }
         }

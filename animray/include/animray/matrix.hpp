@@ -114,8 +114,8 @@ namespace animray {
         /// Multiply two matrixes
         matrix operator*(const matrix &r) const {
             matrix result;
-            const point3d<value_type> cols[4] = {r.column(0), r.column(1),
-                                                 r.column(2), r.column(3)};
+            const point3d<value_type> cols[4] = {
+                    r.column(0), r.column(1), r.column(2), r.column(3)};
             for (std::size_t row(0); row < 4; ++row) {
                 const_row_proxy my_row((*this)[row]);
                 row_proxy res_row(result[row]);

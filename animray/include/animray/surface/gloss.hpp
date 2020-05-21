@@ -51,8 +51,9 @@ namespace animray {
             using accuracy = typename RI::local_coord_type;
             auto const ci =
                     -dot(observer.direction(), intersection.direction());
-            auto const ri{observer.direction()
-                          + intersection.direction() * accuracy(2) * ci};
+            auto const ri{
+                    observer.direction()
+                    + intersection.direction() * accuracy(2) * ci};
             auto const costheta(dot(ri, light.direction()));
             if (costheta > accuracy{}) {
                 return incident * std::pow(costheta, width);
