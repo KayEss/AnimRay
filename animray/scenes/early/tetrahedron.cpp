@@ -106,7 +106,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
         camera(animray::rotate_x<world>(-15_deg))(
                 animray::translate<world>(0.0, 0.0, -4))
                 .instance()
-                .frame(frame);
+                .frame = frame;
 
         typedef animray::film<animray::rgb<uint8_t>> film_type;
 

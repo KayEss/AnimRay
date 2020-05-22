@@ -95,13 +95,13 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     scene.background = animray::rgb<float>(20, 70, 100);
 
     const world scale(200.0);
-    std::get<0>(scene.geometry.instances()) = reflective_sphere_type(
+    std::get<0>(scene.geometry.instances) = reflective_sphere_type(
             0.4f, animray::rgb<float>(0.3f))(animray::translate<world>(
             0.0, 0.0, scale + 1.0))(animray::scale<world>(scale, scale, scale));
-    std::get<1>(scene.geometry.instances()) =
+    std::get<1>(scene.geometry.instances) =
             std::tuple_element<1, scene_type::geometry_type::instances_type>::type(
                     animray::rgb<float>(1, 1, 1));
-    std::get<2>(scene.geometry.instances()) =
+    std::get<2>(scene.geometry.instances) =
             std::tuple_element<2, scene_type::geometry_type::instances_type>::type(
                     10, animray::rgb<float>(1, 1, 1));
 
@@ -116,10 +116,10 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         s.position((location()));
         switch (surface(generator)) {
         case 1:
-            std::get<1>(scene.geometry.instances()).geometry().insert(s);
+            std::get<1>(scene.geometry.instances).geometry().insert(s);
             break;
         case 2:
-        default: std::get<2>(scene.geometry.instances()).geometry().insert(s);
+        default: std::get<2>(scene.geometry.instances).geometry().insert(s);
         }
     }
 

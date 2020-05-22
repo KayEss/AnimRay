@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -103,7 +102,7 @@ FSL_TEST_FUNCTION(rotate) {
     check_close(rot(2), animray::point3d<double>(-1, 1, 1));
     check_close(rot(3), animray::point3d<double>(1, -1, 1));
     check_close(rot(4), animray::point3d<double>(3, 1, 1));
-    rot.phase(90_deg);
+    rot.phase = 90_deg;
     check_close(rot(0), animray::point3d<double>(1, 3, 1));
     check_close(rot(1), animray::point3d<double>(-1, 1, 1));
     check_close(rot(2), animray::point3d<double>(1, -1, 1));

@@ -96,7 +96,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     scene.background = animray::rgb<float>(20, 70, 100);
 
     const world scale(200.0);
-    std::get<0>(scene.geometry.instances()) = reflective_sphere_type(
+    std::get<0>(scene.geometry.instances) = reflective_sphere_type(
             0.4f, animray::rgb<float>(0.3f))(animray::translate<world>(
             0.0, 0.0, scale + 1.0))(animray::scale<world>(scale, scale, scale));
 
@@ -113,14 +113,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         case 1: {
             metallic_sphere_type m(colour);
             m.geometry().position(location());
-            std::get<1>(scene.geometry.instances()).insert(m);
+            std::get<1>(scene.geometry.instances).insert(m);
             break;
         }
         case 2:
         default: {
             gloss_sphere_type g(10.0f, colour);
             g.geometry().position((location()));
-            std::get<2>(scene.geometry.instances()).insert(g);
+            std::get<2>(scene.geometry.instances).insert(g);
         }
         }
     }

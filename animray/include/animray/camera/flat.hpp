@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -40,39 +39,36 @@ namespace animray {
         typedef R resolution_type;
 
         /// Constructs a camera whose film is a particular size
-        flat_camera(
+        constexpr flat_camera(
                 extents_type w,
                 extents_type h,
                 resolution_type c,
-                resolution_type r)
-        : width(w), height(h), columns(c), rows(r) {}
+                resolution_type r) noexcept
+        : width{w}, height{h}, columns{c}, rows{r} {}
 
         /// Give a value for the width of a pixel in world co-ordinates
-        extents_type pixel_width() const { return width() / columns(); }
+        extents_type pixel_width() const { return width / columns; }
         /// Give a value for the height of a pixel in world co-ordinates
-        extents_type pixel_height() const { return height() / rows(); }
+        extents_type pixel_height() const { return height / rows; }
 
         /// Convert from resolution co-ordinates to world co-ordinates
         point2d<extents_type>
                 operator()(resolution_type x, resolution_type y) const {
-            return point2d<extents_type>(
-                    width() * ((extents_type(x) + half()) / columns() - half()),
-                    -height() * ((extents_type(y) + half()) / rows() - half()));
+            return {width * ((x + half) / columns - half),
+                    -height * ((y + half) / rows - half)};
         }
 
         /// The width of the camera
-        fostlib::accessors<const extents_type> width;
+        extents_type width;
         /// The height of the camera
-        fostlib::accessors<const extents_type> height;
+        extents_type height;
         /// The number of columns
-        fostlib::accessors<const resolution_type> columns;
+        resolution_type columns;
         /// The number of rows of resolution
-        fostlib::accessors<const resolution_type> rows;
+        resolution_type rows;
 
         /// Useful constant
-        constexpr static extents_type half() {
-            return extents_type(1) / extents_type(2);
-        }
+        constexpr static extents_type half = extents_type{1} / extents_type{2};
     };
 
 

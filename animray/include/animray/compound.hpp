@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -67,23 +66,22 @@ namespace animray {
                 typename Os::intersection_type::direction_type...>::type;
 
         /// The wrapped intersection
-        fostlib::accessors<std::variant<
+        std::variant<
                 typename O::intersection_type,
-                typename Os::intersection_type...>>
+                typename Os::intersection_type...>
                 wrapped_intersection;
 
         template<typename I>
-        intersection(I &&i) : wrapped_intersection(std::move(i)) {}
+        intersection(I &&i) : wrapped_intersection{std::move(i)} {}
 
-        end_type from() const {
+        auto from() const {
             return std::visit(
-                    [](auto i) { return i.from(); }, wrapped_intersection());
+                    [](auto i) { return i.from(); }, wrapped_intersection);
         }
 
-        direction_type direction() const {
+        auto direction() const {
             return std::visit(
-                    [](auto i) { return i.direction(); },
-                    wrapped_intersection());
+                    [](auto i) { return i.direction(); }, wrapped_intersection);
         }
     };
 
@@ -100,7 +98,7 @@ namespace animray {
         using intersection_type = intersection<compound>;
 
         /// Stores the geometry
-        fostlib::accessors<instances_type, fostlib::lvalue> instances;
+        instances_type instances;
 
         /// Forward the intersection check to the geometry instances.
         /// Return the closest intersection, `null` if none are found.
@@ -135,7 +133,7 @@ namespace animray {
                                        },
                                        dot(geom.intersects(by, epsilon))...);
                            },
-                           instances())
+                           instances)
                     .second;
         };
 
@@ -146,7 +144,7 @@ namespace animray {
                     [&by, epsilon](const auto &... geom) -> bool {
                         return (geom.occludes(by, epsilon) || ...);
                     },
-                    instances());
+                    instances);
             return false;
         }
     };
@@ -172,7 +170,7 @@ namespace animray {
                         return shader(
                                 observer, light, inter, incident, geometry);
                     },
-                    intersection.wrapped_intersection());
+                    intersection.wrapped_intersection);
         }
     };
 
@@ -192,7 +190,7 @@ namespace animray {
                     [&](const auto &inter) {
                         return emission<C>(observer, inter, geometry);
                     },
-                    intersection.wrapped_intersection());
+                    intersection.wrapped_intersection);
         }
     };
 

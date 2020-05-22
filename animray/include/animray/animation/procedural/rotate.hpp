@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -50,34 +49,27 @@ namespace animray {
             typedef typename point_type::value_type phase_type;
 
             /// The centre to rotate about
-            fostlib::accessors<point_type> centre;
+            point_type centre;
             /// The radius
-            fostlib::accessors<radius_type> radius;
+            radius_type radius;
             /// Rotations per unit time in radians/time unit
-            fostlib::accessors<speed_type> speed;
+            speed_type speed;
             /// Phase offset
-            fostlib::accessors<phase_type> phase;
+            phase_type phase;
 
             /// Allow default construction
-            rotate_xy() : radius(1), speed(1) {}
+            rotate_xy() : radius{1}, speed{1} {}
 
             /// Construct the rotation parameters
-            rotate_xy(
-                    const point_type &c,
-                    const radius_type r,
-                    const speed_type s,
-                    const phase_type p)
-            : centre(c), radius(r), speed(s), phase(p) {}
+            rotate_xy(point_type c, radius_type r, speed_type s, phase_type p)
+            : centre{std::move(c)}, radius{r}, speed{s}, phase{p} {}
 
             /// Calculate the position for the requested frame
             template<typename T>
-            point_type operator()(const T t) const {
-                return point_type(
-                        centre().x()
-                                + radius() * std::cos(t * speed() + phase()),
-                        centre().y()
-                                + radius() * std::sin(t * speed() + phase()),
-                        centre().z());
+            point_type operator()(T const t) const {
+                return {centre.x() + radius * std::cos(t * speed + phase),
+                        centre.y() + radius * std::sin(t * speed + phase),
+                        centre.z()};
             }
         };
 

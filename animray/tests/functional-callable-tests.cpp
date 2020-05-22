@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -25,14 +24,6 @@
 
 
 FSL_TEST_SUITE(functional_callable);
-
-
-FSL_TEST_FUNCTION(accessors) {
-    typedef fostlib::accessors<int> accessor;
-    FSL_CHECK(std::is_class<accessor>::value);
-    FSL_CHECK(animray::detail::is_callable_impl<accessor>::value);
-    FSL_CHECK(animray::is_callable<accessor>::value);
-}
 
 
 FSL_TEST_FUNCTION(simple) {
