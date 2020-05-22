@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,24 +35,26 @@ namespace animray {
     class scene {
       public:
         /// The geometry type
-        typedef G geometry_type;
+        using geometry_type = G;
         /// The light type
-        typedef L light_type;
+        using light_type = L;
         /// The colour type
-        typedef C color_type;
+        using color_type = C;
         /// The type of the rays used
-        typedef typename geometry_type::intersection_type intersection_type;
+        using intersection_type = typename geometry_type::intersection_type;
         using local_coord_type = typename intersection_type::local_coord_type;
 
         /// Construct an empty scene
-        scene() {}
+        constexpr scene() {}
+        constexpr scene(G g, L l, C c)
+        : geometry{std::move(g)}, light{std::move(l)}, background{std::move(c)} {}
 
         /// Store the geometry
-        fostlib::accessors<geometry_type, fostlib::lvalue> geometry;
+        geometry_type geometry;
         /// Store the light
-        fostlib::accessors<light_type, fostlib::lvalue> light;
+        light_type light;
         /// Background colour
-        fostlib::accessors<color_type> background;
+        color_type background;
 
         /// Given a position on the camera film, calculate the colour it should be
         template<typename M, typename S>
@@ -64,19 +66,21 @@ namespace animray {
         /// Given a ray work out how much light is returned along it
         template<typename R>
         color_type operator()(const R &observer) const {
-            fostlib::nullable<intersection_type> intersection(geometry().intersects(
+            fostlib::nullable<intersection_type> intersection(geometry.intersects(
                     observer,
                     epsilon<typename intersection_type::local_coord_type>));
             if (intersection) {
-                return color_type(
-                               light()(observer, intersection.value(), *this))
+                return color_type(light(observer, intersection.value(), *this))
                         + emission<color_type>(
                                 observer, intersection.value(), *this);
             } else {
-                return background();
+                return background;
             }
         }
     };
+
+    template<typename G, typename L, typename C>
+    scene(G, L, C) -> scene<G, L, C>;
 
 
 }

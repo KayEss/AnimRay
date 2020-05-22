@@ -57,7 +57,7 @@ namespace animray {
             O illumination(observer);
             illumination.from(intersection.from());
             illumination.to(geometry);
-            if (not scene.geometry().occludes(
+            if (not scene.geometry.occludes(
                         illumination, epsilon<local_coord_type>)) {
                 return shader(
                         observer, illumination, intersection, superclass::color,

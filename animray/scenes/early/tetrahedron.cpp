@@ -92,6 +92,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             bulb{{3.0, -3.0, -5.0}, {0x40, 0x40, 0xa0}})};
     auto constexpr lights = animray::light{animray::light{50.0f}, spots};
 
+    auto const s = animray::scene{
+            tetrahedron, lights, animray::rgb<float>{20, 70, 100}};
+
     using scene_type = animray::scene<
             animray::animation::affine<
                     animray::matrix<world>, decltype(animray::rotate_z<world>),
@@ -110,10 +113,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                     animray::rgb<float>>,
             animray::rgb<float>>;
     scene_type scene;
-    scene.background(animray::rgb<float>(20, 70, 100));
+    scene.background = animray::rgb<float>(20, 70, 100);
 
-    scene.geometry()
-            .instance.instance.insert(triangle(top, north, east))
+    scene.geometry.instance.instance.insert(triangle(top, north, east))
             .insert(triangle(top, east, south))
             .insert(triangle(top, south, west))
             .insert(triangle(top, west, north))
@@ -122,22 +124,21 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             .insert(triangle(bottom, south, west))
             .insert(triangle(bottom, west, north));
 
-    scene.geometry()(animray::rotate_z<world>, 40_deg, 1_deg * angle, frames);
-    scene.geometry().instance(
-            animray::rotate_y<world>, 0, 2_deg * angle, frames);
+    scene.geometry(animray::rotate_z<world>, 40_deg, 1_deg * angle, frames);
+    scene.geometry.instance(animray::rotate_y<world>, 0, 2_deg * angle, frames);
 
-    std::get<0>(scene.light()).color = 50;
-    std::get<1>(scene.light())
+    std::get<0>(scene.light).color = 50;
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-3.0, 5.0, -5.0),
                             animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-5.0, -3.0, -5.0),
                             animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(3.0, -3.0, -5.0),

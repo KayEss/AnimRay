@@ -121,28 +121,28 @@ FSL_TEST_FUNCTION(full_scene) {
             animray::rgb<float>>
             scene_type;
     scene_type scene;
-    scene.background(animray::rgb<float>(20, 70, 100));
+    scene.background = animray::rgb<float>(20, 70, 100);
 
     animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1), north(1, 0, 0),
             south(-1, 0, 0), east(1, 0, 0), west(-1, 0, 0);
 
-    scene.geometry().insert(triangle(
+    scene.geometry.insert(triangle(
             animray::point3d<double>(0, 5, 0),
             animray::point3d<double>(-5, -5, 0),
             animray::point3d<double>(5, -5, 0)));
 
-    std::get<0>(scene.light()).color = 50;
-    std::get<1>(scene.light())
+    std::get<0>(scene.light).color = 50;
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-5.0, 5.0, -5.0),
                             animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-5.0, -5.0, -5.0),
                             animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(5.0, -5.0, -5.0),

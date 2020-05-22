@@ -66,36 +66,35 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             animray::rgb<float>>
             scene_type;
     scene_type scene;
-    scene.background(animray::rgb<float>(10, 50, 70));
+    scene.background = animray::rgb<float>(10, 50, 70);
 
-    scene.geometry().insert(
+    scene.geometry.insert(
             sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
                     animray::translate<world>(0.0, 0.0, 5.0)));
-    scene.geometry().insert(
-            sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
-                    animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry().insert(
+    scene.geometry.insert(sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
+            animray::translate<world>(-1.0, -1.0, 0.0)));
+    scene.geometry.insert(
             sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
                     animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry().insert(
+    scene.geometry.insert(
             sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
                     animray::translate<world>(-1.0, 1.0, 0.0)));
-    scene.geometry().insert(
+    scene.geometry.insert(
             sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
                     animray::translate<world>(1.0, 1.0, 0.0)));
 
-    std::get<0>(scene.light()).color = 50;
-    std::get<1>(scene.light())
+    std::get<0>(scene.light).color = 50;
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-5.0, 5.0, -5.0),
                             animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(-5.0, -5.0, -5.0),
                             animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light())
+    std::get<1>(scene.light)
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
                             animray::point3d<world>(5.0, -5.0, -5.0),

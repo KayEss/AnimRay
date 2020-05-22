@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -60,7 +59,7 @@ namespace animray {
             refray.from(intersection.from());
             refray.direction(ri);
             if (refray.depth_count() > 5) {
-                return scene.background();
+                return scene.background;
             } else {
                 return scene(refray);
             }
