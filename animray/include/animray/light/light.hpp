@@ -27,6 +27,12 @@
 namespace animray {
 
 
+    template<typename L>
+    concept Light = requires {
+        typename L::color_type; // Lights have this, but colours don't
+    };
+
+
     /// Lights allow illumination of the scene
     template<typename L, typename C>
     class light;

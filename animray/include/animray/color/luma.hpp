@@ -54,5 +54,8 @@ namespace animray {
         }
     };
 
+    template<typename C>
+    luma(C) -> luma<C>;
+
 
 }

@@ -30,12 +30,6 @@
 namespace animray {
 
 
-    template<typename L>
-    concept Light = requires {
-        typename L::color_type; // Lights have this, but colours don't
-    };
-
-
     /// Void lights are ambient
     template<typename C>
     class light<void, C> {
