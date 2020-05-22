@@ -23,10 +23,17 @@
 #pragma once
 
 
+#include <animray/color/concept.hpp>
 #include <animray/light/light.hpp>
 
 
 namespace animray {
+
+
+    template<typename L>
+    concept Light = requires {
+        typename L::color_type; // Lights have this, but colours don't
+    };
 
 
     /// Void lights are ambient
@@ -40,7 +47,7 @@ namespace animray {
         color_type color;
 
         /// Default construct a light with no illumination
-        light() noexcept : color{} {}
+        constexpr light() noexcept : color{} {}
         /// Construct with a given color
         explicit constexpr light(color_type c) noexcept : color{std::move(c)} {}
 
@@ -50,6 +57,8 @@ namespace animray {
             return color;
         }
     };
+    template<Color C>
+    light(C) -> light<void, C>;
 
 
 }

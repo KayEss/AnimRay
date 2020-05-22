@@ -86,10 +86,11 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                             triangle{bottom, west, north})}}};
 
     using bulb = animray::light<animray::point3d<world>, animray::rgb<float>>;
-    auto constexpr lights = animray::make_array(
+    auto constexpr spots = animray::light{animray::make_array(
             bulb{{-3.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
             bulb{{-5.0, -3.0, -5.0}, {0xa0, 0x40, 0x40}},
-            bulb{{3.0, -3.0, -5.0}, {0x40, 0x40, 0xa0}});
+            bulb{{3.0, -3.0, -5.0}, {0x40, 0x40, 0xa0}})};
+    auto constexpr lights = animray::light{animray::light{50.0f}, spots};
 
     using scene_type = animray::scene<
             animray::animation::affine<
