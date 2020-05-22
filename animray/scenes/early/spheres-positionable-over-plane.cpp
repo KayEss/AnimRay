@@ -98,9 +98,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     std::get<0>(scene.geometry.instances) =
             reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
-    std::get<0>(scene.geometry.instances)
-            .geometry()
-            .center(animray::point3d<world>(0, 0, 4));
+    std::get<0>(scene.geometry.instances).geometry.center =
+            animray::point3d<world>(0, 0, 4);
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
@@ -114,14 +113,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         switch (surface(generator)) {
         case 1: {
             metallic_sphere_type m(colour);
-            m.geometry().position(location());
+            m.geometry.position = location();
             std::get<1>(scene.geometry.instances).insert(m);
             break;
         }
         case 2:
         default: {
             gloss_sphere_type g(10.0f, colour);
-            g.geometry().position(location());
+            g.geometry.position = location();
             std::get<2>(scene.geometry.instances).insert(g);
         }
         }

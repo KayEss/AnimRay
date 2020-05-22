@@ -112,14 +112,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         switch (surface(generator)) {
         case 1: {
             metallic_sphere_type m(colour);
-            m.geometry().position(location());
+            m.geometry.position = location();
             std::get<1>(scene.geometry.instances).insert(m);
             break;
         }
         case 2:
         default: {
             gloss_sphere_type g(10.0f, colour);
-            g.geometry().position((location()));
+            g.geometry.position = location();
             std::get<2>(scene.geometry.instances).insert(g);
         }
         }

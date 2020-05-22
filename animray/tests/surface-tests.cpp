@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -39,7 +38,7 @@ FSL_TEST_FUNCTION(matte_rgb) {
             animray::ray<float>(
                     animray::point3d<float>(0, 0, 1),
                     animray::point3d<float>(0, 0, 2)),
-            red_ball.surface_parameters());
+            red_ball.surface_parameters);
     animray::ray<float> illumination(
             animray::point3d<float>(0, 0, 1), animray::point3d<float>(0, 0, 5));
     animray::rgb<float> final(animray::shader(
@@ -63,7 +62,7 @@ FSL_TEST_FUNCTION(matte_gray) {
             animray::ray<float>(
                     animray::point3d<float>(0, 0, 1),
                     animray::point3d<float>(0, 0, 2)),
-            gray_ball.surface_parameters());
+            gray_ball.surface_parameters);
     animray::ray<float> illumination(
             animray::point3d<float>(0, 0, 1), animray::point3d<float>(0, 0, 5));
     animray::rgb<float> final(animray::shader(

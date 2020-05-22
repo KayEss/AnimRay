@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -64,7 +63,7 @@ namespace animray {
             typedef typename ray_type::end_type end_type;
             return ray_type(
                     end_type(extents_type(0), extents_type(0), focal_plane),
-                    end_type(pc.x(), pc.y(), focal_plane + focal_length));
+                    end_type(pc.x, pc.y, focal_plane + focal_length));
         }
 
       private:

@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2015, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,10 +34,10 @@ namespace animray {
         template<typename F>
         class at_frame {
           public:
-            at_frame() {}
+            at_frame() : frame{} {}
             template<typename... A>
             at_frame(A &&...) {}
-            fostlib::accessors<F> frame;
+            F frame;
         };
     }
 
@@ -50,7 +49,7 @@ namespace animray {
                 std::is_base_of<detail::at_frame<F>, T>::value,
                 T,
                 mixin<T, detail::at_frame<F>>>::type type;
-        typedef F frame_type;
+        using frame_type = F;
     };
 
 

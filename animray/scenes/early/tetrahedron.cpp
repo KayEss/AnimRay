@@ -103,10 +103,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                 typename animray::with_frame<
                         animray::ray<world>, std::size_t>::type>
                 camera(fw, fh, width, height, 0.05);
-        camera(animray::rotate_x<world>(-15_deg))(
-                animray::translate<world>(0.0, 0.0, -4))
-                .instance()
-                .frame = frame;
+        camera(animray::rotate_x<world>(-15_deg));
+        camera(animray::translate<world>(0.0, 0.0, -4));
+        camera.instance.frame = frame;
 
         typedef animray::film<animray::rgb<uint8_t>> film_type;
 

@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -58,7 +58,7 @@ namespace animray {
             const corner_type e1(superclass::array[1] - superclass::array[0]);
             const corner_type e2(superclass::array[2] - superclass::array[0]);
 
-            const corner_type P(cross(by.direction(), e2));
+            const corner_type P(cross(by.direction, e2));
             const local_coord_type determinant(dot(e1, P));
             if (determinant > -epsilon && determinant < epsilon) {
                 return fostlib::null;
@@ -66,14 +66,14 @@ namespace animray {
             const local_coord_type inv_determinant(
                     local_coord_type(1) / determinant);
 
-            const corner_type T(by.from() - superclass::array[0]);
+            const corner_type T(by.from - superclass::array[0]);
             const local_coord_type u(dot(T, P) * inv_determinant);
             if (u < local_coord_type() || u > local_coord_type(1)) {
                 return fostlib::null;
             }
 
             const corner_type Q(cross(T, e1));
-            const local_coord_type v(dot(by.direction(), Q) * inv_determinant);
+            const local_coord_type v(dot(by.direction, Q) * inv_determinant);
             if (v < local_coord_type() || u + v > local_coord_type(1)) {
                 return fostlib::null;
             }
@@ -82,12 +82,12 @@ namespace animray {
             if (t > epsilon) {
                 typename intersection_type::direction_type normal(
                         cross(e2, e1));
-                if (dot(normal, by.direction()) < local_coord_type()) {
+                if (dot(normal, by.direction) < local_coord_type{}) {
                     return intersection_type(
-                            by.from() + by.direction() * t, normal);
+                            by.from + by.direction * t, normal);
                 } else {
                     return intersection_type(
-                            by.from() + by.direction() * t, -normal);
+                            by.from + by.direction * t, -normal);
                 }
             } else {
                 return fostlib::null;

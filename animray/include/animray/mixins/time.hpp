@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -36,7 +35,7 @@ namespace animray {
           public:
             at_time() : time(2010, 10, 10, 10, 0, 0) {}
 
-            fostlib::accessors<fostlib::timestamp> time;
+            fostlib::timestamp time;
         };
     }
 

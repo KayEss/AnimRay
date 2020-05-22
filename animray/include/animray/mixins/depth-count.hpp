@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -34,9 +33,9 @@ namespace animray {
     namespace detail {
         class depth_counted {
           public:
-            depth_counted() : depth_count() {}
+            depth_counted() : depth_count{} {}
             template<typename... A>
-            depth_counted(A &&...) {}
+            depth_counted(A &&...) : depth_count{} {}
 
             template<
                     typename R,
@@ -45,7 +44,7 @@ namespace animray {
                             not std::is_base_of<depth_counted, R>::value>::type
                             *E = nullptr>
             void add_count(const R &) {
-                depth_count(depth_count() + 1);
+                depth_count = depth_count + 1;
             }
             template<
                     typename R,
@@ -54,10 +53,10 @@ namespace animray {
                             std::is_base_of<depth_counted, R>::value>::type *E =
                             nullptr>
             void add_count(const R &r) {
-                depth_count(depth_count() + 1 + r.depth_count());
+                depth_count = depth_count + 1 + r.depth_count;
             }
 
-            fostlib::accessors<std::size_t> depth_count;
+            std::size_t depth_count;
         };
     }
 

@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2020, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -47,8 +46,8 @@ namespace animray {
         /// Insert new geometry
         template<typename G>
         collection &insert(const G &instance) {
-            instances.insert(instance.geometry());
-            surfaces.push_back(instance.surface_parameters());
+            instances.insert(instance.geometry);
+            surfaces.push_back(instance.surface_parameters);
             return *this;
         }
 
@@ -70,10 +69,9 @@ namespace animray {
                                     by, epsilon));
                     if (intersection) {
                         local_coord_type dot(
-                                (intersection.value().from() - by.from()).dot());
+                                (intersection->from - by.from).dot());
                         if (dot < result_dot) {
-                            result =
-                                    std::make_pair(intersection.value(), index);
+                            result = std::make_pair(*intersection, index);
                             result_dot = dot;
                         }
                     }
@@ -83,9 +81,8 @@ namespace animray {
                             intersection(instances.instances[index].intersects(
                                     by, epsilon));
                     if (intersection) {
-                        result = std::make_pair(intersection.value(), index);
-                        result_dot =
-                                (intersection.value().from() - by.from()).dot();
+                        result = std::make_pair(*intersection, index);
+                        result_dot = (intersection->from - by.from).dot();
                     }
                 }
             }

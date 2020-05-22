@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -39,24 +38,24 @@ namespace animray {
         typedef I intersection_type;
 
         /// The centre of the plane
-        fostlib::accessors<point3d<local_coord_type>> center;
+        point3d<local_coord_type> center;
         /// Surface normal
-        fostlib::accessors<unit_vector<local_coord_type>> normal;
+        unit_vector<local_coord_type> normal;
 
         /// Calculate the intersection point
         template<typename R, typename E>
         fostlib::nullable<intersection_type>
                 intersects(R by, const E epsilon) const {
             const local_coord_type dot_normal(
-                    animray::dot(by.direction(), normal()));
+                    animray::dot(by.direction, normal));
             if (dot_normal == local_coord_type()) { return fostlib::null; }
             const local_coord_type numerator(
-                    animray::dot(normal(), center() - by.from()));
+                    animray::dot(normal, center - by.from));
             const local_coord_type t(numerator / dot_normal);
             if (t > epsilon) {
                 return intersection_type(
-                        by.from() + by.direction() * t,
-                        dot_normal < 0 ? normal() : -normal());
+                        by.from + by.direction * t,
+                        dot_normal < 0 ? normal : -normal);
             } else {
                 return fostlib::null;
             }

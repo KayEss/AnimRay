@@ -50,15 +50,15 @@ namespace animray {
                 const G &scene) const {
             typedef typename RI::local_coord_type accuracy;
             const accuracy ci =
-                    -dot(observer.direction(), intersection.direction());
+                    -dot(observer.direction, intersection.direction);
             const unit_vector<accuracy> ri(
-                    observer.direction()
-                    + intersection.direction() * accuracy(2) * ci);
+                    observer.direction
+                    + intersection.direction * accuracy(2) * ci);
             typename animray::with_depth_count<RI>::type refray(observer);
             refray.add_count(observer);
-            refray.from(intersection.from());
-            refray.direction(ri);
-            if (refray.depth_count() > 5) {
+            refray.from = intersection.from;
+            refray.direction = ri;
+            if (refray.depth_count > 5) {
                 return scene.background;
             } else {
                 return scene(refray);

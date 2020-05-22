@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -91,15 +90,15 @@ namespace animray {
         : surface_parameters(std::forward<typename S::parameters>(args)...) {}
 
         /// The geometry that is being shaded
-        fostlib::accessors<instance_type, fostlib::lvalue> geometry;
+        instance_type geometry;
 
         /// Capture the surface physics model
-        fostlib::accessors<surface_parameters_type> surface_parameters;
+        surface_parameters_type surface_parameters;
 
         /// Pass on affine transformation to the geometry
         template<typename T>
         surface &operator()(const T &t) {
-            geometry()(t);
+            geometry(t);
             return *this;
         }
 
@@ -108,9 +107,9 @@ namespace animray {
         fostlib::nullable<intersection_type>
                 intersects(const R &by, const E epsilon) const {
             fostlib::nullable<typename O::intersection_type> hit(
-                    geometry().intersects(by, epsilon));
+                    geometry.intersects(by, epsilon));
             if (hit) {
-                return intersection_type(hit.value(), surface_parameters());
+                return intersection_type(hit.value(), surface_parameters);
             } else {
                 return fostlib::null;
             }
@@ -119,7 +118,7 @@ namespace animray {
         /// Calculate whether this object occludes the ray or not
         template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return geometry().occludes(by, epsilon);
+            return geometry.occludes(by, epsilon);
         }
     };
 

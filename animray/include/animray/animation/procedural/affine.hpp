@@ -78,7 +78,7 @@ namespace animray {
             template<typename R>
             std::pair<W, W> matrices(const R &ray) const {
                 return lambda(
-                        interpolation::linear(start, end, ray.frame(), frames));
+                        interpolation::linear(start, end, ray.frame, frames));
             }
 
             /// Ray intersection

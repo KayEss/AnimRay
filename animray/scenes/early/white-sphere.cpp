@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -64,13 +64,12 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
                  */
                 auto const intersection = sphere.intersects(r);
                 if (intersection) {
-                    ray light(intersection.value().from(), light_position);
+                    ray light(intersection->from, light_position);
                     if (sphere.occludes(light)) {
                         return ambient;
                     } else {
                         auto const costheta =
-                                dot(light.direction(),
-                                    intersection.value().direction());
+                                dot(light.direction, intersection->direction);
                         return ambient + animray::luma<>{205 * costheta};
                     }
                 } else {

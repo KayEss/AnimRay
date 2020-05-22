@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2020, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -45,21 +44,21 @@ namespace animray {
         line(const end_type &from, const end_type &to) : from(from), to(to) {}
 
         /// The start of the line
-        fostlib::accessors<end_type> from;
+        end_type from;
         /// The end of the line
-        fostlib::accessors<end_type> to;
+        end_type to;
 
         /// Compare for equality
         bool operator==(const line &r) const {
-            return to() == r.to() && from() == r.from();
+            return to == r.to && from == r.from;
         }
         /// Compare for inequality
         bool operator!=(const line &r) const { return !(*this == r); }
 
         /// Returns the square of the length of the line
         value_type length_squared() const {
-            value_type dx = to().x() - from().x(), dy = to().y() - from().y(),
-                       dz = to().z() - from().z();
+            value_type dx = to.x() - from.x(), dy = to.y() - from.y(),
+                       dz = to.z() - from.z();
             return dx * dx + dy * dy + dz * dz;
         }
     };
@@ -74,8 +73,8 @@ namespace fostlib {
     struct coercer<json, animray::line<D>> {
         json coerce(const animray::line<D> &l) {
             json r;
-            jcursor("from").insert(r, fostlib::coerce<json>(l.from()));
-            jcursor("to").insert(r, fostlib::coerce<json>(l.to()));
+            jcursor("from").insert(r, fostlib::coerce<json>(l.from));
+            jcursor("to").insert(r, fostlib::coerce<json>(l.to));
             return r;
         }
     };
@@ -98,7 +97,7 @@ namespace std {
     template<typename D>
     fostlib::ostream &
             operator<<(fostlib::ostream &o, const animray::line<D> &l) {
-        return o << l.from() << " -> " << l.to();
+        return o << l.from << " -> " << l.to;
     }
 }
 

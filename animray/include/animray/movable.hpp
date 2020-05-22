@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -71,16 +70,16 @@ namespace animray {
 
       public:
         /// The type of object that can be moved
-        typedef O instance_type;
+        using instance_type = O;
         /// The type of the local coordinate system
-        typedef typename O::local_coord_type local_coord_type;
+        using local_coord_type = typename O::local_coord_type;
         /// The type of the intersection of the instance
-        typedef I intersection_type;
+        using intersection_type = I;
         /// The type of the transformation that needs to be applied
-        typedef typename T::transform_type transform_type;
+        using transform_type = typename T::transform_type;
 
         /// Store the instance
-        fostlib::accessors<instance_type, fostlib::lvalue> instance;
+        instance_type instance;
 
         /// Allow the underlying instance to be constructed
         template<typename... A>
@@ -103,7 +102,7 @@ namespace animray {
         std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
             const auto hit{
-                    instance().intersects(by * superclass::forward, epsilon)};
+                    instance.intersects(by * superclass::forward, epsilon)};
             if (hit) {
                 return hit.value() * superclass::backward;
             } else {
@@ -114,13 +113,13 @@ namespace animray {
         /// Occlusion check
         template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return instance().occludes(by * superclass::forward, epsilon);
+            return instance.occludes(by * superclass::forward, epsilon);
         }
 
         /// Allow the instance to be used as a camera
         template<typename F>
         intersection_type operator()(F x, F y) const {
-            return instance()(x, y) * superclass::backward;
+            return instance(x, y) * superclass::backward;
         }
     };
 

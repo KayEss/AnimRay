@@ -38,7 +38,7 @@ FSL_TEST_SUITE(animation_procedural);
 
 FSL_TEST_FUNCTION(constant) {
     ray_type ray;
-    FSL_CHECK_EQ(ray.frame(), 0);
+    FSL_CHECK_EQ(ray.frame, 0);
     FSL_CHECK_EQ(animray::reduce(0, ray), 0);
 }
 
@@ -46,12 +46,12 @@ FSL_TEST_FUNCTION(constant) {
 FSL_TEST_FUNCTION(linear_frames_boost_function) {
     const auto f{[](const ray_type &r) {
         return animray::interpolation::linear(
-                5.0, 15.0, r.frame(), std::size_t(10));
+                5.0, 15.0, r.frame, std::size_t(10));
     }};
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), 5);
-    ray.frame(10);
-    FSL_CHECK_EQ(ray.frame(), 10);
+    ray.frame = 10;
+    FSL_CHECK_EQ(ray.frame, 10);
     FSL_CHECK_EQ(animray::reduce(f, ray), 15);
 }
 
@@ -59,11 +59,11 @@ FSL_TEST_FUNCTION(linear_frames_boost_function) {
 FSL_TEST_FUNCTION(linear_frames_std_function) {
     const auto f{[](const ray_type &r) {
         return animray::interpolation::linear(
-                -5.0, 5.0, r.frame(), std::size_t(10));
+                -5.0, 5.0, r.frame, std::size_t(10));
     }};
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), -5);
-    ray.frame(1);
+    ray.frame = 1;
     FSL_CHECK_EQ(animray::reduce(f, ray), -4);
 }
 
@@ -71,13 +71,13 @@ FSL_TEST_FUNCTION(linear_frames_std_function) {
 namespace {
     int linear_frames_function(const ray_type &r) {
         return animray::interpolation::linear(
-                -5.0, 5.0, r.frame(), std::size_t(10));
+                -5.0, 5.0, r.frame, std::size_t(10));
     }
 }
 FSL_TEST_FUNCTION(linear_frames_function) {
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -5);
-    ray.frame(1);
+    ray.frame = 1;
     FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -4);
 }
 
@@ -85,11 +85,11 @@ FSL_TEST_FUNCTION(linear_frames_function) {
 FSL_TEST_FUNCTION(linear_frames_auto) {
     const auto f = [](const ray_type &r) {
         return animray::interpolation::linear(
-                -5.0, 5.0, r.frame(), std::size_t(10));
+                -5.0, 5.0, r.frame, std::size_t(10));
     };
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), -5);
-    ray.frame(5);
+    ray.frame = 5;
     FSL_CHECK_EQ(animray::reduce(f, ray), 0);
 }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -50,8 +50,7 @@ namespace animray {
         template<typename R>
         static std::pair<D, D> quadratic_b_c(const R &by) {
             return std::make_pair(
-                    D(2) * dot(by.from(), by.direction()),
-                    by.from().dot() - D(1));
+                    D{2} * dot(by.from, by.direction), by.from.dot() - D{1});
         }
 
         /// Returns a ray giving the intersection point and surface normal or
@@ -65,7 +64,7 @@ namespace animray {
             if (t) {
                 typedef typename ray<D>::end_type end_type;
                 typedef typename ray<D>::direction_type direction_type;
-                direction_type normal(by.from() + by.direction() * t.value());
+                direction_type normal(by.from + by.direction * *t);
                 return intersection_type(end_type(normal), normal);
             } else {
                 return fostlib::null;

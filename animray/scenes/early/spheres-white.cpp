@@ -113,13 +113,11 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         animray::translate<world> location(
                 x_position(generator), y_position(generator), 0.0);
         animray::unit_sphere<animray::point3d<world>> s;
-        s.position((location()));
+        s.position = location();
         switch (surface(generator)) {
-        case 1:
-            std::get<1>(scene.geometry.instances).geometry().insert(s);
-            break;
+        case 1: std::get<1>(scene.geometry.instances).geometry.insert(s); break;
         case 2:
-        default: std::get<2>(scene.geometry.instances).geometry().insert(s);
+        default: std::get<2>(scene.geometry.instances).geometry.insert(s);
         }
     }
 

@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,9 +34,9 @@ FSL_TEST_SUITE(plane);
 
 FSL_TEST_FUNCTION(plane_constructor) {
     animray::plane<animray::ray<int>> board;
-    FSL_CHECK_EQ(board.center(), animray::point3d<int>(0, 0, 0));
+    FSL_CHECK_EQ(board.center, animray::point3d<int>(0, 0, 0));
     FSL_CHECK_EQ(
-            board.normal(),
+            board.normal,
             animray::unit_vector<int>(animray::point3d<int>(0, 0, 1)));
 }
 

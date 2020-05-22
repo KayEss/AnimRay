@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2020, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -59,32 +58,32 @@ namespace animray {
         : from(from), direction(dir) {}
 
         /// The start of the ray
-        fostlib::accessors<end_type> from;
+        end_type from;
         /// A unit direction vector
-        fostlib::accessors<direction_type> direction;
+        direction_type direction;
 
         /// Set a point the ray must go through
-        void to(const end_type &t) { direction(direction_type{t - from()}); }
+        void to(const end_type &t) { direction = direction_type{t - from}; }
 
         /// Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {
-            return from() + direction() * distance;
+            return from + direction * distance;
         }
 
         /// Compare for equality
         bool operator==(const ray &r) const {
-            return direction() == r.direction() && from() == r.from();
+            return direction == r.direction && from == r.from;
         }
         /// Compare for inequality
         bool operator!=(const ray &r) const {
-            return direction() != r.direction() || from() != r.from();
+            return direction != r.direction || from != r.from;
         }
 
         /// Transform a ray by a matrix
         template<typename MD>
         ray &operator*=(const matrix<MD> &right) {
-            end_type f(right * from()), e(right * ends());
-            from(f);
+            end_type f(right * from), e(right * ends());
+            from = f;
             to(e);
             return *this;
         }
@@ -108,8 +107,8 @@ namespace fostlib {
     struct coercer<json, animray::ray<D>> {
         json coerce(const animray::ray<D> &l) {
             json r;
-            jcursor("from").insert(r, fostlib::coerce<json>(l.from()));
-            jcursor("direction").insert(r, fostlib::coerce<json>(l.direction()));
+            jcursor("from").insert(r, fostlib::coerce<json>(l.from));
+            jcursor("direction").insert(r, fostlib::coerce<json>(l.direction));
             return r;
         }
     };
@@ -122,7 +121,7 @@ namespace std {
     /// Output to a stream
     template<typename D>
     ostream &operator<<(ostream &o, const animray::ray<D> &r) {
-        return o << r.from() << " -> " << r.direction();
+        return o << r.from << " -> " << r.direction;
     }
 
 

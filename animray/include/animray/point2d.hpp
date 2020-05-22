@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,35 +37,31 @@ namespace animray {
         using value_type = C;
 
         /// The x location
-        fostlib::accessors<C> x;
+        value_type x;
         /// The y location
-        fostlib::accessors<C> y;
+        value_type y;
 
         /// Construct an empty point
-        point2d() {}
+        point2d() : x{}, y{} {}
         /// Construct a point from a pair of co-ordinates
-        point2d(const C &x, const C &y) : x(x), y(y) {}
+        point2d(C x, C y) : x(x), y(y) {}
 
         /// Check for equality
-        bool operator==(const point2d &r) const {
-            return x() == r.x() && y() == r.y();
-        }
+        bool operator==(const point2d &r) const { return x == r.x && y == r.y; }
         /// Check for inequality
-        bool operator!=(const point2d &r) const {
-            return x() != r.x() || y() != r.y();
-        }
+        bool operator!=(const point2d &r) const { return x != r.x || y != r.y; }
 
         /// Add another point to this one
         point2d &operator+=(const point2d &r) {
-            x(x() + r.x());
-            y(y() + r.y());
+            x += r.x;
+            y += r.y;
             return *this;
         }
 
         /// Scale a point by a scalar
         point2d &operator*=(const C &r) {
-            x(x() * r);
-            y(y() * r);
+            x *= r;
+            y *= r;
             return *this;
         }
     };
@@ -75,32 +70,32 @@ namespace animray {
     /// Allow two points to be added together
     template<typename C>
     inline auto operator+(const point2d<C> &a, const point2d<C> &b) {
-        return point2d<C>(a.x() + b.x(), a.y() + b.y());
+        return point2d<C>(a.x + b.x, a.y + b.y);
     }
     /// Allow two points to be subracted
     template<typename C>
     inline auto operator-(const point2d<C> &a, const point2d<C> &b) {
-        return point2d<C>(a.x() - b.x(), a.y() - b.y());
+        return point2d<C>(a.x - b.x, a.y - b.y);
     }
     /// Allow us to scale a point location by a scalar
     template<typename C>
     inline auto operator*(const C &a, const point2d<C> &b) {
-        return point2d<C>(a * b.x(), a * b.y());
+        return point2d<C>(a * b.x, a * b.y);
     }
     /// Allow us to scale a point location by a scalar
     template<typename C>
     inline auto operator*(const point2d<C> &a, const C &b) {
-        return point2d<C>(a.x() * b, a.y() * b);
+        return point2d<C>(a.x * b, a.y * b);
     }
     /// Allow us to divide a point location by a scalar
     template<typename C>
     inline auto operator/(const C &a, const point2d<C> &b) {
-        return point2d<C>(a / b.x(), a / b.y());
+        return point2d<C>(a / b.x, a / b.y);
     }
     /// Allow us to divide a point location by a scalar
     template<typename C>
     inline auto operator/(const point2d<C> &a, const C &b) {
-        return point2d<C>(a.x() / b, a.y() / b);
+        return point2d<C>(a.x / b, a.y / b);
     }
 
 
@@ -115,8 +110,8 @@ namespace fostlib {
         fostlib::json coerce(const animray::point2d<C> &p) {
             fostlib::json j;
             fostlib::jcursor r;
-            r.push_back(j, fostlib::coerce<fostlib::json>(p.x()));
-            r.push_back(j, fostlib::coerce<fostlib::json>(p.y()));
+            r.push_back(j, fostlib::coerce<fostlib::json>(p.x));
+            r.push_back(j, fostlib::coerce<fostlib::json>(p.y));
             return j;
         }
     };
@@ -140,7 +135,7 @@ namespace std {
     template<typename C>
     inline fostlib::ostream &
             operator<<(fostlib::ostream &o, const animray::point2d<C> &p) {
-        return o << "(" << p.x() << ", " << p.y() << ")";
+        return o << "(" << p.x << ", " << p.y << ")";
     }
 }
 

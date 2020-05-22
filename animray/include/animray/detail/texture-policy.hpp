@@ -1,6 +1,5 @@
 /**
-    Copyright 2010-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -41,9 +40,9 @@ namespace animray {
         /// Construct the functor with a provided value
         const_value(const result_type &v) : value(v) {}
         /// Stores the value
-        fostlib::accessors<result_type> value;
+        result_type value;
         /// Call the functor
-        const result_type &operator()() const { return value(); }
+        const result_type &operator()() const { return value; }
     };
 
 
@@ -150,7 +149,7 @@ namespace animray {
             /// Convert the extents to x, y and call f
             template<typename F>
             R operator()(const F &f, const A1 &l) const {
-                return f(l.x(), l.y());
+                return f(l.x, l.y);
             }
         };
     }

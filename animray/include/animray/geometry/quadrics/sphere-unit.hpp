@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -49,18 +48,18 @@ namespace animray {
         typedef I intersection_type;
 
         /// Set the position of the sphere
-        fostlib::accessors<position_type> position;
+        position_type position;
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
         fostlib::nullable<intersection_type>
                 intersects(R by, const E epsilon) const {
-            by.from(by.from() - reduce(position(), by));
+            by.from = by.from - reduce(position, by);
             fostlib::nullable<intersection_type> hit(
                     origin.intersects(by, epsilon));
             if (hit) {
-                hit.value().from(hit.value().from() + reduce(position(), by));
+                hit->from = hit->from + reduce(position, by);
                 return hit;
             } else {
                 return fostlib::null;
@@ -70,7 +69,7 @@ namespace animray {
         /// Returns true if the ray hits the sphere
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
-            by.from(by.from() - reduce(position(), by));
+            by.from = by.from - reduce(position, by);
             return origin.occludes(by, epsilon);
         }
     };

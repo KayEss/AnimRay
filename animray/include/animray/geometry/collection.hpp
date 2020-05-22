@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -72,7 +71,7 @@ namespace animray {
                             instance.intersects(by, epsilon));
                     if (intersection) {
                         local_coord_type dot(
-                                (intersection.value().from() - by.from()).dot());
+                                (intersection->from - by.from).dot());
                         if (dot < result_dot) {
                             result = std::move(intersection);
                             result_dot = dot;
@@ -80,9 +79,7 @@ namespace animray {
                     }
                 } else {
                     result = instance.intersects(by, epsilon);
-                    if (result) {
-                        result_dot = (result.value().from() - by.from()).dot();
-                    }
+                    if (result) { result_dot = (result->from - by.from).dot(); }
                 }
             }
             return result;

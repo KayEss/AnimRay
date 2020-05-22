@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2015, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -63,7 +62,7 @@ namespace animray {
         /// Strip the frame out of the ray type
         template<typename R>
         auto operator()(const R &ray) const {
-            return T::operator()(ray.frame());
+            return T::operator()(ray.frame);
         }
     };
 

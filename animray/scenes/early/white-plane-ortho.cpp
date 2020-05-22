@@ -1,5 +1,5 @@
-/*
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -49,9 +49,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                     const film_type::size_type x, const film_type::size_type y) {
                 ray r(camera(x, y));
                 ray intersection(plane.intersects(r, 0.0).value());
-                ray light(intersection.from(), ray::end_type(5.0, 5.0, -5.0));
+                ray light(intersection.from, ray::end_type(5.0, 5.0, -5.0));
                 const double costheta =
-                        dot(light.direction(), intersection.direction());
+                        dot(light.direction, intersection.direction);
                 return animray::rgb<uint8_t>(50 + 205 * costheta);
             });
     animray::targa(output_filename, output);

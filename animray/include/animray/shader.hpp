@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,7 +37,7 @@ namespace animray {
                 const C &incident,
                 const G &) const {
             const typename RI::local_coord_type costheta =
-                    dot(light.direction(), intersection.direction());
+                    dot(light.direction, intersection.direction);
             return incident * costheta;
         }
     };

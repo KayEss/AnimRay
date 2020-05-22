@@ -66,23 +66,18 @@ namespace animray {
                 typename Os::intersection_type::direction_type...>::type;
 
         /// The wrapped intersection
-        std::variant<
+        using intersection_type = std::variant<
                 typename O::intersection_type,
-                typename Os::intersection_type...>
-                wrapped_intersection;
+                typename Os::intersection_type...>;
 
-        template<typename I>
-        intersection(I &&i) : wrapped_intersection{std::move(i)} {}
+        end_type from;
+        direction_type direction;
+        intersection_type wrapped_intersection;
 
-        auto from() const {
-            return std::visit(
-                    [](auto i) { return i.from(); }, wrapped_intersection);
-        }
-
-        auto direction() const {
-            return std::visit(
-                    [](auto i) { return i.direction(); }, wrapped_intersection);
-        }
+        intersection(intersection_type i)
+        : from{std::visit([](auto i) { return i.from; }, i)},
+          direction{std::visit([](auto i) { return i.direction; }, i)},
+          wrapped_intersection{std::move(i)} {}
     };
 
 
@@ -110,26 +105,26 @@ namespace animray {
                     std::optional<intersection_type>>;
             return std::apply(
                            [&by, epsilon](const auto &... geom) {
-                               const auto dot = [&by](auto i) -> mid_type {
-                                   if (i)
-                                       return {(i.value().from() - by.from())
-                                                       .dot(),
-                                               std::move(i.value())};
-                                   else
+                               auto const dot = [&](auto i) -> mid_type {
+                                   if (i) {
+                                       return mid_type{
+                                               (i->from - by.from).dot(),
+                                               std::move(*i)};
+                                   } else {
                                        return {std::nullopt, std::nullopt};
+                                   }
                                };
                                return foldl(
                                        [](auto i1, auto i2) -> mid_type {
-                                           if (not i1.first)
+                                           if (not i1.first) {
                                                return i2;
-                                           else if (not i2.first)
+                                           } else if (not i2.first) {
                                                return i1;
-                                           else if (
-                                                   i1.first.value()
-                                                   < i2.first.value())
+                                           } else if (*i1.first < *i2.first) {
                                                return i1;
-                                           else
+                                           } else {
                                                return i2;
+                                           }
                                        },
                                        dot(geom.intersects(by, epsilon))...);
                            },

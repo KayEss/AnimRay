@@ -51,7 +51,7 @@ namespace {
                                  animray::unit_vector<double>(0, 0, -1)),
                          0)
                         .value()
-                        .direction(),
+                        .direction,
                 animray::unit_vector<double>(0, 0, 1));
         FSL_CHECK(g.occludes(
                 animray::ray<double>(
@@ -70,7 +70,7 @@ namespace {
                                  animray::point3d<double>(1, 1, 0)),
                          0)
                         .value()
-                        .direction(),
+                        .direction,
                 animray::unit_vector<double>(0, 0, -1));
         FSL_CHECK(not g.occludes(
                 animray::ray<double>(
