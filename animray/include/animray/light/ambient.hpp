@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,20 +34,20 @@ namespace animray {
     class light<void, C> {
       public:
         /// The colour type
-        typedef C color_type;
+        using color_type = C;
 
         /// The colour of the light
-        fostlib::accessors<color_type> color;
+        color_type color;
 
         /// Default construct a light with no illumination
-        light() : color() {}
+        light() noexcept : color{} {}
         /// Construct with a given color
-        explicit light(const color_type &c) : color(c) {}
+        explicit constexpr light(color_type c) noexcept : color{std::move(c)} {}
 
         /// Calculate the illumination given by this light
         template<typename O, typename R, typename G>
         color_type operator()(const O &, const R &, const G &) const {
-            return color();
+            return color;
         }
     };
 

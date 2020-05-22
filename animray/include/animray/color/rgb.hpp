@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -45,15 +44,15 @@ namespace animray {
         using superclass::to_json;
 
         /// Default construct an RGB colour with all channels at zero
-        rgb() {}
+        constexpr rgb() {}
         /// Construct a colour from a luma signal
-        explicit rgb(value_type gray) {
+        explicit constexpr rgb(value_type gray) {
             superclass::array[0] = gray;
             superclass::array[1] = gray;
             superclass::array[2] = gray;
         }
         /// Construct an RGB colour with the specified channel values
-        rgb(value_type r, value_type g, value_type b) {
+        constexpr rgb(value_type r, value_type g, value_type b) {
             superclass::array[0] = r;
             superclass::array[1] = g;
             superclass::array[2] = b;

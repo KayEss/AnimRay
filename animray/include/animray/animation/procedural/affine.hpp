@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -44,9 +43,11 @@ namespace animray {
 
           public:
             /// The type of object that can be moved
-            typedef O instance_type;
+            using instance_type = O;
             /// Intersection type
-            typedef typename O::intersection_type intersection_type;
+            using intersection_type = typename O::intersection_type;
+            /// Global co-ordinate base type
+            using local_coord_type = typename O::local_coord_type;
 
             /// Store the instance
             instance_type instance;

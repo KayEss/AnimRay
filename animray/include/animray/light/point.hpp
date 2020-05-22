@@ -1,5 +1,5 @@
-/*
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,20 +35,20 @@ namespace animray {
     /// Point lights
     template<typename C, typename W>
     class light<point3d<W>, C> : public light<void, C> {
-        typedef light<void, C> superclass;
+        using superclass = light<void, C>;
 
       public:
         using local_coord_type = W;
 
         /// The light geometry
-        typedef point3d<W> geometry_type;
+        using geometry_type = point3d<W>;
 
         /// The geometry of the light
-        fostlib::accessors<geometry_type> geometry;
+        geometry_type geometry;
 
         /// Construct from a position and color
-        light(const geometry_type &p, const typename superclass::color_type &c)
-        : superclass(c), geometry(p) {}
+        constexpr light(geometry_type p, typename superclass::color_type c)
+        : superclass{std::move(c)}, geometry{std::move(p)} {}
 
         /// Calculate the illumination given by this light
         template<typename O, typename I, typename G>
@@ -56,12 +56,12 @@ namespace animray {
                 const O &observer, const I &intersection, const G &scene) const {
             O illumination(observer);
             illumination.from(intersection.from());
-            illumination.to(geometry());
+            illumination.to(geometry);
             if (not scene.geometry().occludes(
                         illumination, epsilon<local_coord_type>)) {
                 return shader(
-                        observer, illumination, intersection,
-                        superclass::color(), scene);
+                        observer, illumination, intersection, superclass::color,
+                        scene);
             } else {
                 return typename superclass::color_type();
             }

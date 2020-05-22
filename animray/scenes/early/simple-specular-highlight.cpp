@@ -1,5 +1,5 @@
-/*
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -84,7 +84,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
                     animray::translate<world>(1.0, 1.0, 0.0)));
 
-    std::get<0>(scene.light()).color(50);
+    std::get<0>(scene.light()).color = 50;
     std::get<1>(scene.light())
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(

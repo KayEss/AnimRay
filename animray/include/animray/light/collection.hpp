@@ -1,6 +1,5 @@
-/*
-    Copyright 2014-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -53,7 +52,7 @@ namespace animray {
         template<typename O, typename R, typename G>
         color_type operator()(
                 const O &observer, const R &intersection, const G &scene) const {
-            color_type c(superclass::color());
+            color_type c(superclass::color);
             for (const auto &i : _lights) {
                 c += i(observer, intersection, scene);
             }
@@ -81,7 +80,7 @@ namespace animray {
         template<typename O, typename R, typename G>
         color_type operator()(
                 const O &observer, const R &intersection, const G &scene) const {
-            return superclass::color()
+            return superclass::color
                     + std::apply(
                             [&observer, &intersection,
                              &scene](auto &&... light) -> color_type {

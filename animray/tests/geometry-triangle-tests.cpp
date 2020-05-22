@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -132,7 +131,7 @@ FSL_TEST_FUNCTION(full_scene) {
             animray::point3d<double>(-5, -5, 0),
             animray::point3d<double>(5, -5, 0)));
 
-    std::get<0>(scene.light()).color(50);
+    std::get<0>(scene.light()).color = 50;
     std::get<1>(scene.light())
             .push_back(
                     animray::light<animray::point3d<world>, animray::rgb<float>>(
