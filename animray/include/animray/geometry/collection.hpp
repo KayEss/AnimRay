@@ -44,15 +44,19 @@ namespace animray {
         /// The type of the ray output by the instance
         typedef typename O::intersection_type intersection_type;
 
+        collection(){};
+        explicit constexpr collection(V &&v) noexcept
+        : instances{std::move(v)} {}
+
         /// The instances
-        fostlib::accessors<collection_type, fostlib::lvalue> instances;
+        collection_type instances;
 
         /// Insert a new object into the compound
         template<typename G>
         collection &insert(const G &instance) {
             // Other code may depend on this being a push_back,
             // at least for collections that use std::vector
-            instances().push_back(instance);
+            instances.push_back(instance);
             return *this;
         }
 
@@ -62,7 +66,7 @@ namespace animray {
                 intersects(const R &by, const E epsilon) const {
             fostlib::nullable<intersection_type> result;
             local_coord_type result_dot;
-            for (const auto &instance : instances()) {
+            for (const auto &instance : instances) {
                 if (result) {
                     fostlib::nullable<intersection_type> intersection(
                             instance.intersects(by, epsilon));
@@ -88,13 +92,17 @@ namespace animray {
         template<typename R, typename E>
         bool occludes(const R &by, const E epsilon) const {
             return std::find_if(
-                           instances().begin(), instances().end(),
+                           instances.begin(), instances.end(),
                            [&by, epsilon](const instance_type &instance) {
                                return instance.occludes(by, epsilon);
                            })
-                    != instances().end();
+                    != instances.end();
         }
     };
+
+
+    template<typename V>
+    collection(V &&) -> collection<typename V::value_type, V>;
 
 
 }
