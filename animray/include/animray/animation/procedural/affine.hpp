@@ -24,6 +24,7 @@
 #pragma once
 
 
+#include <animray/matrix.hpp>
 #include <animray/animation/animate.hpp>
 #include <animray/interpolation/linear.hpp>
 
@@ -35,11 +36,9 @@ namespace animray {
 
 
         /// Apply an animated affine transformation to the object
-        template<
-                typename W,
-                std::pair<W, W> A(const typename W::value_type &),
-                typename O>
+        template<typename W, typename T, typename O>
         class affine {
+            std::add_pointer_t<T> lambda;
             typename W::value_type start, end;
             std::size_t frames;
 
@@ -50,13 +49,24 @@ namespace animray {
             typedef typename O::intersection_type intersection_type;
 
             /// Store the instance
-            fostlib::accessors<instance_type, fostlib::lvalue> instance;
+            instance_type instance;
+
+            constexpr affine() noexcept : start{}, end{}, frames{} {}
+            constexpr affine(
+                    std::add_pointer_t<T> t,
+                    typename W::value_type const &s,
+                    typename W::value_type const &e,
+                    std::size_t const f,
+                    O &&o) noexcept
+            : lambda{t}, start{s}, end{e}, frames{f}, instance{std::move(o)} {}
 
             /// Store the animation parameters
             affine &operator()(
+                    T l,
                     const typename W::value_type &s,
                     const typename W::value_type &e,
                     const std::size_t f) {
+                lambda = std::move(l);
                 start = s;
                 end = e;
                 frames = f;
@@ -66,7 +76,7 @@ namespace animray {
             /// Calculate the transformation matrix
             template<typename R>
             std::pair<W, W> matrices(const R &ray) const {
-                return A(
+                return lambda(
                         interpolation::linear(start, end, ray.frame(), frames));
             }
 
@@ -76,7 +86,7 @@ namespace animray {
                     intersects(const R &by, const E epsilon) const {
                 std::pair<W, W> transform(matrices(by));
                 fostlib::nullable<intersection_type> hit(
-                        instance().intersects(by * transform.first, epsilon));
+                        instance.intersects(by * transform.first, epsilon));
                 if (hit) {
                     return hit.value() * transform.second;
                 } else {
@@ -88,11 +98,18 @@ namespace animray {
             template<typename R, typename E>
             bool occludes(const R &by, const E epsilon) const {
                 std::pair<W, W> transform(matrices(by));
-                return instance().occludes(by * transform.first, epsilon);
+                return instance.occludes(by * transform.first, epsilon);
             }
 
           private:
         };
+
+
+        template<typename A, typename B, typename E, typename O>
+        affine(A, B, E, std::size_t, O) -> affine<
+                matrix<typename O::local_coord_type>,
+                std::remove_pointer_t<A>,
+                O>;
 
 
     }

@@ -1,5 +1,5 @@
-/*
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -40,7 +40,7 @@
 #include <thread>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const std::size_t threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
@@ -50,22 +50,27 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const std::size_t frames(
             fostlib::coerce<int>(args.commandSwitch("frames").value_or("2")));
 
+    /// ### Output handling
+    /// Filenames
     auto const output_filename = fostlib::coerce<fostlib::fs::path>(
             args[1].value_or("tetrahedron.tga"));
     const int width = fostlib::coerce<int>(args[2].value_or("96"));
     const int height = fostlib::coerce<int>(args[3].value_or("54"));
 
-    typedef double world;
-    const world aspect = double(width) / height;
-    const world fw = width > height ? aspect * 0.024 : 0.024;
-    const world fh = width > height ? 0.024 : 0.024 / aspect;
+    /// Screen aspect and pixel density
+    auto const aspect = static_cast<double>(width) / height;
+    auto const fw = width > height ? aspect * 0.024 : 0.024;
+    auto const fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::triangle<animray::ray<world>> triangle;
-    typedef animray::scene<
+    /// ## Set up the geometry
+    using world = float;
+    std::size_t const angle{20};
+    using scene_type = animray::scene<
             animray::animation::affine<
-                    animray::matrix<world>, animray::rotate_z,
+                    animray::matrix<world>, decltype(animray::rotate_z<world>),
                     animray::animation::affine<
-                            animray::matrix<world>, animray::rotate_y,
+                            animray::matrix<world>,
+                            decltype(animray::rotate_y<world>),
                             animray::collection<triangle>>>,
             animray::light<
                     std::tuple<
@@ -76,18 +81,12 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                                             animray::rgb<float>>>,
                                     animray::rgb<float>>>,
                     animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
+            animray::rgb<float>>;
     scene_type scene;
     scene.background(animray::rgb<float>(20, 70, 100));
 
-    animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1), north(0, 1, 0),
-            south(0, -1, 0), east(1, 0, 0), west(-1, 0, 0);
-
     scene.geometry()
-            .instance()
-            .instance()
-            .insert(triangle(top, north, east))
+            .instance.instance.insert(triangle(top, north, east))
             .insert(triangle(top, east, south))
             .insert(triangle(top, south, west))
             .insert(triangle(top, west, north))
@@ -96,9 +95,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             .insert(triangle(bottom, south, west))
             .insert(triangle(bottom, west, north));
 
-    const std::size_t angle(20);
-    scene.geometry()(40_deg, 1_deg * angle, frames);
-    scene.geometry().instance()(0, 2_deg * angle, frames);
+    scene.geometry()(animray::rotate_z<world>, 40_deg, 1_deg * angle, frames);
+    scene.geometry().instance(
+            animray::rotate_y<world>, 0, 2_deg * angle, frames);
 
     std::get<0>(scene.light()).color(50);
     std::get<1>(scene.light())
