@@ -27,13 +27,31 @@
 
 #include <array>
 #include <numeric>
-#include <experimental/array>
 
 
 namespace animray {
 
 
-    using std::experimental::make_array;
+    namespace details {
+        template<typename D, typename...>
+        struct return_type_helper {
+            using type = D;
+        };
+        template<typename... Types>
+        struct return_type_helper<void, Types...> :
+        std::common_type<Types...> {};
+
+        template<typename D, typename... Types>
+        using return_type = std::array<
+                typename return_type_helper<D, Types...>::type,
+                sizeof...(Types)>;
+    }
+
+    template<typename D = void, typename... Types>
+    constexpr details::return_type<D, Types...> make_array(Types &&... t) {
+        return {typename details::return_type_helper<D, Types...>::type{
+                std::forward<Types>(t)}...};
+    }
 
 
     namespace detail {
