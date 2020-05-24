@@ -21,6 +21,7 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/library/lights/block.hpp>
 #include <animray/animation/procedural/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
@@ -31,9 +32,6 @@
 #include <animray/geometry/collection.hpp>
 #include <animray/geometry/planar/triangle.hpp>
 #include <animray/scene.hpp>
-#include <animray/light/ambient.hpp>
-#include <animray/light/collection.hpp>
-#include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/threading/sub-panel.hpp>
 
@@ -85,16 +83,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                             triangle{bottom, south, west},
                             triangle{bottom, west, north})}}};
 
-    using bulb = animray::light<animray::point3d<world>, animray::rgb<float>>;
-    auto constexpr spots = animray::light{animray::make_array(
-            bulb{{-3.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
-            bulb{{-5.0, -3.0, -5.0}, {0xa0, 0x40, 0x40}},
-            bulb{{3.0, -3.0, -5.0}, {0x40, 0x40, 0xa0}})};
-    auto constexpr lights =
-            animray::light{spots, animray::light{animray::luma{50.0f}}};
-
     auto const scene = animray::scene{
-            tetrahedron, lights, animray::rgb<float>{20, 70, 100}};
+            tetrahedron, animray::library::lights::testblock<world>,
+            animray::rgb<float>{20, 70, 100}};
 
     for (std::size_t frame{}; frame != frames * 360 / angle; ++frame) {
         animray::movable<
