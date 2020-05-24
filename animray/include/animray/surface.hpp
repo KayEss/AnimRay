@@ -23,11 +23,12 @@
 #pragma once
 
 
-#include <fost/core>
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
 #include <animray/emission.hpp>
 #include <animray/maths/zip.hpp>
+
+#include <optional>
 
 
 namespace animray {
@@ -87,7 +88,10 @@ namespace animray {
 
         /// Pass the constructor arguments on to the underlying parameters
         surface(typename S::parameters... args)
-        : surface_parameters(std::forward<typename S::parameters>(args)...) {}
+        : surface_parameters{std::forward<typename S::parameters>(args)...} {}
+        surface(instance_type i, typename S::parameters... args)
+        : geometry{std::move(i)},
+          surface_parameters{std::forward<typename S::parameters>(args)...} {}
 
         /// The geometry that is being shaded
         instance_type geometry;
@@ -104,14 +108,14 @@ namespace animray {
 
         /// Calculate the intersection of the ray on the instance
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
-            fostlib::nullable<typename O::intersection_type> hit(
+            std::optional<typename O::intersection_type> hit(
                     geometry.intersects(by, epsilon));
             if (hit) {
                 return intersection_type(hit.value(), surface_parameters);
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

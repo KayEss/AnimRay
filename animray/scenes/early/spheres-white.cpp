@@ -41,7 +41,7 @@
 #include <thread>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const std::size_t threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
@@ -61,39 +61,13 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    using reflective_sphere_type = animray::movable<animray::surface<
-            animray::unit_sphere<animray::point3d<world>>,
-            animray::reflective<float>, animray::matte<animray::rgb<float>>>>;
-    using gloss_sphere_type = animray::surface<
-            animray::collection<animray::unit_sphere<animray::point3d<world>>>,
-            animray::gloss<world>, animray::matte<animray::rgb<float>>>;
-    using metallic_sphere_type = animray::surface<
-            animray::collection<animray::unit_sphere<animray::point3d<world>>>,
-            animray::reflective<animray::rgb<float>>>;
-
-    animray::compound<
-            reflective_sphere_type, metallic_sphere_type, gloss_sphere_type>
-            geometry;
-
-    animray::scene scene{
-            geometry, animray::library::lights::wide_block<world>,
-            animray::rgb<float>(20, 70, 100)};
-    using scene_type = decltype(scene);
-
-    const world scale(200.0);
-    std::get<0>(scene.geometry.instances) = reflective_sphere_type(
-            0.4f, animray::rgb<float>(0.3f))(animray::translate<world>(
-            0.0, 0.0, scale + 1.0))(animray::scale<world>(scale, scale, scale));
-    std::get<1>(scene.geometry.instances) =
-            std::tuple_element<1, scene_type::geometry_type::instances_type>::type(
-                    animray::rgb<float>(1, 1, 1));
-    std::get<2>(scene.geometry.instances) =
-            std::tuple_element<2, scene_type::geometry_type::instances_type>::type(
-                    10, animray::rgb<float>(1, 1, 1));
+    using spheres_type =
+            animray::collection<animray::unit_sphere<animray::point3d<world>>>;
+    spheres_type metallic, glossy;
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
-    std::uniform_real_distribution<world> hue(0, 360), x_position(-20, 20),
+    std::uniform_real_distribution<world> x_position(-20, 20),
             y_position(-20, 20);
     for (auto count = 0; count != spheres; ++count) {
         animray::translate<world> location(
@@ -101,11 +75,38 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         animray::unit_sphere<animray::point3d<world>> s;
         s.position = location();
         switch (surface(generator)) {
-        case 1: std::get<1>(scene.geometry.instances).geometry.insert(s); break;
-        case 2:
-        default: std::get<2>(scene.geometry.instances).geometry.insert(s);
+        case 1: metallic.insert(s); break;
+        case 2: glossy.insert(s); break;
         }
     }
+
+    using reflective_sphere_type = animray::movable<animray::surface<
+            animray::unit_sphere<animray::point3d<world>>,
+            animray::reflective<float>, animray::matte<animray::rgb<float>>>>;
+    using metallic_spheres_type = animray::surface<
+            animray::collection<animray::unit_sphere<animray::point3d<world>>>,
+            animray::reflective<animray::rgb<float>>>;
+    using gloss_spheres_type = animray::surface<
+            animray::collection<animray::unit_sphere<animray::point3d<world>>>,
+            animray::gloss<world>, animray::matte<animray::rgb<float>>>;
+
+    animray::compound<
+            reflective_sphere_type, metallic_spheres_type, gloss_spheres_type>
+            geometry;
+
+    const world scale(200.0);
+    std::get<0>(geometry.instances) = reflective_sphere_type(
+            0.4f, animray::rgb<float>(0.3f))(animray::translate<world>(
+            0.0, 0.0, scale + 1.0))(animray::scale<world>(scale, scale, scale));
+    std::get<1>(geometry.instances) = metallic_spheres_type{
+            std::move(metallic), animray::rgb<float>(1, 1, 1)};
+    std::get<2>(geometry.instances) = gloss_spheres_type{
+            std::move(glossy), 10, animray::rgb<float>(1, 1, 1)};
+
+    animray::scene scene{
+            std::move(geometry), animray::library::lights::wide_block<world>,
+            animray::rgb<float>(20, 70, 100)};
+    using scene_type = decltype(scene);
 
     animray::movable<
             animray::pinhole_camera<

@@ -23,11 +23,12 @@
 #pragma once
 
 
-#include <fost/core>
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
 #include <animray/emission.hpp>
 #include <animray/maths/fold.hpp>
+
+#include <optional>
 #include <tuple>
 #include <variant>
 
@@ -95,10 +96,13 @@ namespace animray {
         /// Stores the geometry
         instances_type instances;
 
+        template<typename... G>
+        compound(G... gs) : instances{std::forward<G>(gs)...} {}
+
         /// Forward the intersection check to the geometry instances.
         /// Return the closest intersection, `null` if none are found.
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
             using mid_type = std::pair<
                     std::optional<local_coord_type>,
