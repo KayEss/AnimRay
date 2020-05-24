@@ -21,13 +21,15 @@
 #pragma once
 
 
+#include <concepts>
+
+
 namespace animray {
 
 
     template<typename C>
-    concept Color = requires(C c, C o) {
-        C{}; // default constructible
-        c + o; // We need to be able to add them together
+    concept Color = requires(C) {
+        std::regular<C>;
     };
 
 

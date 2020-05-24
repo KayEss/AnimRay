@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2020, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,10 +19,15 @@
 
 
 #include <animray/color/rgba.hpp>
+
+#include <animray/color/concept.hpp>
 #include <fost/test>
 
 
 FSL_TEST_SUITE(rgba);
+
+
+static_assert(animray::Color<animray::rgba<float>>);
 
 
 FSL_TEST_FUNCTION(constructor_default_tests) {
