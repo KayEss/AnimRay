@@ -120,7 +120,7 @@ namespace fostlib {
                 g = D(0);
                 b = X;
             }
-            const float m = l - D(0.5) * C;
+            D const m = l - D(0.5) * C;
             return animray::rgb<D>(r + m, g + m, b + m);
         }
     };
