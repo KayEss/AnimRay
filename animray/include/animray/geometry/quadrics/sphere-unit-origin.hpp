@@ -39,7 +39,7 @@ namespace animray {
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to return when the sphere is struck
-        typedef I intersection_type;
+        using intersection_type = I;
 
         /// Check for equality
         bool operator==(const unit_sphere_at_origin &) const { return true; }
@@ -62,8 +62,8 @@ namespace animray {
             const fostlib::nullable<D> t(first_positive_quadratic_solution(
                     D(1), bc.first, bc.second, eps));
             if (t) {
-                typedef typename ray<D>::end_type end_type;
-                typedef typename ray<D>::direction_type direction_type;
+                using end_type = typename ray<D>::end_type;
+                using direction_type = typename ray<D>::direction_type;
                 direction_type normal(by.from + by.direction * *t);
                 return intersection_type(end_type(normal), normal);
             } else {

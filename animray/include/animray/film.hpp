@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,17 +37,17 @@ namespace animray {
         /// The colour type
         typedef C color_type;
         /// The type of the extents co-ordinates
-        typedef E extents_value_type;
+        using extents_value_type = E;
         /// The extents type
-        typedef extents2d<extents_value_type> extents_type;
+        using extents_type = extents2d<extents_value_type>;
         /// The extents size type
-        typedef typename extents_type::size_type size_type;
+        using size_type = typename extents_type::size_type;
         /// The type of a single column of image data
-        typedef std::vector<color_type> column_type;
+        using column_type = std::vector<color_type>;
 
 
         /// Default constructor
-        film() {}
+        film() = default;
 
         /// Construct an empty targa of the given size
         film(size_type width, size_type height, const C &colour = C())
@@ -105,7 +104,7 @@ namespace animray {
         }
 
       private:
-        typedef std::vector<column_type> columns_type;
+        using columns_type = std::vector<column_type>;
         columns_type columns;
     };
 

@@ -37,12 +37,12 @@ namespace animray {
         using value_type = C;
 
         /// The x location
-        value_type x;
+        value_type x{};
         /// The y location
-        value_type y;
+        value_type y{};
 
         /// Construct an empty point
-        point2d() : x{}, y{} {}
+        point2d() {}
         /// Construct a point from a pair of co-ordinates
         point2d(C x, C y) : x(x), y(y) {}
 

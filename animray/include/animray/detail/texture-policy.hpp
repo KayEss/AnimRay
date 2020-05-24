@@ -50,9 +50,9 @@ namespace animray {
     template<typename V>
     struct identity {
         /// The result type
-        typedef V result_type;
+        using result_type = V;
         /// The argument type
-        typedef V arg1_type;
+        using arg1_type = V;
         /// The identity function
         const result_type &operator()(const result_type &v) const { return v; }
     };
@@ -62,9 +62,9 @@ namespace animray {
     template<typename T, typename F>
     struct coercer {
         /// The result type
-        typedef T result_type;
+        using result_type = T;
         /// The argument type
-        typedef F arg1_type;
+        using arg1_type = F;
         /// The coercion function
         result_type operator()(const F &f) const {
             return fostlib::coerce<T>(f);
@@ -76,9 +76,9 @@ namespace animray {
     template<typename R, typename A1>
     struct apply {
         /// The result type
-        typedef R result_type;
+        using result_type = R;
         /// The argument type
-        typedef A1 arg1_type;
+        using arg1_type = A1;
         /// The functor itself
         template<typename F>
         result_type operator()(F f, const arg1_type &a1) const {
@@ -91,9 +91,9 @@ namespace animray {
     template<typename R, typename A1>
     struct apply_without_arguments {
         /// The result type
-        typedef R result_type;
+        using result_type = R;
         /// The argument type
-        typedef A1 arg1_type;
+        using arg1_type = A1;
         /// The functor itself
         template<typename F>
         result_type operator()(F f, const arg1_type &) const {
@@ -106,17 +106,18 @@ namespace animray {
     template<typename C, typename L, typename F>
     struct texture_policy {
         /// The colour type
-        typedef C color_type;
+        using color_type = C;
         /// The location co-ordinate type
-        typedef L location_type;
+        using location_type = L;
         /// The functor type
-        typedef F functor_type;
+        using functor_type = F;
         /// The colour conversion functor type
-        typedef coercer<C, typename F::result_type> color_conversion_functor_type;
+        using color_conversion_functor_type =
+                coercer<C, typename F::result_type>;
         /// The location mapping type
-        typedef apply<typename F::result_type, L> location_mapping_functor_type;
+        using location_mapping_functor_type = apply<typename F::result_type, L>;
         /// Texture constructor functor type
-        typedef F texture_constructor_arg1_type;
+        using texture_constructor_arg1_type = F;
     };
 
 
@@ -124,17 +125,17 @@ namespace animray {
     template<typename C, typename L>
     struct texture_policy<C, L, const_value<C>> {
         /// The colour type
-        typedef C color_type;
+        using color_type = C;
         /// The location co-ordinate type
-        typedef L location_type;
+        using location_type = L;
         /// The functor type
-        typedef const_value<C> functor_type;
+        using functor_type = const_value<C>;
         /// The colour conversion functor type
-        typedef identity<C> color_conversion_functor_type;
+        using color_conversion_functor_type = identity<C>;
         /// The location mapping type
-        typedef apply_without_arguments<C, L> location_mapping_functor_type;
+        using location_mapping_functor_type = apply_without_arguments<C, L>;
         /// Texture constructor functor type
-        typedef C texture_constructor_arg1_type;
+        using texture_constructor_arg1_type = C;
     };
 
 
@@ -143,9 +144,9 @@ namespace animray {
         template<typename R, typename A1>
         struct location_mapper_binary_op {
             /// The result type
-            typedef R result_type;
+            using result_type = R;
             /// The argument type
-            typedef A1 arg1_type;
+            using arg1_type = A1;
             /// Convert the extents to x, y and call f
             template<typename F>
             R operator()(const F &f, const A1 &l) const {
@@ -157,18 +158,18 @@ namespace animray {
     template<typename C, typename S, typename R>
     struct texture_policy<C, animray::point2d<S>, std::function<R(S, S)>> {
         /// The colour type
-        typedef C color_type;
+        using color_type = C;
         /// The location co-ordinate type
-        typedef animray::point2d<S> location_type;
+        using location_type = animray::point2d<S>;
         /// The functor type
-        typedef std::pointer_to_binary_function<S, S, R> functor_type;
+        using functor_type = std::pointer_to_binary_function<S, S, R>;
         /// The colour conversion functor type
-        typedef coercer<C, R> color_conversion_functor_type;
+        using color_conversion_functor_type = coercer<C, R>;
         /// The location mapping type
-        typedef detail::location_mapper_binary_op<R, animray::point2d<S>>
-                location_mapping_functor_type;
+        using location_mapping_functor_type =
+                detail::location_mapper_binary_op<R, animray::point2d<S>>;
         /// Texture constructor functor type
-        typedef R (*texture_constructor_arg1_type)(S, S);
+        using texture_constructor_arg1_type = R (*)(S, S);
     };
 
 

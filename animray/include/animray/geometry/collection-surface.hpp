@@ -37,11 +37,11 @@ namespace animray {
 
       public:
         /// The surface type we're collecting over
-        typedef surface<O, S...> surface_type;
+        using surface_type = surface<O, S...>;
         /// The type of the local coordinate system
-        typedef typename O::local_coord_type local_coord_type;
+        using local_coord_type = typename O::local_coord_type;
         /// The intersection type
-        typedef intersection<surface<O, S...>> intersection_type;
+        using intersection_type = intersection<surface<O, S...>>;
 
         /// Insert new geometry
         template<typename G>

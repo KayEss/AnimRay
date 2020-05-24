@@ -29,7 +29,7 @@ namespace animray {
     /// Basic Lambertian full-white surface
     template<typename C, typename I, typename RI, typename RL, typename G>
     struct surface_interaction {
-        surface_interaction() {}
+        surface_interaction() = default;
         C operator()(
                 const RI &,
                 const RL &light,

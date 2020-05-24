@@ -35,7 +35,7 @@ namespace animray {
         /// The type of the local coordinates used
         typedef D local_coord_type;
         /// Type of intersection to be returned
-        typedef I intersection_type;
+        using intersection_type = I;
 
         /// The centre of the plane
         point3d<local_coord_type> center;

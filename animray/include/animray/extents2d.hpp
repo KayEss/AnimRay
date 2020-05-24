@@ -50,7 +50,7 @@ namespace animray {
         /// The size type of the extents
         typedef S size_type;
         /// The corner type
-        typedef point2d<size_type> corner_type;
+        using corner_type = point2d<size_type>;
 
         /// A corner of the extents
         corner_type lower_left;

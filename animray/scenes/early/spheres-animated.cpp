@@ -71,21 +71,18 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::surface<
+    using reflective_plane_type = animray::surface<
             animray::plane<animray::ray<world>>, animray::reflective<float>,
-            animray::matte<animray::rgb<float>>>
-            reflective_plane_type;
-    typedef animray::surface<
+            animray::matte<animray::rgb<float>>>;
+    using gloss_sphere_type = animray::surface<
             animray::unit_sphere<animray::animate<
                     animray::animation::rotate_xy<animray::point3d<world>>>>,
-            animray::gloss<world>, animray::matte<animray::rgb<float>>>
-            gloss_sphere_type;
-    typedef animray::surface<
+            animray::gloss<world>, animray::matte<animray::rgb<float>>>;
+    using metallic_sphere_type = animray::surface<
             animray::unit_sphere<animray::animate<
                     animray::animation::rotate_xy<animray::point3d<world>>>>,
-            animray::reflective<animray::rgb<float>>>
-            metallic_sphere_type;
-    typedef animray::scene<
+            animray::reflective<animray::rgb<float>>>;
+    using scene_type = animray::scene<
             animray::compound<
                     reflective_plane_type,
                     animray::collection<metallic_sphere_type>,
@@ -99,8 +96,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                                             animray::rgb<float>>>,
                                     animray::rgb<float>>>,
                     animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
+            animray::rgb<float>>;
     scene_type scene;
     scene.background = animray::rgb<float>(20, 70, 100);
 
@@ -169,7 +165,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         camera(animray::translate<world>(0.0, -4.0, -40));
         camera.instance.frame = frame;
 
-        typedef animray::film<animray::rgb<uint8_t>> film_type;
+        using film_type = animray::film<animray::rgb<uint8_t>>;
 
         fostlib::worker worker;
         fostlib::meter tracking;

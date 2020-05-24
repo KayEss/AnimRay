@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -37,12 +36,12 @@ namespace animray {
 
       public:
         /// The value type
-        typedef typename superclass::value_type value_type;
+        using value_type = typename superclass::value_type;
         /// The array type
-        typedef typename superclass::array_type array_type;
+        using array_type = typename superclass::array_type;
         /// The type of a value parameter
-        typedef typename superclass::const_value_parameter_type
-                const_value_parameter_type;
+        using const_value_parameter_type =
+                typename superclass::const_value_parameter_type;
         /// The size of the array
         static const std::size_t c_array_size = superclass::c_array_size;
 
@@ -50,7 +49,7 @@ namespace animray {
         using superclass::to_json;
 
         /// Default construct an HLS colour with all channels at zero
-        hls() {}
+        hls() = default;
         /// Construct an HLS colour with the specified channel values
         hls(value_type h, value_type l, value_type s) {
             superclass::array[0] = h;

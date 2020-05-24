@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -37,10 +36,10 @@ namespace animray {
         using superclass::at;
 
       public:
-        typedef typename superclass::value_type value_type;
-        typedef typename superclass::array_type array_type;
-        typedef typename superclass::const_value_parameter_type
-                const_value_parameter_type;
+        using value_type = typename superclass::value_type;
+        using array_type = typename superclass::array_type;
+        using const_value_parameter_type =
+                typename superclass::const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
 
         /// Construct an identity transform matrix
@@ -141,7 +140,7 @@ namespace animray {
         }
 
         /// The matrix has a special JSON representation
-        fostlib::json to_json() const {
+        [[nodiscard]] fostlib::json to_json() const {
             fostlib::json ret, line;
             for (std::size_t i = 0; i < 16; ++i) {
                 fostlib::jcursor().push_back(line, superclass::array[i]);

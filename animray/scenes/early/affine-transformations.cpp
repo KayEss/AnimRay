@@ -39,7 +39,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const int width = fostlib::coerce<int>(args[1].value_or("100"));
     const int height = fostlib::coerce<int>(args[2].value_or("150"));
-    fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto output_filename = fostlib::coerce<fostlib::fs::path>(
             args[3].value_or("affine-transformations.tga"));
 
     typedef double world;
@@ -75,7 +75,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             animray::translate<world>(0.0, 0.0, -8.5))(
             animray::rotate_x<world>(2_deg))(animray::rotate_y<world>(-1_deg))(
             animray::translate<world>(0.0, 0.0, -1.5));
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
             width, height,
             [&scene, &camera](

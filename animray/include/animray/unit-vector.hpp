@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2020, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,7 +37,7 @@ namespace animray {
 
       public:
         /// The value type
-        typedef D value_type;
+        using value_type = D;
 
         /// Constructs a unit vector pointing along the x axis.
         unit_vector() : superclass(0, 0, 1) {}

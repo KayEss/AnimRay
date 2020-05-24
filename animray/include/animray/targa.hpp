@@ -92,7 +92,7 @@ namespace animray {
             const static uint8_t bits = 8;
             void operator()(
                     std::ostream &file, const film<luma<>, E> &image) const {
-                typedef typename film<luma<>, E>::size_type size_type;
+                using size_type = typename film<luma<>, E>::size_type;
                 for (size_type r = 0; r < image.height(); ++r)
                     for (size_type c = 0; c < image.width(); ++c)
                         file.put(image[c][r]);
@@ -106,7 +106,7 @@ namespace animray {
             const static uint8_t bits = 24;
             void operator()(
                     std::ostream &file, const film<rgb<uint8_t>, E> &image) {
-                typedef typename film<rgb<uint8_t>, E>::size_type size_type;
+                using size_type = typename film<rgb<uint8_t>, E>::size_type;
                 for (size_type r = 0; r < image.height(); ++r)
                     for (size_type c = 0; c < image.width(); ++c) {
                         rgb<uint8_t> col(image[c][r]);

@@ -36,11 +36,11 @@ namespace animray {
 
       public:
         /// The type of the local coordinates used
-        typedef D local_coord_type;
+        using local_coord_type = D;
         /// Type of intersection to be returned
-        typedef I intersection_type;
+        using intersection_type = I;
         /// The type of the corners
-        typedef point3d<local_coord_type> corner_type;
+        using corner_type = point3d<local_coord_type>;
 
         /// Construct a triangle from three points
         constexpr triangle(

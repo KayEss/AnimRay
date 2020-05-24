@@ -38,12 +38,12 @@ namespace animray {
         /// The value type of the line
         typedef D local_coord_type;
         /// The type of the end point
-        typedef F end_type;
+        using end_type = F;
         /// Unit vector type describing the direction
-        typedef V direction_type;
+        using direction_type = V;
 
         /// Construct a null ray
-        ray() {}
+        ray() = default;
         /// Construct a line between two locations
         ray(const end_type &from, const end_type &to)
         : from(from), direction(to - from) {}

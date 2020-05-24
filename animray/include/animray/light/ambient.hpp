@@ -40,10 +40,10 @@ namespace animray {
         using color_type = C;
 
         /// The colour of the light
-        color_type color;
+        color_type color{};
 
         /// Default construct a light with no illumination
-        constexpr light() noexcept : color{} {}
+        constexpr light() noexcept {}
         /// Construct with a given color
         explicit constexpr light(color_type c) noexcept : color{std::move(c)} {}
 

@@ -41,7 +41,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     typedef animray::ray<double> ray;
     animray::plane<ray> plane;
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    using film_type = animray::film<animray::rgb<uint8_t>>;
     animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
     film_type output(
             width, height,

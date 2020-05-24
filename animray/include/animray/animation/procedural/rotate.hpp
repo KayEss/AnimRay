@@ -27,54 +27,48 @@
 #include <animray/interpolation/linear.hpp>
 
 
-namespace animray {
+namespace animray::animation {
 
 
-    namespace animation {
+    /// Return a point that rotates about a centre position in the x/y plane
+    template<typename P>
+    class rotate_xy {
+      public:
+        /// The type of point that is to be returned
+        typedef P point_type;
+        /// The value type from the point type
+        using value_type = typename point_type::value_type;
+        /// The type of the radius
+        using radius_type = typename point_type::value_type;
+        /// The type of the speed
+        using speed_type = typename point_type::value_type;
+        /// The type of the phase offset
+        using phase_type = typename point_type::value_type;
 
+        /// The centre to rotate about
+        point_type centre;
+        /// The radius
+        radius_type radius{1};
+        /// Rotations per unit time in radians/time unit
+        speed_type speed{1};
+        /// Phase offset
+        phase_type phase;
 
-        /// Return a point that rotates about a centre position in the x/y plane
-        template<typename P>
-        class rotate_xy {
-          public:
-            /// The type of point that is to be returned
-            typedef P point_type;
-            /// The value type from the point type
-            typedef typename point_type::value_type value_type;
-            /// The type of the radius
-            typedef typename point_type::value_type radius_type;
-            /// The type of the speed
-            typedef typename point_type::value_type speed_type;
-            /// The type of the phase offset
-            typedef typename point_type::value_type phase_type;
+        /// Allow default construction
+        rotate_xy() {}
 
-            /// The centre to rotate about
-            point_type centre;
-            /// The radius
-            radius_type radius;
-            /// Rotations per unit time in radians/time unit
-            speed_type speed;
-            /// Phase offset
-            phase_type phase;
+        /// Construct the rotation parameters
+        rotate_xy(point_type c, radius_type r, speed_type s, phase_type p)
+        : centre{std::move(c)}, radius{r}, speed{s}, phase{p} {}
 
-            /// Allow default construction
-            rotate_xy() : radius{1}, speed{1} {}
-
-            /// Construct the rotation parameters
-            rotate_xy(point_type c, radius_type r, speed_type s, phase_type p)
-            : centre{std::move(c)}, radius{r}, speed{s}, phase{p} {}
-
-            /// Calculate the position for the requested frame
-            template<typename T>
-            point_type operator()(T const t) const {
-                return {centre.x() + radius * std::cos(t * speed + phase),
-                        centre.y() + radius * std::sin(t * speed + phase),
-                        centre.z()};
-            }
-        };
-
-
-    }
+        /// Calculate the position for the requested frame
+        template<typename T>
+        point_type operator()(T const t) const {
+            return {centre.x() + radius * std::cos(t * speed + phase),
+                    centre.y() + radius * std::sin(t * speed + phase),
+                    centre.z()};
+        }
+    };
 
 
 }

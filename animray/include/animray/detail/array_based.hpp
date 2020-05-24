@@ -100,7 +100,7 @@ namespace animray {
             }
 
             /// Turn the array into a JSON array
-            fostlib::json to_json() const {
+            [[nodiscard]] fostlib::json to_json() const {
                 fostlib::json r;
                 for (std::size_t i = 0; i < array.size(); ++i)
                     fostlib::jcursor().push_back(

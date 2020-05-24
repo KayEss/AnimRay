@@ -36,10 +36,10 @@ namespace animray {
         /// The value type of the line
         typedef D value_type;
         /// The type of the end points
-        typedef point3d<value_type> end_type;
+        using end_type = point3d<value_type>;
 
         /// Construct a null line
-        line() {}
+        line() = default;
         /// Construct a line between two locations
         line(const end_type &from, const end_type &to) : from(from), to(to) {}
 

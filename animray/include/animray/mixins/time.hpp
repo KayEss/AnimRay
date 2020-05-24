@@ -23,8 +23,9 @@
 #pragma once
 
 
-#include <fost/datetime>
 #include <animray/mixins/mixin.hpp>
+
+#include <fost/datetime>
 
 
 namespace animray {

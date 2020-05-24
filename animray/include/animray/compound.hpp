@@ -153,7 +153,7 @@ namespace animray {
             typename G,
             typename... Os>
     struct surface_interaction<C, intersection<compound<O, Os...>>, RI, RL, G> {
-        surface_interaction() {}
+        surface_interaction() = default;
         C operator()(
                 const RI &observer,
                 const RL &light,
@@ -176,7 +176,7 @@ namespace animray {
      */
     template<typename C, typename O, typename RI, typename G, typename... Os>
     struct surface_emission<C, RI, intersection<compound<O, Os...>>, G> {
-        surface_emission() {}
+        surface_emission() = default;
         C operator()(
                 const RI &observer,
                 const intersection<compound<O, Os...>> &intersection,

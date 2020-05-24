@@ -46,20 +46,20 @@ namespace animray {
         /// The policy which controls the texture implementation
         typedef P policy_type;
         /// The colour type that is returned by the texture
-        typedef typename P::color_type color_type;
+        using color_type = typename P::color_type;
         /// The location type used externally to the texture
-        typedef typename P::location_type location_type;
+        using location_type = typename P::location_type;
         /// The type of the functor
-        typedef typename P::functor_type functor_type;
+        using functor_type = typename P::functor_type;
         /// The type of color conversion functor
-        typedef typename P::color_conversion_functor_type
-                color_conversion_functor_type;
+        using color_conversion_functor_type =
+                typename P::color_conversion_functor_type;
         /// The type of the location conversion functor
-        typedef typename P::location_mapping_functor_type
-                location_mapping_functor_type;
+        using location_mapping_functor_type =
+                typename P::location_mapping_functor_type;
         /// The type of the first argument to the constructor (which creates the
         /// functor)
-        typedef typename P::texture_constructor_arg1_type constructor_arg1_type;
+        using constructor_arg1_type = typename P::texture_constructor_arg1_type;
 
         /// Construct a texture from a function
         texture(constructor_arg1_type f) : function(f) {}

@@ -34,7 +34,7 @@ namespace animray {
     class matte {
       public:
         /// Default constructor
-        matte() {}
+        matte() = default;
 
         /// The absorption attenuation of the surface
         typedef C parameters;
@@ -48,7 +48,7 @@ namespace animray {
                 const I &intersection,
                 const CI &incident,
                 const G &) const {
-            typedef typename RI::local_coord_type D;
+            using D = typename RI::local_coord_type;
             const D costheta = dot(light.direction, intersection.direction);
             return incident * attenuation * costheta;
         }

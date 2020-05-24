@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,7 +34,7 @@ namespace animray {
         class HasMember_op_call {
           private:
             typedef char (&yes)[1];
-            typedef char (&no)[2];
+            using no = char (&)[2];
 
             struct Fallback {
                 void operator()();

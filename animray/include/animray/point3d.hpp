@@ -46,10 +46,10 @@ namespace animray {
         point3d(const superclass &sc) : superclass(sc) {}
 
       public:
-        typedef typename superclass::value_type value_type;
-        typedef typename superclass::array_type array_type;
-        typedef typename superclass::const_value_parameter_type
-                const_value_parameter_type;
+        using value_type = typename superclass::value_type;
+        using array_type = typename superclass::array_type;
+        using const_value_parameter_type =
+                typename superclass::const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::print_on;
         using superclass::to_json;

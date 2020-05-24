@@ -1,6 +1,5 @@
-/*
-    Copyright 1995-2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -36,10 +35,10 @@ namespace animray {
         typedef detail::array_based<D, 4> superclass;
 
       public:
-        typedef typename superclass::value_type value_type;
-        typedef typename superclass::array_type array_type;
-        typedef typename superclass::const_value_parameter_type
-                const_value_parameter_type;
+        using value_type = typename superclass::value_type;
+        using array_type = typename superclass::array_type;
+        using const_value_parameter_type =
+                typename superclass::const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::to_json;
 

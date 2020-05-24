@@ -33,7 +33,7 @@ namespace animray {
     namespace detail {
         class depth_counted {
           public:
-            depth_counted() : depth_count{} {}
+            depth_counted() {}
             template<typename... A>
             depth_counted(A &&...) : depth_count{} {}
 
@@ -56,7 +56,7 @@ namespace animray {
                 depth_count = depth_count + 1 + r.depth_count;
             }
 
-            std::size_t depth_count;
+            std::size_t depth_count{};
         };
     }
 

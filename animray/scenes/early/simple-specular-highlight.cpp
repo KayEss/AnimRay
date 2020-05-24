@@ -48,11 +48,10 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
+    using sphere_type = animray::movable<animray::surface<
             animray::unit_sphere_at_origin<animray::ray<world>>,
-            animray::gloss<world>, animray::matte<animray::rgb<float>>>>
-            sphere_type;
-    typedef animray::scene<
+            animray::gloss<world>, animray::matte<animray::rgb<float>>>>;
+    using scene_type = animray::scene<
             animray::collection<sphere_type>,
             animray::light<
                     std::tuple<
@@ -63,8 +62,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                                             animray::rgb<float>>>,
                                     animray::rgb<float>>>,
                     animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
+            animray::rgb<float>>;
     scene_type scene;
     scene.background = animray::rgb<float>(10, 50, 70);
 
@@ -104,7 +102,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
             camera(fw, fh, width, height, 0.05);
     camera(animray::translate<world>(0.0, 0.0, -8.5));
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
             width, height,
             [&scene, &camera](

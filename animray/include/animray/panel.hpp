@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -34,10 +33,10 @@ namespace animray {
 
       public:
         /// The extents size type
-        typedef typename F::size_type size_type;
+        using size_type = typename F::size_type;
 
         /// Default constructor
-        panel() {}
+        panel() = default;
 
         /// Construct a panel from a size, offset and lambda
         template<typename Fn>

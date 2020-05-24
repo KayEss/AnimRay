@@ -37,7 +37,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const int width = fostlib::coerce<int>(args[1].value_or("300"));
     const int height = fostlib::coerce<int>(args[2].value_or("200"));
-    fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto output_filename = fostlib::coerce<fostlib::fs::path>(
             args[3].value_or("five-spheres-coloured-lights.tga"));
 
     const double aspect = double(width) / height;
@@ -45,9 +45,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const double fh = width > height ? 0.024 : 0.024 / aspect;
 
     typedef double world;
-    typedef animray::movable<animray::unit_sphere_at_origin<animray::ray<world>>>
-            movable_sphere;
-    typedef animray::scene<
+    using movable_sphere =
+            animray::movable<animray::unit_sphere_at_origin<animray::ray<world>>>;
+    using scene_type = animray::scene<
             animray::collection<movable_sphere>,
             animray::light<
                     std::tuple<
@@ -58,8 +58,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                                             animray::rgb<float>>>,
                                     animray::rgb<float>>>,
                     animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
+            animray::rgb<float>>;
     scene_type scene;
     scene.background = animray::rgb<float>(10, 50, 70);
 
@@ -95,7 +94,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
             camera(fw, fh, width, height, 0.05);
     camera(animray::translate<world>(0.0, 0.0, -8.5));
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
             width, height,
             [&scene, &camera](

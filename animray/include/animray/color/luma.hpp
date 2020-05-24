@@ -28,12 +28,12 @@ namespace animray {
 
     template<typename C = uint8_t>
     class luma {
-        C _luma;
+        C _luma{};
 
       public:
         using value_type = C;
 
-        constexpr luma() : _luma{} {}
+        constexpr luma() {}
         explicit constexpr luma(value_type f) : _luma(f) {}
         template<typename V>
         explicit constexpr luma(V v)

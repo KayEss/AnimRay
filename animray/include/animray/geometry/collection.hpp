@@ -38,13 +38,14 @@ namespace animray {
         /// The type of objects that can be inserted
         typedef O instance_type;
         /// The type of the collection
-        typedef V collection_type;
+        using collection_type = V;
         /// The type of the local coordinate system
-        typedef typename instance_type::local_coord_type local_coord_type;
+        using local_coord_type = typename instance_type::local_coord_type;
         /// The type of the ray output by the instance
-        typedef typename O::intersection_type intersection_type;
+        using intersection_type = typename O::intersection_type;
 
-        collection(){};
+        collection() = default;
+        ;
         explicit constexpr collection(V &&v) noexcept
         : instances{std::move(v)} {}
 

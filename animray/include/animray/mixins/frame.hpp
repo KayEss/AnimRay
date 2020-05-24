@@ -34,10 +34,10 @@ namespace animray {
         template<typename F>
         class at_frame {
           public:
-            at_frame() : frame{} {}
+            at_frame() {}
             template<typename... A>
             at_frame(A &&...) {}
-            F frame;
+            F frame{};
         };
     }
 

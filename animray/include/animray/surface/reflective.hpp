@@ -37,7 +37,7 @@ namespace animray {
     class reflective {
       public:
         /// Default constructor
-        reflective() {}
+        reflective() = default;
 
         /// The absorption attenuation of the surface
         typedef C parameters;
@@ -49,7 +49,7 @@ namespace animray {
                 const RI &observer,
                 const I &intersection,
                 const G &scene) const {
-            typedef typename RI::local_coord_type accuracy;
+            using accuracy = typename RI::local_coord_type;
             const accuracy ci =
                     -dot(observer.direction, intersection.direction);
             const unit_vector<accuracy> ri(

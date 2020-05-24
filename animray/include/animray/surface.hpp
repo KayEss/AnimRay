@@ -42,8 +42,8 @@ namespace animray {
     template<typename O, typename... S>
     class intersection<surface<O, S...>> : public O::intersection_type {
         typedef typename O::intersection_type superclass;
-        typedef typename surface<O, S...>::surface_parameters_type
-                surface_parameters_type;
+        using surface_parameters_type =
+                typename surface<O, S...>::surface_parameters_type;
         const surface_parameters_type *m_parameters;
 
       public:
@@ -74,16 +74,16 @@ namespace animray {
     class surface {
       public:
         /// The underlying object type
-        typedef O instance_type;
+        using instance_type = O;
         /// The type of the local coordinate system
-        typedef typename instance_type::local_coord_type local_coord_type;
+        using local_coord_type = typename instance_type::local_coord_type;
         /// The physical model of the surface
-        typedef std::tuple<typename S::parameters...> surface_parameters_type;
+        using surface_parameters_type = std::tuple<typename S::parameters...>;
         /// The intersection type
-        typedef intersection<surface> intersection_type;
+        using intersection_type = intersection<surface<O, S...>>;
 
         /// Default construct a surface
-        surface() {}
+        surface() = default;
 
         /// Pass the constructor arguments on to the underlying parameters
         surface(typename S::parameters... args)
@@ -133,7 +133,7 @@ namespace animray {
             typename G,
             typename... S>
     struct surface_interaction<C, intersection<surface<O, S...>>, RI, RL, G> {
-        surface_interaction() {}
+        surface_interaction() = default;
         C operator()(
                 const RI &observer,
                 const RL &light,
@@ -156,7 +156,7 @@ namespace animray {
     /// layers
     template<typename C, typename O, typename RI, typename G, typename... S>
     struct surface_emission<C, RI, intersection<surface<O, S...>>, G> {
-        surface_emission() {}
+        surface_emission() = default;
         C operator()(
                 const RI &observer,
                 const intersection<surface<O, S...>> &intersection,

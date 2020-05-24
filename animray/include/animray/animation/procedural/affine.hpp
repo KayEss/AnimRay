@@ -28,92 +28,85 @@
 #include <animray/interpolation/linear.hpp>
 
 
-namespace animray {
+namespace animray::animation {
 
 
-    namespace animation {
+    /// Apply an animated affine transformation to the object
+    template<typename W, typename T, typename O>
+    class affine {
+        std::add_pointer_t<T> lambda;
+        typename W::value_type start{}, end{};
+        std::size_t frames{};
 
+      public:
+        /// The type of object that can be moved
+        using instance_type = O;
+        /// Intersection type
+        using intersection_type = typename O::intersection_type;
+        /// Global co-ordinate base type
+        using local_coord_type = typename O::local_coord_type;
 
-        /// Apply an animated affine transformation to the object
-        template<typename W, typename T, typename O>
-        class affine {
-            std::add_pointer_t<T> lambda;
-            typename W::value_type start, end;
-            std::size_t frames;
+        /// Store the instance
+        instance_type instance;
 
-          public:
-            /// The type of object that can be moved
-            using instance_type = O;
-            /// Intersection type
-            using intersection_type = typename O::intersection_type;
-            /// Global co-ordinate base type
-            using local_coord_type = typename O::local_coord_type;
+        constexpr affine() noexcept {}
+        constexpr affine(
+                std::add_pointer_t<T> t,
+                typename W::value_type const &s,
+                typename W::value_type const &e,
+                std::size_t const f,
+                O &&o) noexcept
+        : lambda{t}, start{s}, end{e}, frames{f}, instance{std::move(o)} {}
 
-            /// Store the instance
-            instance_type instance;
+        /// Store the animation parameters
+        affine &operator()(
+                T l,
+                const typename W::value_type &s,
+                const typename W::value_type &e,
+                const std::size_t f) {
+            lambda = std::move(l);
+            start = s;
+            end = e;
+            frames = f;
+            return *this;
+        }
 
-            constexpr affine() noexcept : start{}, end{}, frames{} {}
-            constexpr affine(
-                    std::add_pointer_t<T> t,
-                    typename W::value_type const &s,
-                    typename W::value_type const &e,
-                    std::size_t const f,
-                    O &&o) noexcept
-            : lambda{t}, start{s}, end{e}, frames{f}, instance{std::move(o)} {}
+        /// Calculate the transformation matrix
+        template<typename R>
+        std::pair<W, W> matrices(const R &ray) const {
+            return lambda(interpolation::linear(start, end, ray.frame, frames));
+        }
 
-            /// Store the animation parameters
-            affine &operator()(
-                    T l,
-                    const typename W::value_type &s,
-                    const typename W::value_type &e,
-                    const std::size_t f) {
-                lambda = std::move(l);
-                start = s;
-                end = e;
-                frames = f;
-                return *this;
+        /// Ray intersection
+        template<typename R, typename E>
+        fostlib::nullable<intersection_type>
+                intersects(const R &by, const E epsilon) const {
+            std::pair<W, W> transform(matrices(by));
+            fostlib::nullable<intersection_type> hit(
+                    instance.intersects(by * transform.first, epsilon));
+            if (hit) {
+                return hit.value() * transform.second;
+            } else {
+                return fostlib::null;
             }
+        }
 
-            /// Calculate the transformation matrix
-            template<typename R>
-            std::pair<W, W> matrices(const R &ray) const {
-                return lambda(
-                        interpolation::linear(start, end, ray.frame, frames));
-            }
+        /// Occlusion check
+        template<typename R, typename E>
+        bool occludes(const R &by, const E epsilon) const {
+            std::pair<W, W> transform(matrices(by));
+            return instance.occludes(by * transform.first, epsilon);
+        }
 
-            /// Ray intersection
-            template<typename R, typename E>
-            fostlib::nullable<intersection_type>
-                    intersects(const R &by, const E epsilon) const {
-                std::pair<W, W> transform(matrices(by));
-                fostlib::nullable<intersection_type> hit(
-                        instance.intersects(by * transform.first, epsilon));
-                if (hit) {
-                    return hit.value() * transform.second;
-                } else {
-                    return fostlib::null;
-                }
-            }
-
-            /// Occlusion check
-            template<typename R, typename E>
-            bool occludes(const R &by, const E epsilon) const {
-                std::pair<W, W> transform(matrices(by));
-                return instance.occludes(by * transform.first, epsilon);
-            }
-
-          private:
-        };
+      private:
+    };
 
 
-        template<typename A, typename B, typename E, typename O>
-        affine(A, B, E, std::size_t, O) -> affine<
-                matrix<typename O::local_coord_type>,
-                std::remove_pointer_t<A>,
-                O>;
-
-
-    }
+    template<typename A, typename B, typename E, typename O>
+    affine(A, B, E, std::size_t, O) -> affine<
+            matrix<typename O::local_coord_type>,
+            std::remove_pointer_t<A>,
+            O>;
 
 
 }

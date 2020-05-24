@@ -46,7 +46,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
             animray::point3d<double>(19, 19, 0),
             animray::point3d<double>(-19, 0, 0),
             animray::point3d<double>(0, -19, 0));
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    using film_type = animray::film<animray::rgb<uint8_t>>;
 
     animray::movable<animray::ortho_camera<ray>, animray::ray<double>> camera(
             fw, fh, width, height, 0, 1);

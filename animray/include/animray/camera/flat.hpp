@@ -36,7 +36,7 @@ namespace animray {
         /// The type used to measure the height of the camera image
         typedef E extents_type;
         /// The type used to measure the physical resolution of the camera
-        typedef R resolution_type;
+        using resolution_type = R;
 
         /// Constructs a camera whose film is a particular size
         constexpr flat_camera(

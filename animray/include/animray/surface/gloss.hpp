@@ -36,7 +36,7 @@ namespace animray {
     class gloss {
       public:
         /// Default constructor
-        gloss() {}
+        gloss() = default;
 
         /// The width of the specular highlight
         using parameters = W;

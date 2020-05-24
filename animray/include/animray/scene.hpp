@@ -1,4 +1,4 @@
-/*
+/**
     Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
@@ -48,7 +48,7 @@ namespace animray {
         using local_coord_type = typename intersection_type::local_coord_type;
 
         /// Construct an empty scene
-        constexpr scene() {}
+        constexpr scene() = default;
         constexpr scene(G g, L l, C c)
         : geometry{std::move(g)}, light{std::move(l)}, background{std::move(c)} {}
 

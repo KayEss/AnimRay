@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -30,7 +29,7 @@ namespace animray {
     /// Non-emissive surface
     template<typename C, typename RI, typename I, typename G>
     struct surface_emission {
-        surface_emission() {}
+        surface_emission() = default;
         C operator()(const RI &, const I &, const G &) const { return C{}; }
     };
 

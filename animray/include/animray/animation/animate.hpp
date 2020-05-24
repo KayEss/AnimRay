@@ -80,7 +80,7 @@ namespace animray {
 
         /// The type of the value of R
         /// TODO: We don't really want this here
-        typedef typename T::value_type value_type;
+        using value_type = typename T::value_type;
 
         /// Strip the frame out of the ray type
         template<typename R>

@@ -66,7 +66,7 @@ namespace animray {
             typename I = typename O::intersection_type,
             typename T = transformable<matrix<typename O::local_coord_type>>>
     class movable : private T {
-        typedef T superclass;
+        using superclass = T;
 
       public:
         /// The type of object that can be moved
