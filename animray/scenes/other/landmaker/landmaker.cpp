@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -22,7 +22,7 @@
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
 #include <animray/targa.hpp>
-#include <animray/color/hls.hpp>
+#include <animray/color/hsl.hpp>
 #include <animray/threading/random-generator.hpp>
 #include <animray/maths/angles.hpp>
 
@@ -92,7 +92,7 @@ FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2019 Kirit Saelensminde")
                                         [=](const circle &c) -> bool {
                                             return c.contains(x, y);
                                         });
-                animray::hls<double> h(int(360.0 * weight) % 360, 0.5, 1.0);
+                animray::hsl<double> h(int(360.0 * weight) % 360, 1.0, 0.5);
                 auto const c = fostlib::coerce<animray::rgb<double>>(h);
                 return animray::rgb<uint8_t>(
                         c.red() * 255, c.green() * 255, c.blue() * 255);

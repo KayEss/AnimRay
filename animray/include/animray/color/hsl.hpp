@@ -31,7 +31,7 @@ namespace animray {
 
     /// Represents the normal 3 channel HLS colour space
     template<typename D>
-    class hls : private detail::array_based<D, 3> {
+    class hsl : private detail::array_based<D, 3> {
         typedef detail::array_based<D, 3> superclass;
 
       public:
@@ -49,23 +49,23 @@ namespace animray {
         using superclass::to_json;
 
         /// Default construct an HLS colour with all channels at zero
-        hls() = default;
+        hsl() = default;
         /// Construct an HLS colour with the specified channel values
-        hls(value_type h, value_type l, value_type s) {
+        hsl(value_type h, value_type s, value_type l) {
             superclass::array[0] = h;
-            superclass::array[1] = l;
-            superclass::array[2] = s;
+            superclass::array[1] = s;
+            superclass::array[2] = l;
         }
 
         /// Return the channel values
         const array_type &array() const { return superclass::array; }
 
         /// Compare for equality
-        bool operator==(const hls &r) const {
+        bool operator==(hsl const &r) const {
             return superclass::array == r.superclass::array;
         }
         /// Compare for inequality
-        bool operator!=(const hls &r) const {
+        bool operator!=(hsl const &r) const {
             return superclass::array != r.superclass::array;
         }
     };
@@ -84,11 +84,11 @@ namespace fostlib {
     template<typename D>
     struct coercer<
             animray::rgb<D>,
-            animray::hls<D>,
+            animray::hsl<D>,
             typename boost::enable_if<boost::is_floating_point<D>>::type> {
         /// Performs the coercion
-        animray::rgb<D> coerce(const animray::hls<D> &hls) {
-            const D h = hls.array()[0], l = hls.array()[1], s = hls.array()[2];
+        animray::rgb<D> coerce(animray::hsl<D> const &hsl) {
+            const D h = hsl.array()[0], s = hsl.array()[1], l = hsl.array()[2];
             const D C = l <= D(0.5) ? D(2) * l * s : (D(2) - D(2) * l) * s;
             const D H = h / D(60);
             D Hmod2 = H;

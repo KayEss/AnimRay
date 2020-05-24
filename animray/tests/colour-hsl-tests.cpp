@@ -18,36 +18,27 @@
 */
 
 
-#include <animray/color/hls.hpp>
+#include <animray/color/hsl.hpp>
 
 #include <animray/color/concept.hpp>
 #include "test-json.hpp"
 
 
-FSL_TEST_SUITE(hls);
+FSL_TEST_SUITE(hsl);
 
 
-static_assert(animray::Color<animray::hls<float>>);
-
-
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::hls<int>>();
-    fostlib::test::default_copy_constructable<animray::hls<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::hls<float>>();
-    fostlib::test::default_copy_constructable<animray::hls<double>>();
-    fostlib::test::default_copy_constructable<animray::hls<long double>>();
-}
+static_assert(animray::Color<animray::hsl<float>>);
 
 
 FSL_TEST_FUNCTION(json) {
-    json_roundtrip(animray::hls<int64_t>(), "[0, 0, 0]");
-    json_roundtrip(animray::hls<uint8_t>(1, 2, 3), "[1,2,3]");
+    json_roundtrip(animray::hsl<int64_t>(), "[0, 0, 0]");
+    json_roundtrip(animray::hsl<uint8_t>(1, 2, 3), "[1,2,3]");
 }
 
 
 namespace {
     void check(float h, float l, float s, float r, float g, float b) {
-        animray::hls<float> f(h, l, s);
+        animray::hsl<float> f(h, s, l);
         animray::rgb<float> t(fostlib::coerce<animray::rgb<float>>(f));
         FSL_CHECK_EQ(int(t.array()[0] * 1000 + .5f), int(r * 1000 + .5f));
         FSL_CHECK_EQ(int(t.array()[1] * 1000 + .5f), int(g * 1000 + .5f));

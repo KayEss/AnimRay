@@ -21,7 +21,7 @@
 #include <fost/unicode>
 #include <fost/main>
 #include <fost/coerce/ints.hpp>
-#include <animray/color/hls.hpp>
+#include <animray/color/hsl.hpp>
 #include <animray/targa.hpp>
 #include <animray/mandelbrot.hpp>
 
@@ -59,8 +59,8 @@ FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2020 Kirit Saelensminde")
                     [hue](unsigned int d, std::size_t b) {
                         if (d) {
                             unsigned int m = (1u << b) - 1u;
-                            animray::hls<double> h(
-                                    int(hue + 360.0 * d / m) % 360, 0.5, 1.0);
+                            animray::hsl<double> h(
+                                    int(hue + 360.0 * d / m) % 360, 1.0, 0.5);
                             animray::rgb<double> c(
                                     fostlib::coerce<animray::rgb<double>>(h));
                             return animray::rgb<uint8_t>(

@@ -2,7 +2,7 @@ add_library(animray-smoke-test
         animation-animate-tests.cpp
         animation-procedural-tests.cpp
         camera-movie-tests.cpp
-        colour-hls-tests.cpp
+        colour-hsl-tests.cpp
         colour-rgba-tests.cpp
         colour-rgb-tests.cpp
         extents2d-tests.cpp

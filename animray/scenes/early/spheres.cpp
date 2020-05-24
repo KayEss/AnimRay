@@ -40,7 +40,7 @@
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
-#include <animray/color/hls.hpp>
+#include <animray/color/hsl.hpp>
 #include <thread>
 
 
@@ -101,8 +101,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     std::uniform_real_distribution<world> hue(0, 360), x_position(-20, 20),
             y_position(-20, 20);
     for (auto count = 0; count != spheres; ++count) {
-        animray::hls<float> hls_colour(hue(generator), 0.5f, 1.0f);
-        auto colour(fostlib::coerce<animray::rgb<float>>(hls_colour));
+        animray::hsl<float> hsl_colour(hue(generator), 1.0f, 0.5f);
+        auto colour(fostlib::coerce<animray::rgb<float>>(hsl_colour));
         auto location(animray::translate<world>(
                 x_position(generator), y_position(generator), 0.0));
         switch (surface(generator)) {
