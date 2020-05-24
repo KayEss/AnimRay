@@ -1,6 +1,5 @@
-/*
-    Copyright 2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,34 +19,22 @@
 
 
 #include <animray/line.hpp>
-#include "test-json.hpp"
+
+#include <fost/test>
+#include <concepts>
 
 
 FSL_TEST_SUITE(line);
 
 
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::line<int>>();
-    fostlib::test::default_copy_constructable<animray::line<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::line<float>>();
-    fostlib::test::default_copy_constructable<animray::line<double>>();
-    fostlib::test::default_copy_constructable<animray::line<long double>>();
-}
+static_assert(std::regular<animray::line<int>>);
+static_assert(std::regular<animray::line<float>>);
 
 
 FSL_TEST_FUNCTION(constructor_simple) {
     animray::line<int> l1(
             animray::line<int>::end_type(0, 0, 1),
             animray::line<int>::end_type(0, 0, 10));
-}
-
-
-FSL_TEST_FUNCTION(json) {
-    json_roundtrip(
-            animray::line<int>(
-                    animray::line<int>::end_type(-1, -2, -3),
-                    animray::line<int>::end_type(1, 2, 3)),
-            "{\"from\":[-1,-2,-3,1], \"to\": [1,2,3,1]}");
 }
 
 

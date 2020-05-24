@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -52,7 +52,6 @@ namespace animray {
                 typename superclass::const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::print_on;
-        using superclass::to_json;
 
         /// Return the 4 underlying coordinates
         const array_type &array() const { return superclass::array; }

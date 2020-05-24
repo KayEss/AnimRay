@@ -20,7 +20,7 @@
 
 #include <animray/geometry/planar/plane.hpp>
 #include <animray/ray.hpp>
-#include <fost/log>
+
 #include <fost/test>
 
 
@@ -43,8 +43,8 @@ FSL_TEST_FUNCTION(plane_constructor) {
 
 namespace {
     void check_intersection(
-            animray::ray<int> ray, fostlib::nullable<animray::ray<int>> hit) {
-        fostlib::log::debug(c_mod)("ray", ray)("hit", hit.value());
+            animray::ray<int> ray, std::optional<animray::ray<int>> hit) {
+        // fostlib::log::debug(c_mod)("ray", ray)("hit", hit.value());
         animray::plane<animray::ray<int>> board;
         fostlib::nullable<animray::ray<int>> intersection(
                 board.intersects(ray, 0));

@@ -67,31 +67,6 @@ namespace animray {
 }
 
 
-namespace fostlib {
-    /// Coerce a line to JSON
-    template<typename D>
-    struct coercer<json, animray::line<D>> {
-        json coerce(const animray::line<D> &l) {
-            json r;
-            jcursor("from").insert(r, fostlib::coerce<json>(l.from));
-            jcursor("to").insert(r, fostlib::coerce<json>(l.to));
-            return r;
-        }
-    };
-    /// Coerce a line from JSON
-    template<typename D>
-    struct coercer<animray::line<D>, json> {
-        animray::line<D> coerce(const json &js) {
-            return animray::line<D>(
-                    fostlib::coerce<typename animray::line<D>::end_type>(
-                            js["from"]),
-                    fostlib::coerce<typename animray::line<D>::end_type>(
-                            js["to"]));
-        }
-    };
-}
-
-
 namespace std {
     /// Allow the line to be displayed
     template<typename D>

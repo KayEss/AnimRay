@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -99,14 +99,6 @@ namespace animray {
                 }
             }
 
-            /// Turn the array into a JSON array
-            [[nodiscard]] fostlib::json to_json() const {
-                fostlib::json r;
-                for (std::size_t i = 0; i < array.size(); ++i)
-                    fostlib::jcursor().push_back(
-                            r, fostlib::coerce<fostlib::json>(array[i]));
-                return r;
-            }
             /// Print the vector onto a stream
             fostlib::ostream &print_on(fostlib::ostream &o) const {
                 o << "(";
@@ -175,62 +167,6 @@ namespace animray {
             operator<<(std::ostream &o, const T &a) {
         return a.print_on(o);
     }
-
-
-}
-
-
-namespace fostlib {
-    /// Allows coercion from array types to JSON
-    template<typename T>
-    struct coercer<
-            fostlib::json,
-            T,
-            std::enable_if_t<
-                    std::is_base_of_v<animray::detail::array_based_base_class, T>>> {
-        fostlib::json coerce(const T &a) { return a.to_json(); }
-    };
-    template<typename T>
-    struct coercer<
-            T,
-            fostlib::json,
-            std::enable_if_t<
-                    std::is_base_of_v<
-                            animray::detail::array_based_base_class,
-                            T> && T::c_array_size == 3>> {
-        T coerce(const json &j) {
-            return T(
-                    fostlib::coerce<typename T::value_type>(j[0]),
-                    fostlib::coerce<typename T::value_type>(j[1]),
-                    fostlib::coerce<typename T::value_type>(j[2]));
-        }
-    };
-    template<typename T>
-    struct coercer<
-            T,
-            fostlib::json,
-            std::enable_if_t<
-                    std::is_base_of_v<
-                            animray::detail::array_based_base_class,
-                            T> && T::c_array_size == 4>> {
-        T coerce(const json &j) {
-            return T(
-                    fostlib::coerce<typename T::value_type>(j[0]),
-                    fostlib::coerce<typename T::value_type>(j[1]),
-                    fostlib::coerce<typename T::value_type>(j[2]),
-                    fostlib::coerce<typename T::value_type>(j[3]));
-        }
-    };
-    template<typename T>
-    struct coercer<
-            T,
-            fostlib::json,
-            std::enable_if_t<
-                    std::is_base_of_v<
-                            animray::detail::array_based_base_class,
-                            T> && (T::c_array_size > 4)>> {
-        T coerce(const json &j) { return T(j); }
-    };
 
 
 }

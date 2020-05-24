@@ -28,19 +28,3 @@ FSL_TEST_SUITE(rgba);
 
 
 static_assert(animray::Color<animray::rgba<float>>);
-
-
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::rgba<int>>();
-    fostlib::test::default_copy_constructable<animray::rgba<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::rgba<float>>();
-    fostlib::test::default_copy_constructable<animray::rgba<double>>();
-    fostlib::test::default_copy_constructable<animray::rgba<long double>>();
-}
-
-
-FSL_TEST_FUNCTION(json) {
-    FSL_CHECK_EQ(
-            fostlib::coerce<fostlib::json>(animray::rgba<int64_t>()),
-            fostlib::json::parse("[0, 0, 0, 0]"));
-}

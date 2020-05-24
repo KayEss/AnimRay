@@ -21,28 +21,12 @@
 #include <animray/color/rgb.hpp>
 
 #include <animray/color/concept.hpp>
-#include "test-json.hpp"
 
 
 FSL_TEST_SUITE(rgb);
 
 
 static_assert(animray::Color<animray::rgb<float>>);
-
-
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::rgb<int>>();
-    fostlib::test::default_copy_constructable<animray::rgb<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::rgb<float>>();
-    fostlib::test::default_copy_constructable<animray::rgb<double>>();
-    fostlib::test::default_copy_constructable<animray::rgb<long double>>();
-}
-
-
-FSL_TEST_FUNCTION(json) {
-    json_roundtrip(animray::rgb<int64_t>(), "[0, 0, 0]");
-    json_roundtrip(animray::rgb<uint8_t>(1, 2, 3), "[1,2,3]");
-}
 
 
 FSL_TEST_FUNCTION(attenuation) {

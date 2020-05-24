@@ -102,34 +102,6 @@ namespace animray {
 }
 
 
-namespace fostlib {
-    /// Allow coercion to JSON
-    template<typename C>
-    struct coercer<fostlib::json, animray::point2d<C>> {
-        /// Perform the coercion
-        fostlib::json coerce(const animray::point2d<C> &p) {
-            fostlib::json j;
-            fostlib::jcursor r;
-            r.push_back(j, fostlib::coerce<fostlib::json>(p.x));
-            r.push_back(j, fostlib::coerce<fostlib::json>(p.y));
-            return j;
-        }
-    };
-    /// Allow coercion from JSON
-    template<typename C>
-    struct coercer<animray::point2d<C>, fostlib::json> {
-        /// Perform the coercion
-        animray::point2d<C> coerce(const fostlib::json &j) {
-            return animray::point2d<C>(
-                    fostlib::coerce<typename animray::point2d<C>::value_type>(
-                            j[0]),
-                    fostlib::coerce<typename animray::point2d<C>::value_type>(
-                            j[1]));
-        }
-    };
-}
-
-
 namespace std {
     /// Allow 2d points to be displayed on a stream
     template<typename C>

@@ -25,6 +25,8 @@
 
 #include <animray/detail/array_based.hpp>
 
+#include <fost/test>
+
 
 namespace animray {
 
@@ -41,7 +43,6 @@ namespace animray {
                 typename superclass::const_value_parameter_type;
         static const std::size_t c_array_size = superclass::c_array_size;
         using superclass::print_on;
-        using superclass::to_json;
 
         /// Default construct an RGB colour with all channels at zero
         constexpr rgb() = default;

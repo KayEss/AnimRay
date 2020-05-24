@@ -1,6 +1,5 @@
-/*
-    Copyright 2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,27 +19,15 @@
 
 
 #include <animray/point2d.hpp>
-#include "test-json.hpp"
+
+#include <fost/test>
 
 
 FSL_TEST_SUITE(point2d);
 
 
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    using fostlib::test::default_copy_constructable;
-    default_copy_constructable<animray::point2d<int>>();
-    default_copy_constructable<animray::point2d<int64_t>>();
-    default_copy_constructable<animray::point2d<float>>();
-    default_copy_constructable<animray::point2d<double>>();
-    default_copy_constructable<animray::point2d<long double>>();
-}
-
-
-FSL_TEST_FUNCTION(json) {
-    json_roundtrip(animray::point2d<int64_t>(), "[0, 0]");
-    json_roundtrip(animray::point2d<int>(1, 2), "[1,2]");
-    json_roundtrip(animray::point2d<int>(2, -5), "[2,-5]");
-}
+static_assert(std::regular<animray::point2d<int>>);
+static_assert(std::regular<animray::point2d<float>>);
 
 
 FSL_TEST_FUNCTION(operator_add) {

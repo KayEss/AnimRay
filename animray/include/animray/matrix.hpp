@@ -50,13 +50,6 @@ namespace animray {
             superclass::array[10] = D(1);
             superclass::array[15] = D(1);
         }
-        /// Construct a matrix from its JSON representation
-        matrix(const fostlib::json &js) {
-            for (std::size_t c = 0; c < 4; ++c)
-                for (std::size_t r = 0; r < 4; ++r)
-                    superclass::array[r * 4 + c] =
-                            fostlib::coerce<value_type>(js[r][c]);
-        }
 
         /// Allows us to fetch values from rows then columns
         class row_proxy {
@@ -139,23 +132,14 @@ namespace animray {
             return *this = result;
         }
 
-        /// The matrix has a special JSON representation
-        [[nodiscard]] fostlib::json to_json() const {
-            fostlib::json ret, line;
-            for (std::size_t i = 0; i < 16; ++i) {
-                fostlib::jcursor().push_back(line, superclass::array[i]);
-                if ((i + 1) % 4 == 0) {
-                    fostlib::jcursor().push_back(ret, line);
-                    line = fostlib::json();
-                }
-            }
-            return ret;
-        }
-
-        /// Just print out the (pretty printed) JSON for now
         fostlib::ostream &print_on(fostlib::ostream &o) const {
-            return o << fostlib::json::unparse(
-                           fostlib::coerce<fostlib::json>(*this), true);
+            for (std::size_t r = 0; r < 4; ++r) {
+                for (std::size_t c = 0; c < 4; ++c) {
+                    o << superclass::array[r * 4 + c];
+                }
+                o << '\n';
+            }
+            return o;
         }
     };
 

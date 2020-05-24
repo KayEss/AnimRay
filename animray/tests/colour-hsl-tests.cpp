@@ -21,19 +21,13 @@
 #include <animray/color/hsl.hpp>
 
 #include <animray/color/concept.hpp>
-#include "test-json.hpp"
+#include <fost/test>
 
 
 FSL_TEST_SUITE(hsl);
 
 
 static_assert(animray::Color<animray::hsl<float>>);
-
-
-FSL_TEST_FUNCTION(json) {
-    json_roundtrip(animray::hsl<int64_t>(), "[0, 0, 0]");
-    json_roundtrip(animray::hsl<uint8_t>(1, 2, 3), "[1,2,3]");
-}
 
 
 namespace {

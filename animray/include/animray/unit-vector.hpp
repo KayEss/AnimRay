@@ -71,7 +71,6 @@ namespace animray {
         }
 
         using superclass::print_on;
-        using superclass::to_json;
         using superclass::x;
         using superclass::y;
         using superclass::z;

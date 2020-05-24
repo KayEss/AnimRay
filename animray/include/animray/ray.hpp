@@ -101,20 +101,6 @@ namespace animray {
 }
 
 
-namespace fostlib {
-    /// Coerce a ray to JSON
-    template<typename D>
-    struct coercer<json, animray::ray<D>> {
-        json coerce(const animray::ray<D> &l) {
-            json r;
-            jcursor("from").insert(r, fostlib::coerce<json>(l.from));
-            jcursor("direction").insert(r, fostlib::coerce<json>(l.direction));
-            return r;
-        }
-    };
-}
-
-
 namespace std {
 
 

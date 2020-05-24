@@ -46,7 +46,6 @@ namespace animray {
         static const std::size_t c_array_size = superclass::c_array_size;
 
         using superclass::print_on;
-        using superclass::to_json;
 
         /// Default construct an HLS colour with all channels at zero
         hsl() = default;

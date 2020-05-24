@@ -21,19 +21,15 @@
 #include <animray/maths/angles.hpp>
 #include <animray/affine.hpp>
 #include <animray/ray.hpp>
-#include "test-json.hpp"
+
+#include <fost/test>
 
 
 FSL_TEST_SUITE(matrix);
 
 
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::matrix<int>>();
-    fostlib::test::default_copy_constructable<animray::matrix<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::matrix<float>>();
-    fostlib::test::default_copy_constructable<animray::matrix<double>>();
-    fostlib::test::default_copy_constructable<animray::matrix<long double>>();
-}
+static_assert(std::regular<animray::matrix<int>>);
+static_assert(std::regular<animray::matrix<float>>);
 
 
 FSL_TEST_FUNCTION(matrix_multiply) {
@@ -50,21 +46,6 @@ FSL_TEST_FUNCTION(matrix_multiply) {
     FSL_CHECK_EQ(ps.x(), -10);
     FSL_CHECK_EQ(ps.y(), -23);
     FSL_CHECK_EQ(ps.z(), -54);
-}
-
-
-FSL_TEST_FUNCTION(json) {
-    json_roundtrip(
-            animray::matrix<int64_t>(),
-            "[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]");
-    animray::matrix<int64_t> m(
-            fostlib::json::parse("[[1, 2, 3, 4], [5, 6, 7, 8], "
-                                 "[9, 10, 11, 12], [13, 14, 15, 16]]"));
-    FSL_CHECK_EQ(m[0][0], 1);
-    FSL_CHECK_EQ(m[0][2], 3);
-    FSL_CHECK_EQ(m[3][3], 16);
-    FSL_CHECK_EXCEPTION(
-            m[4][0], fostlib::exceptions::out_of_range<std::size_t> &);
 }
 
 
