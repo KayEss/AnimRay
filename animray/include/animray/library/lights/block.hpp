@@ -38,13 +38,22 @@ namespace animray::library::lights {
      * Block of lights of three colours with some ambient.
      */
     template<typename World>
-    auto constexpr spots = animray::light{animray::make_array(
+    auto constexpr narrow_spots = animray::light{animray::make_array(
             bulb<World>{{-3.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
             bulb<World>{{-5.0, -3.0, -5.0}, {0xa0, 0x40, 0x40}},
             bulb<World>{{3.0, -3.0, -5.0}, {0x40, 0x40, 0xa0}})};
     template<typename World>
-    auto constexpr testblock =
-            animray::light{spots<World>, animray::light{animray::luma{50.0f}}};
+    auto constexpr narrow_block = animray::light{
+            narrow_spots<World>, animray::light{animray::luma{50.0f}}};
+
+    template<typename World>
+    auto constexpr wide_spots = animray::light{animray::make_array(
+            bulb<World>{{-5.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
+            bulb<World>{{-5.0, -5.0, -5.0}, {0xa0, 0x40, 0x40}},
+            bulb<World>{{5.0, -5.0, -5.0}, {0x40, 0x40, 0xa0}})};
+    template<typename World>
+    auto constexpr wide_block = animray::light{
+            wide_spots<World>, animray::light{animray::luma{50.0f}}};
 
 
 }

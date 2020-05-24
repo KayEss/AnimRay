@@ -60,17 +60,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     spheres.insert(sphere_type(animray::rgb<float>(0.25, 0.5, 1.0))(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
-    auto constexpr spots = animray::light{animray::make_array(
-            animray::library::lights::bulb<world>{
-                    {-5.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
-            animray::library::lights::bulb<world>{
-                    {-5.0, -5.0, -5.0}, {0xa0, 0x40, 0x40}},
-            animray::library::lights::bulb<world>{
-                    {5.0, -5.0, -5.0}, {0x40, 0x40, 0xa0}})};
-
     auto const scene = animray::scene{
-            std::move(spheres),
-            animray::light{spots, animray::light{animray::luma{50.0f}}},
+            std::move(spheres), animray::library::lights::wide_block<world>,
             animray::rgb<float>{10, 50, 70}};
 
     animray::movable<

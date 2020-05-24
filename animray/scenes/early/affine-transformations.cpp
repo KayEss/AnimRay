@@ -65,7 +65,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             animray::translate<world>(1.0, 1.0, 0.0)));
 
     auto const scene = animray::scene{
-            std::move(spheres), animray::library::lights::testblock<world>,
+            std::move(spheres), animray::library::lights::narrow_block<world>,
             animray::rgb<float>{20, 70, 100}};
 
     animray::movable<

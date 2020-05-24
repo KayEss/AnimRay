@@ -84,7 +84,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                             triangle{bottom, west, north})}}};
 
     auto const scene = animray::scene{
-            tetrahedron, animray::library::lights::testblock<world>,
+            tetrahedron, animray::library::lights::narrow_block<world>,
             animray::rgb<float>{20, 70, 100}};
 
     for (std::size_t frame{}; frame != frames * 360 / angle; ++frame) {
