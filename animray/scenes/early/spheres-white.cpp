@@ -43,13 +43,15 @@
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    const std::size_t threads(
+    std::size_t const threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
                     .value_or(std::thread::hardware_concurrency()));
-    const std::size_t samples(
+    std::size_t const samples(
             fostlib::coerce<int>(args.commandSwitch("ss").value_or("6")));
-    const std::size_t spheres(
+    std::size_t const spheres(
             fostlib::coerce<int>(args.commandSwitch("sp").value_or("10")));
+    double const focal_length{fostlib::coerce<double>(
+            args.commandSwitch("focal").value_or("0.05"))};
 
     const int width = fostlib::coerce<int>(args[1].value_or("150"));
     const int height = fostlib::coerce<int>(args[2].value_or("100"));
@@ -112,7 +114,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             animray::pinhole_camera<
                     animray::ray<world>, animray::flat_jitter_camera<world>>,
             animray::ray<world>>
-            camera(fw, fh, width, height, 0.05);
+            camera(fw, fh, width, height, focal_length);
     camera(animray::rotate_x<world>(-65_deg))(
             animray::translate<world>(0.0, -4.0, -40));
 
