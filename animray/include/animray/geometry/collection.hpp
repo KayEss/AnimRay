@@ -64,14 +64,14 @@ namespace animray {
         fostlib::nullable<intersection_type>
                 intersects(const R &by, const E epsilon) const {
             fostlib::nullable<intersection_type> result;
-            local_coord_type result_dot;
+            local_coord_type result_dot{};
             for (const auto &instance : instances) {
                 if (result) {
                     fostlib::nullable<intersection_type> intersection(
                             instance.intersects(by, epsilon));
                     if (intersection) {
-                        local_coord_type dot(
-                                (intersection->from - by.from).dot());
+                        local_coord_type dot =
+                                (intersection->from - by.from).dot();
                         if (dot < result_dot) {
                             result = std::move(intersection);
                             result_dot = dot;
