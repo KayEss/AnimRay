@@ -26,6 +26,7 @@
 #include <animray/epsilon.hpp>
 #include <animray/surface.hpp>
 #include <animray/mixins/depth-count.hpp>
+#include <animray/unit-vector.hpp>
 
 
 namespace animray {

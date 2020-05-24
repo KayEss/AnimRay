@@ -25,6 +25,10 @@
 
 #include <animray/light/light.hpp>
 
+#include <array>
+#include <tuple>
+#include <vector>
+
 
 namespace animray {
 

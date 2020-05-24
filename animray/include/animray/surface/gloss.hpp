@@ -25,6 +25,8 @@
 
 #include <animray/surface.hpp>
 
+#include <cmath>
+
 
 namespace animray {
 

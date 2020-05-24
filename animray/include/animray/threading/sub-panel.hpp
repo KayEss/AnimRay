@@ -24,8 +24,11 @@
 #pragma once
 
 
-#include <fost/progress>
+#include <animray/film.hpp>
 #include <animray/panel.hpp>
+
+#include <fost/insert>
+#include <fost/progress>
 
 
 namespace animray {

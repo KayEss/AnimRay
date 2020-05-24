@@ -26,6 +26,8 @@
 #include <animray/color/concept.hpp>
 #include <animray/light/light.hpp>
 
+#include <utility>
+
 
 namespace animray {
 

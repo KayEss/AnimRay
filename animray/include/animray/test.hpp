@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -25,6 +24,7 @@
 
 
 #include <fost/test>
+#include <animray/point3d.hpp>
 
 
 namespace animray {

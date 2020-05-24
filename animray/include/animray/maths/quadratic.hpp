@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -24,6 +24,7 @@
 
 
 #include <cmath>
+#include <optional>
 
 
 namespace animray {
@@ -44,10 +45,10 @@ namespace animray {
     /// Returns the smallest real solution to the quadratic if it lies inside
     /// the range
     template<typename D>
-    fostlib::nullable<D> first_positive_quadratic_solution(
+    std::optional<D> first_positive_quadratic_solution(
             const D a, const D b, const D c, const D range) {
-        const D discrim = b * b - D(4) * a * c;
-        if (discrim < D(0)) { return fostlib::null; }
+        const D discrim = b * b - D{4} * a * c;
+        if (discrim < D{}) { return {}; }
         using S = decltype(std::sqrt(discrim));
         S const root_discrim(std::sqrt(discrim));
         S const q(
@@ -57,7 +58,7 @@ namespace animray {
         if (t1 < t0) { std::swap(t0, t1); }
         S t = t0 < S(0) ? t1 : t0;
         if (t < range) {
-            return fostlib::null;
+            return {};
         } else {
             return t;
         }

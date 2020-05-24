@@ -23,8 +23,9 @@
 #pragma once
 
 
-#include <vector>
 #include <memory>
+#include <optional>
+#include <vector>
 
 
 namespace animray {
@@ -61,13 +62,13 @@ namespace animray {
 
         /// Ray intersection with closest item
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
-            fostlib::nullable<intersection_type> result;
+            std::optional<intersection_type> result;
             local_coord_type result_dot{};
             for (const auto &instance : instances) {
                 if (result) {
-                    fostlib::nullable<intersection_type> intersection(
+                    std::optional<intersection_type> intersection(
                             instance.intersects(by, epsilon));
                     if (intersection) {
                         local_coord_type dot =
