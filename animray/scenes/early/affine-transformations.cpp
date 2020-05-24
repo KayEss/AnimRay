@@ -37,12 +37,12 @@
 #include <animray/affine.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2014 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
+    const int width = fostlib::coerce<int>(args[1].value_or("200"));
+    const int height = fostlib::coerce<int>(args[2].value_or("300"));
     fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
-            args[1].value_or("affine-transformations.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("200"));
-    const int height = fostlib::coerce<int>(args[3].value_or("300"));
+            args[3].value_or("affine-transformations.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;

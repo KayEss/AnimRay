@@ -26,12 +26,12 @@
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
-            args[1].value_or("white-sphere.tga"));
     auto const width = fostlib::coerce<std::size_t>(
-            fostlib::coerce<int>(args[2].value_or("1920")));
+            fostlib::coerce<int>(args[1].value_or("1920")));
     auto const height = fostlib::coerce<std::size_t>(
-            fostlib::coerce<int>(args[3].value_or("1080")));
+            fostlib::coerce<int>(args[2].value_or("1080")));
+    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+            args[3].value_or("white-sphere.tga"));
 
     /**
      * The sphere has a radius of two units, so we want to make sure we

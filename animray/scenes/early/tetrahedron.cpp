@@ -50,10 +50,10 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     /// ### Output handling
     /// Filenames
+    const int width = fostlib::coerce<int>(args[1].value_or("96"));
+    const int height = fostlib::coerce<int>(args[2].value_or("54"));
     auto const output_filename = fostlib::coerce<fostlib::fs::path>(
-            args[1].value_or("tetrahedron.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("96"));
-    const int height = fostlib::coerce<int>(args[3].value_or("54"));
+            args[3].value_or("tetrahedron.tga"));
 
     /// Screen aspect and pixel density
     auto const aspect = static_cast<double>(width) / height;

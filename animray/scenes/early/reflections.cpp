@@ -51,10 +51,10 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const std::size_t samples(
             fostlib::coerce<int>(args.commandSwitch("ss").value_or("6")));
 
+    const int width = fostlib::coerce<int>(args[1].value_or("100"));
+    const int height = fostlib::coerce<int>(args[2].value_or("150"));
     auto const output_filename = fostlib::coerce<fostlib::fs::path>(
-            args[1].value_or("reflections.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("100"));
-    const int height = fostlib::coerce<int>(args[3].value_or("150"));
+            args[3].value_or("reflections.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;
