@@ -21,6 +21,7 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/library/lights/block.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
@@ -34,9 +35,6 @@
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
 #include <animray/surface/reflective.hpp>
-#include <animray/light/ambient.hpp>
-#include <animray/light/collection.hpp>
-#include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 #include <animray/threading/sub-panel.hpp>
@@ -63,32 +61,24 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
+    using reflective_sphere_type = animray::movable<animray::surface<
             animray::unit_sphere<animray::point3d<world>>,
-            animray::reflective<float>, animray::matte<animray::rgb<float>>>>
-            reflective_sphere_type;
+            animray::reflective<float>, animray::matte<animray::rgb<float>>>>;
     using gloss_sphere_type = animray::surface<
             animray::collection<animray::unit_sphere<animray::point3d<world>>>,
             animray::gloss<world>, animray::matte<animray::rgb<float>>>;
     using metallic_sphere_type = animray::surface<
             animray::collection<animray::unit_sphere<animray::point3d<world>>>,
             animray::reflective<animray::rgb<float>>>;
-    using scene_type = animray::scene<
-            animray::compound<
-                    reflective_sphere_type, metallic_sphere_type,
-                    gloss_sphere_type>,
-            animray::light<
-                    std::tuple<
-                            animray::light<void, float>,
-                            animray::light<
-                                    std::vector<animray::light<
-                                            animray::point3d<world>,
-                                            animray::rgb<float>>>,
-                                    animray::rgb<float>>>,
-                    animray::rgb<float>>,
-            animray::rgb<float>>;
-    scene_type scene;
-    scene.background = animray::rgb<float>(20, 70, 100);
+
+    animray::compound<
+            reflective_sphere_type, metallic_sphere_type, gloss_sphere_type>
+            geometry;
+
+    animray::scene scene{
+            geometry, animray::library::lights::wide_block<world>,
+            animray::rgb<float>(20, 70, 100)};
+    using scene_type = decltype(scene);
 
     const world scale(200.0);
     std::get<0>(scene.geometry.instances) = reflective_sphere_type(
@@ -116,23 +106,6 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
         default: std::get<2>(scene.geometry.instances).geometry.insert(s);
         }
     }
-
-    std::get<0>(scene.light).color = 50;
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, 5.0, -5.0),
-                            animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, -5.0, -5.0),
-                            animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(5.0, -5.0, -5.0),
-                            animray::rgb<float>(0x40, 0x40, 0xa0)));
 
     animray::movable<
             animray::pinhole_camera<
