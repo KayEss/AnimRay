@@ -20,6 +20,7 @@
 
 #include <fost/main>
 #include <fost/unicode>
+#include <animray/library/lights/block.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
@@ -30,17 +31,14 @@
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
-#include <animray/light/ambient.hpp>
-#include <animray/light/collection.hpp>
-#include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    const int width = fostlib::coerce<int>(args[1].value_or("200"));
-    const int height = fostlib::coerce<int>(args[2].value_or("300"));
+    const int width = fostlib::coerce<int>(args[1].value_or("100"));
+    const int height = fostlib::coerce<int>(args[2].value_or("150"));
     fostlib::fs::path output_filename = fostlib::coerce<fostlib::fs::path>(
             args[3].value_or("affine-transformations.tga"));
 
@@ -49,59 +47,26 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
+    using sphere_type = animray::movable<animray::surface<
             animray::unit_sphere_at_origin<animray::ray<world>>,
-            animray::gloss<world>, animray::matte<animray::rgb<float>>>>
-            sphere_type;
-    typedef animray::scene<
-            animray::collection<sphere_type>,
-            animray::light<
-                    std::tuple<
-                            animray::light<void, float>,
-                            animray::light<
-                                    std::vector<animray::light<
-                                            animray::point3d<world>,
-                                            animray::rgb<float>>>,
-                                    animray::rgb<float>>>,
-                    animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
-    scene_type scene;
-    scene.background = animray::rgb<float>(20, 70, 100);
-
-    const world scale(200.0);
-    scene.geometry.insert(
-            sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
-                    animray::translate<world>(0.0, 0.0, scale + 1.0))(
-                    animray::scale<world>(scale, scale, scale)));
-    scene.geometry.insert(sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
+            animray::gloss<world>, animray::matte<animray::rgb<float>>>>;
+    animray::collection<sphere_type> spheres;
+    world const scale{200.0};
+    spheres.insert(sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
+            animray::translate<world>(0.0, 0.0, scale + 1.0))(
+            animray::scale<world>(scale, scale, scale)));
+    spheres.insert(sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry.insert(
-            sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
-                    animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry.insert(
-            sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
-                    animray::translate<world>(-1.0, 1.0, 0.0)));
-    scene.geometry.insert(
-            sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
-                    animray::translate<world>(1.0, 1.0, 0.0)));
+    spheres.insert(sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
+            animray::translate<world>(1.0, -1.0, 0.0)));
+    spheres.insert(sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
+            animray::translate<world>(-1.0, 1.0, 0.0)));
+    spheres.insert(sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
+            animray::translate<world>(1.0, 1.0, 0.0)));
 
-    std::get<0>(scene.light).color = 50;
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, 5.0, -5.0),
-                            animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, -5.0, -5.0),
-                            animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(5.0, -5.0, -5.0),
-                            animray::rgb<float>(0x40, 0x40, 0xa0)));
+    auto const scene = animray::scene{
+            std::move(spheres), animray::library::lights::testblock<world>,
+            animray::rgb<float>{20, 70, 100}};
 
     animray::movable<
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
