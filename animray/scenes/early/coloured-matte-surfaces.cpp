@@ -20,6 +20,7 @@
 
 #include <fost/main>
 #include <fost/unicode>
+#include <animray/library/lights/block.hpp>
 #include <animray/camera/pinhole.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
@@ -28,72 +29,49 @@
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
-#include <animray/light/ambient.hpp>
-#include <animray/light/collection.hpp>
-#include <animray/light/point.hpp>
 #include <animray/targa.hpp>
 #include <animray/affine.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const int width = fostlib::coerce<int>(args[1].value_or("300"));
     const int height = fostlib::coerce<int>(args[2].value_or("200"));
     auto const output_filename = fostlib::coerce<fostlib::fs::path>(
             args[3].value_or("coloured-matte-surfaces.tga"));
 
-    typedef double world;
+    using world = double;
     const world aspect = double(width) / height;
     const world fw = width > height ? aspect * 0.024 : 0.024;
     const world fh = width > height ? 0.024 : 0.024 / aspect;
 
-    typedef animray::movable<animray::surface<
+    using sphere_type = animray::movable<animray::surface<
             animray::unit_sphere_at_origin<animray::ray<world>>,
-            animray::matte<animray::rgb<float>>>>
-            sphere_type;
-    typedef animray::scene<
-            animray::collection<sphere_type>,
-            animray::light<
-                    std::tuple<
-                            animray::light<void, float>,
-                            animray::light<
-                                    std::vector<animray::light<
-                                            animray::point3d<world>,
-                                            animray::rgb<float>>>,
-                                    animray::rgb<float>>>,
-                    animray::rgb<float>>,
-            animray::rgb<float>>
-            scene_type;
-    scene_type scene;
-    scene.background = animray::rgb<float>(10, 50, 70);
-
-    scene.geometry.insert(sphere_type(animray::rgb<float>(1.0, 1.0, 1.0))(
+            animray::matte<animray::rgb<float>>>>;
+    animray::collection<sphere_type> spheres;
+    spheres.insert(sphere_type(animray::rgb<float>(1.0, 1.0, 1.0))(
             animray::translate<world>(0.0, 0.0, 5.0)));
-    scene.geometry.insert(sphere_type(animray::rgb<float>(0, 1.0, 1.0))(
+    spheres.insert(sphere_type(animray::rgb<float>(0, 1.0, 1.0))(
             animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry.insert(sphere_type(animray::rgb<float>(1.0, 0.25, 0.5))(
+    spheres.insert(sphere_type(animray::rgb<float>(1.0, 0.25, 0.5))(
             animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry.insert(sphere_type(animray::rgb<float>(0.25, 1.0, 0.5))(
+    spheres.insert(sphere_type(animray::rgb<float>(0.25, 1.0, 0.5))(
             animray::translate<world>(-1.0, 1.0, 0.0)));
-    scene.geometry.insert(sphere_type(animray::rgb<float>(0.25, 0.5, 1.0))(
+    spheres.insert(sphere_type(animray::rgb<float>(0.25, 0.5, 1.0))(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
-    std::get<0>(scene.light).color = 50;
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, 5.0, -5.0),
-                            animray::rgb<float>(0x40, 0xa0, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(-5.0, -5.0, -5.0),
-                            animray::rgb<float>(0xa0, 0x40, 0x40)));
-    std::get<1>(scene.light)
-            .push_back(
-                    animray::light<animray::point3d<world>, animray::rgb<float>>(
-                            animray::point3d<world>(5.0, -5.0, -5.0),
-                            animray::rgb<float>(0x40, 0x40, 0xa0)));
+    auto constexpr spots = animray::light{animray::make_array(
+            animray::library::lights::bulb<world>{
+                    {-5.0, 5.0, -5.0}, {0x40, 0xa0, 0x40}},
+            animray::library::lights::bulb<world>{
+                    {-5.0, -5.0, -5.0}, {0xa0, 0x40, 0x40}},
+            animray::library::lights::bulb<world>{
+                    {5.0, -5.0, -5.0}, {0x40, 0x40, 0xa0}})};
+
+    auto const scene = animray::scene{
+            std::move(spheres),
+            animray::light{spots, animray::light{animray::luma{50.0f}}},
+            animray::rgb<float>{10, 50, 70}};
 
     animray::movable<
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
