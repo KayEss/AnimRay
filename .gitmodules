@@ -10,3 +10,6 @@
 [submodule "cord"]
 	path = cord
 	url = git@github.com:KayEss/f5-cord.git
+[submodule "makham"]
+	path = makham
+	url = git@github.com:hotkit/makham.git
