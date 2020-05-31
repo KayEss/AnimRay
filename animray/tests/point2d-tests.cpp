@@ -26,8 +26,8 @@
 FSL_TEST_SUITE(point2d);
 
 
-static_assert(std::regular<animray::point2d<int>>);
-static_assert(std::regular<animray::point2d<float>>);
+// static_assert(std::regular<animray::point2d<int>>);
+// static_assert(std::regular<animray::point2d<float>>);
 
 
 FSL_TEST_FUNCTION(operator_add) {
