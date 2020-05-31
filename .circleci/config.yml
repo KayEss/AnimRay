@@ -7,13 +7,17 @@ executors:
     environment:
       CC: clang
       CXX: clang++
+      CXXFLAGS: "-stdlib=libc++"
+      LD_FLAGS: "-stdlib=libc++"
+      BOOST_EXTRA_OPTS: "cxxflags=-stdlib=libc++ linkflags=-stdlib=libc++"
+      CMAKE_EXTRA: '-DBOOST_TOOLSET=clang-10 -DBOOST_VMINOR=66'
   gcc:
     docker:
     - image: fost/circleci
     environment:
       CC: gcc-10
       CXX: g++-10
-
+      CMAKE_EXTRA: ''
 
 jobs:
   build:
@@ -27,15 +31,14 @@ jobs:
       - checkout
       - run:
           name: submodules
-          command: git submodule update --init --recursive
+          command: |
+            git submodule update --init --recursive
+            ln -s /opt/fost-boost/boost Boost/boost
       - run:
           name: cmake
-          environment:
-            CMAKE_BUILD_TYPE: << parameters.variant >>
           command: |
             mkdir build.tmp
-            cd build.tmp
-            cmake .. -G Ninja
+            cmake -S . -B build.tmp -G Ninja -DCMAKE_BUILD_TYPE=<< parameters.variant >> $CMAKE_EXTRA
       - run:
           name: ninja
           command: ninja -j1 -C build.tmp
