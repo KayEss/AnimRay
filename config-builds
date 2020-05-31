@@ -9,7 +9,8 @@ CC=gcc-10
 CXX=g++-10
 
 $CMAKE -B build.tmp/gcc-debug \
-    -DCMAKE_INSTALL_PREFIX=dist/gcc-debug
+    -DCMAKE_INSTALL_PREFIX=dist/gcc-debug \
+    -DCMAKE_BUILD_TYPE=Debug
 
 $CMAKE -B build.tmp/gcc-release \
     -DCMAKE_INSTALL_PREFIX=dist/gcc-release \
@@ -23,10 +24,11 @@ LD_FLAGS="-stdlib=libc++"
 BOOST_EXTRA_OPTS="cxxflags=-stdlib=libc++ linkflags=-stdlib=libc++"
 
 $CMAKE -B build.tmp/clang-debug \
-    -DBOOST_TOOLSET=clang-10 -DBOOST_VMINOR=66 \
-    -DCMAKE_INSTALL_PREFIX=dist/clang-debug
+    -DBOOST_TOOLSET=clang-10 -DBOOST_VMINOR=71 \
+    -DCMAKE_INSTALL_PREFIX=dist/clang-debug \
+    -DCMAKE_BUILD_TYPE=Debug
 
 $CMAKE -B build.tmp/clang-release \
-    -DBOOST_TOOLSET=clang-10 -DBOOST_VMINOR=66 \
+    -DBOOST_TOOLSET=clang-10 -DBOOST_VMINOR=71 \
     -DCMAKE_INSTALL_PREFIX=dist/clang-release \
     -DCMAKE_BUILD_TYPE=Release
