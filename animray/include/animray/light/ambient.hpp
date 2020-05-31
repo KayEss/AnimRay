@@ -53,7 +53,7 @@ namespace animray {
             return color;
         }
     };
-    template<Color C>
+    template<Spectrum C>
     light(C) -> light<void, C>;
 
 

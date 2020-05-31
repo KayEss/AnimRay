@@ -27,7 +27,7 @@
 FSL_TEST_SUITE(hsl);
 
 
-static_assert(animray::Color<animray::hsl<float>>);
+static_assert(animray::Spectrum<animray::hsl<float>>);
 
 
 namespace {

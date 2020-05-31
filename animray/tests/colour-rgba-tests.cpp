@@ -27,4 +27,4 @@
 FSL_TEST_SUITE(rgba);
 
 
-static_assert(animray::Color<animray::rgba<float>>);
+static_assert(animray::PixelValue<animray::rgba<uint8_t>>);

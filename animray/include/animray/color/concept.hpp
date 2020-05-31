@@ -21,15 +21,20 @@
 #pragma once
 
 
-#include <concepts>
+#include <type_traits>
 
 
 namespace animray {
 
 
     template<typename C>
-    concept Color = requires(C) {
-        std::regular<C>;
+    concept Spectrum = requires(C c) {
+        std::is_trivially_destructible_v<C>;
+    };
+
+    template<typename C>
+    concept PixelValue = requires(C c) {
+        std::is_trivially_destructible_v<C>;
     };
 
 

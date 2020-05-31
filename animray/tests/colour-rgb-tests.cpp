@@ -26,7 +26,7 @@
 FSL_TEST_SUITE(rgb);
 
 
-static_assert(animray::Color<animray::rgb<float>>);
+static_assert(animray::Spectrum<animray::rgb<float>>);
 
 
 FSL_TEST_FUNCTION(attenuation) {
