@@ -162,7 +162,7 @@ namespace animray {
         /// The location co-ordinate type
         using location_type = animray::point2d<S>;
         /// The functor type
-        using functor_type = std::pointer_to_binary_function<S, S, R>;
+        using functor_type = std::function<R(S, S)>;
         /// The colour conversion functor type
         using color_conversion_functor_type = coercer<C, R>;
         /// The location mapping type
