@@ -21,14 +21,16 @@
 #include <animray/line.hpp>
 
 #include <fost/test>
-#include <concepts>
 
 
 FSL_TEST_SUITE(line);
 
 
+#if __has_include(<concepts>)
+#include <concepts>
 static_assert(std::regular<animray::line<int>>);
 static_assert(std::regular<animray::line<float>>);
+#endif
 
 
 FSL_TEST_FUNCTION(constructor_simple) {
