@@ -29,19 +29,24 @@ namespace {
 
     constexpr std::size_t const width = 1920, height = 1080;
 
-    constexpr auto const top_left = colour{255, 0, 0};
-    constexpr auto const top_right = colour{255, 0, 0};
-    constexpr auto const bottom_left = colour{0, 255, 0};
-    constexpr auto const bottom_right = colour{0, 0, 255};
+    constexpr auto const red = colour{255, 0, 0};
+    constexpr auto const green = colour{0, 255, 0};
+    constexpr auto const blue = colour{0, 0, 255};
 
-    auto lerp(colour start, colour end, std::size_t pos, std::size_t limit) {
-        return colour(
+    constexpr auto const top_left = red;
+    constexpr auto const top_right = red;
+    constexpr auto const bottom_left = green;
+    constexpr auto const bottom_right = blue;
+
+    template<typename C>
+    auto lerp(C start, C end, std::size_t pos, std::size_t limit) {
+        return C(
                 animray::interpolation::linear(
-                        start.red(), end.red(), pos, limit),
+                        start.array()[0], end.array()[0], pos, limit),
                 animray::interpolation::linear(
-                        start.green(), end.green(), pos, limit),
+                        start.array()[1], end.array()[1], pos, limit),
                 animray::interpolation::linear(
-                        start.blue(), end.blue(), pos, limit));
+                        start.array()[2], end.array()[2], pos, limit));
     }
     auto pixel_colour(std::size_t x, std::size_t y) {
         auto const left = lerp(top_left, bottom_left, y, height);
