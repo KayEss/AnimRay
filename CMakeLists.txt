@@ -1,16 +1,4 @@
 cmake_minimum_required(VERSION 3.12)
 project(animray)
 
-enable_testing()
-add_custom_target(check)
-include(fost-base/smoke_test.cmake)
-include(fost-base/stress_test.cmake)
-
 add_subdirectory(animray)
-add_subdirectory(Boost)
-add_subdirectory(cord)
-add_subdirectory(fost-base/Cpp/fost-cli)
-add_subdirectory(fost-base/Cpp/fost-core)
-add_subdirectory(fost-base/Cpp/fost-test)
-# add_subdirectory(makham)
-add_subdirectory(threading)
