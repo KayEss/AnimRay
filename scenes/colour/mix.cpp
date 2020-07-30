@@ -19,6 +19,7 @@
 
 
 #include <fost/main>
+#include <animray/color/hsl.hpp>
 #include <animray/interpolation/linear.hpp>
 #include <animray/targa.hpp>
 #include <algorithm>
@@ -33,10 +34,11 @@ namespace {
     constexpr auto const green = colour{0, 255, 0};
     constexpr auto const blue = colour{0, 0, 255};
 
-    constexpr auto const top_left = red;
-    constexpr auto const top_right = red;
-    constexpr auto const bottom_left = green;
-    constexpr auto const bottom_right = blue;
+    using hsl = animray::hsl<float>;
+    auto const hred1 = hsl{0.0f, 1.0f, 0.5f};
+    auto const hred2 = hsl{360.0f, 1.0f, 0.5f};
+    auto const hgreen = hsl{120.0f, 1.0f, 0.5f};
+    auto const hblue = hsl{240.0f, 1.0f, 0.5f};
 
     template<typename C>
     auto lerp(C start, C end, std::size_t pos, std::size_t limit) {
@@ -48,7 +50,14 @@ namespace {
                 animray::interpolation::linear(
                         start.array()[2], end.array()[2], pos, limit));
     }
-    auto pixel_colour(std::size_t x, std::size_t y) {
+    template<typename C>
+    auto pixel_colour(
+            C top_left,
+            C top_right,
+            C bottom_left,
+            C bottom_right,
+            std::size_t x,
+            std::size_t y) {
         auto const left = lerp(top_left, bottom_left, y, height);
         auto const right = lerp(top_right, bottom_right, y, height);
         return lerp(left, right, x, width);
@@ -56,13 +65,13 @@ namespace {
     uint8_t linear_clamp(float channel) {
         return std::clamp(channel, 0.0f, 255.0f);
     }
-    uint8_t non_linear_clamp(float channel) {
-        auto const normalised = std::clamp(channel, 0.0f, 255.0f) / 255.0f;
-        if (normalised < 0.0031308) {
-            return 255.0f * (normalised * 12.92);
+    uint8_t non_linear_clamp(float channel, float max) {
+        auto const normalised = std::clamp(channel, 0.0f, max) / max;
+        if (normalised < 0.0031308f) {
+            return 255.0f * (normalised * 12.92f);
         } else {
             return 255.0f
-                    * (std::pow(normalised * 1.055, 1.0f / 2.4f) - 0.055f);
+                    * (std::pow(normalised * 1.055f, 1.0f / 2.4f) - 0.055f);
         }
     }
 }
@@ -72,7 +81,7 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     animray::film<animray::rgb<uint8_t>> linear{
             width, height, [](auto x, auto y) {
-                auto const pixel = pixel_colour(x, y);
+                auto const pixel = pixel_colour(red, red, green, blue, x, y);
                 return animray::rgb<uint8_t>(
                         linear_clamp(pixel.red()), linear_clamp(pixel.green()),
                         linear_clamp(pixel.blue()));
@@ -80,12 +89,22 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     animray::targa("mix-linear.tga", linear);
     animray::film<animray::rgb<uint8_t>> non_linear{
             width, height, [](auto x, auto y) {
-                auto const pixel = pixel_colour(x, y);
+                auto const pixel = pixel_colour(red, red, green, blue, x, y);
                 return animray::rgb<uint8_t>(
-                        non_linear_clamp(pixel.red()),
-                        non_linear_clamp(pixel.green()),
-                        non_linear_clamp(pixel.blue()));
+                        non_linear_clamp(pixel.red(), 255),
+                        non_linear_clamp(pixel.green(), 255),
+                        non_linear_clamp(pixel.blue(), 255));
             }};
     animray::targa("mix-non_linear.tga", non_linear);
+    animray::film<animray::rgb<uint8_t>> hsl{
+            width, height, [](auto x, auto y) {
+                auto const pixel = fostlib::coerce<colour>(
+                        pixel_colour(hred1, hred2, hgreen, hblue, x, y));
+                return animray::rgb<uint8_t>(
+                        non_linear_clamp(pixel.red(), 1),
+                        non_linear_clamp(pixel.green(), 1),
+                        non_linear_clamp(pixel.blue(), 1));
+            }};
+    animray::targa("mix-hsl.tga", hsl);
     return 0;
 }
