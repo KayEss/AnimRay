@@ -48,7 +48,7 @@ namespace {
 }
 
 
-FSL_MAIN("triangle", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     animray::film<animray::rgb<uint8_t>> image{
             width, height, [](auto x, auto y) {
@@ -59,6 +59,6 @@ FSL_MAIN("triangle", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                         quantise(pixel.red()), quantise(pixel.green()),
                         quantise(pixel.blue()));
             }};
-    animray::targa("triangle-linear.tga", image);
+    animray::targa("mix-linear.tga", image);
     return 0;
 }

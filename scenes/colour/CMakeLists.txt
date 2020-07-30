@@ -5,4 +5,4 @@ function(scene name)
     add_custom_command(TARGET ${name} POST_BUILD COMMAND ${name})
 endfunction()
 
-scene(triangle)
+scene(mix)
