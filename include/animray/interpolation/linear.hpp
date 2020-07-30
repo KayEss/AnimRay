@@ -31,12 +31,11 @@ namespace animray::interpolation {
 
     /// Linear interpolation
     template<typename S, typename T>
-    S linear(const S end, const T time, const T outof) {
-        const S perunit(end / outof);
-        return perunit * time;
+    auto linear(const S end, const T time, const T outof) {
+        return end * time / outof;
     }
     template<typename S, boost::int64_t P>
-    S linear(
+    auto linear(
             const S end,
             const boost::date_time::
                     subsecond_duration<boost::posix_time::time_duration, P> time,
@@ -50,7 +49,7 @@ namespace animray::interpolation {
 
     /// Linear interpolator
     template<typename S, typename T>
-    S linear(const S start, const S end, const T time, const T outof) {
+    auto linear(const S start, const S end, const T time, const T outof) {
         return start + linear(end - start, time, outof);
     }
 
