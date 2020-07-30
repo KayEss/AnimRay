@@ -26,10 +26,10 @@
 
 
 namespace {
+
+    constexpr std::size_t const width = 900, height = 900;
+
     using colour = animray::rgb<float>;
-
-    constexpr std::size_t const width = 1920, height = 1080;
-
     constexpr auto const red = colour{255, 0, 0};
     constexpr auto const green = colour{0, 255, 0};
     constexpr auto const blue = colour{0, 0, 255};
