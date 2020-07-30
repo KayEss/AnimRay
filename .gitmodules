@@ -13,3 +13,6 @@
 [submodule "makham"]
 	path = makham
 	url = git@github.com:hotkit/makham.git
+[submodule "animray"]
+	path = animray
+	url = git@github.com:KayEss/libanimray.git
