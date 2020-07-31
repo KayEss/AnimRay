@@ -20,6 +20,7 @@
 
 #include <fost/main>
 #include <animray/color/hsl.hpp>
+#include <animray/color/yuv.hpp>
 #include <animray/interpolation/linear.hpp>
 #include <animray/targa.hpp>
 #include <algorithm>
@@ -72,12 +73,14 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     /// ## RGB
     using colour = animray::rgb<float>;
     constexpr auto const red = colour{255, 0, 0};
+    constexpr auto const magenta = colour{255, 0, 255};
     constexpr auto const green = colour{0, 255, 0};
     constexpr auto const blue = colour{0, 0, 255};
 
     animray::film<animray::rgb<uint8_t>> linear{
             width, height, [&](auto x, auto y) {
-                auto const pixel = pixel_colour(red, red, green, blue, x, y);
+                auto const pixel =
+                        pixel_colour(red, magenta, green, blue, x, y);
                 return animray::rgb<uint8_t>(
                         linear_clamp(pixel.red()), linear_clamp(pixel.green()),
                         linear_clamp(pixel.blue()));
@@ -86,7 +89,8 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     animray::film<animray::rgb<uint8_t>> non_linear{
             width, height, [&](auto x, auto y) {
-                auto const pixel = pixel_colour(red, red, green, blue, x, y);
+                auto const pixel =
+                        pixel_colour(red, magenta, green, blue, x, y);
                 return animray::rgb<uint8_t>(
                         non_linear_clamp(pixel.red(), 255),
                         non_linear_clamp(pixel.green(), 255),
@@ -96,20 +100,39 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     /// ## HSL
     using hslc = animray::hsl<float>;
-    constexpr auto const hred1 = hslc{0.0f, 1.0f, 0.5f};
-    constexpr auto const hred2 = hslc{360.0f, 1.0f, 0.5f};
+    constexpr auto const hred = hslc{0.0f, 1.0f, 0.5f};
+    constexpr auto const hmagenta = hslc{300.0f, 1.0f, 0.5f};
     constexpr auto const hgreen = hslc{120.0f, 1.0f, 0.5f};
     constexpr auto const hblue = hslc{240.0f, 1.0f, 0.5f};
 
     animray::film<animray::rgb<uint8_t>> hsl{
             width, height, [&](auto x, auto y) {
                 auto const pixel = fostlib::coerce<colour>(
-                        pixel_colour(hred1, hred2, hgreen, hblue, x, y));
+                        pixel_colour(hred, hmagenta, hgreen, hblue, x, y));
                 return animray::rgb<uint8_t>(
                         non_linear_clamp(pixel.red(), 1),
                         non_linear_clamp(pixel.green(), 1),
                         non_linear_clamp(pixel.blue(), 1));
             }};
     animray::targa("mix-hsl.tga", hsl);
+
+    /// YUV
+    using yuvc = animray::yuv<float>;
+    constexpr auto const yred = yuvc{0.0f, -0.5f, 0.5f};
+    constexpr auto const ymagenta = yuvc{0.0f, 0.5f, 0.5f};
+    constexpr auto const ygreen = yuvc{0.0f, -0.5f, -0.5f};
+    constexpr auto const yblue = yuvc{0.0f, 0.5f, -0.5f};
+
+    animray::film<animray::rgb<uint8_t>> yuv{
+            width, height, [&](auto x, auto y) {
+                auto const pixel = fostlib::coerce<colour>(
+                        pixel_colour(yred, ymagenta, ygreen, yblue, x, y));
+                return animray::rgb<uint8_t>(
+                        non_linear_clamp(pixel.red(), 1),
+                        non_linear_clamp(pixel.green(), 1),
+                        non_linear_clamp(pixel.blue(), 1));
+            }};
+    animray::targa("mix-yuv.tga", yuv);
+
     return 0;
 }
