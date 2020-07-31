@@ -23,7 +23,7 @@
 #pragma once
 
 
-#include <animray/detail/array_based.hpp>
+#include <animray/color/rgb.hpp>
 
 
 namespace animray {
@@ -48,16 +48,18 @@ namespace animray {
         using superclass::print_on;
 
         /// Default construct an HLS colour with all channels at zero
-        hsl() = default;
+        constexpr hsl() noexcept = default;
         /// Construct an HLS colour with the specified channel values
-        hsl(value_type h, value_type s, value_type l) {
+        constexpr hsl(value_type h, value_type s, value_type l) noexcept {
             superclass::array[0] = h;
             superclass::array[1] = s;
             superclass::array[2] = l;
         }
 
         /// Return the channel values
-        const array_type &array() const { return superclass::array; }
+        constexpr const array_type &array() const noexcept {
+            return superclass::array;
+        }
 
         /// Compare for equality
         bool operator==(hsl const &r) const {
@@ -73,9 +75,6 @@ namespace animray {
 }
 
 
-#include <animray/color/rgb.hpp>
-
-
 namespace fostlib {
 
 
@@ -84,7 +83,7 @@ namespace fostlib {
     struct coercer<
             animray::rgb<D>,
             animray::hsl<D>,
-            typename boost::enable_if<boost::is_floating_point<D>>::type> {
+            std::enable_if_t<std::is_floating_point_v<D>>> {
         /// Performs the coercion
         animray::rgb<D> coerce(animray::hsl<D> const &hsl) {
             const D h = hsl.array()[0], s = hsl.array()[1], l = hsl.array()[2];
