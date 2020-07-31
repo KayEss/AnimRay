@@ -29,17 +29,6 @@ namespace {
 
     constexpr std::size_t const width = 900, height = 900;
 
-    using colour = animray::rgb<float>;
-    constexpr auto const red = colour{255, 0, 0};
-    constexpr auto const green = colour{0, 255, 0};
-    constexpr auto const blue = colour{0, 0, 255};
-
-    using hsl = animray::hsl<float>;
-    auto const hred1 = hsl{0.0f, 1.0f, 0.5f};
-    auto const hred2 = hsl{360.0f, 1.0f, 0.5f};
-    auto const hgreen = hsl{120.0f, 1.0f, 0.5f};
-    auto const hblue = hsl{240.0f, 1.0f, 0.5f};
-
     template<typename C>
     auto lerp(C start, C end, std::size_t pos, std::size_t limit) {
         return C(
@@ -79,16 +68,24 @@ namespace {
 
 FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
+
+    /// ## RGB
+    using colour = animray::rgb<float>;
+    constexpr auto const red = colour{255, 0, 0};
+    constexpr auto const green = colour{0, 255, 0};
+    constexpr auto const blue = colour{0, 0, 255};
+
     animray::film<animray::rgb<uint8_t>> linear{
-            width, height, [](auto x, auto y) {
+            width, height, [&](auto x, auto y) {
                 auto const pixel = pixel_colour(red, red, green, blue, x, y);
                 return animray::rgb<uint8_t>(
                         linear_clamp(pixel.red()), linear_clamp(pixel.green()),
                         linear_clamp(pixel.blue()));
             }};
     animray::targa("mix-linear.tga", linear);
+
     animray::film<animray::rgb<uint8_t>> non_linear{
-            width, height, [](auto x, auto y) {
+            width, height, [&](auto x, auto y) {
                 auto const pixel = pixel_colour(red, red, green, blue, x, y);
                 return animray::rgb<uint8_t>(
                         non_linear_clamp(pixel.red(), 255),
@@ -96,8 +93,16 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                         non_linear_clamp(pixel.blue(), 255));
             }};
     animray::targa("mix-non_linear.tga", non_linear);
+
+    /// ## HSL
+    using hslc = animray::hsl<float>;
+    constexpr auto const hred1 = hslc{0.0f, 1.0f, 0.5f};
+    constexpr auto const hred2 = hslc{360.0f, 1.0f, 0.5f};
+    constexpr auto const hgreen = hslc{120.0f, 1.0f, 0.5f};
+    constexpr auto const hblue = hslc{240.0f, 1.0f, 0.5f};
+
     animray::film<animray::rgb<uint8_t>> hsl{
-            width, height, [](auto x, auto y) {
+            width, height, [&](auto x, auto y) {
                 auto const pixel = fostlib::coerce<colour>(
                         pixel_colour(hred1, hred2, hgreen, hblue, x, y));
                 return animray::rgb<uint8_t>(
