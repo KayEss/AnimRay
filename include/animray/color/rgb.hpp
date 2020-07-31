@@ -25,8 +25,6 @@
 
 #include <animray/detail/array_based.hpp>
 
-#include <fost/test>
-
 
 namespace animray {
 

@@ -22,6 +22,8 @@
 
 #include <animray/color/concept.hpp>
 
+#include <fost/test>
+
 
 FSL_TEST_SUITE(rgb);
 
