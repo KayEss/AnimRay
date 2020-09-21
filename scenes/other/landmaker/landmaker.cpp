@@ -66,8 +66,8 @@ namespace {
 
 FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2019 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
-    fostlib::fs::path output_filename =
-            fostlib::coerce<fostlib::fs::path>(args[1].value_or("out.tga"));
+    auto const output_filename =
+            fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));
     int width = fostlib::coerce<int>(args[2].value_or("100"));
     int height = fostlib::coerce<int>(args[3].value_or("100"));
 

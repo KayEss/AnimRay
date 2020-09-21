@@ -37,7 +37,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const int width = fostlib::coerce<int>(args[1].value_or("300"));
     const int height = fostlib::coerce<int>(args[2].value_or("200"));
-    auto output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto output_filename = fostlib::coerce<std::filesystem::path>(
             args[3].value_or("five-spheres-coloured-lights.tga"));
 
     const double aspect = double(width) / height;

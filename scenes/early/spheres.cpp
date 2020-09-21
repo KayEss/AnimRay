@@ -56,8 +56,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     const int width = fostlib::coerce<int>(args[1].value_or("96"));
     const int height = fostlib::coerce<int>(args[2].value_or("54"));
-    auto const output_filename =
-            fostlib::coerce<fostlib::fs::path>(args[3].value_or("spheres.tga"));
+    auto const output_filename = fostlib::coerce<std::filesystem::path>(
+            args[3].value_or("spheres.tga"));
 
     typedef double world;
     const world aspect = double(width) / height;

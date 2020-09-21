@@ -63,7 +63,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     const int width = fostlib::coerce<int>(args[1].value_or("36"));
     const int height = fostlib::coerce<int>(args[2].value_or("27"));
-    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[3].value_or("spheres-animated.tga"));
 
     typedef double world;
@@ -220,7 +220,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
                 },
                 [](const fostlib::meter::reading &) { return "["; });
         auto filename = output_filename;
-        filename.replace_extension(fostlib::coerce<fostlib::fs::path>(
+        filename.replace_extension(fostlib::coerce<std::filesystem::path>(
                 fostlib::coerce<fostlib::string>(frame) + ".tga"));
         animray::targa(filename, result());
     }

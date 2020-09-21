@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -40,9 +40,9 @@ namespace animray {
 
     /// Save a film as a Targa file
     template<typename C, typename E>
-    void targa(const fostlib::fs::path &filename, const film<C, E> &image) {
+    void targa(std::filesystem::path const &filename, const film<C, E> &image) {
         detail::targa_saver<C, E> saver;
-        fostlib::fs::ofstream file(filename, std::ios::binary);
+        std::ofstream file(filename, std::ios::binary);
         // Header
         file.put(0); // 0 identsize
         file.put(0); // Has no colour map

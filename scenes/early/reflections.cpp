@@ -53,7 +53,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 
     const int width = fostlib::coerce<int>(args[1].value_or("100"));
     const int height = fostlib::coerce<int>(args[2].value_or("150"));
-    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[3].value_or("reflections.tga"));
 
     typedef double world;

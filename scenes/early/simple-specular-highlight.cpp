@@ -40,7 +40,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const int width = fostlib::coerce<int>(args[1].value_or("600"));
     const int height = fostlib::coerce<int>(args[2].value_or("400"));
-    auto const output_filename = fostlib::coerce<fostlib::fs::path>(
+    auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[3].value_or("simple-specular-highlight.tga"));
 
     typedef double world;

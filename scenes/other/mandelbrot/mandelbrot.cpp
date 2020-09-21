@@ -29,7 +29,7 @@
 FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     auto const output_filename =
-            fostlib::coerce<fostlib::fs::path>(args[1].value_or("out.tga"));
+            fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));
     int width = fostlib::coerce<int>(args[2].value_or("100"));
     int height = fostlib::coerce<int>(args[3].value_or("100"));
     out << "Creating image " << output_filename << ", size " << width << " x "
