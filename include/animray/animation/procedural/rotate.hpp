@@ -26,6 +26,8 @@
 #include <animray/animation/animate.hpp>
 #include <animray/interpolation/linear.hpp>
 
+#include <cmath>
+
 
 namespace animray::animation {
 

@@ -23,9 +23,6 @@
 #pragma once
 
 
-#include <fost/datetime>
-
-
 namespace animray::interpolation {
 
 
@@ -34,19 +31,6 @@ namespace animray::interpolation {
     auto linear(const S end, const T time, const T outof) {
         return end * time / outof;
     }
-    template<typename S, boost::int64_t P>
-    auto linear(
-            const S end,
-            const boost::date_time::
-                    subsecond_duration<boost::posix_time::time_duration, P> time,
-            const boost::date_time::subsecond_duration<
-                    boost::posix_time::time_duration,
-                    P> outof) {
-        const S perunit(end * P / outof.ticks());
-        return perunit * time.ticks() / P;
-    }
-
-
     /// Linear interpolator
     template<typename S, typename T>
     auto linear(const S start, const S end, const T time, const T outof) {
