@@ -16,7 +16,6 @@ add_library(animray-smoke-test
         maths-cross-tests.cpp
         maths-matrix-tests.cpp
         maths-prime-tests.cpp
-        mixins-tests.cpp
         point2d-tests.cpp
         point3d-tests.cpp
         ray-tests.cpp
@@ -27,3 +26,6 @@ add_library(animray-smoke-test
 target_link_libraries(animray-smoke-test fost-test animray)
 smoke_test(animray-smoke-test)
 
+add_test_run(check animray fost-core TESTS
+        mixins-tests.cpp
+    )

@@ -32,11 +32,8 @@ namespace animray {
 
 
     namespace detail {
-        class at_time {
-          public:
-            at_time() : time(2010, 10, 10, 10, 0, 0) {}
-
-            fostlib::timestamp time;
+        struct at_time {
+            std::chrono::system_clock::time_point time = {};
         };
     }
 
