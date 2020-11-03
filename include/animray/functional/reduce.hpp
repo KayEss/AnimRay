@@ -45,7 +45,7 @@ namespace animray {
             typename F,
             typename... P,
             typename = typename std::enable_if<is_callable<F>::value>::type>
-    decltype(auto) reduce(const F &f, const P &... ps) {
+    decltype(auto) reduce(const F &f, const P &...ps) {
         return f(ps...);
     }
 

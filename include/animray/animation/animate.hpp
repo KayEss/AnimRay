@@ -41,7 +41,7 @@ namespace animray {
 
         /// Pass on constructor arguments
         template<typename... A>
-        animatable(A &&... a) : starting_value(std::forward<A>(a)...) {}
+        animatable(A &&...a) : starting_value(std::forward<A>(a)...) {}
 
         /// Return the value
         template<typename T>
@@ -57,7 +57,7 @@ namespace animray {
       public:
         /// Pass constructor arguments to superclass
         template<typename... A>
-        animate(A &&... args) : T(std::forward<A>(args)...) {}
+        animate(A &&...args) : T(std::forward<A>(args)...) {}
 
         /// Strip the frame out of the ray type
         template<typename R>

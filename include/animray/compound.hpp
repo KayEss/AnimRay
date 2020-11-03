@@ -108,7 +108,7 @@ namespace animray {
                     std::optional<local_coord_type>,
                     std::optional<intersection_type>>;
             return std::apply(
-                           [&by, epsilon](const auto &... geom) {
+                           [&by, epsilon](const auto &...geom) {
                                auto const dot = [&](auto i) -> mid_type {
                                    if (i) {
                                        return mid_type{
@@ -140,7 +140,7 @@ namespace animray {
         template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
             return std::apply(
-                    [&by, epsilon](const auto &... geom) -> bool {
+                    [&by, epsilon](const auto &...geom) -> bool {
                         return (geom.occludes(by, epsilon) || ...);
                     },
                     instances);

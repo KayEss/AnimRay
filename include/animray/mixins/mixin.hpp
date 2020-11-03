@@ -47,7 +47,7 @@ namespace animray {
 
         /// Construct by forwarding all arguments to both bases
         template<typename... A>
-        explicit mixin(A &&... args) : R{args...}, M{args...} {}
+        explicit mixin(A &&...args) : R{args...}, M{args...} {}
 
         /// These operations always go to `R` because that is where geometry
         /// etc. lives.

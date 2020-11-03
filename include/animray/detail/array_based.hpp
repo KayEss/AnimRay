@@ -48,7 +48,7 @@ namespace animray {
     }
 
     template<typename D = void, typename... Types>
-    constexpr details::return_type<D, Types...> make_array(Types &&... t) {
+    constexpr details::return_type<D, Types...> make_array(Types &&...t) {
         return {typename details::return_type_helper<D, Types...>::type{
                 std::forward<Types>(t)}...};
     }

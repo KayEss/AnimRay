@@ -83,7 +83,7 @@ namespace animray {
 
         /// Allow the underlying instance to be constructed
         template<typename... A>
-        explicit movable(A &&... args) : instance(std::forward<A>(args)...) {}
+        explicit movable(A &&...args) : instance(std::forward<A>(args)...) {}
 
         /// Apply a transformation
         movable &operator()(const transform_type &t) {

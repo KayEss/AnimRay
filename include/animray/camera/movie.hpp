@@ -51,7 +51,7 @@ namespace animray {
 
         /// Construct by passing all parameters to the contained camera
         template<typename... A>
-        explicit stacatto_movie(A &&... args)
+        explicit stacatto_movie(A &&...args)
         : frame_camera(std::forward<A>(args)...) {}
 
         /// Allow the instance to be used as a camera
@@ -91,7 +91,7 @@ namespace animray {
 
         /// Construct by passing all parameters to the contained camera
         template<typename... A>
-        explicit movie(A &&... args)
+        explicit movie(A &&...args)
         : shutter{T{1}}, frame_camera{std::forward<A>(args)...} {}
 
         /// Allow the instance to be used as a camera

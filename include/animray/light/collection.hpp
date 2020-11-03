@@ -117,7 +117,7 @@ namespace animray {
         color_type operator()(
                 const O &observer, const R &intersection, const G &scene) const {
             return std::apply(
-                    [&](auto &&... light) -> color_type {
+                    [&](auto &&...light) -> color_type {
                         return (light(observer, intersection, scene) + ...);
                     },
                     static_cast<tuple_type const &>(*this));
