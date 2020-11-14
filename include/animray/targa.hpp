@@ -27,6 +27,8 @@
 #include <animray/color/luma.hpp>
 #include <animray/color/rgb.hpp>
 
+#include <fstream>
+
 
 namespace animray {
 
