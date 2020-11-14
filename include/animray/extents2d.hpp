@@ -31,13 +31,13 @@ namespace animray {
 
     /// The size for integral types -- includes both values in the range
     template<typename S>
-    inline typename boost::enable_if<boost::is_integral<S>, S>::type
+    inline typename std::enable_if<std::is_integral_v<S>, S>::type
             size(S min, S max) {
         return max - min + 1;
     }
     /// The size for continuous types
     template<typename S>
-    inline typename boost::enable_if<boost::is_floating_point<S>, S>::type
+    inline typename std::enable_if<std::is_floating_point_v<S>, S>::type
             size(S min, S max) {
         return max - min;
     }
