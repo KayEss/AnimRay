@@ -38,7 +38,7 @@ FSL_TEST_SUITE(animation_procedural);
 
 FSL_TEST_FUNCTION(constant) {
     ray_type ray;
-    FSL_CHECK_EQ(ray.frame, 0);
+    FSL_CHECK_EQ(ray.frame, 0u);
     FSL_CHECK_EQ(animray::reduce(0, ray), 0);
 }
 
@@ -51,7 +51,7 @@ FSL_TEST_FUNCTION(linear_frames_boost_function) {
     ray_type ray;
     FSL_CHECK_EQ(animray::reduce(f, ray), 5);
     ray.frame = 10;
-    FSL_CHECK_EQ(ray.frame, 10);
+    FSL_CHECK_EQ(ray.frame, 10u);
     FSL_CHECK_EQ(animray::reduce(f, ray), 15);
 }
 

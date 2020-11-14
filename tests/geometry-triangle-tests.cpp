@@ -123,9 +123,6 @@ FSL_TEST_FUNCTION(full_scene) {
     scene_type scene;
     scene.background = animray::rgb<float>(20, 70, 100);
 
-    animray::point3d<world> top(0, 0, 1), bottom(0, 0, -1), north(1, 0, 0),
-            south(-1, 0, 0), east(1, 0, 0), west(-1, 0, 0);
-
     scene.geometry.insert(triangle(
             animray::point3d<double>(0, 5, 0),
             animray::point3d<double>(-5, -5, 0),

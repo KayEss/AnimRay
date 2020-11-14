@@ -71,7 +71,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_real_distribution<world> x_position(-20, 20),
             y_position(-20, 20);
-    for (auto count = 0; count != spheres; ++count) {
+    for (std::size_t count{}; count != spheres; ++count) {
         animray::translate<world> location(
                 x_position(generator), y_position(generator), 0.0);
         animray::unit_sphere<animray::point3d<world>> s;
@@ -108,7 +108,6 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     animray::scene scene{
             std::move(geometry), animray::library::lights::wide_block<world>,
             animray::rgb<float>(20, 70, 100)};
-    using scene_type = decltype(scene);
 
     animray::movable<
             animray::pinhole_camera<

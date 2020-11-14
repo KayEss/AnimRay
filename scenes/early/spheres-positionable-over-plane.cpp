@@ -45,7 +45,7 @@
 #include <thread>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     const std::size_t threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
@@ -101,7 +101,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
     std::uniform_int_distribution<int> surface(1, 2);
     std::uniform_real_distribution<world> hue(0, 360), x_position(-20, 20),
             y_position(-20, 20);
-    for (auto count = 0; count != spheres; ++count) {
+    for (std::size_t count{}; count != spheres; ++count) {
         animray::hsl<float> hsl_colour(hue(generator), 1.0f, 0.5f);
         auto colour(fostlib::coerce<animray::rgb<float>>(hsl_colour));
         animray::translate<world> location(

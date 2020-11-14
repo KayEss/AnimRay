@@ -29,8 +29,8 @@
 #include <animray/affine.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2018 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+(fostlib::ostream &, fostlib::arguments &args) {
     int width = fostlib::coerce<int>(args[1].value_or("1920"));
     int height = fostlib::coerce<int>(args[2].value_or("1080"));
     auto const output_filename = fostlib::coerce<std::filesystem::path>(

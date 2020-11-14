@@ -24,8 +24,8 @@
 #include <animray/targa.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2019 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+(fostlib::ostream &, fostlib::arguments &args) {
     auto const width = fostlib::coerce<std::size_t>(
             fostlib::coerce<int>(args[1].value_or("1920")));
     auto const height = fostlib::coerce<std::size_t>(

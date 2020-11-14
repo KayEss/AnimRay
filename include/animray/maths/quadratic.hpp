@@ -32,7 +32,7 @@ namespace animray {
 
     /// Returns true if the quadratic has real solutions within the provided range
     template<typename D>
-    bool quadratic_has_solution(const D a, const D b, const D c, const D range) {
+    bool quadratic_has_solution(D const, D const b, D const c, D const range) {
         const D discriminant = b * b - D(4) * c;
         if (discriminant < D(0)) return false;
         const D disc_root = std::sqrt(discriminant);
@@ -46,8 +46,8 @@ namespace animray {
     /// the range
     template<typename D>
     std::optional<D> first_positive_quadratic_solution(
-            const D a, const D b, const D c, const D range) {
-        const D discrim = b * b - D{4} * a * c;
+            D const a, D const b, D const c, D const range) {
+        D const discrim = b * b - D{4} * a * c;
         if (discrim < D{}) { return {}; }
         using S = decltype(std::sqrt(discrim));
         S const root_discrim(std::sqrt(discrim));

@@ -68,7 +68,7 @@ namespace {
 
 
 FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
+(fostlib::ostream &, fostlib::arguments &) {
 
     /// ## RGB
     using colour = animray::rgb<float>;
