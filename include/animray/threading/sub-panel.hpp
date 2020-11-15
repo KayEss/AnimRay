@@ -76,7 +76,7 @@ namespace animray::threading {
         std::vector<fostlib::worker> thread_pool(threads);
         std::size_t worker{};
 
-        calculation_type panels(
+        calculation_type panels{
                 panels_x, panels_y,
                 [&thread_pool, &worker, &fn, px, py, threads, &progress](
                         const typename panel_type::size_type pr,
@@ -91,7 +91,7 @@ namespace animray::threading {
                                     });
                     worker = (worker + 1) % threads;
                     return result;
-                });
+                }};
 
         return film_type(
                 width, height,
