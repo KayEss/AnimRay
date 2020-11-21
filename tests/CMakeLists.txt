@@ -1,4 +1,4 @@
-add_library(animray-smoke-test
+add_test_run(check animray fost-core TESTS
         animation-animate-tests.cpp
         animation-procedural-tests.cpp
         camera-movie-tests.cpp
@@ -16,16 +16,11 @@ add_library(animray-smoke-test
         maths-cross-tests.cpp
         maths-matrix-tests.cpp
         maths-prime-tests.cpp
+        mixins-tests.cpp
         point2d-tests.cpp
         point3d-tests.cpp
         ray-tests.cpp
         surface-tests.cpp
         texture-tests.cpp
         unit-vector-tests.cpp
-    )
-target_link_libraries(animray-smoke-test fost-test animray)
-smoke_test(animray-smoke-test)
-
-add_test_run(check animray fost-core TESTS
-        mixins-tests.cpp
     )

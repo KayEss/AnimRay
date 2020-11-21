@@ -153,7 +153,7 @@ FSL_TEST_FUNCTION(full_scene) {
     camera(animray::translate<world>(0.0, 0.0, -8.0));
 
     animray::rgb<float> c(scene(camera, 170, 95));
-    FSL_CHECK_ERROR(c.red(), 213.445, 1e-2);
-    FSL_CHECK_ERROR(c.green(), 214.031, 1e-2);
-    FSL_CHECK_ERROR(c.blue(), 216.171, 1e-2);
+    FSL_CHECK_ERROR(c.red(), 213, 1);
+    FSL_CHECK_ERROR(c.green(), 213, 1);
+    FSL_CHECK_ERROR(c.blue(), 216, 1);
 }
