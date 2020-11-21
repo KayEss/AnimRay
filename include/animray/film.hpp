@@ -45,31 +45,38 @@ namespace animray {
         /// The type of a single column of image data
         using column_type = std::vector<color_type>;
 
-
         /// Default constructor
         film() = default;
 
         /// Construct an empty targa of the given size
         film(size_type width, size_type height, const C &colour = C())
         : columns(width, column_type(height, colour)) {
-            if (width < 1)
-                throw fostlib::exceptions::out_of_range<E>(
-                        1, std::numeric_limits<E>::max(), width);
-            if (height < 1)
-                throw fostlib::exceptions::out_of_range<E>(
-                        1, std::numeric_limits<E>::max(), height);
+            check_width_height(width, height);
         }
 
         /// Construct a film of a given size with a lambda telling us which
         /// colors to use
         film(size_type width,
              size_type height,
-             std::function<color_type(size_type, size_type)> fn,
-             const C &colour = C())
-        : film(width, height, colour) {
-            for (size_type c = 0; c < width; ++c) {
+             std::function<color_type(size_type, size_type)> fn) {
+            check_width_height(width, height);
+            for (size_type c{}; c < width; ++c) {
+                columns.emplace_back();
+                column_type &col = columns.back();
+                for (size_type r{}; r < height; ++r) {
+                    col.push_back(fn(c, r));
+                }
+            }
+        }
+        film(size_type width,
+             size_type height,
+             std::function<color_type(size_type, size_type)>
+                     fn) requires std::is_copy_constructible_v<C> :
+        film{width, height} {
+            check_width_height(width, height);
+            for (size_type c{}; c < width; ++c) {
                 column_type &col = columns[c];
-                for (size_type r = 0; r < height; ++r) { col[r] = fn(c, r); }
+                for (size_type r{}; r < height; ++r) { col[r] = fn(c, r); }
             }
         }
 
@@ -83,9 +90,11 @@ namespace animray {
         }
 
         /// Return a mutable row
-        column_type &operator[](size_type c) { return columns[c]; }
+        column_type &operator[](size_type c) { return columns.at(c); }
         /// Return a non-mutable row
-        const column_type &operator[](size_type c) const { return columns[c]; }
+        const column_type &operator[](size_type c) const {
+            return columns.at(c);
+        }
 
         /// Iterate the function across the image rows/columns
         template<typename F>
@@ -106,6 +115,16 @@ namespace animray {
       private:
         using columns_type = std::vector<column_type>;
         columns_type columns;
+        void static check_width_height(size_type width, size_type height) {
+            if (width < 1) {
+                throw fostlib::exceptions::out_of_range<E>{
+                        1, std::numeric_limits<E>::max(), width};
+            }
+            if (height < 1) {
+                throw fostlib::exceptions::out_of_range<E>{
+                        1, std::numeric_limits<E>::max(), height};
+            }
+        }
     };
 
 
