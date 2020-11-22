@@ -21,31 +21,29 @@
 #include <fost/main>
 #include <fost/progress-cli>
 #include <fost/unicode>
+#include <animray/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/cli/progress.hpp>
+#include <animray/color/hsl.hpp>
+#include <animray/compound.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
-#include <animray/compound.hpp>
+#include <animray/intersection.hpp>
+#include <animray/light/ambient.hpp>
+#include <animray/light/collection.hpp>
+#include <animray/light/point.hpp>
 #include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
-#include <animray/intersection.hpp>
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
 #include <animray/surface/gloss.hpp>
 #include <animray/surface/reflective.hpp>
-#include <animray/light/ambient.hpp>
-#include <animray/light/collection.hpp>
-#include <animray/light/point.hpp>
-#include <animray/targa.hpp>
-#include <animray/affine.hpp>
-#include <animray/threading/sub-panel.hpp>
-#include <animray/color/hsl.hpp>
-#include <thread>
 
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
+(fostlib::ostream &, fostlib::arguments &args) {
     const std::size_t threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
                     .value_or(std::thread::hardware_concurrency()));
@@ -144,52 +142,21 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     using film_type = animray::film<animray::rgb<uint8_t>>;
 
-    fostlib::meter tracking;
-    std::promise<film_type> promise;
-    auto result = promise.get_future();
-    std::thread{[threads, samples, width, height, &scene, &camera,
-                 promise = std::move(promise)]() mutable {
-        promise.set_value(animray::threading::sub_panel<film_type>(
-                threads, width, height,
-                [samples, &scene, &camera](
-                        const film_type::size_type x,
-                        const film_type::size_type y) {
-                    animray::rgb<float> photons;
-                    for (std::size_t sample{}; sample != samples; ++sample) {
-                        photons += scene(camera, x, y) /= samples;
-                    }
-                    const float exposure = 1.4f;
-                    photons /= exposure;
-                    return animray::rgb<uint8_t>(
-                            uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                            uint8_t(photons.green() > 255 ? 255
-                                                          : photons.green()),
-                            uint8_t(photons.blue() > 255 ? 255
-                                                         : photons.blue()));
-                }));
-    }}.detach();
-    fostlib::cli::monitor(
-            out, tracking, result,
-            [](const fostlib::meter::reading &current) {
-                fostlib::stringstream out;
-                out << "] " << current.done() << "/"
-                    << current.work().value_or(0);
-                if (current.meta().size() && not current.meta()[0].isnull()) {
-                    fostlib::json meta(current.meta()[0]);
-                    out << " ("
-                        << fostlib::json::unparse(meta["panels"]["x"], false)
-                        << "x"
-                        << fostlib::json::unparse(meta["panels"]["y"], false)
-                        << " of size "
-                        << fostlib::json::unparse(meta["size"]["x"], false)
-                        << "x"
-                        << fostlib::json::unparse(meta["size"]["y"], false)
-                        << ")";
+    animray::cli_render<film_type>(
+            output_filename, threads, width, height,
+            [samples, &scene, &camera](
+                    const film_type::size_type x, const film_type::size_type y) {
+                animray::rgb<float> photons;
+                for (std::size_t sample{}; sample != samples; ++sample) {
+                    photons += scene(camera, x, y) /= samples;
                 }
-                return out.str();
-            },
-            [](const fostlib::meter::reading &) { return "["; });
-    animray::targa(output_filename, result.get());
+                const float exposure = 1.4f;
+                photons /= exposure;
+                return animray::rgb<uint8_t>(
+                        uint8_t(photons.red() > 255 ? 255 : photons.red()),
+                        uint8_t(photons.green() > 255 ? 255 : photons.green()),
+                        uint8_t(photons.blue() > 255 ? 255 : photons.blue()));
+            });
 
     return 0;
 }
