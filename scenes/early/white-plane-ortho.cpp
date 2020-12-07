@@ -29,10 +29,10 @@
 
 FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
-    int width = fostlib::coerce<int>(args[1].value_or("1920"));
-    int height = fostlib::coerce<int>(args[2].value_or("1080"));
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[3].value_or("white-plane-ortho.tga"));
+            args[1].value_or("white-plane-ortho.tga"));
+    int width = fostlib::coerce<int>(args[2].value_or("1920"));
+    int height = fostlib::coerce<int>(args[3].value_or("1080"));
 
     const double size = 20.0;
     const double aspect = double(width) / height;

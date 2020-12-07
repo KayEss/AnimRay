@@ -51,10 +51,10 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     double const focal_length{fostlib::coerce<double>(
             args.commandSwitch("focal").value_or("0.05"))};
 
-    const int width = fostlib::coerce<int>(args[1].value_or("150"));
-    const int height = fostlib::coerce<int>(args[2].value_or("100"));
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[3].value_or("spheres-white.tga"));
+            args[1].value_or("spheres-white.tga"));
+    const int width = fostlib::coerce<int>(args[2].value_or("150"));
+    const int height = fostlib::coerce<int>(args[3].value_or("100"));
 
     using world = double;
     const world aspect = double(width) / height;
