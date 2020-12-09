@@ -24,6 +24,7 @@
 #include <animray/interpolation/linear.hpp>
 #include <animray/targa.hpp>
 #include <algorithm>
+#include <cmath>
 
 
 namespace {
