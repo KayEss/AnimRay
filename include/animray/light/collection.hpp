@@ -121,7 +121,7 @@ namespace animray {
                         return (light(observer, intersection, scene) + ...);
                     },
                     static_cast<tuple_type const &>(*this));
-        };
+        }
     };
     template<Light L1, Light L2, Light... Ls>
     light(L1, L2, Ls...)

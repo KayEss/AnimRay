@@ -45,7 +45,7 @@ namespace animray {
         using intersection_type = typename O::intersection_type;
 
         collection() = default;
-        ;
+
         explicit constexpr collection(V &&v) noexcept
         : instances{std::move(v)} {}
 

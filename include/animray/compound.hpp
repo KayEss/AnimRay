@@ -134,7 +134,7 @@ namespace animray {
                            },
                            instances)
                     .second;
-        };
+        }
 
         /// Calculate whether this object occludes the ray or not
         template<typename R>
