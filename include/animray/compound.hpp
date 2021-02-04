@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -23,10 +23,10 @@
 #pragma once
 
 
+#include <animray/emission.hpp>
+#include <animray/functional/fold.hpp>
 #include <animray/intersection.hpp>
 #include <animray/shader.hpp>
-#include <animray/emission.hpp>
-#include <animray/maths/fold.hpp>
 
 #include <optional>
 #include <tuple>
