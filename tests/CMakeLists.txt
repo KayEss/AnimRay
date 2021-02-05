@@ -17,6 +17,7 @@ add_test_run(check animray fost-core TESTS
         maths-matrix-tests.cpp
         maths-prime-tests.cpp
         mixins-tests.cpp
+        numeric.tests.cpp
         point2d-tests.cpp
         point3d-tests.cpp
         ray-tests.cpp
