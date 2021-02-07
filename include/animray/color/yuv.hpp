@@ -22,6 +22,7 @@
 
 
 #include <animray/detail/array_based.hpp>
+#include <animray/color/rgb.hpp>
 
 
 namespace animray {

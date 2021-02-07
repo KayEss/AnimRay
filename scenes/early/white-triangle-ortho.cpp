@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,18 +18,18 @@
 */
 
 
+#include <animray/affine.hpp>
+#include <animray/camera/ortho.hpp>
+#include <animray/epsilon.hpp>
+#include <animray/formats/targa.hpp>
+#include <animray/geometry/planar/triangle.hpp>
+#include <animray/movable.hpp>
+#include <animray/ray.hpp>
 #include <fost/main>
 #include <fost/unicode>
-#include <animray/ray.hpp>
-#include <animray/epsilon.hpp>
-#include <animray/camera/ortho.hpp>
-#include <animray/geometry/planar/triangle.hpp>
-#include <animray/targa.hpp>
-#include <animray/movable.hpp>
-#include <animray/affine.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("white-triangle-ortho.tga"));

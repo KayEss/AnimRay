@@ -1,5 +1,5 @@
 /*
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,15 +18,14 @@
 */
 
 
-#include <fost/unicode>
-#include <fost/main>
-#include <fost/coerce/ints.hpp>
 #include <animray/color/hsl.hpp>
-#include <animray/targa.hpp>
+#include <animray/formats/targa.hpp>
 #include <animray/mandelbrot.hpp>
+#include <fost/main>
+#include <fost/unicode>
 
 
-FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     auto const output_filename =
             fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));

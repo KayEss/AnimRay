@@ -50,6 +50,10 @@ namespace animray {
         /// Set the position of the sphere
         position_type position;
 
+        /// Constructors
+        unit_sphere() : position{} {}
+        explicit unit_sphere(position_type p) : position{std::move(p)} {}
+
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>

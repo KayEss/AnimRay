@@ -1,5 +1,5 @@
 /**
-    Copyright 2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2020-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,13 +18,13 @@
 */
 
 
-#include <fost/main>
+#include <algorithm>
 #include <animray/color/hsl.hpp>
 #include <animray/color/yuv.hpp>
+#include <animray/formats/targa.hpp>
 #include <animray/interpolation/linear.hpp>
-#include <animray/targa.hpp>
-#include <algorithm>
 #include <cmath>
+#include <fost/main>
 
 
 namespace {

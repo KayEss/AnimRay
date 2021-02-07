@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,13 +18,13 @@
 */
 
 
+#include <animray/formats/targa.hpp>
+#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <fost/main>
 #include <fost/unicode>
-#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
-#include <animray/targa.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("white-sphere.tga"));

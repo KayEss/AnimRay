@@ -1,5 +1,5 @@
 /**
-    Copyright 2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2020-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -21,8 +21,9 @@
 #pragma once
 
 
-#include <animray/targa.hpp>
+#include <animray/formats/targa.hpp>
 #include <animray/threading/sub-panel.hpp>
+#include <fost/progress-cli>
 
 
 namespace animray {

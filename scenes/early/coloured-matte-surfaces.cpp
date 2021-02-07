@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,22 +18,22 @@
 */
 
 
-#include <fost/main>
-#include <fost/unicode>
-#include <animray/library/lights/block.hpp>
+#include <animray/affine.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/formats/targa.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
-#include <animray/movable.hpp>
 #include <animray/intersection.hpp>
+#include <animray/library/lights/block.hpp>
+#include <animray/movable.hpp>
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
 #include <animray/surface/matte.hpp>
-#include <animray/targa.hpp>
-#include <animray/affine.hpp>
+#include <fost/main>
+#include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("coloured-matte-surfaces.tga"));
