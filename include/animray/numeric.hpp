@@ -60,6 +60,15 @@ namespace animray {
         friend constexpr number operator/(number l, number r) {
             return {l.value / r.value};
         }
+
+        /// Bit manipulation operators
+        constexpr number operator~() const noexcept { return {~value}; }
+        friend constexpr number operator&(number l, number r) {
+            return {l.value & r.value};
+        }
+        friend constexpr number operator|(number l, number r) {
+            return {l.value | r.value};
+        }
     };
 
 
