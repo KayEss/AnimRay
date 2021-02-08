@@ -33,6 +33,12 @@ namespace animray {
       public:
         constexpr number() : value{} {}
         constexpr number(Rep v) : value{v} {}
+        template<typename Other>
+        explicit constexpr number(number<Other, Rep> n)
+        : value{static_cast<Rep>(n)} {}
+
+        using tag_type = Tag;
+        using representation_type = Rep;
 
         /// Access to underlying numeric value
         constexpr explicit operator Rep() const noexcept { return value; }
