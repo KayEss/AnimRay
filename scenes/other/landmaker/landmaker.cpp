@@ -46,16 +46,17 @@ namespace {
     void more_circles(
             animray::random::engine<> &rng,
             const ::circle &within,
-            std::vector<::circle> &circles) {
+            std::vector<::circle> &circles,
+            std::size_t const splits) {
         std::uniform_real_distribution<float> radians(0, 2 * animray::pi),
                 distance(0, within.r);
         float theta{radians(rng.e)}, length{distance(rng.e)};
-        for (auto i = 0; i < 3; ++i) {
-            circle next{
+        for (std::size_t i{}; i != splits; ++i) {
+            circle const next{
                     within.cx + length * std::cos(theta),
                     within.cy + length * std::sin(theta), within.r / 2.f};
             circles.push_back(next);
-            if (within.r > 2.f) { more_circles(rng, next, circles); }
+            if (within.r > 2.f) { more_circles(rng, next, circles, splits); }
         }
     }
 
@@ -67,37 +68,76 @@ FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &out, fostlib::arguments &args) {
     auto const output_filename =
             fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("100"));
-    int height = fostlib::coerce<int>(args[3].value_or("100"));
+    std::size_t const width = fostlib::coerce<int>(args[2].value_or("100"));
+    std::size_t const height = fostlib::coerce<int>(args[3].value_or("100"));
+
+    auto const ccount =
+            fostlib::coerce<std::size_t>(args.commandSwitch("c").value_or("3"));
+    auto const splits =
+            fostlib::coerce<std::size_t>(args.commandSwitch("s").value_or("3"));
+    auto const mag =
+            fostlib::coerce<float>(args.commandSwitch("m").value_or("1"));
+    auto const radius =
+            fostlib::coerce<std::optional<float>>(args.commandSwitch("r"))
+                    .value_or(std::min(width, height) / 4.f);
+
+    auto const format =
+            fostlib::coerce<std::size_t>(args.commandSwitch("f").value_or("0"));
+
+
+    out << "Circle count " << ccount << ", radius " << radius << ", with split "
+        << splits << " and elevation magnification " << mag << std::endl;
 
     animray::random::engine<> rng;
     std::vector<::circle> circles;
-    circle start{width / 2.f, height / 2.f, std::min(width, height) / 4.f};
-    for (auto i = 0; i != 3; ++i) {
-        circles.push_back(start);
-        more_circles(rng, start, circles);
+    circle start{width / 2.f, height / 2.f, radius};
+    circles.push_back(start);
+    for (std::size_t i{}; i != ccount; ++i) {
+        more_circles(rng, start, circles, splits);
     }
 
     out << "Creating image " << output_filename << ", size " << width << " x "
         << height << " using " << circles.size() << " circles" << std::endl;
 
-    double const scale = std::sqrt(0.05 * width * height) / circles.size();
-    using film_type = animray::film<animray::rgb<uint8_t>>;
-    auto output = film_type(
-            width, height,
-            [&circles, scale](film_type::size_type x, film_type::size_type y) {
-                double const weight = scale
-                        * std::count_if(circles.begin(), circles.end(),
-                                        [=](const circle &c) -> bool {
-                                            return c.contains(x, y);
-                                        });
-                animray::hsl<double> h(int(360.0 * weight) % 360, 1.0, 0.5);
-                auto const c = fostlib::coerce<animray::rgb<double>>(h);
-                return animray::rgb<uint8_t>(
-                        c.red() * 255, c.green() * 255, c.blue() * 255);
-            });
+    float const scale = mag * std::sqrt(0.05 * width * height) / circles.size();
+    animray::film<float> const heights{
+            width, height, [&circles, scale](auto const x, auto const y) {
+                auto const count = std::count_if(
+                        circles.begin(), circles.end(),
+                        [=](const circle &c) -> bool {
+                            return c.contains(x, y);
+                        });
+                return std::clamp(scale * count, 0.0f, 1.0f);
+            }};
 
-    animray::targa(output_filename, output);
+    switch (format) {
+    case 0:
+        animray::targa(
+                output_filename,
+                animray::film<animray::rgb<uint8_t>>{
+                        width, height, [&heights](auto const x, auto const y) {
+                            animray::hsl<float> h(
+                                    300.0f * heights[x][y], 1.0f, 0.5f);
+                            auto const c =
+                                    fostlib::coerce<animray::rgb<float>>(h);
+                            return animray::rgb<uint8_t>(
+                                    c.red() * 255, c.green() * 255,
+                                    c.blue() * 255);
+                        }});
+        break;
+    case 1:
+        animray::targa(
+                output_filename,
+                animray::film<animray::luma<uint8_t>>{
+                        width, height, [&heights](auto const x, auto const y) {
+                            return animray::luma<uint8_t>(heights[x][y] * 255);
+                        }});
+        break;
+    default:
+        std::cerr << "Unknown format number " << format << "options are:\n";
+        std::cerr << "0 -- False colour HSL\n";
+        std::cerr << "1 -- Grayscale matte\n";
+    }
 
     return 0;
 }
