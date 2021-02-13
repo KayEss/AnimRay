@@ -58,13 +58,14 @@ namespace animray::threading {
     /// A mechanism whereby the frame is rendered in a number of sub-panels
     template<typename film_type, typename Fn>
     film_type sub_panel(
-            std::size_t const,
+            std::size_t const /*threads*/,
             typename film_type::size_type const width,
             typename film_type::size_type const height,
             Fn fn) {
-        const std::size_t pdiv(detail::bigestodd(detail::gcd(width, height)));
-        const std::size_t px(width / pdiv), py(height / pdiv);
-        const std::size_t panels_x(width / px), panels_y(height / py);
+        std::size_t const pdiv(detail::bigestodd(detail::gcd(width, height)));
+        std::size_t const px(width / pdiv), py(height / pdiv);
+        std::size_t const panels_x(width / px), panels_y(height / py);
+
         fostlib::json description;
         fostlib::insert(description, "panels", "x", panels_x);
         fostlib::insert(description, "panels", "y", panels_y);
@@ -79,11 +80,13 @@ namespace animray::threading {
         calculation_type work{
                 panels_x, panels_y,
                 [&fn, px, py, &progress](auto const pr, auto const pc) {
-                    return std::async([px, py, pr, pc, &fn, &progress]() {
-                        panel_type panel{px, py, px * pr, py * pc, fn};
-                        ++progress;
-                        return panel;
-                    });
+                    return std::async(
+                            std::launch::deferred,
+                            [px, py, pr, pc, &fn, &progress]() {
+                                panel_type panel{px, py, px * pr, py * pc, fn};
+                                ++progress;
+                                return panel;
+                            });
                 }};
 
         auto panels = animray::film<panel_type>{
