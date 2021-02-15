@@ -60,6 +60,7 @@ namespace animray {
         file.put(0); // Y origin
         uint16_t w(fostlib::coerce<uint16_t>(image.width()));
         uint16_t h(fostlib::coerce<uint16_t>(image.height()));
+        /// TODO Don'l rely on endian mode we're running in
         file.write(reinterpret_cast<const char *>(&w), 2);
         file.write(reinterpret_cast<const char *>(&h), 2);
         file.put(saver.bits); // n bit pixels
