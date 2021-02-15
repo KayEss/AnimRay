@@ -44,6 +44,7 @@ namespace animray {
         constexpr explicit operator Rep() const noexcept { return value; }
 
         /// Comparisons
+        constexpr explicit operator bool() const noexcept { return value; }
         friend constexpr auto
                 operator<=>(number const &, number const &) noexcept = default;
 
