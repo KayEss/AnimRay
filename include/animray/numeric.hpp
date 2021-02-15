@@ -49,6 +49,11 @@ namespace animray {
         constexpr explicit operator bool() const noexcept { return value; }
         friend constexpr auto
                 operator<=>(number const &, number const &) noexcept = default;
+        template<typename O>
+        friend constexpr inline auto
+                operator<=>(number const &l, number<O, Rep> const &r) noexcept {
+            return l <=> static_cast<Rep>(r);
+        }
 
         /// Numeric operators
         friend constexpr number operator+(number l, number r) {
