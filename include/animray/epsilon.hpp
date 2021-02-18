@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -36,7 +36,7 @@ namespace animray {
 
     /// Specialisation for floats
     template<>
-    constexpr inline float epsilon<float> = 1e-6f;
+    constexpr inline float epsilon<float> = 1e-5f;
 
     /// Specialisation for doubles
     template<>
