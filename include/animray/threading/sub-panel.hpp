@@ -58,7 +58,7 @@ namespace animray::threading {
     /// A mechanism whereby the frame is rendered in a number of sub-panels
     template<typename film_type, typename Fn>
     film_type sub_panel(
-            std::size_t const /*threads*/,
+            std::size_t const threads,
             typename film_type::size_type const width,
             typename film_type::size_type const height,
             Fn fn) {
@@ -77,27 +77,36 @@ namespace animray::threading {
         using panel_type = animray::panel<film_type>;
         using calculation_type = animray::film<std::future<panel_type>>;
 
+        std::vector<std::pair<std::size_t, std::size_t>> futures;
         calculation_type work{
                 panels_x, panels_y,
-                [&fn, px, py, &progress](auto const pr, auto const pc) {
+                [&fn, px, py, &progress,
+                 &futures](auto const pr, auto const pc) {
+                    futures.emplace_back(pr, pc);
                     return std::async(
                             std::launch::deferred,
                             [px, py, pr, pc, &fn, &progress]() {
-                                panel_type panel{px, py, px * pr, py * pc, fn};
                                 ++progress;
-                                return panel;
+                                return panel_type{px, py, px * pr, py * pc, fn};
                             });
                 }};
+        std::atomic<std::size_t> next{};
+        for (std::size_t thread{}; thread != threads; ++thread) {
+            std::thread{[&futures, &next, &work]() {
+                for (std::size_t index = next++; index < futures.size();
+                     index = next++) {
+                    auto const [r, c] = futures[index];
+                    work[r][c].wait();
+                }
+            }}.detach();
+        }
 
         auto panels = animray::film<panel_type>{
-                panels_x, panels_y,
-                [&work](auto r, auto c) { return work[r][c].get(); }};
-
+                panels_x, panels_y, [&work](auto const r, auto const c) {
+                    return work[r][c].get();
+                }};
         return film_type{
-                width, height,
-                [&panels, px,
-                 py](const typename film_type::size_type x,
-                     const typename film_type::size_type y) {
+                width, height, [&panels, px, py](auto const x, auto const y) {
                     return panels[x / px][y / py][x % px][y % py];
                 }};
     }
