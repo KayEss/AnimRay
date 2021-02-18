@@ -11,6 +11,7 @@ macro(scene  name)
 endmacro()
 
 scene(affine-transformations)
+scene(cube ".0")
 scene(coloured-matte-surfaces)
 scene(five-spheres-coloured-lights)
 scene(reflections)
