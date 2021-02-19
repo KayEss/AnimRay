@@ -59,7 +59,6 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 
     /// ## Set up the geometry
     using world = float;
-    std::size_t const angle{20};
 
     /// Start with the apexes of the triangles for the shape.
     animray::point3d<world> constexpr tne(1, 1, 1), tse(1, -1, 1),
@@ -67,30 +66,27 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
             bsw(-1, -1, -1), bnw(-1, 1, -1);
     /// Then put them together into the triangles we require
     using triangle = animray::triangle<animray::ray<world>>;
-    auto const cube = animray::animation::affine{
-            animray::rotate_z<world>, 40_deg, 1_deg * angle, frames,
-            animray::animation::affine{
-                    animray::rotate_y<world>, 0, 2_deg * angle, frames,
-                    animray::collection{animray::make_array(
-                            triangle{tne, tse, tsw}, triangle{tsw, tnw, tne},
-                            triangle{bne, bse, bsw}, triangle{bsw, bnw, bne},
-                            triangle{tne, bne, tse}, triangle{tse, bse, bne},
-                            triangle{tse, tsw, bsw}, triangle{bsw, bse, tse},
-                            triangle{tsw, bsw, tnw}, triangle{tnw, bnw, bsw},
-                            triangle{tnw, bnw, tne}, triangle{tne, bne, bnw})}}};
+    auto const cube = animray::collection{animray::make_array(
+            triangle{tne, tse, tsw}, triangle{tsw, tnw, tne},
+            triangle{bne, bse, bsw}, triangle{bsw, bnw, bne},
+            triangle{tne, bne, tse}, triangle{tse, bse, bne},
+            triangle{tse, tsw, bsw}, triangle{bsw, bse, tse},
+            triangle{tsw, bsw, tnw}, triangle{tnw, bnw, bsw},
+            triangle{tnw, bnw, tne}, triangle{tne, bne, bnw})};
 
     auto const scene = animray::scene{
             cube, animray::library::lights::narrow_block<world>,
             animray::rgb<float>{20, 70, 100}};
 
-    for (std::size_t frame{}; frame != frames * 360 / angle; ++frame) {
+    for (std::size_t frame{}; frame != frames; ++frame) {
         animray::movable<
                 animray::stacatto_movie<animray::pinhole_camera<
                         animray::ray<world>, animray::flat_jitter_camera<world>>>,
                 typename animray::with_frame<
                         animray::ray<world>, std::size_t>::type>
                 camera(fw, fh, width, height, 0.05);
-        camera(animray::rotate_x<world>(-15_deg));
+        camera(animray::rotate_x<world>(frame * 360_deg / frames));
+        camera(animray::rotate_y<world>(frame * 720_deg / frames));
         camera(animray::translate<world>(0.0, 0.0, -6));
         camera.instance.frame = frame;
 
