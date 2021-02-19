@@ -91,16 +91,18 @@ namespace animray::threading {
                             });
                 }};
         std::atomic<std::size_t> next{};
+        std::vector<std::thread> joins;
+        joins.reserve(threads);
         for (std::size_t thread{}; thread != threads; ++thread) {
-            std::thread{[&futures, &next, &work]() {
+            joins.emplace_back([&futures, &next, &work]() {
                 for (std::size_t index = next++; index < futures.size();
                      index = next++) {
                     auto const [r, c] = futures[index];
                     work[r][c].wait();
                 }
-            }}.detach();
+            });
         }
-
+        for (auto &th : joins) { th.join(); }
         auto panels = animray::film<panel_type>{
                 panels_x, panels_y, [&work](auto const r, auto const c) {
                     return work[r][c].get();
