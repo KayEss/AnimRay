@@ -26,6 +26,7 @@
 #include <animray/camera/pinhole.hpp>
 #include <animray/camera/movie.hpp>
 #include <animray/cli/progress.hpp>
+#include <animray/color/srgb.hpp>
 #include <animray/intersection.hpp>
 #include <animray/library/lights/block.hpp>
 #include <animray/maths/angles.hpp>
@@ -76,7 +77,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 
     auto const scene = animray::scene{
             cube, animray::library::lights::narrow_block<world>,
-            animray::rgb<float>{20, 70, 100}};
+            animray::rgb<float>{5, 18, 25}};
 
     for (std::size_t frame{}; frame != frames; ++frame) {
         animray::movable<
@@ -101,14 +102,8 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                     for (std::size_t sample{}; sample != samples; ++sample) {
                         photons += scene(camera, x, y) /= samples;
                     }
-                    const float exposure = 1.4f;
-                    photons /= exposure;
-                    return animray::rgb<uint8_t>(
-                            uint8_t(photons.red() > 255 ? 255 : photons.red()),
-                            uint8_t(photons.green() > 255 ? 255
-                                                          : photons.green()),
-                            uint8_t(photons.blue() > 255 ? 255
-                                                         : photons.blue()));
+                    auto const exposure = 1.4f;
+                    return animray::to_srgb(photons, exposure * 255);
                 });
     }
 
