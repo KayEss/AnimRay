@@ -50,7 +50,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
     const std::size_t samples(
             fostlib::coerce<int>(args.commandSwitch("ss").value_or("6")));
     const std::size_t spheres(
-            fostlib::coerce<int>(args.commandSwitch("sp").value_or("10")));
+            fostlib::coerce<int>(args.commandSwitch("sp").value_or("20")));
 
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("spheres-positionable.tga"));
