@@ -53,13 +53,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
     const int width = fostlib::coerce<int>(args[2].value_or("96"));
     const int height = fostlib::coerce<int>(args[3].value_or("54"));
 
-    /// Screen aspect and pixel density
-    auto const aspect = static_cast<double>(width) / height;
-    auto const fw = width > height ? aspect * 0.024 : 0.024;
-    auto const fh = width > height ? 0.024 : 0.024 / aspect;
-
     /// ## Set up the geometry
     using world = float;
+
+    /// Screen aspect and pixel density
+    world const aspect = world(width) / height;
+    bool const high = (height > width);
+    world const fw = high ? aspect * 0.036 : 0.036;
+    world const fh = high ? 0.036 : 0.036 / aspect;
 
     /// Start with the apexes of the triangles for the shape.
     animray::point3d<world> constexpr tne(1, 1, 1), tse(1, -1, 1),
