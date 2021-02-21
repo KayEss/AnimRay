@@ -49,15 +49,25 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
             animray::unit_sphere_at_origin<animray::ray<world>>,
             animray::matte<animray::rgb<float>>>>;
     animray::collection<sphere_type> spheres;
-    spheres.insert(sphere_type(animray::rgb<float>(1.0, 1.0, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{},
+            animray::rgb<float>(1.0, 1.0, 1.0)}(
             animray::translate<world>(0.0, 0.0, 5.0)));
-    spheres.insert(sphere_type(animray::rgb<float>(0, 1.0, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{},
+            animray::rgb<float>(0, 1.0, 1.0)}(
             animray::translate<world>(-1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type(animray::rgb<float>(1.0, 0.25, 0.5))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{},
+            animray::rgb<float>(1.0, 0.25, 0.5)}(
             animray::translate<world>(1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type(animray::rgb<float>(0.25, 1.0, 0.5))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{},
+            animray::rgb<float>(0.25, 1.0, 0.5)}(
             animray::translate<world>(-1.0, 1.0, 0.0)));
-    spheres.insert(sphere_type(animray::rgb<float>(0.25, 0.5, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{},
+            animray::rgb<float>(0.25, 0.5, 1.0)}(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
     auto const scene = animray::scene{

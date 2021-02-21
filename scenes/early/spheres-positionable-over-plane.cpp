@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -43,7 +43,7 @@
 #include <animray/surface/reflective.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     const std::size_t threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
@@ -90,10 +90,9 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
     scene_type scene;
     scene.background = animray::rgb<float>(20, 70, 100);
 
-    std::get<0>(scene.geometry.instances) =
-            reflective_plane_type(0.4f, animray::rgb<float>(0.3f));
-    std::get<0>(scene.geometry.instances).geometry.center =
-            animray::point3d<world>(0, 0, 4);
+    std::get<0>(scene.geometry.instances) = reflective_plane_type(
+            {animray::point3d<world>{0, 0, 4}, {}}, 0.4f,
+            animray::rgb<float>(0.3f));
 
     std::default_random_engine generator;
     std::uniform_int_distribution<int> surface(1, 2);
@@ -105,18 +104,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
         animray::translate<world> location(
                 x_position(generator), y_position(generator), 0.0);
         switch (surface(generator)) {
-        case 1: {
-            metallic_sphere_type m(colour);
-            m.geometry.position = location();
-            std::get<1>(scene.geometry.instances).insert(m);
+        case 1:
+            std::get<1>(scene.geometry.instances)
+                    .insert(metallic_sphere_type{location(), colour});
             break;
-        }
         case 2:
-        default: {
-            gloss_sphere_type g(10.0f, colour);
-            g.geometry.position = location();
-            std::get<2>(scene.geometry.instances).insert(g);
-        }
+        default:
+            std::get<2>(scene.geometry.instances)
+                    .insert(gloss_sphere_type{location(), 10.0f, colour});
         }
     }
 

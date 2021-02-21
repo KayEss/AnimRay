@@ -1,5 +1,5 @@
 /*
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -34,10 +34,9 @@ namespace animray {
 
     /// A simple 3D unit sphere primitive at the origin.
     template<typename I, typename D = typename I::local_coord_type>
-    class unit_sphere_at_origin {
-      public:
+    struct unit_sphere_at_origin {
         /// The type of the local coordinates used
-        typedef D local_coord_type;
+        using local_coord_type = D;
         /// Type of intersection to return when the sphere is struck
         using intersection_type = I;
 

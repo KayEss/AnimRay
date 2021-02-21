@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -52,7 +52,7 @@ namespace animray {
 
         /// Constructors
         unit_sphere() : position{} {}
-        explicit unit_sphere(position_type p) : position{std::move(p)} {}
+        unit_sphere(position_type p) : position{std::move(p)} {}
 
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs

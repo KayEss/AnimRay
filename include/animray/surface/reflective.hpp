@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -38,9 +38,10 @@ namespace animray {
       public:
         /// Default constructor
         reflective() = default;
+        reflective(C c) : attenuation{std::move(c)} {}
 
         /// The absorption attenuation of the surface
-        typedef C parameters;
+        C attenuation;
 
         /// Calculate the light coming from the reflected ray
         template<typename RI, typename I, typename CI, typename G>
@@ -68,13 +69,8 @@ namespace animray {
 
         /// Calculate the light/surface interaction
         template<typename RI, typename RL, typename I, typename CI, typename G>
-        CI operator()(
-                const C &,
-                const RI &,
-                const RL &,
-                const I &,
-                const CI &,
-                const G &) const {
+        CI operator()(const RI &, const RL &, const I &, const CI &, const G &)
+                const {
             // There is never any light due to illumination
             return CI();
         }
@@ -82,7 +78,6 @@ namespace animray {
         /// The specular light is emissive
         template<typename CI, typename RI, typename I, typename G>
         CI operator()(
-                const C &attenuation,
                 const CI &c,
                 const RI &observer,
                 const I &intersection,

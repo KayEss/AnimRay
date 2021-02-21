@@ -36,31 +36,28 @@ namespace animray {
 
     /// Forward declaration of the surface
     template<typename O, typename... S>
-    class surface;
+    struct surface;
 
 
     /// Partial specialisation of the intersection type for a surface
     template<typename O, typename... S>
     class intersection<surface<O, S...>> : public O::intersection_type {
-        typedef typename O::intersection_type superclass;
-        using surface_parameters_type =
-                typename surface<O, S...>::surface_parameters_type;
-        const surface_parameters_type *m_parameters;
+        using superclass = typename O::intersection_type;
+        using surfaces_type = typename surface<O, S...>::surfaces_type;
+        surfaces_type const *m_surfaces;
 
       public:
         /// Default constructor (no intersection)
-        intersection() : m_parameters(nullptr) {}
+        intersection() : m_surfaces(nullptr) {}
 
         /// Have an intersection so store the parameters
-        intersection(const superclass &r, const surface_parameters_type &p)
-        : superclass(r), m_parameters(&p) {}
+        intersection(const superclass &r, surfaces_type const &p)
+        : superclass(r), m_surfaces(&p) {}
 
         /// Allow access to the parameters
-        const surface_parameters_type &parameters() const {
-            return *m_parameters;
-        }
+        surfaces_type const &surfaces() const { return *m_surfaces; }
 
-        /// Handle multiplication for transformaion of co-ordinate spaces
+        /// Handle multiplication for transformation of co-ordinate spaces
         template<typename B>
         intersection operator*(const B &by) const {
             intersection r{*this};
@@ -72,14 +69,13 @@ namespace animray {
 
     /// Stores the layers of a surface description
     template<typename O, typename... S>
-    class surface {
-      public:
+    struct surface {
         /// The underlying object type
         using instance_type = O;
         /// The type of the local coordinate system
         using local_coord_type = typename instance_type::local_coord_type;
         /// The physical model of the surface
-        using surface_parameters_type = std::tuple<typename S::parameters...>;
+        using surfaces_type = std::tuple<S...>;
         /// The intersection type
         using intersection_type = intersection<surface<O, S...>>;
 
@@ -87,17 +83,14 @@ namespace animray {
         surface() = default;
 
         /// Pass the constructor arguments on to the underlying parameters
-        surface(typename S::parameters... args)
-        : surface_parameters{std::forward<typename S::parameters>(args)...} {}
-        surface(instance_type i, typename S::parameters... args)
-        : geometry{std::move(i)},
-          surface_parameters{std::forward<typename S::parameters>(args)...} {}
+        surface(instance_type i, S... surf)
+        : geometry{std::move(i)}, surfaces{std::forward<S>(surf)...} {}
 
         /// The geometry that is being shaded
         instance_type geometry;
 
         /// Capture the surface physics model
-        surface_parameters_type surface_parameters;
+        surfaces_type surfaces;
 
         /// Pass on affine transformation to the geometry
         template<typename T>
@@ -113,7 +106,7 @@ namespace animray {
             std::optional<typename O::intersection_type> hit(
                     geometry.intersects(by, epsilon));
             if (hit) {
-                return intersection_type(hit.value(), surface_parameters);
+                return intersection_type(hit.value(), surfaces);
             } else {
                 return {};
             }
@@ -145,13 +138,11 @@ namespace animray {
                 const C &incident,
                 const G &scene) const {
             return std::apply(
-                    [&](auto... pair) {
-                        return (pair.first(
-                                        pair.second, observer, light,
-                                        intersection, incident, scene)
+                    [&](auto... s) {
+                        return (s(observer, light, intersection, incident, scene)
                                 + ...);
                     },
-                    zip(std::tuple<S...>{}, intersection.parameters()));
+                    intersection.surfaces());
         }
     };
 
@@ -166,13 +157,10 @@ namespace animray {
                 const intersection<surface<O, S...>> &intersection,
                 const G &scene) const {
             return std::apply(
-                    [&](auto... pair) {
-                        return (pair.first(
-                                        pair.second, C{}, observer,
-                                        intersection, scene)
-                                + ...);
+                    [&](auto... s) {
+                        return (s(C{}, observer, intersection, scene) + ...);
                     },
-                    zip(std::tuple<S...>{}, intersection.parameters()));
+                    intersection.surfaces());
         }
     };
 

@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -39,7 +39,7 @@
 #include <animray/surface/reflective.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     std::size_t const threads(
             fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
@@ -95,9 +95,12 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             geometry;
 
     const world scale(200.0);
-    std::get<0>(geometry.instances) = reflective_sphere_type(
-            0.4f, animray::rgb<float>(0.3f))(animray::translate<world>(
-            0.0, 0.0, scale + 1.0))(animray::scale<world>(scale, scale, scale));
+    std::get<0>(geometry.instances) =
+            reflective_sphere_type{
+                    animray::unit_sphere<animray::point3d<world>>{}, 0.4f,
+                    animray::rgb<float>(0.3f)}(
+                    animray::translate<world>(0.0, 0.0, scale + 1.0))(
+                    animray::scale<world>(scale, scale, scale));
     std::get<1>(geometry.instances) = metallic_spheres_type{
             std::move(metallic), animray::rgb<float>(1, 1, 1)};
     std::get<2>(geometry.instances) = gloss_spheres_type{

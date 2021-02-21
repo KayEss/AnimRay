@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -83,7 +83,7 @@ namespace animray {
 
         /// Allow the underlying instance to be constructed
         template<typename... A>
-        explicit movable(A &&...args) : instance(std::forward<A>(args)...) {}
+        movable(A &&...args) : instance(std::forward<A>(args)...) {}
 
         /// Apply a transformation
         movable &operator()(const transform_type &t) {

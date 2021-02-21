@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -30,10 +30,11 @@
 namespace animray {
 
 
+    /*
     template<typename O, typename... S>
     class collection<surface<O, S...>, std::vector<surface<O, S...>>> {
         /// The instances collection type
-        typedef collection<O, std::vector<O>> instances_collection_type;
+        using instances_collection_type = collection<O, std::vector<O>>;
 
       public:
         /// The surface type we're collecting over
@@ -47,24 +48,25 @@ namespace animray {
         template<typename G>
         collection &insert(const G &instance) {
             instances.insert(instance.geometry);
-            surfaces.push_back(instance.surface_parameters);
+            surfaces.push_back(instance.surface);
             return *this;
         }
 
         /// Calculate the intersection of the ray on the instance
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
-            fostlib::nullable<std::pair<
+            std::optional<std::pair<
                     typename instances_collection_type::intersection_type,
                     std::size_t>>
                     result;
             local_coord_type result_dot;
-            for (std::size_t index(0); index != instances.instances.size();
+            for (std::size_t index{}; index != instances.instances.size();
                  ++index) {
                 if (result) {
-                    fostlib::nullable<
-                            typename instances_collection_type::intersection_type>
+                    std::optional<
+                            typename
+    instances_collection_type::intersection_type>
                             intersection(instances.instances[index].intersects(
                                     by, epsilon));
                     if (intersection) {
@@ -76,8 +78,9 @@ namespace animray {
                         }
                     }
                 } else {
-                    fostlib::nullable<
-                            typename instances_collection_type::intersection_type>
+                    std::optional<
+                            typename
+    instances_collection_type::intersection_type>
                             intersection(instances.instances[index].intersects(
                                     by, epsilon));
                     if (intersection) {
@@ -90,7 +93,7 @@ namespace animray {
                 return intersection_type(
                         result.value().first, surfaces[result.value().second]);
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 
@@ -108,6 +111,7 @@ namespace animray {
         /// The surface parameters
         std::vector<typename surface_type::surface_parameters_type> surfaces;
     };
+    */
 
 
 }

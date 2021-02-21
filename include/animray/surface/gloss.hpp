@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -37,14 +37,14 @@ namespace animray {
       public:
         /// Default constructor
         gloss() = default;
+        gloss(W w) : width{std::move(w)} {}
 
         /// The width of the specular highlight
-        using parameters = W;
+        W width;
 
         /// Calculate the light/surface interaction
         template<typename RI, typename RL, typename I, typename CI, typename G>
         CI operator()(
-                parameters const &width,
                 RI const &observer,
                 RL const &light,
                 I const &intersection,
@@ -65,12 +65,7 @@ namespace animray {
 
         /// This material is non-emissive
         template<typename CI, typename RI, typename I, typename G>
-        auto operator()(
-                parameters const &,
-                CI const &,
-                RI const &,
-                I const &,
-                G const &) const {
+        auto operator()(CI const &, RI const &, I const &, G const &) const {
             return CI();
         }
     };

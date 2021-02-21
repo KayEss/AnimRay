@@ -35,7 +35,7 @@
 #include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
+FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     auto output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("affine-transformations.tga"));
@@ -52,16 +52,26 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
             animray::gloss<world>, animray::matte<animray::rgb<float>>>>;
     animray::collection<sphere_type> spheres;
     world const scale{200.0};
-    spheres.insert(sphere_type(100.0f, animray::rgb<float>(1.0, 1.0, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{}, 100.0f,
+            animray::rgb<float>(1.0, 1.0, 1.0)}(
             animray::translate<world>(0.0, 0.0, scale + 1.0))(
             animray::scale<world>(scale, scale, scale)));
-    spheres.insert(sphere_type(200.0f, animray::rgb<float>(0, 1.0, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{}, 200.0f,
+            animray::rgb<float>(0, 1.0, 1.0)}(
             animray::translate<world>(-1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type(10.0f, animray::rgb<float>(1.0, 0.25, 0.5))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{}, 10.0f,
+            animray::rgb<float>(1.0, 0.25, 0.5)}(
             animray::translate<world>(1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type(20.0f, animray::rgb<float>(0.25, 1.0, 0.5))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{}, 20.0f,
+            animray::rgb<float>(0.25, 1.0, 0.5)}(
             animray::translate<world>(-1.0, 1.0, 0.0)));
-    spheres.insert(sphere_type(50.0f, animray::rgb<float>(0.25, 0.5, 1.0))(
+    spheres.insert(sphere_type{
+            animray::unit_sphere_at_origin<animray::ray<world>>{}, 50.0f,
+            animray::rgb<float>(0.25, 0.5, 1.0)}(
             animray::translate<world>(1.0, 1.0, 0.0)));
 
     auto const scene = animray::scene{

@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -35,14 +35,14 @@ namespace animray {
       public:
         /// Default constructor
         matte() = default;
+        matte(C c) : attenuation{std::move(c)} {}
 
         /// The absorption attenuation of the surface
-        typedef C parameters;
+        C attenuation;
 
         /// Calculate the light/surface interaction
         template<typename RI, typename RL, typename I, typename CI, typename G>
         CI operator()(
-                const C &attenuation,
                 const RI &,
                 const RL &light,
                 const I &intersection,
@@ -55,8 +55,7 @@ namespace animray {
 
         /// This material is non-emissive
         template<typename CI, typename RI, typename I, typename G>
-        CI operator()(
-                const C &, const CI &, const RI &, const I &, const G &) const {
+        CI operator()(const CI &, const RI &, const I &, const G &) const {
             return CI();
         }
     };

@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -30,10 +30,9 @@ namespace animray {
 
 
     template<typename I, typename D = typename I::local_coord_type>
-    class plane {
-      public:
+    struct plane {
         /// The type of the local coordinates used
-        typedef D local_coord_type;
+        using local_coord_type = D;
         /// Type of intersection to be returned
         using intersection_type = I;
 
