@@ -30,7 +30,7 @@
 #include <animray/color/hsl.hpp>
 #include <animray/geometry/planar/plane.hpp>
 #include <animray/geometry/quadrics/sphere-unit.hpp>
-#include <animray/geometry/collection-surface.hpp>
+#include <animray/geometry/collection.hpp>
 #include <animray/compound.hpp>
 #include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
