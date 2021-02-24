@@ -30,35 +30,39 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 (fostlib::ostream &, fostlib::arguments &args) {
     auto const output_filename = fostlib::coerce<std::filesystem::path>(
             args[1].value_or("white-sphere-ortho.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("1920"));
-    int height = fostlib::coerce<int>(args[3].value_or("1080"));
+    auto const width = fostlib::coerce<int>(args[2].value_or("1920"));
+    auto const height = fostlib::coerce<int>(args[3].value_or("1080"));
+    auto const exposure =
+            fostlib::coerce<std::optional<double>>(args.commandSwitch("e"))
+                    .value_or(1);
 
-    const double aspect = double(width) / height;
-    const double fw = width > height ? aspect * 2.0 : 2.0;
-    const double fh = width > height ? 2.0 : 2.0 / aspect;
+    double const aspect = double(width) / height;
+    double const fw = width > height ? aspect * 2.0 : 2.0;
+    double const fh = width > height ? 2.0 : 2.0 / aspect;
 
-    typedef animray::ray<double> ray;
+    using ray = animray::ray<double>;
     animray::unit_sphere_at_origin<ray> sphere;
-    using film_type = animray::film<animray::rgb<uint8_t>>;
+    using film_type = animray::film<animray::luma<std::uint8_t>>;
     animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
     film_type output(
             width, height,
             [=, &sphere](
                     const film_type::size_type x, const film_type::size_type y) {
                 ray r(camera(x, y));
-                fostlib::nullable<ray> intersection(sphere.intersects(r, 0.0));
+                auto intersection(sphere.intersects(r, 0.0));
                 if (intersection) {
                     ray light(
-                            intersection->from, ray::end_type(5.0, 5.0, -5.0));
+                            intersection->from, ray::end_type(2.0, 2.0, -5.0));
                     if (sphere.occludes(light, 1e-9)) {
-                        return animray::rgb<uint8_t>(50);
+                        return animray::luma<uint8_t>(50);
                     } else {
                         const double costheta =
                                 dot(light.direction, intersection->direction);
-                        return animray::rgb<uint8_t>(50 + 205 * costheta);
+                        return animray::luma<uint8_t>(std::clamp<float>(
+                                (50 + 205 * costheta) * exposure, 0, 255));
                     }
                 } else {
-                    return animray::rgb<uint8_t>(0);
+                    return animray::luma<uint8_t>(0);
                 }
             });
     animray::targa(output_filename, output);
