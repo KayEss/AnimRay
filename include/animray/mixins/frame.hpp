@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,7 +24,6 @@
 
 
 #include <animray/mixins/mixin.hpp>
-#include <fost/core>
 
 
 namespace animray {

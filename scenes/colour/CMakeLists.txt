@@ -2,7 +2,7 @@ set(scenes-colour)
 
 macro(scene name output)
     add_executable(${name} ${name}.cpp)
-    target_link_libraries(${name} animray fost-cli)
+    target_link_libraries(${name} animray)
     install(TARGETS ${name} EXPORT ${name} RUNTIME DESTINATION bin)
     if(TARGET check)
         add_custom_command(OUTPUT ${output} COMMAND ${name} -b false)
