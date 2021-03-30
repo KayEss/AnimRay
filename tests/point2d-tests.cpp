@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,27 +18,33 @@
 */
 
 
+#include <animray/functional/traits.hpp>
 #include <animray/point2d.hpp>
-
-#include <fost/test>
-
-
-FSL_TEST_SUITE(point2d);
+#include <felspar/test.hpp>
 
 
-// static_assert(std::regular<animray::point2d<int>>);
-// static_assert(std::regular<animray::point2d<float>>);
+namespace {
 
 
-FSL_TEST_FUNCTION(operator_add) {
-    animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
-    FSL_CHECK_EQ(p1 += p2, animray::point2d<int>(1, 2));
-    FSL_CHECK_EQ(p1 += p2, 2 * animray::point2d<int>(1, 2));
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(operator_mul) {
-    animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
-    FSL_CHECK_EQ(p1 * 4, p1);
-    FSL_CHECK_EQ(p2 *= 3, animray::point2d<int>(3, 6));
+    static_assert(animray::Regular<animray::point2d<int>>);
+    static_assert(animray::Regular<animray::point2d<float>>);
+
+
+    auto const add = suite.test("add", [](auto check) {
+        animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
+        check(p1 += p2) == animray::point2d<int>(1, 2);
+        check(p1 += p2) == 2 * animray::point2d<int>(1, 2);
+    });
+
+
+    auto const mul = suite.test("mul", [](auto check) {
+        animray::point2d<int> p1, p2 = animray::point2d<int>(1, 2);
+        check(p1 * 4) == p1;
+        check(p2 *= 3) == animray::point2d<int>(3, 6);
+    });
+
+
 }
