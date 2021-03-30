@@ -18,8 +18,6 @@
 */
 
 
-#include <fost/json>
-
 #include <compare>
 #include <ostream>
 
@@ -89,11 +87,12 @@ namespace animray {
 }
 
 
-namespace fostlib {
-    template<typename T, typename F, typename R>
-    struct coercer<T, animray::number<F, R>> {
-        auto coerce(animray::number<F, R> const n, felspar::source_location loc) {
-            return fostlib::coerce<T>(static_cast<R>(n), loc);
-        }
-    };
-}
+// namespace fostlib {
+//     template<typename T, typename F, typename R>
+//     struct coercer<T, animray::number<F, R>> {
+//         auto coerce(animray::number<F, R> const n, felspar::source_location
+//         loc) {
+//             return fostlib::coerce<T>(static_cast<R>(n), loc);
+//         }
+//     };
+// }

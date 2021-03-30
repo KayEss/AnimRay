@@ -111,21 +111,6 @@ namespace animray {
 }
 
 
-namespace fostlib {
-    /// Allow extents to be coerced between different numeric types
-    template<typename T, typename F>
-    struct coercer<animray::extents2d<T>, animray::extents2d<F>> {
-        animray::extents2d<T> coerce(const animray::extents2d<F> &e) {
-            return animray::extents2d<T>(
-                    fostlib::coerce<T>(e.lower_left.x),
-                    fostlib::coerce<T>(e.lower_left.y),
-                    fostlib::coerce<T>(e.top_right.x),
-                    fostlib::coerce<T>(e.top_right.y));
-        }
-    };
-}
-
-
 namespace std {
     /// Output an extents to a stream
     template<typename S>
@@ -134,6 +119,21 @@ namespace std {
         return o << "[ " << e.lower_left << " -> " << e.top_right << " ]";
     }
 }
+
+
+// namespace fostlib {
+//     /// Allow extents to be coerced between different numeric types
+//     template<typename T, typename F>
+//     struct coercer<animray::extents2d<T>, animray::extents2d<F>> {
+//         animray::extents2d<T> coerce(const animray::extents2d<F> &e) {
+//             return animray::extents2d<T>(
+//                     fostlib::coerce<T>(e.lower_left.x),
+//                     fostlib::coerce<T>(e.lower_left.y),
+//                     fostlib::coerce<T>(e.top_right.x),
+//                     fostlib::coerce<T>(e.top_right.y));
+//         }
+//     };
+// }
 
 
 #endif // ANIMRAY_EXTENTS2D_HPP
