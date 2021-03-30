@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,31 +20,29 @@
 
 #include <animray/functional/callable.hpp>
 #include <animray/point3d.hpp>
-#include <animray/test.hpp>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(functional_callable);
+namespace {
 
 
-FSL_TEST_FUNCTION(simple) {
+    auto const suite = felspar::testsuite(__FILE__);
+
+
     class simple {};
-    FSL_CHECK(std::is_class<simple>::value);
-    FSL_CHECK(not animray::detail::is_callable_impl<simple>::value);
-    FSL_CHECK(not animray::is_callable<simple>::value);
-}
+    static_assert(std::is_class<simple>::value);
+    static_assert(not animray::detail::is_callable_impl<simple>::value);
+    static_assert(not animray::is_callable<simple>::value);
+
+    using array = animray::detail::array_based<int, 4>;
+    static_assert(std::is_class<array>::value);
+    static_assert(not animray::detail::is_callable_impl<array>::value);
+    static_assert(not animray::is_callable<array>::value);
+
+    using point = animray::point3d<int>;
+    static_assert(std::is_class<point>::value);
+    static_assert(not animray::detail::is_callable_impl<point>::value);
+    static_assert(not animray::is_callable<point>::value);
 
 
-FSL_TEST_FUNCTION(array) {
-    typedef animray::detail::array_based<int, 4> array;
-    FSL_CHECK(std::is_class<array>::value);
-    FSL_CHECK(not animray::detail::is_callable_impl<array>::value);
-    FSL_CHECK(not animray::is_callable<array>::value);
-}
-
-
-FSL_TEST_FUNCTION(point3d) {
-    typedef animray::point3d<int> point;
-    FSL_CHECK(std::is_class<point>::value);
-    FSL_CHECK(not animray::detail::is_callable_impl<point>::value);
-    FSL_CHECK(not animray::is_callable<point>::value);
 }
