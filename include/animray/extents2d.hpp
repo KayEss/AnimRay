@@ -94,13 +94,13 @@ namespace animray {
         }
 
         /// Return the intersection between this extents and another one
-        fostlib::nullable<extents2d> intersection(const extents2d &r) {
-            size_type lx = std::max(lower_left.x, r.lower_left.x);
-            size_type ly = std::max(lower_left.y, r.lower_left.y);
-            size_type ux = std::min(top_right.x, r.top_right.x);
-            size_type uy = std::min(top_right.y, r.top_right.y);
-            if (lx > ux || ly > uy) {
-                return fostlib::null;
+        std::optional<extents2d> intersection(const extents2d &r) {
+            auto const lx = std::max(lower_left.x, r.lower_left.x);
+            auto const ly = std::max(lower_left.y, r.lower_left.y);
+            auto const ux = std::min(top_right.x, r.top_right.x);
+            auto const uy = std::min(top_right.y, r.top_right.y);
+            if (lx > ux or ly > uy) {
+                return {};
             } else {
                 return extents2d(lx, ly, ux, uy);
             }
