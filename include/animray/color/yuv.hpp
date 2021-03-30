@@ -1,5 +1,5 @@
 /**
-    Copyright 2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2020-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -22,6 +22,7 @@
 
 
 #include <animray/detail/array_based.hpp>
+#include <animray/color/concept.hpp>
 #include <animray/color/rgb.hpp>
 
 
@@ -78,26 +79,16 @@ namespace animray {
     };
 
 
-}
-
-
-namespace fostlib {
-
-
     /// Allow conversion from YUV to RGB for float versions. Output RGB range
     /// is [0...1] for each channel, but is un-clamped, so some values may be
     /// out of range. Values are for the HDTV (BT.709) standard
     template<typename D>
-    struct coercer<
-            animray::rgb<D>,
-            animray::yuv<D>,
-            std::enable_if_t<std::is_floating_point_v<D>>> {
-        animray::rgb<D> coerce(animray::yuv<D> const &yuv) {
-            auto const r = yuv.y() + D{1.28033} * yuv.v();
-            auto const g =
-                    yuv.y() - D{0.21482} * yuv.u() - D{0.38059} * yuv.v();
-            auto const b = yuv.y() + D{2.12798} * yuv.u();
-            return animray::rgb<D>{r, g, b};
+    struct detail::color_conversion<rgb<D>, yuv<D>> {
+        auto convert(yuv<D> const &c) {
+            auto const r = c.y() + D{1.28033} * c.v();
+            auto const g = c.y() - D{0.21482} * c.u() - D{0.38059} * c.v();
+            auto const b = c.y() + D{2.12798} * c.u();
+            return rgb<D>{r, g, b};
         }
     };
 

@@ -24,10 +24,10 @@
 #include <animray/formats/targa.hpp>
 #include <animray/interpolation/linear.hpp>
 #include <cmath>
-#include <fost/main>
 
 
 namespace {
+
 
     constexpr std::size_t const width = 900, height = 900;
 
@@ -65,12 +65,12 @@ namespace {
                     * (std::pow(normalised * 1.055f, 1.0f / 2.4f) - 0.055f);
         }
     }
+
+
 }
 
 
-FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &) {
-
+int main() {
     /// ## RGB
     using colour = animray::rgb<float>;
     constexpr auto const red = colour{255, 0, 0};
@@ -108,7 +108,7 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     animray::film<animray::rgb<uint8_t>> hsl{
             width, height, [&](auto x, auto y) {
-                auto const pixel = fostlib::coerce<colour>(
+                auto const pixel = animray::convert_to<colour>(
                         pixel_colour(hred, hmagenta, hgreen, hblue, x, y));
                 return animray::rgb<uint8_t>(
                         non_linear_clamp(pixel.red(), 1),
@@ -126,7 +126,7 @@ FSL_MAIN("mix", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
 
     animray::film<animray::rgb<uint8_t>> yuv{
             width, height, [&](auto x, auto y) {
-                auto const pixel = fostlib::coerce<colour>(
+                auto const pixel = animray::convert_to<colour>(
                         pixel_colour(yred, ymagenta, ygreen, yblue, x, y));
                 return animray::rgb<uint8_t>(
                         non_linear_clamp(pixel.red(), 1),

@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -23,6 +23,7 @@
 #pragma once
 
 
+#include <animray/color/concept.hpp>
 #include <animray/color/rgb.hpp>
 
 
@@ -72,21 +73,12 @@ namespace animray {
     };
 
 
-}
-
-
-namespace fostlib {
-
-
     /// Allow conversion from HLS to RGB for float versions
     template<typename D>
-    struct coercer<
-            animray::rgb<D>,
-            animray::hsl<D>,
-            std::enable_if_t<std::is_floating_point_v<D>>> {
-        /// Performs the coercion
-        animray::rgb<D> coerce(animray::hsl<D> const &hsl) {
-            const D h = hsl.array()[0], s = hsl.array()[1], l = hsl.array()[2];
+    struct detail::color_conversion<rgb<D>, hsl<D>> {
+        auto convert(hsl<D> c) {
+            /// Performs the coercion
+            const D h = c.array()[0], s = c.array()[1], l = c.array()[2];
             const D C = l <= D(0.5) ? D(2) * l * s : (D(2) - D(2) * l) * s;
             const D H = h / D(60);
             D Hmod2 = H;
@@ -119,7 +111,7 @@ namespace fostlib {
                 b = X;
             }
             D const m = l - D(0.5) * C;
-            return animray::rgb<D>(r + m, g + m, b + m);
+            return rgb<D>(r + m, g + m, b + m);
         }
     };
 
