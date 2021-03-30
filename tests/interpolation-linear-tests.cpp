@@ -1,6 +1,5 @@
-/*
-    Copyright s2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,77 +19,75 @@
 
 
 #include <animray/interpolation/linear.hpp>
-#include <fost/test>
+#include <chrono>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(interpolation_linear);
+namespace {
 
 
-FSL_TEST_FUNCTION(rising) {
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 0, 2), 10);
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 2, 2), 20);
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 1, 2), 15);
-
-    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 0, 2), 10.0);
-    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 2, 2), 20.0);
-    FSL_CHECK_EQ(animray::interpolation::linear(10.0, 20.0, 1, 2), 15.0);
-
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 0.0, 2.0), 10);
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 2.0, 2.0), 20);
-    FSL_CHECK_EQ(animray::interpolation::linear(10, 20, 1.0, 2.0), 15);
-
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10, 20, std::chrono::milliseconds(0),
-                    std::chrono::milliseconds(2)),
-            10);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10, 20, std::chrono::milliseconds(2),
-                    std::chrono::milliseconds(2)),
-            20);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10, 20, std::chrono::milliseconds(1),
-                    std::chrono::milliseconds(2)),
-            15);
-
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10.0, 20.0, std::chrono::milliseconds(0),
-                    std::chrono::milliseconds(2)),
-            10);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10.0, 20.0, std::chrono::milliseconds(2),
-                    std::chrono::milliseconds(2)),
-            20);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    10.0, 20.0, std::chrono::milliseconds(1),
-                    std::chrono::milliseconds(2)),
-            15);
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(falling) {
-    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 0, 2), 20);
-    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 2, 2), 10);
-    FSL_CHECK_EQ(animray::interpolation::linear(20, 10, 1, 2), 15);
+    auto const r = suite.test("rising", [](auto check) {
+        check(animray::interpolation::linear(10, 20, 0, 2)) == 10;
+        check(animray::interpolation::linear(10, 20, 2, 2)) == 20;
+        check(animray::interpolation::linear(10, 20, 1, 2)) == 15;
 
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    20, 10, std::chrono::milliseconds(0),
-                    std::chrono::milliseconds(2)),
-            20);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    20, 10, std::chrono::milliseconds(2),
-                    std::chrono::milliseconds(2)),
-            10);
-    FSL_CHECK_EQ(
-            animray::interpolation::linear(
-                    20, 10, std::chrono::milliseconds(1),
-                    std::chrono::milliseconds(2)),
-            15);
+        check(animray::interpolation::linear(10.0, 20.0, 0, 2)) == 10.0;
+        check(animray::interpolation::linear(10.0, 20.0, 2, 2)) == 20.0;
+        check(animray::interpolation::linear(10.0, 20.0, 1, 2)) == 15.0;
+
+        check(animray::interpolation::linear(10, 20, 0.0, 2.0)) == 10;
+        check(animray::interpolation::linear(10, 20, 2.0, 2.0)) == 20;
+        check(animray::interpolation::linear(10, 20, 1.0, 2.0)) == 15;
+
+        check(animray::interpolation::linear(
+                10, 20, std::chrono::milliseconds(0),
+                std::chrono::milliseconds(2)))
+                == 10;
+        check(animray::interpolation::linear(
+                10, 20, std::chrono::milliseconds(2),
+                std::chrono::milliseconds(2)))
+                == 20;
+        check(animray::interpolation::linear(
+                10, 20, std::chrono::milliseconds(1),
+                std::chrono::milliseconds(2)))
+                == 15;
+
+        check(animray::interpolation::linear(
+                10.0, 20.0, std::chrono::milliseconds(0),
+                std::chrono::milliseconds(2)))
+                == 10;
+        check(animray::interpolation::linear(
+                10.0, 20.0, std::chrono::milliseconds(2),
+                std::chrono::milliseconds(2)))
+                == 20;
+        check(animray::interpolation::linear(
+                10.0, 20.0, std::chrono::milliseconds(1),
+                std::chrono::milliseconds(2)))
+                == 15;
+    });
+
+
+    auto const f = suite.test("falling", [](auto check) {
+        check(animray::interpolation::linear(20, 10, 0, 2)) == 20;
+        check(animray::interpolation::linear(20, 10, 2, 2)) == 10;
+        check(animray::interpolation::linear(20, 10, 1, 2)) == 15;
+
+        check(animray::interpolation::linear(
+                20, 10, std::chrono::milliseconds(0),
+                std::chrono::milliseconds(2)))
+                == 20;
+        check(animray::interpolation::linear(
+                20, 10, std::chrono::milliseconds(2),
+                std::chrono::milliseconds(2)))
+                == 10;
+        check(animray::interpolation::linear(
+                20, 10, std::chrono::milliseconds(1),
+                std::chrono::milliseconds(2)))
+                == 15;
+    });
+
+
 }
