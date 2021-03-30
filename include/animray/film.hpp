@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,7 +24,9 @@
 
 
 #include <animray/extents2d.hpp>
-#include <fost/exception/out_of_range.hpp>
+#include <felspar/exceptions/underflow_error.hpp>
+#include <functional>
+#include <vector>
 
 
 namespace animray {
@@ -117,12 +119,12 @@ namespace animray {
         columns_type columns;
         void static check_width_height(size_type width, size_type height) {
             if (width < 1) {
-                throw fostlib::exceptions::out_of_range<E>{
-                        1, std::numeric_limits<E>::max(), width};
+                throw felspar::underflow_error{
+                        "Width can't be less than 1", width};
             }
             if (height < 1) {
-                throw fostlib::exceptions::out_of_range<E>{
-                        1, std::numeric_limits<E>::max(), height};
+                throw felspar::underflow_error{
+                        "Height can't be less than 1", height};
             }
         }
     };

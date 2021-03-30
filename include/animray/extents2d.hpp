@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,6 +24,7 @@
 
 
 #include <animray/point2d.hpp>
+#include <felspar/exceptions/overflow_error.hpp>
 
 
 namespace animray {
@@ -63,15 +64,13 @@ namespace animray {
         extents2d(size_type sx, size_type sy, size_type ex, size_type ey)
         : lower_left(corner_type(sx, sy)), top_right(corner_type(ex, ey)) {
             if (lower_left.x > top_right.x)
-                throw fostlib::exceptions::out_of_range<size_type>(
+                throw felspar::overflow_error{
                         "Top right for x is less than lower left for x",
-                        lower_left.x, std::numeric_limits<size_type>::max(),
-                        top_right.x);
+                        lower_left.x, top_right.x};
             if (lower_left.y > top_right.y)
-                throw fostlib::exceptions::out_of_range<size_type>(
+                throw felspar::overflow_error{
                         "Top right for y is less than lower left for y",
-                        lower_left.y, std::numeric_limits<size_type>::max(),
-                        top_right.y);
+                        lower_left.y, top_right.y};
         }
 
         /// Calculate the height of the extents
