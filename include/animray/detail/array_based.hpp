@@ -23,11 +23,10 @@
 #pragma once
 
 
-#include <fost/core>
-
 #include <array>
 #include <felspar/exceptions/overflow_error.hpp>
 #include <numeric>
+#include <ostream>
 
 
 namespace animray {
@@ -99,7 +98,7 @@ namespace animray {
             }
 
             /// Print the vector onto a stream
-            fostlib::ostream &print_on(fostlib::ostream &o) const {
+            std::ostream &print_on(std::ostream &o) const {
                 o << "(";
                 for (std::size_t i = 0; i < array.size(); ++i) {
                     if (i != 0) o << ", ";

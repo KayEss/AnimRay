@@ -25,6 +25,7 @@
 
 #include <animray/point2d.hpp>
 #include <felspar/exceptions/overflow_error.hpp>
+#include <optional>
 
 
 namespace animray {
@@ -108,16 +109,13 @@ namespace animray {
     };
 
 
-}
-
-
-namespace std {
     /// Output an extents to a stream
     template<typename S>
-    inline fostlib::ostream &
-            operator<<(fostlib::ostream &o, const animray::extents2d<S> &e) {
+    inline std::ostream &operator<<(std::ostream &o, extents2d<S> const &e) {
         return o << "[ " << e.lower_left << " -> " << e.top_right << " ]";
     }
+
+
 }
 
 

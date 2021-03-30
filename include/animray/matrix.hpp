@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -132,7 +132,7 @@ namespace animray {
             return *this = result;
         }
 
-        fostlib::ostream &print_on(fostlib::ostream &o) const {
+        std::ostream &print_on(std::ostream &o) const {
             for (std::size_t r = 0; r < 4; ++r) {
                 for (std::size_t c = 0; c < 4; ++c) {
                     o << superclass::array[r * 4 + c];

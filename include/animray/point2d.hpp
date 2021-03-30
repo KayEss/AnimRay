@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -23,7 +23,7 @@
 #pragma once
 
 
-#include <fost/core>
+#include <ostream>
 
 
 namespace animray {
@@ -98,17 +98,12 @@ namespace animray {
         return point2d<C>(a.x / b, a.y / b);
     }
 
-
-}
-
-
-namespace std {
     /// Allow 2d points to be displayed on a stream
     template<typename C>
-    inline fostlib::ostream &
-            operator<<(fostlib::ostream &o, const animray::point2d<C> &p) {
+    inline std::ostream &operator<<(std::ostream &o, point2d<C> const &p) {
         return o << "(" << p.x << ", " << p.y << ")";
     }
+
 }
 
 

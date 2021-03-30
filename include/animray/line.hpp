@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -64,16 +64,12 @@ namespace animray {
     };
 
 
-}
-
-
-namespace std {
-    /// Allow the line to be displayed
     template<typename D>
-    fostlib::ostream &
-            operator<<(fostlib::ostream &o, const animray::line<D> &l) {
+    std::ostream &operator<<(std::ostream &o, const line<D> &l) {
         return o << l.from << " -> " << l.to;
     }
+
+
 }
 
 
