@@ -1,4 +1,4 @@
-add_test_run(check animray fost-core TESTS
+add_test_run(check animray TESTS
         animation-animate-tests.cpp
         animation-procedural-tests.cpp
         colour-hsl-tests.cpp

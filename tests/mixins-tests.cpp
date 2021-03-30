@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -25,10 +25,10 @@
 
 
 namespace {
-    auto const mixins = felspar::testsuite("mixins");
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-    auto const dc = mixins.test("depth_count", [](auto check) {
+    auto const dc = suite.test("depth_count", [](auto check) {
         class base {};
         static_assert(
                 not std::is_same<
@@ -52,7 +52,7 @@ namespace {
     });
 
 
-    auto const dcm = mixins.test("depth_count_multiply", [](auto check) {
+    auto const dcm = suite.test("depth_count_multiply", [](auto check) {
         animray::with_depth_count<animray::ray<int>>::type r(
                 animray::ray<int>::end_type(0, 0, 0),
                 animray::ray<int>::end_type(0, 0, 1));
@@ -64,7 +64,7 @@ namespace {
     });
 
 
-    auto const time = mixins.test("time", [](auto check) {
+    auto const time = suite.test("time", [](auto check) {
         class base {};
         static_assert(
                 not std::is_same<
