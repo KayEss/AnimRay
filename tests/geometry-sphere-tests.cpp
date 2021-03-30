@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+/**
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,55 +18,54 @@
 */
 
 
+#include <animray/functional/traits.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/ray.hpp>
-#include <fost/insert>
-#include <fost/test>
-
-
-FSL_TEST_SUITE(sphere);
-
-
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<
-            animray::unit_sphere_at_origin<animray::ray<int>>>();
-    fostlib::test::default_copy_constructable<
-            animray::unit_sphere_at_origin<animray::ray<int64_t>>>();
-    fostlib::test::default_copy_constructable<
-            animray::unit_sphere_at_origin<animray::ray<float>>>();
-    fostlib::test::default_copy_constructable<
-            animray::unit_sphere_at_origin<animray::ray<double>>>();
-    fostlib::test::default_copy_constructable<
-            animray::unit_sphere_at_origin<animray::ray<long double>>>();
-}
+#include <felspar/test.hpp>
 
 
 namespace {
-    template<typename D>
-    void sphere_occlude() {
-        try {
-            typedef typename animray::ray<D>::end_type end_type;
-            typedef animray::ray<D> ray;
-            animray::unit_sphere_at_origin<animray::ray<D>> s;
-            FSL_CHECK(s.occludes(ray(end_type(0, 0, 10), end_type()), 0));
-            FSL_CHECK(s.occludes(ray(end_type(), end_type(0, 0, 10)), 0));
-            FSL_CHECK(
-                    !s.occludes(ray(end_type(0, 0, 5), end_type(0, 0, 10)), 0));
-            FSL_CHECK(
-                    s.occludes(ray(end_type(0, 0, 10), end_type(0, 0, 5)), 0));
-        } catch (fostlib::exceptions::exception &e) {
-            fostlib::insert(
-                    e.data(), "Type under test",
-                    fostlib::coerce<fostlib::string>(typeid(D).name()));
-            ;
-            throw;
-        }
+
+
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    static_assert(
+            animray::Regular<animray::unit_sphere_at_origin<animray::ray<int>>>);
+    static_assert(animray::Regular<
+                  animray::unit_sphere_at_origin<animray::ray<int64_t>>>);
+    static_assert(animray::Regular<
+                  animray::unit_sphere_at_origin<animray::ray<float>>>);
+    static_assert(animray::Regular<
+                  animray::unit_sphere_at_origin<animray::ray<double>>>);
+    static_assert(animray::Regular<
+                  animray::unit_sphere_at_origin<animray::ray<long double>>>);
+
+
+    template<typename D, typename C>
+    void sphere_occlude(C check) {
+        using end_type = typename animray::ray<D>::end_type;
+        using ray = animray::ray<D>;
+        animray::unit_sphere_at_origin<animray::ray<D>> s;
+        check(s.occludes(ray(end_type(0, 0, 10), end_type()), 0)).is_truthy();
+        check(s.occludes(ray(end_type(), end_type(0, 0, 10)), 0)).is_truthy();
+        check(!s.occludes(ray(end_type(0, 0, 5), end_type(0, 0, 10)), 0))
+                .is_truthy();
+        check(s.occludes(ray(end_type(0, 0, 10), end_type(0, 0, 5)), 0))
+                .is_truthy();
     }
+    auto const occ = suite.test("occlusion", [](auto check) {
+        sphere_occlude<int>(check);
+        sphere_occlude<int64_t>(check);
+        sphere_occlude<float>(check);
+        sphere_occlude<double>(check);
+        sphere_occlude<long double>(check);
+    });
+
+
 }
-FSL_TEST_FUNCTION(occlusion) {
-    sphere_occlude<int>();
-    sphere_occlude<int64_t>();
-    sphere_occlude<float>();
-    sphere_occlude<double>();
-    sphere_occlude<long double>();
-}
+
+
+// namespace {
+// FSL_TEST_FUNCTION(occlusion) {
+// }
