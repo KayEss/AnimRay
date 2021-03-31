@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -28,83 +28,72 @@
 
 
 namespace {
-    typedef animray::ray<int> base_ray;
-    typedef animray::with_frame<base_ray, std::size_t>::type ray_type;
-}
 
 
-FSL_TEST_SUITE(animation_procedural);
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(constant) {
-    ray_type ray;
-    FSL_CHECK_EQ(ray.frame, 0u);
-    FSL_CHECK_EQ(animray::reduce(0, ray), 0);
-}
+    using base_ray = animray::ray<int>;
+    using ray_type = animray::with_frame<base_ray, std::size_t>::type;
 
 
-FSL_TEST_FUNCTION(linear_frames_boost_function) {
-    const auto f{[](const ray_type &r) {
-        return animray::interpolation::linear(
-                5.0, 15.0, r.frame, std::size_t(10));
-    }};
-    ray_type ray;
-    FSL_CHECK_EQ(animray::reduce(f, ray), 5);
-    ray.frame = 10;
-    FSL_CHECK_EQ(ray.frame, 10u);
-    FSL_CHECK_EQ(animray::reduce(f, ray), 15);
-}
+    auto const c = suite.test("constant", [](auto check) {
+        ray_type ray;
+        check(ray.frame) == 0u;
+        check(animray::reduce(0, ray)) == 0;
+    });
 
 
-FSL_TEST_FUNCTION(linear_frames_std_function) {
-    const auto f{[](const ray_type &r) {
-        return animray::interpolation::linear(
-                -5.0, 5.0, r.frame, std::size_t(10));
-    }};
-    ray_type ray;
-    FSL_CHECK_EQ(animray::reduce(f, ray), -5);
-    ray.frame = 1;
-    FSL_CHECK_EQ(animray::reduce(f, ray), -4);
-}
+    auto const lf = suite.test("linear-frames", [](auto check) {
+        const auto f{[](const ray_type &r) {
+            return animray::interpolation::linear(
+                    -5.0, 5.0, r.frame, std::size_t(10));
+        }};
+        ray_type ray;
+        check(animray::reduce(f, ray)) == -5;
+        ray.frame = 1;
+        check(animray::reduce(f, ray)) == -4;
+    });
 
 
-namespace {
     int linear_frames_function(const ray_type &r) {
         return animray::interpolation::linear(
                 -5.0, 5.0, r.frame, std::size_t(10));
     }
-}
-FSL_TEST_FUNCTION(linear_frames_function) {
-    ray_type ray;
-    FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -5);
-    ray.frame = 1;
-    FSL_CHECK_EQ(animray::reduce(linear_frames_function, ray), -4);
-}
+    auto const lff = suite.test("linear_frames_function", [](auto check) {
+        ray_type ray;
+        check(animray::reduce(linear_frames_function, ray)) == -5;
+        ray.frame = 1;
+        check(animray::reduce(linear_frames_function, ray)) == -4;
+    });
 
 
-FSL_TEST_FUNCTION(linear_frames_auto) {
-    const auto f = [](const ray_type &r) {
-        return animray::interpolation::linear(
-                -5.0, 5.0, r.frame, std::size_t(10));
-    };
-    ray_type ray;
-    FSL_CHECK_EQ(animray::reduce(f, ray), -5);
-    ray.frame = 5;
-    FSL_CHECK_EQ(animray::reduce(f, ray), 0);
-}
+    auto const lfa = suite.test("linear_frames_auto", [](auto check) {
+        const auto f = [](const ray_type &r) {
+            return animray::interpolation::linear(
+                    -5.0, 5.0, r.frame, std::size_t(10));
+        };
+        ray_type ray;
+        check(animray::reduce(f, ray)) == -5;
+        ray.frame = 5;
+        check(animray::reduce(f, ray)) == 0;
+    });
 
 
-FSL_TEST_FUNCTION(rotate) {
-    animray::animation::rotate_xy<animray::point3d<double>> rot(
-            animray::point3d<double>(1, 1, 1), 2, 90_deg, 0_deg);
-    check_close(rot(0), animray::point3d<double>(3, 1, 1));
-    check_close(rot(1), animray::point3d<double>(1, 3, 1));
-    check_close(rot(2), animray::point3d<double>(-1, 1, 1));
-    check_close(rot(3), animray::point3d<double>(1, -1, 1));
-    check_close(rot(4), animray::point3d<double>(3, 1, 1));
-    rot.phase = 90_deg;
-    check_close(rot(0), animray::point3d<double>(1, 3, 1));
-    check_close(rot(1), animray::point3d<double>(-1, 1, 1));
-    check_close(rot(2), animray::point3d<double>(1, -1, 1));
-    check_close(rot(3), animray::point3d<double>(3, 1, 1));
+    auto const r = suite.test("rotate", [](auto check) {
+        animray::animation::rotate_xy<animray::point3d<double>> rot{
+                animray::point3d<double>(1, 1, 1), 2, 90_deg, 0_deg};
+        animray::check_close(check, rot(0), animray::point3d<double>(3, 1, 1));
+        animray::check_close(check, rot(1), animray::point3d<double>(1, 3, 1));
+        animray::check_close(check, rot(2), animray::point3d<double>(-1, 1, 1));
+        animray::check_close(check, rot(3), animray::point3d<double>(1, -1, 1));
+        animray::check_close(check, rot(4), animray::point3d<double>(3, 1, 1));
+        rot.phase = 90_deg;
+        animray::check_close(check, rot(0), animray::point3d<double>(1, 3, 1));
+        animray::check_close(check, rot(1), animray::point3d<double>(-1, 1, 1));
+        animray::check_close(check, rot(2), animray::point3d<double>(1, -1, 1));
+        animray::check_close(check, rot(3), animray::point3d<double>(3, 1, 1));
+    });
+
+
 }

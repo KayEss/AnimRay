@@ -30,22 +30,24 @@
 namespace animray {
 
 
+    /// Check if two values are near each other
+    template<typename C, typename D>
+    inline void
+            check_close(C check, D const &left, D const &right, D const &error) {
+        check(left) >= right - error;
+        check(right) <= right + error;
+    }
+
     /// Check if two points are close enough to be considered the same
-    template<typename D>
-    void check_close(
+    template<typename C, typename D>
+    inline void check_close(
+            C check,
             animray::point3d<D> const &l,
             animray::point3d<D> const &r,
             D const error = 1e-3) {
-        try {
-            FSL_CHECK_ERROR(l.x(), r.x(), error);
-            FSL_CHECK_ERROR(l.y(), r.y(), error);
-            FSL_CHECK_ERROR(l.z(), r.z(), error);
-        } catch (fostlib::exceptions::exception &e) {
-            fostlib::insert(e.data(), "check_close", "error", error);
-            // fostlib::insert(e.data(), "check_close", "left", l);
-            // fostlib::insert(e.data(), "check_close", "right", r);
-            throw;
-        }
+        check_close(check, l.x(), r.x(), error);
+        check_close(check, l.y(), r.y(), error);
+        check_close(check, l.z(), r.z(), error);
     }
 
 
