@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,21 +19,25 @@
 
 
 #include <animray/color/rgb.hpp>
-
 #include <animray/color/concept.hpp>
-
-#include <fost/test>
-
-
-FSL_TEST_SUITE(rgb);
+#include <felspar/test.hpp>
 
 
-static_assert(animray::Spectrum<animray::rgb<float>>);
+namespace {
 
 
-FSL_TEST_FUNCTION(attenuation) {
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    static_assert(animray::Spectrum<animray::rgb<float>>);
+
+
+    auto const a = suite.test("attenuation", [](auto check) {
     animray::rgb<int> f1(animray::rgb<int>(10, 10, 10) * 0.5f);
-    FSL_CHECK_EQ(f1.red(), 5);
-    FSL_CHECK_EQ(f1.green(), 5);
-    FSL_CHECK_EQ(f1.blue(), 5);
+        check(f1.red()) ==  5;
+        check(f1.green()) == 5;
+        check(f1.blue()) == 5;
+    });
+
+
 }
