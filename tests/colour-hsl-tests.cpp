@@ -30,10 +30,11 @@ namespace {
     auto const suite = felspar::testsuite(__FILE__);
 
 
-static_assert(animray::Spectrum<animray::hsl<float>>);
+    static_assert(animray::Spectrum<animray::hsl<float>>);
 
 
-    void hsl_is_rgb(auto check, float h, float s, float l, float r, float g, float b) {
+    void hsl_is_rgb(
+            auto check, float h, float s, float l, float r, float g, float b) {
         animray::hsl<float> f(h, s, l);
         auto const t(animray::convert_to<animray::rgb<float>>(f));
         animray::check_close(check, t.array()[0], r);
@@ -48,9 +49,10 @@ static_assert(animray::Spectrum<animray::hsl<float>>);
         hsl_is_rgb(check, 0, 1, .5f, 1, 0, 0); // red
         hsl_is_rgb(check, 60, 1, .375f, .75f, .75f, 0); // olive
         hsl_is_rgb(check, 49.5f, .893f, .497f, .941f, .785f, .053f); // orange
-        hsl_is_rgb(check, 240.5f, .290f, .607f, .495f, .493f, .721f); // light purple
+        hsl_is_rgb(
+                check, 240.5f, .290f, .607f, .495f, .493f,
+                .721f); // light purple
     });
 
 
 }
-

@@ -33,8 +33,8 @@ namespace {
 
 
     auto const a = suite.test("attenuation", [](auto check) {
-    animray::rgb<int> f1(animray::rgb<int>(10, 10, 10) * 0.5f);
-        check(f1.red()) ==  5;
+        animray::rgb<int> f1(animray::rgb<int>(10, 10, 10) * 0.5f);
+        check(f1.red()) == 5;
         check(f1.green()) == 5;
         check(f1.blue()) == 5;
     });
