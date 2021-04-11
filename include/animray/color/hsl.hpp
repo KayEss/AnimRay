@@ -73,50 +73,50 @@ namespace animray {
     };
 
 
-    /// Allow conversion from HLS to RGB for float versions
-    template<typename D>
-    struct detail::color_conversion<rgb<D>, hsl<D>> {
-        auto convert(hsl<D> c) {
-            /// Performs the coercion
-            const D h = c.array()[0], s = c.array()[1], l = c.array()[2];
-            const D C = l <= D(0.5) ? D(2) * l * s : (D(2) - D(2) * l) * s;
-            const D H = h / D(60);
-            D Hmod2 = H;
-            while (Hmod2 > D(2)) Hmod2 -= D(2);
-            const D X = C * (D(1) - std::abs(Hmod2 - D(1)));
-            D r, g, b;
-            if (H < D(1)) {
-                r = C;
-                g = X;
-                b = D(0);
-            } else if (H < D(2)) {
-                r = X;
-                g = C;
-                b = D(0);
-            } else if (H < D(3)) {
-                r = D(0);
-                g = C;
-                b = X;
-            } else if (H < D(4)) {
-                r = D(0);
-                g = X;
-                b = C;
-            } else if (H < D(5)) {
-                r = X;
-                g = D(0);
-                b = C;
-            } else {
-                r = C;
-                g = D(0);
-                b = X;
-            }
-            D const m = l - D(0.5) * C;
-            return rgb<D>(r + m, g + m, b + m);
-        }
-    };
-
-
 }
+
+
+/// Allow conversion from HLS to RGB for float versions
+template<typename D>
+struct animray::detail::color_conversion<animray::rgb<D>, animray::hsl<D>> {
+    auto convert(hsl<D> c) {
+        /// Performs the coercion
+        const D h = c.array()[0], s = c.array()[1], l = c.array()[2];
+        const D C = l <= D(0.5) ? D(2) * l * s : (D(2) - D(2) * l) * s;
+        const D H = h / D(60);
+        D Hmod2 = H;
+        while (Hmod2 > D(2)) Hmod2 -= D(2);
+        const D X = C * (D(1) - std::abs(Hmod2 - D(1)));
+        D r, g, b;
+        if (H < D(1)) {
+            r = C;
+            g = X;
+            b = D(0);
+        } else if (H < D(2)) {
+            r = X;
+            g = C;
+            b = D(0);
+        } else if (H < D(3)) {
+            r = D(0);
+            g = C;
+            b = X;
+        } else if (H < D(4)) {
+            r = D(0);
+            g = X;
+            b = C;
+        } else if (H < D(5)) {
+            r = X;
+            g = D(0);
+            b = C;
+        } else {
+            r = C;
+            g = D(0);
+            b = X;
+        }
+        D const m = l - D(0.5) * C;
+        return rgb<D>(r + m, g + m, b + m);
+    }
+};
 
 
 #endif // ANIMRAY_HLS_HPP
