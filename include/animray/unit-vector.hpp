@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -43,18 +43,18 @@ namespace animray {
         unit_vector() : superclass(0, 0, 1) {}
         /// Constructs a unit vector (already normalised)
         unit_vector(
-                const value_type x,
-                const value_type y,
-                const value_type z,
-                const value_type m = value_type(1))
+                value_type const x,
+                value_type const y,
+                value_type const z,
+                value_type const m = value_type{1})
         : superclass(x, y, z, m) {}
         /// Constructs a unit vector from a point relative to the origin
-        explicit unit_vector(const point3d<D> &p) : superclass(p.unit()) {}
+        explicit unit_vector(point3d<D> const &p) : superclass(p.unit()) {}
 
         /// Multiply by a scalar
-        point3d<value_type> operator*(const value_type scalar) const;
+        point3d<value_type> operator*(value_type scalar) const;
         /// Add a vector
-        point3d<value_type> operator+(const point3d<value_type> &r) const {
+        point3d<value_type> operator+(point3d<value_type> const &r) const {
             return point3d<value_type>(*this) + r;
         }
 
