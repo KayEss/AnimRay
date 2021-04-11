@@ -46,7 +46,8 @@ namespace animray {
     /// Colour conversion between colour spaces
     template<Spectrum T, Spectrum F>
     T convert_to(F &&f) {
-        return detail::color_conversion<T, F>{}.convert(std::forward<F>(f));
+        return detail::color_conversion<T, std::decay_t<F>>{}.convert(
+                std::forward<F>(f));
     }
     // template<PixelValue T, PixelValue F>
     // T convert_to(F &&f) {
