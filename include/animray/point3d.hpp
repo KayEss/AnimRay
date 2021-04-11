@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -135,6 +135,10 @@ namespace animray {
         /// The length of the location as vectro
         value_type magnitude() const { return std::sqrt(dot()); }
     };
+
+
+    template<typename V>
+    point3d(V, V, V) -> point3d<V>;
 
 
 }

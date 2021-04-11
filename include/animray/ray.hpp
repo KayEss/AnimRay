@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -98,15 +98,13 @@ namespace animray {
     };
 
 
-}
-
-
-namespace std {
+    template<typename V>
+    ray(point3d<V>, point3d<V>) -> ray<V, point3d<V>>;
 
 
     /// Output to a stream
     template<typename D>
-    ostream &operator<<(ostream &o, const animray::ray<D> &r) {
+    std::ostream &operator<<(std::ostream &o, animray::ray<D> const &r) {
         return o << r.from << " -> " << r.direction;
     }
 
