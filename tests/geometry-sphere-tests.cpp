@@ -64,8 +64,3 @@ namespace {
 
 
 }
-
-
-// namespace {
-// FSL_TEST_FUNCTION(occlusion) {
-// }
