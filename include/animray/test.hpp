@@ -33,7 +33,7 @@ namespace animray {
     /// Check if two values are near each other
     template<typename C, typename D>
     inline void check_close(
-            C check, D const &left, D const &right, D const &error = 1e-3) {
+            C check, D const left, D const right, D const error = 1e-3) {
         check(left) >= right - error;
         check(right) <= right + error;
     }
