@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,45 +18,37 @@
 */
 
 
+#include <animray/functional/traits.hpp>
 #include <animray/line.hpp>
-
-#include <fost/test>
-
-
-FSL_TEST_SUITE(line);
+#include <felspar/test.hpp>
 
 
-#if __has_include(<concepts>)
-#include <concepts>
-static_assert(std::regular<animray::line<int>>);
-static_assert(std::regular<animray::line<float>>);
-#endif
+namespace {
 
 
-FSL_TEST_FUNCTION(constructor_simple) {
-    animray::line<int> l1(
-            animray::line<int>::end_type(0, 0, 1),
-            animray::line<int>::end_type(0, 0, 10));
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(length_squared) {
-    FSL_CHECK_EQ(
-            animray::line<int>(
-                    animray::line<int>::end_type(),
-                    animray::line<int>::end_type(1, 0, 0))
-                    .length_squared(),
-            1);
-    FSL_CHECK_EQ(
-            animray::line<int>(
-                    animray::line<int>::end_type(),
-                    animray::line<int>::end_type(0, 2, 0))
-                    .length_squared(),
-            4);
-    FSL_CHECK_EQ(
-            animray::line<int>(
-                    animray::line<int>::end_type(),
-                    animray::line<int>::end_type(3, 0, 4))
-                    .length_squared(),
-            25);
+    static_assert(animray::Regular<animray::line<int>>);
+    static_assert(animray::Regular<animray::line<float>>);
+
+
+    auto const c = suite.test("constructor simple", [](auto) {
+        animray::line l1{animray::point3d{0, 0, 1}, animray::point3d{0, 0, 10}};
+    });
+
+
+    auto const ls = suite.test("length squared", [](auto check) {
+        check(animray::line(animray::point3d<int>(), animray::point3d(1, 0, 0))
+                      .length_squared())
+                == 1;
+        check(animray::line(animray::point3d<int>(), animray::point3d(0, 2, 0))
+                      .length_squared())
+                == 4;
+        check(animray::line(animray::point3d<int>(), animray::point3d(3, 0, 4))
+                      .length_squared())
+                == 25;
+    });
+
+
 }
