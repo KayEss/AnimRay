@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,80 +18,91 @@
 */
 
 
-#include <animray/maths/angles.hpp>
 #include <animray/affine.hpp>
+#include <animray/functional/traits.hpp>
+#include <animray/maths/angles.hpp>
 #include <animray/ray.hpp>
-
-#include <fost/test>
-
-
-FSL_TEST_SUITE(matrix);
+#include <animray/test.hpp>
+#include <felspar/test.hpp>
 
 
-// static_assert(std::regular<animray::matrix<int>>);
-// static_assert(std::regular<animray::matrix<float>>);
+namespace {
 
 
-FSL_TEST_FUNCTION(matrix_multiply) {
-    animray::matrix<int> id;
-    auto aff(animray::translate<int>(10, 23, 54));
-    FSL_CHECK_EQ(aff.forward() * aff.backward(), id);
-    FSL_CHECK_EQ(id * aff.forward(), aff.forward());
-    FSL_CHECK_EQ(id * aff.backward(), aff.backward());
-    animray::point3d<int> pf(aff.forward() * animray::point3d<int>());
-    FSL_CHECK_EQ(pf.x(), 10);
-    FSL_CHECK_EQ(pf.y(), 23);
-    FSL_CHECK_EQ(pf.z(), 54);
-    animray::point3d<int> ps(aff.backward() * animray::point3d<int>());
-    FSL_CHECK_EQ(ps.x(), -10);
-    FSL_CHECK_EQ(ps.y(), -23);
-    FSL_CHECK_EQ(ps.z(), -54);
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(ray_rotate_forward) {
-    animray::ray<double> z(
-            animray::point3d<double>(0, 0, 0),
-            animray::unit_vector<double>(0, 0, 1));
-    FSL_CHECK_EQ(z.direction, (z.ends() - z.from).unit());
-
-    animray::matrix<double> rx45(animray::rotate_x<double>(-45_deg).first);
-    animray::ray<double> r45(z * rx45);
-    FSL_CHECK_EQ(r45.direction, (r45.ends() - r45.from).unit());
-
-    animray::ray<double> r90(r45 * rx45);
-    FSL_CHECK_EQ(r90.direction, (r90.ends() - r90.from).unit());
-    FSL_CHECK_ERROR(r90.direction.x(), 0, 1e-10);
-    FSL_CHECK_ERROR(r90.direction.y(), 1, 1e-10);
-    FSL_CHECK(r90.direction.z() < 1e-10);
-}
+    static_assert(animray::Regular<animray::matrix<int>>);
+    static_assert(animray::Regular<animray::matrix<float>>);
 
 
-FSL_TEST_FUNCTION(ray_rotate_backward) {
-    animray::ray<double> z(
-            animray::point3d<double>(0, 0, 0),
-            animray::unit_vector<double>(0, 0, 1));
-    FSL_CHECK_EQ(z.direction, (z.ends() - z.from).unit());
+    auto const mm = suite.test("matrix multiply", [](auto check) {
+        animray::matrix<int> id;
 
-    animray::matrix<double> rx45(animray::rotate_x<double>(45_deg).second);
-    animray::ray<double> r45(z * rx45);
-    FSL_CHECK_EQ(r45.direction, (r45.ends() - r45.from).unit());
+        auto aff(animray::translate<int>(10, 23, 54));
+        check(aff.forward() * aff.backward()) == id;
+        check(id * aff.forward()) == aff.forward();
+        check(id * aff.backward()) == aff.backward();
 
-    animray::ray<double> r90(r45 * rx45);
-    FSL_CHECK_EQ(r90.direction, (r90.ends() - r90.from).unit());
-    FSL_CHECK_ERROR(r90.direction.x(), 0, 1e-10);
-    FSL_CHECK_ERROR(r90.direction.y(), 1, 1e-10);
-    FSL_CHECK(r90.direction.z() < 1e-10);
-}
+        animray::point3d<int> pf(aff.forward() * animray::point3d<int>());
+        check(pf.x()) == 10;
+        check(pf.y()) == 23;
+        check(pf.z()) == 54;
+
+        animray::point3d<int> ps(aff.backward() * animray::point3d<int>());
+        check(ps.x()) == -10;
+        check(ps.y()) == -23;
+        check(ps.z()) == -54;
+    });
 
 
-FSL_TEST_FUNCTION(ray_scale) {
-    animray::ray<double> all(
-            animray::point3d<double>(0, 0, 0),
-            animray::point3d<double>(1, 1, 1));
-    FSL_CHECK_EQ(all.direction, (all.ends() - all.from).unit());
+    auto const rrf = suite.test("rotate ray forward", [](auto check) {
+        animray::ray<double> z(
+                animray::point3d<double>(0, 0, 0),
+                animray::unit_vector<double>(0, 0, 1));
+        check(z.direction) == (z.ends() - z.from).unit();
 
-    animray::matrix<double> halve(animray::scale<double>(0.5, 0.5, 0.5).first);
-    animray::ray<double> havled(all * halve);
-    FSL_CHECK_EQ(all, havled);
+        animray::matrix<double> rx45(animray::rotate_x<double>(-45_deg).first);
+        animray::ray<double> r45(z * rx45);
+        check(r45.direction) == (r45.ends() - r45.from).unit();
+
+        animray::ray<double> r90(r45 * rx45);
+        check(r90.direction) == (r90.ends() - r90.from).unit();
+        animray::check_close(check, r90.direction.x(), 0, 1e-10);
+        animray::check_close(check, r90.direction.y(), 1, 1e-10);
+        check(r90.direction.z()) < 1e-10;
+    });
+
+
+    auto const rrb = suite.test("rotate ray backward", [](auto check) {
+        animray::ray<double> z(
+                animray::point3d<double>(0, 0, 0),
+                animray::unit_vector<double>(0, 0, 1));
+        check(z.direction) == (z.ends() - z.from).unit();
+
+        animray::matrix<double> rx45(animray::rotate_x<double>(45_deg).second);
+        animray::ray<double> r45(z * rx45);
+        check(r45.direction) == (r45.ends() - r45.from).unit();
+
+        animray::ray<double> r90(r45 * rx45);
+        check(r90.direction) == (r90.ends() - r90.from).unit();
+        animray::check_close(check, r90.direction.x(), 0, 1e-10);
+        animray::check_close(check, r90.direction.y(), 1, 1e-10);
+        check(r90.direction.z()) < 1e-10;
+    });
+
+
+    auto const rs = suite.test("ray scale", [](auto check) {
+        animray::ray<double> all(
+                animray::point3d<double>(0, 0, 0),
+                animray::point3d<double>(1, 1, 1));
+        check(all.direction) == (all.ends() - all.from).unit();
+
+        animray::matrix<double> halve(
+                animray::scale<double>(0.5, 0.5, 0.5).first);
+        animray::ray<double> havled(all * halve);
+        check(all) == havled;
+    });
+
+
 }

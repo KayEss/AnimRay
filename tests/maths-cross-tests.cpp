@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,28 +19,34 @@
 
 
 #include <animray/maths/cross.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(cross_product);
+namespace {
 
 
-FSL_TEST_FUNCTION(simple) {
-    FSL_CHECK_EQ(
-            cross(animray::unit_vector<int>(0, 1, 0),
-                  animray::point3d<int>(1, 0, 0)),
-            animray::point3d<int>(0, 0, -1));
-    FSL_CHECK_EQ(
-            cross(animray::unit_vector<int>(1, 0, 0),
-                  animray::point3d<int>(0, 1, 0)),
-            animray::point3d<int>(0, 0, 1));
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(inverse) {
-    animray::point3d<double> e1(5, 0, 0), e2(0, 3, 0);
-    FSL_CHECK_EQ(cross(e1, e2), animray::point3d<double>(0, 0, 15));
-    FSL_CHECK_EQ(-cross(e1, e2), animray::point3d<double>(0, 0, -15));
-    FSL_CHECK_EQ(cross(e2, e1), animray::point3d<double>(0, 0, -15));
-    FSL_CHECK_EQ(-cross(e2, e1), animray::point3d<double>(0, 0, 15));
+    auto const s = suite.test("simple", [](auto check) {
+        check(animray::cross(
+                animray::unit_vector<int>(0, 1, 0),
+                animray::point3d<int>(1, 0, 0)))
+                == animray::point3d<int>(0, 0, -1);
+        check(animray::cross(
+                animray::unit_vector<int>(1, 0, 0),
+                animray::point3d<int>(0, 1, 0)))
+                == animray::point3d<int>(0, 0, 1);
+    });
+
+
+    auto const i = suite.test("inverse", [](auto check) {
+        animray::point3d<double> e1(5, 0, 0), e2(0, 3, 0);
+        check(animray::cross(e1, e2)) == animray::point3d<double>(0, 0, 15);
+        check(-animray::cross(e1, e2)) == animray::point3d<double>(0, 0, -15);
+        check(animray::cross(e2, e1)) == animray::point3d<double>(0, 0, -15);
+        check(-animray::cross(e2, e1)) == animray::point3d<double>(0, 0, 15);
+    });
+
+
 }
