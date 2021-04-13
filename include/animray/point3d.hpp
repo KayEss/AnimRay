@@ -139,6 +139,8 @@ namespace animray {
 
     template<typename V>
     point3d(V, V, V) -> point3d<V>;
+    template<typename V>
+    point3d(V, V, V, V) -> point3d<V>;
 
 
 }

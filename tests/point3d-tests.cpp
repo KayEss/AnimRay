@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,37 +18,44 @@
 */
 
 
+#include <animray/functional/traits.hpp>
 #include <animray/point3d.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(point3d);
+namespace {
 
 
-// static_assert(std::regular<animray::point3d<int>>);
-// static_assert(std::regular<animray::point3d<float>>);
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(basic_arithmatic) {
-    animray::point3d<int> x(2, 0, 0, 2), y(0, 2, 0, 2), z(0, 0, 2, 2),
-            xy(2, 2, 0, 2), xz(2, 0, 2, 2), yz(0, 2, 2, 2);
-    FSL_CHECK_EQ(x + y, xy);
-    FSL_CHECK_EQ(x + z, xz);
-    FSL_CHECK_EQ(y + z, yz);
-    FSL_CHECK_EQ(xy * xz, x);
-    FSL_CHECK_EQ(xy * yz, y);
-    FSL_CHECK_EQ(xz * yz, z);
-    FSL_CHECK_EQ(x + x, x * 2);
-    FSL_CHECK_EQ(y + y, y * 2);
-    FSL_CHECK_EQ(z + z, z * 2);
-}
+    static_assert(animray::Regular<animray::point3d<int>>);
+    static_assert(animray::Regular<animray::point3d<float>>);
 
 
-FSL_TEST_FUNCTION(dot) {
-    animray::point3d<int> h1(3, 4, 5), h2(-2, -2, -2);
-    FSL_CHECK_EQ(h1.dot(), 50);
-    FSL_CHECK_EQ(h2.dot(), 12);
-    FSL_CHECK_EQ((h1 - h2).dot(), 110);
-    FSL_CHECK_EQ((h2 - h1).dot(), 110);
-    FSL_CHECK_EQ((h1 + h2).dot(), 14);
+    auto const ba = suite.test("basic arithmatic", [](auto check) {
+        animray::point3d x(2, 0, 0, 2), y(0, 2, 0, 2), z(0, 0, 2, 2),
+                xy(2, 2, 0, 2), xz(2, 0, 2, 2), yz(0, 2, 2, 2);
+        check(x + y) == xy;
+        check(x + z) == xz;
+        check(y + z) == yz;
+        check(xy * xz) == x;
+        check(xy * yz) == y;
+        check(xz * yz) == z;
+        check(x + x) == x * 2;
+        check(y + y) == y * 2;
+        check(z + z) == z * 2;
+    });
+
+
+    auto const d = suite.test("dot", [](auto check) {
+        animray::point3d h1(3, 4, 5), h2(-2, -2, -2);
+        check(h1.dot()) == 50;
+        check(h2.dot()) == 12;
+        check((h1 - h2).dot()) == 110;
+        check((h2 - h1).dot()) == 110;
+        check((h1 + h2).dot()) == 14;
+    });
+
+
 }
