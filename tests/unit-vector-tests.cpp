@@ -1,6 +1,5 @@
-/*
-    Copyright 2010, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,25 +18,28 @@
 */
 
 
+#include <animray/functional/traits.hpp>
 #include <animray/unit-vector.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-using animray::unit_vector;
+namespace {
 
 
-FSL_TEST_SUITE(unit_vector);
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<unit_vector<int>>();
-    fostlib::test::default_copy_constructable<unit_vector<int64_t>>();
-    fostlib::test::default_copy_constructable<unit_vector<float>>();
-    fostlib::test::default_copy_constructable<unit_vector<double>>();
-    fostlib::test::default_copy_constructable<unit_vector<long double>>();
-}
+    static_assert(animray::Regular<animray::unit_vector<int>>);
+    static_assert(animray::Regular<animray::unit_vector<int64_t>>);
+    static_assert(animray::Regular<animray::unit_vector<float>>);
+    static_assert(animray::Regular<animray::unit_vector<double>>);
+    static_assert(animray::Regular<animray::unit_vector<long double>>);
 
 
-FSL_TEST_FUNCTION(comparison) {
-    FSL_CHECK_EQ(unit_vector<int>(), unit_vector<int>(0, 0, 1));
+    auto const c = suite.test("comparison", [](auto check) {
+        check(animray::unit_vector<int>())
+                == animray::unit_vector<int>(0, 0, 1);
+    });
+
+
 }
