@@ -56,7 +56,7 @@ namespace animray {
     };
 
 
-    /// A functor that calls coerce -- (TODO maybe to be generalised)
+    /// A functor that coerces one colour to another
     template<typename T, typename F>
     struct coercer {
         /// The result type
@@ -65,6 +65,12 @@ namespace animray {
         using arg1_type = F;
         /// The coercion function
         result_type operator()(const F &f) const { return convert_to<T>(f); }
+    };
+    template<typename T>
+    struct coercer<T, T> {
+        using result_type = T;
+        using arg1_type = T;
+        result_type operator()(const T &f) const { return f; }
     };
 
 
