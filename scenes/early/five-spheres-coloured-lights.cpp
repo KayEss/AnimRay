@@ -20,6 +20,7 @@
 
 #include <animray/affine.hpp>
 #include <animray/camera/pinhole.hpp>
+#include <animray/cli/main.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
 #include <animray/geometry/collection.hpp>
 #include <animray/light/ambient.hpp>
@@ -29,20 +30,15 @@
 #include <animray/scene.hpp>
 #include <animray/shader.hpp>
 #include <animray/formats/targa.hpp>
-#include <fost/main>
-#include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    auto output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("five-spheres-coloured-lights.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("300"));
-    const int height = fostlib::coerce<int>(args[3].value_or("200"));
+int main(int argc, char const *const argv[]) {
+    auto const args = animray::cli::arguments{
+            argc, argv, "five-spheres-coloured-lights.tga", 300, 200};
 
-    const double aspect = double(width) / height;
-    const double fw = width > height ? aspect * 0.024 : 0.024;
-    const double fh = width > height ? 0.024 : 0.024 / aspect;
+    const double aspect = double(args.width) / args.height;
+    const double fw = args.width > args.height ? aspect * 0.024 : 0.024;
+    const double fh = args.width > args.height ? 0.024 : 0.024 / aspect;
 
     typedef double world;
     using movable_sphere =
@@ -92,11 +88,11 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
 
     animray::movable<
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
-            camera(fw, fh, width, height, 0.05);
+            camera(fw, fh, args.width, args.height, 0.05);
     camera(animray::translate<world>(0.0, 0.0, -8.5));
     using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
-            width, height,
+            args.width, args.height,
             [&scene, &camera](
                     const film_type::size_type x, const film_type::size_type y) {
                 animray::rgb<float> photons(scene(camera, x, y));
@@ -112,7 +108,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                                         ? 255
                                         : photons.blue() / exposure));
             });
-    animray::targa(output_filename, output);
+    animray::targa(args.output_filename, output);
 
     return 0;
 }

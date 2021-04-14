@@ -20,28 +20,24 @@
 
 #include <animray/affine.hpp>
 #include <animray/camera/ortho.hpp>
+#include <animray/cli/main.hpp>
 #include <animray/epsilon.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/geometry/planar/triangle.hpp>
 #include <animray/movable.hpp>
 #include <animray/ray.hpp>
-#include <fost/main>
-#include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("white-triangle-ortho.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("1920"));
-    int height = fostlib::coerce<int>(args[3].value_or("1080"));
+int main(int argc, char const *const argv[]) {
+    auto const args = animray::cli::arguments{
+            argc, argv, "white-triangle-ortho.tga", 1920, 1080};
 
     const double size = 40;
-    const double aspect = double(width) / height;
-    const double fw = width > height ? aspect * size : size;
-    const double fh = width > height ? size : size / aspect;
+    const double aspect = double(args.width) / args.height;
+    const double fw = args.width > args.height ? aspect * size : size;
+    const double fh = args.width > args.height ? size : size / aspect;
 
-    typedef animray::ray<double> ray;
+    using ray = animray::ray<double>;
     animray::triangle<ray> triangle(
             animray::point3d<double>(19, 19, 0),
             animray::point3d<double>(-19, 0, 0),
@@ -49,23 +45,22 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
     using film_type = animray::film<animray::rgb<uint8_t>>;
 
     animray::movable<animray::ortho_camera<ray>, animray::ray<double>> camera(
-            fw, fh, width, height, 0, 1);
+            fw, fh, args.width, args.height, 0, 1);
     camera(animray::translate<double>(0, 0, -9));
 
     film_type output(
-            width, height,
+            args.width, args.height,
             [=, &triangle, &camera](
                     const film_type::size_type x, const film_type::size_type y) {
                 ray r(camera(x, y));
-                fostlib::nullable<ray> intersection(
-                        triangle.intersects(r, 0.0));
+                auto intersection = triangle.intersects(r, 0.0);
                 if (intersection) {
                     ray light(
                             intersection->from, ray::end_type(5.0, 5.0, -5.0));
                     if (triangle.occludes(light, 1e-9)) {
                         return animray::rgb<uint8_t>(50);
                     } else {
-                        const double costheta =
+                        auto const costheta =
                                 dot(light.direction, intersection->direction);
                         return animray::rgb<uint8_t>(50 + 205 * costheta);
                     }
@@ -73,7 +68,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                     return animray::rgb<uint8_t>(0);
                 }
             });
-    animray::targa(output_filename, output);
+    animray::targa(args.output_filename, output);
 
     return 0;
 }

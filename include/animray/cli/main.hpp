@@ -76,6 +76,14 @@ namespace animray::cli {
         std::map<char, char const *> switches;
 
         /// APIs to make things simpler
+        double switch_value(char const option, double const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::strtod(it->second, &ends);
+            } else {
+                return v;
+            }
+        }
     };
 
 
