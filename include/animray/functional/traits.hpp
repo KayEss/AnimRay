@@ -43,7 +43,9 @@ namespace animray {
 
 
     template<typename C>
-    concept Regular = requires true;
+    concept Regular = requires {
+        true;
+    };
 
 
 }
