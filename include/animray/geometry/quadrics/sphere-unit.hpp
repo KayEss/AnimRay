@@ -57,16 +57,16 @@ namespace animray {
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(R by, const E epsilon) const {
             by.from = by.from - reduce(position, by);
-            fostlib::nullable<intersection_type> hit(
+            std::optional<intersection_type> hit(
                     origin.intersects(by, epsilon));
             if (hit) {
                 hit->from = hit->from + reduce(position, by);
                 return hit;
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

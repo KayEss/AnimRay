@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,111 +19,78 @@
 
 
 #include <animray/geometry/planar/plane.hpp>
+#include <animray/functional/traits.hpp>
 #include <animray/ray.hpp>
-
-#include <fost/test>
-
-
-namespace {
-    const fostlib::module c_mod{__FILE__};
-}
-
-
-FSL_TEST_SUITE(plane);
-
-
-FSL_TEST_FUNCTION(plane_constructor) {
-    animray::plane<animray::ray<int>> board;
-    FSL_CHECK_EQ(board.center, animray::point3d<int>(0, 0, 0));
-    FSL_CHECK_EQ(
-            board.normal,
-            animray::unit_vector<int>(animray::point3d<int>(0, 0, 1)));
-}
+#include <felspar/test.hpp>
 
 
 namespace {
+
+
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    static_assert(animray::Regular<animray::plane<animray::ray<int>>>);
+
+
+    auto const pc = suite.test("plane_constructor", [](auto check) {
+        animray::plane<animray::ray<int>> board;
+        check(board.center) == animray::point3d(0, 0, 0);
+        check(board.normal) == animray::unit_vector(animray::point3d(0, 0, 1));
+    });
+
+    template<typename C>
     void check_intersection(
-            animray::ray<int> ray, std::optional<animray::ray<int>> hit) {
-        // fostlib::log::debug(c_mod)("ray", ray)("hit", hit.value());
+            C check, animray::ray<int> ray, animray::ray<int> hit) {
         animray::plane<animray::ray<int>> board;
-        fostlib::nullable<animray::ray<int>> intersection(
-                board.intersects(ray, 0));
-        if (hit) {
-            FSL_CHECK_EQ(intersection.value(), hit.value());
-        } else {
-            FSL_CHECK(not intersection);
-        }
+        std::optional<animray::ray<int>> intersection(board.intersects(ray, 0));
+        check(intersection.value()) == hit;
     }
-}
-FSL_TEST_FUNCTION(plane_intersection) {
-    // From above
-    check_intersection(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 1),
-                    animray::point3d<int>(0, 0, -1)),
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 0),
-                    animray::point3d<int>(0, 0, 1)));
-    check_intersection(
-            animray::ray<int>(
-                    animray::point3d<int>(1, 1, 1),
-                    animray::point3d<int>(1, 1, -1)),
-            animray::ray<int>(
-                    animray::point3d<int>(1, 1, 0),
-                    animray::point3d<int>(1, 1, 1)));
-    check_intersection(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 5),
-                    animray::point3d<int>(0, 0, 4)),
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 0),
-                    animray::point3d<int>(0, 0, 1)));
-    // From below
-    check_intersection(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, -1),
-                    animray::point3d<int>(0, 0, 1)),
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 0),
-                    animray::point3d<int>(0, 0, -1)));
-}
+    auto const pi = suite.test("plane_intersection", [](auto check) {
+        // From above
+        check_intersection(
+                check, {animray::point3d(0, 0, 1), animray::point3d(0, 0, -1)},
+                {animray::point3d(0, 0, 0), animray::point3d(0, 0, 1)});
+        check_intersection(
+                check, {animray::point3d(1, 1, 1), animray::point3d(1, 1, -1)},
+                {animray::point3d(1, 1, 0), animray::point3d(1, 1, 1)});
+        check_intersection(
+                check, {animray::point3d(0, 0, 5), animray::point3d(0, 0, 4)},
+                {animray::point3d(0, 0, 0), animray::point3d(0, 0, 1)});
+        // From below
+        check_intersection(
+                check, {animray::point3d(0, 0, -1), animray::point3d(0, 0, 1)},
+                {animray::point3d(0, 0, 0), animray::point3d(0, 0, -1)});
+    });
 
 
-namespace {
-    void check_occludes(animray::ray<int> ray, bool occludes, int epsilon = 0) {
+    template<typename C>
+    void check_occludes(
+            C check, animray::ray<int> ray, bool occludes, int epsilon = 0) {
         animray::plane<animray::ray<int>> board;
-        FSL_CHECK_EQ(board.occludes(ray, epsilon), occludes);
+        check(board.occludes(ray, epsilon)) == occludes;
     }
-}
-FSL_TEST_FUNCTION(plane_occludes) {
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 1),
-                    animray::point3d<int>(1, 1, 1)),
-            false); // parallel to the XY plane
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 1),
-                    animray::point3d<int>(0, 0, -1)),
-            true); // towards the XY plane from above
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, -1),
-                    animray::point3d<int>(0, 0, -2)),
-            false); // away from the XY plane from below
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(1, 1, 1),
-                    animray::point3d<int>(1, 1, -1)),
-            true); // towards the XY plane from above
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 5),
-                    animray::point3d<int>(0, 0, 4)),
-            true); // towards the XY plane from further above
-    check_occludes(
-            animray::ray<int>(
-                    animray::point3d<int>(1, 1, 1),
-                    animray::point3d<int>(1, 1, -1)),
-            false, 2); // towards the XY plane from above, but within epsilon
+    auto const po = suite.test("plane_occludes", [](auto check) {
+        check_occludes(
+                check, {animray::point3d(0, 0, 1), animray::point3d(1, 1, 1)},
+                false); // parallel to the XY plane
+        check_occludes(
+                check, {animray::point3d(0, 0, 1), animray::point3d(0, 0, -1)},
+                true); // towards the XY plane from above
+        check_occludes(
+                check, {animray::point3d(0, 0, -1), animray::point3d(0, 0, -2)},
+                false); // away from the XY plane from below
+        check_occludes(
+                check, {animray::point3d(1, 1, 1), animray::point3d(1, 1, -1)},
+                true); // towards the XY plane from above
+        check_occludes(
+                check, {animray::point3d(0, 0, 5), animray::point3d(0, 0, 4)},
+                true); // towards the XY plane from further above
+        check_occludes(
+                check, {animray::point3d(1, 1, 1), animray::point3d(1, 1, -1)},
+                false,
+                2); // towards the XY plane from above, but within epsilon
+    });
+
+
 }

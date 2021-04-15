@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -23,9 +23,7 @@
 #pragma once
 
 
-#include <fost/core>
 #include <animray/point2d.hpp>
-
 #include <functional>
 
 
@@ -58,7 +56,7 @@ namespace animray {
     };
 
 
-    /// A functor that calls coerce -- (TODO maybe to be generalised)
+    /// A functor that coerces one colour to another
     template<typename T, typename F>
     struct coercer {
         /// The result type
@@ -66,9 +64,13 @@ namespace animray {
         /// The argument type
         using arg1_type = F;
         /// The coercion function
-        result_type operator()(const F &f) const {
-            return fostlib::coerce<T>(f);
-        }
+        result_type operator()(const F &f) const { return convert_to<T>(f); }
+    };
+    template<typename T>
+    struct coercer<T, T> {
+        using result_type = T;
+        using arg1_type = T;
+        result_type operator()(const T &f) const { return f; }
     };
 
 

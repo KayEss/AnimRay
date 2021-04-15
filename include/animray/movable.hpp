@@ -26,6 +26,7 @@
 #include <animray/affine.hpp>
 #include <animray/ray.hpp>
 #include <animray/matrix.hpp>
+#include <optional>
 
 
 namespace animray {

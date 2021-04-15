@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -23,29 +23,31 @@
 #pragma once
 
 
-#include <fost/test>
 #include <animray/point3d.hpp>
+#include <felspar/test.hpp>
 
 
 namespace animray {
 
 
+    /// Check if two values are near each other
+    template<typename C, typename L, typename R, typename E = double>
+    inline void check_close(
+            C check, L const left, R const right, E const error = 1e-3) {
+        check(left) >= right - error;
+        check(right) <= right + error;
+    }
+
     /// Check if two points are close enough to be considered the same
-    template<typename D>
-    void check_close(
+    template<typename C, typename D>
+    inline void check_close(
+            C check,
             animray::point3d<D> const &l,
             animray::point3d<D> const &r,
             D const error = 1e-3) {
-        try {
-            FSL_CHECK_ERROR(l.x(), r.x(), error);
-            FSL_CHECK_ERROR(l.y(), r.y(), error);
-            FSL_CHECK_ERROR(l.z(), r.z(), error);
-        } catch (fostlib::exceptions::exception &e) {
-            fostlib::insert(e.data(), "check_close", "error", error);
-            // fostlib::insert(e.data(), "check_close", "left", l);
-            // fostlib::insert(e.data(), "check_close", "right", r);
-            throw;
-        }
+        check_close(check, l.x(), r.x(), error);
+        check_close(check, l.y(), r.y(), error);
+        check_close(check, l.z(), r.z(), error);
     }
 
 

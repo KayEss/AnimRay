@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,34 +18,41 @@
 */
 
 
-#include <animray/color/hsl.hpp>
-
 #include <animray/color/concept.hpp>
-#include <fost/test>
-
-
-FSL_TEST_SUITE(hsl);
-
-
-static_assert(animray::Spectrum<animray::hsl<float>>);
+#include <animray/color/hsl.hpp>
+#include <animray/test.hpp>
+#include <felspar/test.hpp>
 
 
 namespace {
-    void check(float h, float l, float s, float r, float g, float b) {
+
+
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    static_assert(animray::Spectrum<animray::hsl<float>>);
+
+
+    void hsl_is_rgb(
+            auto check, float h, float s, float l, float r, float g, float b) {
         animray::hsl<float> f(h, s, l);
-        animray::rgb<float> t(fostlib::coerce<animray::rgb<float>>(f));
-        FSL_CHECK_EQ(int(t.array()[0] * 1000 + .5f), int(r * 1000 + .5f));
-        FSL_CHECK_EQ(int(t.array()[1] * 1000 + .5f), int(g * 1000 + .5f));
-        FSL_CHECK_EQ(int(t.array()[2] * 1000 + .5f), int(b * 1000 + .5f));
+        auto const t(animray::convert_to<animray::rgb<float>>(f));
+        animray::check_close(check, t.array()[0], r);
+        animray::check_close(check, t.array()[1], g);
+        animray::check_close(check, t.array()[2], b);
     }
-}
-FSL_TEST_FUNCTION(to_rgb) {
-    // Test data taken from http://en.wikipedia.org/wiki/HSL_and_HSV
-    check(0, 0, 0, 0, 0, 0); // black
-    check(0, 1, 0, 1, 1, 1); // white
-    check(0, .5f, 0, .5f, .5f, .5f); // gray
-    check(0, .5f, 1, 1, 0, 0); // red
-    check(60, .375f, 1, .75f, .75f, 0); // olive
-    check(49.5f, .497f, .893f, .941f, .785f, .053f); // orange
-    check(240.5f, .607f, .290f, .495f, .493f, .721f); // light purple
+    auto const rgb = suite.test("to_rgb", [](auto check) {
+        // Test data taken from http://en.wikipedia.org/wiki/HSL_and_HSV
+        hsl_is_rgb(check, 0, 0, 0, 0, 0, 0); // black
+        hsl_is_rgb(check, 0, 0, 1, 1, 1, 1); // white
+        hsl_is_rgb(check, 0, 0, .5f, .5f, .5f, .5f); // gray
+        hsl_is_rgb(check, 0, 1, .5f, 1, 0, 0); // red
+        hsl_is_rgb(check, 60, 1, .375f, .75f, .75f, 0); // olive
+        hsl_is_rgb(check, 49.5f, .893f, .497f, .941f, .785f, .053f); // orange
+        hsl_is_rgb(
+                check, 240.5f, .290f, .607f, .495f, .493f,
+                .721f); // light purple
+    });
+
+
 }

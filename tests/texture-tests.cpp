@@ -1,6 +1,5 @@
 /**
-    Copyright 2010-2018, Kirit Saelensminde.
-    <https://kirit.com/AnimRay>
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,34 +19,38 @@
 
 
 #include <animray/texture.hpp>
-#include <fost/test>
-
-
-FSL_TEST_SUITE(texture);
-
-
-FSL_TEST_FUNCTION(basic_color) {
-    typedef animray::texture<uint8_t, animray::point2d<int>> texture_type;
-    texture_type t(123);
-    FSL_CHECK_EQ(
-            t(texture_type::location_type()), texture_type::color_type(123));
-}
+#include <felspar/test.hpp>
 
 
 namespace {
-    int square(double u, double v) {
-        if (std::abs(u) <= 1 && std::abs(v) <= 1)
-            return 1;
-        else
-            return 0;
-    }
-}
-FSL_TEST_FUNCTION(square_texture) {
-    typedef animray::point2d<double> location_type;
-    typedef animray::texture<
-            uint8_t, location_type, std::function<int(double, double)>>
-            texture_type;
-    texture_type t(square);
-    FSL_CHECK_EQ(t(location_type()), 1);
-    FSL_CHECK_EQ(t(location_type(2, 2)), 0);
+
+
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    auto const bc = suite.test("basic color", [](auto check) {
+        using texture_type = animray::texture<uint8_t, animray::point2d<int>>;
+        texture_type t(123);
+        check(t(texture_type::location_type()))
+                == texture_type::color_type(123);
+    });
+
+
+    auto const st = suite.test("square texture", [](auto check) {
+        using location_type = animray::point2d<double>;
+        using texture_type = animray::texture<
+                int, location_type, std::function<int(double, double)>>;
+
+        texture_type t([](auto const u, auto const v) {
+            if (std::abs(u) <= 1 and std::abs(v) <= 1) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        check(t(location_type())) == 1;
+        check(t(location_type(2, 2))) == 0;
+    });
+
+
 }

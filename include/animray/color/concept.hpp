@@ -1,5 +1,5 @@
 /**
-    Copyright 2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2020-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -22,6 +22,7 @@
 
 
 #include <type_traits>
+#include <utility>
 
 
 namespace animray {
@@ -36,6 +37,22 @@ namespace animray {
     concept PixelValue = requires(C c) {
         std::is_trivially_destructible_v<C>;
     };
+
+
+    namespace detail {
+        template<typename T, typename F>
+        struct color_conversion;
+    }
+    /// Colour conversion between colour spaces
+    template<Spectrum T, Spectrum F>
+    T convert_to(F &&f) {
+        return detail::color_conversion<T, std::decay_t<F>>{}.convert(
+                std::forward<F>(f));
+    }
+    // template<PixelValue T, PixelValue F>
+    // T convert_to(F &&f) {
+    //     return detail::color_conversion<T, F>()(std::forward<F>(f));
+    // }
 
 
 }

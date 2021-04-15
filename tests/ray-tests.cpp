@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,71 +19,61 @@
 
 
 #include <animray/affine.hpp>
+#include <animray/functional/traits.hpp>
 #include <animray/ray.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(ray);
+namespace {
 
 
-FSL_TEST_FUNCTION(constructor_default_tests) {
-    fostlib::test::default_copy_constructable<animray::ray<int>>();
-    fostlib::test::default_copy_constructable<animray::ray<int64_t>>();
-    fostlib::test::default_copy_constructable<animray::ray<float>>();
-    fostlib::test::default_copy_constructable<animray::ray<double>>();
-    fostlib::test::default_copy_constructable<animray::ray<long double>>();
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(constructor_simple) {
-    animray::ray<int> r1(
-            animray::ray<int>::end_type(0, 0, 0),
-            animray::ray<int>::end_type(0, 0, 1));
-}
+    static_assert(animray::Regular<animray::ray<int>>);
+    static_assert(animray::Regular<animray::ray<int64_t>>);
+    static_assert(animray::Regular<animray::ray<float>>);
+    static_assert(animray::Regular<animray::ray<double>>);
+    static_assert(animray::Regular<animray::ray<long double>>);
 
 
-FSL_TEST_FUNCTION(transformation) {
-    animray::ray<int> r(
-            animray::ray<int>::end_type(0, 0, 0),
-            animray::ray<int>::end_type(0, 0, 1));
-    auto aff(animray::translate<int>(10, 23, 54));
-    animray::ray<int> rf(r * aff.forward());
-    FSL_CHECK_EQ(rf.from, animray::ray<int>::end_type(10, 23, 54));
-    FSL_CHECK_EQ(rf.direction, animray::ray<int>::direction_type(0, 0, 1));
-    animray::ray<int> rb(r * aff.backward());
-    FSL_CHECK_EQ(rb.from, animray::ray<int>::end_type(-10, -23, -54));
-    FSL_CHECK_EQ(rb.direction, animray::ray<int>::direction_type(0, 0, 1));
+    auto const t = suite.test("transformation", [](auto check) {
+        animray::ray r(animray::point3d(0, 0, 0), animray::point3d(0, 0, 1));
+        auto aff(animray::translate<int>(10, 23, 54));
+        animray::ray<int> rf(r * aff.forward());
+        check(rf.from) == animray::ray<int>::end_type(10, 23, 54);
+        check(rf.direction) == animray::ray<int>::direction_type(0, 0, 1);
 
-    FSL_CHECK_EQ((r * aff.forward() * aff.backward()).from, r.from);
-    FSL_CHECK_EQ((r * aff.forward() * aff.backward()).direction, r.direction);
-    FSL_CHECK_EQ((r * aff.backward() * aff.forward()).from, r.from);
-    FSL_CHECK_EQ((r * aff.backward() * aff.forward()).direction, r.direction);
-}
+        animray::ray<int> rb(r * aff.backward());
+        check(rb.from) == animray::ray<int>::end_type(-10, -23, -54);
+        check(rb.direction) == animray::ray<int>::direction_type(0, 0, 1);
+
+        check((r * aff.forward() * aff.backward()).from) == r.from;
+        check((r * aff.forward() * aff.backward()).direction) == r.direction;
+        check((r * aff.backward() * aff.forward()).from) == r.from;
+        check((r * aff.backward() * aff.forward()).direction) == r.direction;
+    });
 
 
-FSL_TEST_FUNCTION(comparison) {
-    FSL_CHECK_EQ(
-            animray::ray<int>(),
-            animray::ray<int>(
-                    animray::point3d<int>(0, 0, 0),
-                    animray::point3d<int>(0, 0, 1)));
-    FSL_CHECK_NEQ(
-            animray::ray<int>(),
-            animray::ray<int>(
-                    animray::point3d<int>(1, 0, 0),
-                    animray::point3d<int>(2, 0, 0)));
-    FSL_CHECK_EQ(
-            animray::ray<int>(
-                    animray::point3d<int>(5, 5, 0),
-                    animray::point3d<int>(5, 5, 1)),
-            animray::ray<int>(
-                    animray::point3d<int>(5, 5, 0),
-                    animray::unit_vector<int>(0, 0, 1)));
-    FSL_CHECK_EQ(
-            animray::ray<float>(
-                    animray::point3d<float>(0, 0, 1),
-                    animray::point3d<float>(1, 1, 0)),
-            animray::ray<float>(
-                    animray::point3d<float>(0, 0, 1),
-                    animray::unit_vector<float>(1, 1, -1, 1.7320508075688772)));
+    auto const c = suite.test("comparison", [](auto check) {
+        check(animray::ray<int>())
+                == animray::ray<int>(
+                        animray::point3d(0, 0, 0), animray::point3d(0, 0, 1));
+        check(animray::ray<int>())
+                != animray::ray<int>(
+                        animray::point3d(1, 0, 0), animray::point3d(2, 0, 0));
+        check(animray::ray(animray::point3d(5, 5, 0), animray::point3d(5, 5, 1)))
+                == animray::ray<int>(
+                        animray::point3d(5, 5, 0),
+                        animray::unit_vector<int>(0, 0, 1));
+        check(animray::ray<float>(
+                animray::point3d<float>(0, 0, 1),
+                animray::point3d<float>(1, 1, 0)))
+                == animray::ray<float>(
+                        animray::point3d<float>(0, 0, 1),
+                        animray::unit_vector<float>(
+                                1, 1, -1, 1.7320508075688772));
+    });
+
+
 }

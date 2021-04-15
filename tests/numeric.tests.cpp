@@ -19,19 +19,19 @@
 
 
 #include <animray/numeric.hpp>
-
-#include <fost/test.hpp>
+#include <felspar/test.hpp>
 
 
 namespace {
 
 
-    auto const nbr = felspar::testsuite("numeric");
+    auto const suite = felspar::testsuite(__FILE__);
+
 
     struct nt {};
     using numeric = animray::number<nt, int>;
 
-    auto const eq = nbr.test("<=>", [](auto check) {
+    auto const eq = suite.test("<=>", [](auto check) {
         check(numeric{3}) == 3;
         check(3) == numeric{3};
         check(numeric{4}) != 3;
@@ -40,12 +40,12 @@ namespace {
         check(numeric{3}) < 4;
     });
 
-    auto const ops = nbr.test("+",
-                              [](auto check) {
-                                  check(numeric{2} + 3) == 5;
-                                  check(2 + numeric{3}) == 5;
-                                  check(numeric{2} + numeric{3}) == 5;
-                              })
+    auto const ops = suite.test("+",
+                                [](auto check) {
+                                    check(numeric{2} + 3) == 5;
+                                    check(2 + numeric{3}) == 5;
+                                    check(numeric{2} + numeric{3}) == 5;
+                                })
                              .test("-",
                                    [](auto check) {
                                        check(numeric{2} - 3) == -1;

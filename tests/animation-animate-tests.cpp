@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,25 +19,29 @@
 
 
 #include <animray/animation/animate.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(animation);
+namespace {
 
 
-FSL_TEST_FUNCTION(constructors) {
-    animray::animatable<int> v1;
-    animray::animatable<int> v2(0);
+    auto const suite = felspar::testsuite(__FILE__);
+
+
+    auto const c = suite.test("constructors", [](auto) {
+        animray::animatable<int> v1;
+        animray::animatable<int> v2{0};
+    });
+
+
+    auto const d = suite.test("degenerate", [](auto check) {
+        check(animray::animatable<int>{}(0)) == 0;
+        check(animray::animatable<int>{2}(0)) == 2;
+    });
+
+
+    auto const s = suite.test(
+            "scalar", [](auto) { animray::animatable<int> value{2}; });
+
+
 }
-
-
-FSL_TEST_FUNCTION(degenerate) {
-    FSL_CHECK_EQ(animray::animatable<int>()(0), 0);
-    FSL_CHECK_EQ(animray::animatable<int>(2)(0), 2);
-}
-
-
-FSL_TEST_FUNCTION(scalar) { animray::animatable<int> value(2); }
-
-
-FSL_TEST_FUNCTION(transformations) {}

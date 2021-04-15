@@ -18,26 +18,20 @@
 */
 
 
+#include <animray/cli/main.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/geometry/quadrics/sphere-unit-origin.hpp>
-#include <fost/main>
-#include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("white-sphere.tga"));
-    auto const width = fostlib::coerce<std::size_t>(
-            fostlib::coerce<int>(args[2].value_or("1920")));
-    auto const height = fostlib::coerce<std::size_t>(
-            fostlib::coerce<int>(args[3].value_or("1080")));
+int main(int argc, char const *const argv[]) {
+    auto const args =
+            animray::cli::arguments{argc, argv, "white-sphere.tga", 1920, 1080};
 
     /**
      * The sphere has a radius of two units, so we want to make sure we
      * can fit it into the frame. This calculates the scaling factor to apply.
      */
-    const double limit = std::min(width, height) / 2.0;
+    const double limit = std::min(args.width, args.height) / 2.0;
 
     using ray = animray::ray<double>;
     auto constexpr const sphere = animray::unit_sphere_at_origin<ray>{};
@@ -45,14 +39,14 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
     auto constexpr const ambient = animray::luma<>{50};
 
     auto const output = animray::film<animray::luma<>>{
-            width, height, [=](auto const x, auto const y) {
+            args.width, args.height, [=](auto const x, auto const y) {
                 /**
                  * Map the current pixel to a position in the -1 to +1 range
                  * based on the `limit` which tells us the scaling factor to
                  * use.
                  */
-                auto const cx = (double(x) + 0.5 - width / 2.0) / limit;
-                auto const cy = -(double(y) + 0.5 - height / 2.0) / limit;
+                auto const cx = (double(x) + 0.5 - args.width / 2.0) / limit;
+                auto const cy = -(double(y) + 0.5 - args.height / 2.0) / limit;
                 /**
                  * Fire the rays parallel towards the sphere. This causes us
                  * to use an orthographic projection of the geometry to
@@ -76,7 +70,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                     return animray::luma<>{0};
                 }
             }};
-    animray::targa(output_filename, output);
+    animray::targa(args.output_filename, output);
 
     return 0;
 }

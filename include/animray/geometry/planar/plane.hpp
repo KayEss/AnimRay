@@ -24,6 +24,7 @@
 
 
 #include <animray/maths/dot.hpp>
+#include <optional>
 
 
 namespace animray {
@@ -43,11 +44,11 @@ namespace animray {
 
         /// Calculate the intersection point
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(R by, const E epsilon) const {
             const local_coord_type dot_normal(
                     animray::dot(by.direction, normal));
-            if (dot_normal == local_coord_type()) { return fostlib::null; }
+            if (dot_normal == local_coord_type()) { return {}; }
             const local_coord_type numerator(
                     animray::dot(normal, center - by.from));
             const local_coord_type t(numerator / dot_normal);
@@ -56,7 +57,7 @@ namespace animray {
                         by.from + by.direction * t,
                         dot_normal < 0 ? normal : -normal);
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

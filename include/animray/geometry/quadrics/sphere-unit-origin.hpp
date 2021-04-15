@@ -55,10 +55,10 @@ namespace animray {
         /// Returns a ray giving the intersection point and surface normal or
         /// null if no intersection occurs
         template<typename R>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, D const eps = epsilon<D>) const {
             const std::pair<D, D> bc(quadratic_b_c(by));
-            const fostlib::nullable<D> t(first_positive_quadratic_solution(
+            const std::optional<D> t(first_positive_quadratic_solution(
                     D(1), bc.first, bc.second, eps));
             if (t) {
                 using end_type = typename ray<D>::end_type;
@@ -66,7 +66,7 @@ namespace animray {
                 direction_type normal(by.from + by.direction * *t);
                 return intersection_type(end_type(normal), normal);
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

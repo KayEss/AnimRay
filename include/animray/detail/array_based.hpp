@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -23,10 +23,10 @@
 #pragma once
 
 
-#include <fost/core>
-
 #include <array>
+#include <felspar/exceptions/overflow_error.hpp>
 #include <numeric>
+#include <ostream>
 
 
 namespace animray {
@@ -70,7 +70,7 @@ namespace animray {
             /// The type of the array
             using array_type = std::array<D, S>;
             /// The number of elements in the array
-            static std::size_t const c_array_size = S;
+            static constexpr std::size_t const c_array_size = S;
 
             /// The actual data
             array_type array;
@@ -79,28 +79,26 @@ namespace animray {
             constexpr array_based() : array() {}
 
             /// Fetch a value from the array with bounds checking
-            value_type at(std::size_t p) const {
+            value_type at(std::size_t const p) const {
                 try {
                     return array.at(p);
                 } catch (std::out_of_range &) {
-                    throw fostlib::exceptions::out_of_range<std::size_t>(
-                            "Array index was out of bounds", 0, c_array_size,
-                            p);
+                    throw felspar::overflow_error{
+                            "Array index was out of bounds", p, c_array_size};
                 }
             }
             /// Fetch a value from the array with bounds checking
-            value_type &at(std::size_t p) {
+            value_type &at(std::size_t const p) {
                 try {
                     return array.at(p);
                 } catch (std::out_of_range &) {
-                    throw fostlib::exceptions::out_of_range<std::size_t>(
-                            "Array index was out of bounds", 0, c_array_size,
-                            p);
+                    throw felspar::overflow_error{
+                            "Array index was out of bounds", p, c_array_size};
                 }
             }
 
             /// Print the vector onto a stream
-            fostlib::ostream &print_on(fostlib::ostream &o) const {
+            std::ostream &print_on(std::ostream &o) const {
                 o << "(";
                 for (std::size_t i = 0; i < array.size(); ++i) {
                     if (i != 0) o << ", ";

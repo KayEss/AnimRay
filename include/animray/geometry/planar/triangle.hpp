@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -52,7 +52,7 @@ namespace animray {
 
         /// Calculate the intersection point
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(R by, const E epsilon) const {
             // Möller–Trumbore intersection algorithm
             const corner_type e1(superclass::array[1] - superclass::array[0]);
@@ -60,22 +60,20 @@ namespace animray {
 
             const corner_type P(cross(by.direction, e2));
             const local_coord_type determinant(dot(e1, P));
-            if (determinant > -epsilon && determinant < epsilon) {
-                return fostlib::null;
-            }
+            if (determinant > -epsilon && determinant < epsilon) { return {}; }
             const local_coord_type inv_determinant(
                     local_coord_type(1) / determinant);
 
             const corner_type T(by.from - superclass::array[0]);
             const local_coord_type u(dot(T, P) * inv_determinant);
             if (u < local_coord_type() || u > local_coord_type(1)) {
-                return fostlib::null;
+                return {};
             }
 
             const corner_type Q(cross(T, e1));
             const local_coord_type v(dot(by.direction, Q) * inv_determinant);
             if (v < local_coord_type() || u + v > local_coord_type(1)) {
-                return fostlib::null;
+                return {};
             }
 
             const local_coord_type t(dot(e2, Q) * inv_determinant);
@@ -90,7 +88,7 @@ namespace animray {
                             by.from + by.direction * t, -normal);
                 }
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

@@ -1,6 +1,5 @@
-/*
-    Copyright 2010-2018, Kirit Saelensminde.
-    https://kirit.com/AnimRay
+/**
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -20,37 +19,42 @@
 
 
 #include <animray/extents2d.hpp>
-#include <fost/test>
+#include <animray/functional/traits.hpp>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(extents2d);
+namespace {
 
 
-FSL_TEST_FUNCTION(extents_construct) {
-    fostlib::test::default_copy_constructable<animray::extents2d<char>>();
-    fostlib::test::default_copy_constructable<animray::extents2d<int>>();
-    fostlib::test::default_copy_constructable<animray::extents2d<double>>();
-}
+    auto const suite = felspar::testsuite(__FILE__);
 
 
-FSL_TEST_FUNCTION(sizes) {
-    animray::extents2d<int> e1(-1, -1, 1, 1);
-    FSL_CHECK_EQ(e1.width(), 3);
-    FSL_CHECK_EQ(e1.height(), 3);
-    FSL_CHECK_EQ(e1.area(), 9);
-
-    animray::extents2d<double> e2(-1, -1, 1, 1);
-    FSL_CHECK_EQ(e2.width(), 2);
-    FSL_CHECK_EQ(e2.height(), 2);
-    FSL_CHECK_EQ(e2.area(), 4);
-}
+    static_assert(animray::Regular<animray::extents2d<char>>);
+    static_assert(animray::Regular<animray::extents2d<int>>);
+    static_assert(animray::Regular<animray::extents2d<double>>);
 
 
-FSL_TEST_FUNCTION(intersection) {
-    animray::extents2d<char> e1(0, 0, 10, 10), e2(20, 20, 30, 30),
-            e3(5, 5, 15, 15), e4(5, 5, 10, 10);
-    FSL_CHECK_EQ(e1.intersection(e1).value(), e1);
-    FSL_CHECK(not e1.intersection(e2).has_value());
-    FSL_CHECK_EQ(e1.intersection(e3).value(), e4);
-    FSL_CHECK_EQ(e1.intersection(e3).value(), e4);
+    auto const s = suite.test("sizes", [](auto check) {
+        animray::extents2d<int> e1(-1, -1, 1, 1);
+        check(e1.width()) == 3;
+        check(e1.height()) == 3;
+        check(e1.area()) == 9;
+
+        animray::extents2d<double> e2(-1, -1, 1, 1);
+        check(e2.width()) == 2;
+        check(e2.height()) == 2;
+        check(e2.area()) == 4;
+    });
+
+
+    auto const i = suite.test("intersection", [](auto check) {
+        animray::extents2d<char> e1(0, 0, 10, 10), e2(20, 20, 30, 30),
+                e3(5, 5, 15, 15), e4(5, 5, 10, 10);
+        check(e1.intersection(e1).value()) == e1;
+        check(e1.intersection(e2)).is_falsey();
+        check(e1.intersection(e3)) == e4;
+        check(e1.intersection(e3).value()) == e4;
+    });
+
+
 }

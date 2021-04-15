@@ -18,12 +18,12 @@
 */
 
 
+#include <animray/cli/main.hpp>
 #include <animray/color/hsl.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/maths/angles.hpp>
 #include <animray/threading/random-generator.hpp>
-#include <fost/main>
-#include <fost/unicode>
+#include <iostream>
 
 
 namespace {
@@ -64,44 +64,37 @@ namespace {
 }
 
 
-FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
-    auto const output_filename =
-            fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));
-    std::size_t const width = fostlib::coerce<int>(args[2].value_or("100"));
-    std::size_t const height = fostlib::coerce<int>(args[3].value_or("100"));
+int main(int argc, char const *const argv[]) {
+    auto const args =
+            animray::cli::arguments{argc, argv, "landmaker.tga", 150, 100};
 
-    auto const ccount =
-            fostlib::coerce<std::size_t>(args.commandSwitch("c").value_or("3"));
-    auto const splits =
-            fostlib::coerce<std::size_t>(args.commandSwitch("s").value_or("3"));
-    auto const mag =
-            fostlib::coerce<float>(args.commandSwitch("m").value_or("1"));
-    auto const radius =
-            fostlib::coerce<std::optional<float>>(args.commandSwitch("r"))
-                    .value_or(std::min(width, height) / 4.f);
+    auto const ccount = args.switch_value('c', 3);
+    auto const splits = args.switch_value('s', 3);
+    auto const mag = args.switch_value('m', 1);
+    auto const radius = args.switch_value('r', 4.0f);
+    auto const format = args.switch_value('F', 0);
 
-    auto const format =
-            fostlib::coerce<std::size_t>(args.commandSwitch("f").value_or("0"));
-
-
-    out << "Circle count " << ccount << ", radius " << radius << ", with split "
-        << splits << " and elevation magnification " << mag << std::endl;
+    std::cout << "Circle count " << ccount << ", radius " << radius
+              << ", with split " << splits << " and elevation magnification "
+              << mag << std::endl;
 
     animray::random::engine<> rng;
     std::vector<::circle> circles;
-    circle start{width / 2.f, height / 2.f, radius};
+    circle start{args.width / 2.f, args.height / 2.f, radius};
     circles.push_back(start);
     for (std::size_t i{}; i != ccount; ++i) {
         more_circles(rng, start, circles, splits);
     }
 
-    out << "Creating image " << output_filename << ", size " << width << " x "
-        << height << " using " << circles.size() << " circles" << std::endl;
+    std::cout << "Creating image " << args.output_filename << ", size "
+              << args.width << " x " << args.height << " using "
+              << circles.size() << " circles" << std::endl;
 
-    float const scale = mag * std::sqrt(0.05 * width * height) / circles.size();
+    float const scale =
+            mag * std::sqrt(0.05 * args.width * args.height) / circles.size();
     animray::film<float> const heights{
-            width, height, [&circles, scale](auto const x, auto const y) {
+            args.width, args.height,
+            [&circles, scale](auto const x, auto const y) {
                 auto const count = std::count_if(
                         circles.begin(), circles.end(),
                         [=](const circle &c) -> bool {
@@ -113,13 +106,14 @@ FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2021 Kirit Saelensminde")
     switch (format) {
     case 0:
         animray::targa(
-                output_filename,
+                args.output_filename,
                 animray::film<animray::rgb<uint8_t>>{
-                        width, height, [&heights](auto const x, auto const y) {
+                        args.width, args.height,
+                        [&heights](auto const x, auto const y) {
                             animray::hsl<float> h(
                                     300.0f * heights[x][y], 1.0f, 0.5f);
                             auto const c =
-                                    fostlib::coerce<animray::rgb<float>>(h);
+                                    animray::convert_to<animray::rgb<float>>(h);
                             return animray::rgb<uint8_t>(
                                     c.red() * 255, c.green() * 255,
                                     c.blue() * 255);
@@ -127,9 +121,10 @@ FSL_MAIN("landmaker", "LandMaker, Copyright 2010-2021 Kirit Saelensminde")
         break;
     case 1:
         animray::targa(
-                output_filename,
+                args.output_filename,
                 animray::film<animray::luma<uint8_t>>{
-                        width, height, [&heights](auto const x, auto const y) {
+                        args.width, args.height,
+                        [&heights](auto const x, auto const y) {
                             return animray::luma<uint8_t>(heights[x][y] * 255);
                         }});
         break;

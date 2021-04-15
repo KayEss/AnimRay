@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,12 +19,13 @@
 
 
 #include <animray/color/rgba.hpp>
-
 #include <animray/color/concept.hpp>
-#include <fost/test>
+#include <felspar/test.hpp>
 
 
-FSL_TEST_SUITE(rgba);
+namespace {
+    auto const suite = felspar::testsuite("rgba");
+}
 
 
 static_assert(animray::PixelValue<animray::rgba<uint8_t>>);

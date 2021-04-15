@@ -1,6 +1,5 @@
-/*
-    Copyright 2014, Kirit Saelensminde.
-    http://www.kirit.com/AnimRay
+/**
+    Copyright 2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -19,11 +18,35 @@
 */
 
 
-#include <animray/camera/movie.hpp>
-#include <fost/test>
+#if __has_include(<concepts>)
 
 
-FSL_TEST_SUITE(camera_movie);
+#include <concepts>
 
 
-FSL_TEST_FUNCTION(constructors) {}
+namespace animray {
+
+
+    template<typename C>
+    concept Regular = requires {
+        std::regular<C>;
+    };
+
+
+}
+
+
+#else
+
+
+namespace animray {
+
+
+    template<typename C>
+    concept Regular = requires true;
+
+
+}
+
+
+#endif

@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -23,9 +23,8 @@
 #pragma once
 
 
-#include <fost/core>
-
 #include <cmath>
+#include <vector>
 
 
 namespace animray {

@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -26,7 +26,8 @@
 #include <animray/film.hpp>
 #include <animray/color/luma.hpp>
 #include <animray/color/rgb.hpp>
-
+#include <animray/narrow.hpp>
+#include <filesystem>
 #include <fstream>
 
 
@@ -58,8 +59,8 @@ namespace animray {
         file.put(0); // X origin
         file.put(0);
         file.put(0); // Y origin
-        uint16_t w(fostlib::coerce<uint16_t>(image.width()));
-        uint16_t h(fostlib::coerce<uint16_t>(image.height()));
+        uint16_t w(narrow<uint16_t>(image.width()));
+        uint16_t h(narrow<uint16_t>(image.height()));
         /// TODO Don'l rely on endian mode we're running in
         file.write(reinterpret_cast<const char *>(&w), 2);
         file.write(reinterpret_cast<const char *>(&h), 2);

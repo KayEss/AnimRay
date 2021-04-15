@@ -19,32 +19,28 @@
 
 
 #include <animray/camera/ortho.hpp>
+#include <animray/cli/main.hpp>
 #include <animray/epsilon.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/geometry/planar/plane.hpp>
 #include <animray/ray.hpp>
-#include <fost/main>
-#include <fost/unicode>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("white-plane-ortho.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("1920"));
-    int height = fostlib::coerce<int>(args[3].value_or("1080"));
+int main(int argc, char const *const argv[]) {
+    auto const args = animray::cli::arguments{
+            argc, argv, "white-plane-ortho.tga", 1920, 1080};
 
     const double size = 20.0;
-    const double aspect = double(width) / height;
-    const double fw = width > height ? aspect * size : size;
-    const double fh = width > height ? size : size / aspect;
+    const double aspect = double(args.width) / args.height;
+    const double fw = args.width > args.height ? aspect * size : size;
+    const double fh = args.width > args.height ? size : size / aspect;
 
-    typedef animray::ray<double> ray;
+    using ray = animray::ray<double>;
     animray::plane<ray> plane;
     using film_type = animray::film<animray::rgb<uint8_t>>;
-    animray::ortho_camera<ray> camera(fw, fh, width, height, -9, 1);
+    animray::ortho_camera<ray> camera(fw, fh, args.width, args.height, -9, 1);
     film_type output(
-            width, height,
+            args.width, args.height,
             [=, &plane](
                     const film_type::size_type x, const film_type::size_type y) {
                 ray r(camera(x, y));
@@ -54,7 +50,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                         dot(light.direction, intersection.direction);
                 return animray::rgb<uint8_t>(50 + 205 * costheta);
             });
-    animray::targa(output_filename, output);
+    animray::targa(args.output_filename, output);
 
     return 0;
 }

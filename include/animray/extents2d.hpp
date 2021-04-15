@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -24,6 +24,8 @@
 
 
 #include <animray/point2d.hpp>
+#include <felspar/exceptions/overflow_error.hpp>
+#include <optional>
 
 
 namespace animray {
@@ -63,15 +65,13 @@ namespace animray {
         extents2d(size_type sx, size_type sy, size_type ex, size_type ey)
         : lower_left(corner_type(sx, sy)), top_right(corner_type(ex, ey)) {
             if (lower_left.x > top_right.x)
-                throw fostlib::exceptions::out_of_range<size_type>(
+                throw felspar::overflow_error{
                         "Top right for x is less than lower left for x",
-                        lower_left.x, std::numeric_limits<size_type>::max(),
-                        top_right.x);
+                        lower_left.x, top_right.x};
             if (lower_left.y > top_right.y)
-                throw fostlib::exceptions::out_of_range<size_type>(
+                throw felspar::overflow_error{
                         "Top right for y is less than lower left for y",
-                        lower_left.y, std::numeric_limits<size_type>::max(),
-                        top_right.y);
+                        lower_left.y, top_right.y};
         }
 
         /// Calculate the height of the extents
@@ -95,13 +95,13 @@ namespace animray {
         }
 
         /// Return the intersection between this extents and another one
-        fostlib::nullable<extents2d> intersection(const extents2d &r) {
-            size_type lx = std::max(lower_left.x, r.lower_left.x);
-            size_type ly = std::max(lower_left.y, r.lower_left.y);
-            size_type ux = std::min(top_right.x, r.top_right.x);
-            size_type uy = std::min(top_right.y, r.top_right.y);
-            if (lx > ux || ly > uy) {
-                return fostlib::null;
+        std::optional<extents2d> intersection(const extents2d &r) {
+            auto const lx = std::max(lower_left.x, r.lower_left.x);
+            auto const ly = std::max(lower_left.y, r.lower_left.y);
+            auto const ux = std::min(top_right.x, r.top_right.x);
+            auto const uy = std::min(top_right.y, r.top_right.y);
+            if (lx > ux or ly > uy) {
+                return {};
             } else {
                 return extents2d(lx, ly, ux, uy);
             }
@@ -109,32 +109,29 @@ namespace animray {
     };
 
 
-}
-
-
-namespace fostlib {
-    /// Allow extents to be coerced between different numeric types
-    template<typename T, typename F>
-    struct coercer<animray::extents2d<T>, animray::extents2d<F>> {
-        animray::extents2d<T> coerce(const animray::extents2d<F> &e) {
-            return animray::extents2d<T>(
-                    fostlib::coerce<T>(e.lower_left.x),
-                    fostlib::coerce<T>(e.lower_left.y),
-                    fostlib::coerce<T>(e.top_right.x),
-                    fostlib::coerce<T>(e.top_right.y));
-        }
-    };
-}
-
-
-namespace std {
     /// Output an extents to a stream
     template<typename S>
-    inline fostlib::ostream &
-            operator<<(fostlib::ostream &o, const animray::extents2d<S> &e) {
+    inline std::ostream &operator<<(std::ostream &o, extents2d<S> const &e) {
         return o << "[ " << e.lower_left << " -> " << e.top_right << " ]";
     }
+
+
 }
+
+
+// namespace fostlib {
+//     /// Allow extents to be coerced between different numeric types
+//     template<typename T, typename F>
+//     struct coercer<animray::extents2d<T>, animray::extents2d<F>> {
+//         animray::extents2d<T> coerce(const animray::extents2d<F> &e) {
+//             return animray::extents2d<T>(
+//                     fostlib::coerce<T>(e.lower_left.x),
+//                     fostlib::coerce<T>(e.lower_left.y),
+//                     fostlib::coerce<T>(e.top_right.x),
+//                     fostlib::coerce<T>(e.top_right.y));
+//         }
+//     };
+// }
 
 
 #endif // ANIMRAY_EXTENTS2D_HPP

@@ -1,7 +1,6 @@
-add_test_run(check animray fost-core TESTS
+add_test_run(check animray TESTS
         animation-animate-tests.cpp
         animation-procedural-tests.cpp
-        camera-movie-tests.cpp
         colour-hsl-tests.cpp
         colour-rgba-tests.cpp
         colour-rgb-tests.cpp
