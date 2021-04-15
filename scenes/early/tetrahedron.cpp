@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,9 +18,6 @@
 */
 
 
-#include <fost/main>
-#include <fost/progress-cli>
-#include <fost/unicode>
 #include <animray/animation/procedural/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
@@ -35,27 +32,21 @@
 #include <animray/scene.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    const std::size_t threads(
-            fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
-                    .value_or(std::thread::hardware_concurrency()));
-    const std::size_t samples(
-            fostlib::coerce<int>(args.commandSwitch("ss").value_or("2")));
-    const std::size_t frames(
-            fostlib::coerce<int>(args.commandSwitch("frames").value_or("2")));
+int main(int argc, char const *const argv[]) {
+    /// Output handling
+    auto const args =
+            animray::cli::arguments{argc, argv, "tetrahedron.tga", 96, 54};
 
-    /// ### Output handling
-    /// Filenames
-    auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("tetrahedron.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("96"));
-    const int height = fostlib::coerce<int>(args[3].value_or("54"));
+    std::size_t const threads =
+            args.switch_value('t', std::thread::hardware_concurrency());
+    std::size_t const samples = args.switch_value('s', 1);
+    /// Convert `frames` to an actual frame count instead of scaling value
+    std::size_t const frames = args.switch_value('T', 2);
 
     /// Screen aspect and pixel density
-    auto const aspect = static_cast<double>(width) / height;
-    auto const fw = width > height ? aspect * 0.024 : 0.024;
-    auto const fh = width > height ? 0.024 : 0.024 / aspect;
+    auto const aspect = static_cast<double>(args.width) / args.height;
+    auto const fw = args.width > args.height ? aspect * 0.024 : 0.024;
+    auto const fh = args.width > args.height ? 0.024 : 0.024 / aspect;
 
     /// ## Set up the geometry
     using world = float;
@@ -90,7 +81,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
                         animray::ray<world>, animray::flat_jitter_camera<world>>>,
                 typename animray::with_frame<
                         animray::ray<world>, std::size_t>::type>
-                camera(fw, fh, width, height, 0.05);
+                camera(fw, fh, args.width, args.height, 0.05);
         camera(animray::rotate_x<world>(-15_deg));
         camera(animray::translate<world>(0.0, 0.0, -4));
         camera.instance.frame = frame;
@@ -98,7 +89,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2020 Kirit Saelensminde")
         using film_type = animray::film<animray::rgb<uint8_t>>;
 
         animray::cli_render_frame<film_type>(
-                output_filename, frame, threads, width, height,
+                args, frame, threads,
                 [samples, &scene, &camera](
                         const film_type::size_type x,
                         const film_type::size_type y) {

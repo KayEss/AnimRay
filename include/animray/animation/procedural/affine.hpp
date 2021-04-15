@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -79,15 +79,15 @@ namespace animray::animation {
 
         /// Ray intersection
         template<typename R, typename E>
-        fostlib::nullable<intersection_type>
+        std::optional<intersection_type>
                 intersects(const R &by, const E epsilon) const {
             std::pair<W, W> transform(matrices(by));
-            fostlib::nullable<intersection_type> hit(
+            std::optional<intersection_type> hit(
                     instance.intersects(by * transform.first, epsilon));
             if (hit) {
                 return hit.value() * transform.second;
             } else {
-                return fostlib::null;
+                return {};
             }
         }
 

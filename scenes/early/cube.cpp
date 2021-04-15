@@ -18,9 +18,6 @@
 */
 
 
-#include <fost/main>
-#include <fost/progress-cli>
-#include <fost/unicode>
 #include <animray/animation/procedural/affine.hpp>
 #include <animray/camera/flat-jitter.hpp>
 #include <animray/camera/pinhole.hpp>
@@ -36,29 +33,22 @@
 #include <animray/scene.hpp>
 
 
-FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &, fostlib::arguments &args) {
-    const std::size_t threads(
-            fostlib::coerce<fostlib::nullable<int>>(args.commandSwitch("t"))
-                    .value_or(std::thread::hardware_concurrency()));
-    const std::size_t samples(
-            fostlib::coerce<int>(args.commandSwitch("ss").value_or("2")));
-    const std::size_t frames(
-            fostlib::coerce<int>(args.commandSwitch("frames").value_or("2")));
+int main(int argc, char const *const argv[]) {
+    /// Output handling
 
-    /// ### Output handling
-    /// Filenames
-    auto const output_filename = fostlib::coerce<std::filesystem::path>(
-            args[1].value_or("cube.tga"));
-    const int width = fostlib::coerce<int>(args[2].value_or("96"));
-    const int height = fostlib::coerce<int>(args[3].value_or("54"));
+    auto const args = animray::cli::arguments{argc, argv, "cube.tga", 96, 54};
+
+    std::size_t const threads =
+            args.switch_value('t', std::thread::hardware_concurrency());
+    std::size_t const samples = args.switch_value('s', 2);
+    std::size_t const frames = args.switch_value('l', 2);
 
     /// ## Set up the geometry
     using world = float;
 
     /// Screen aspect and pixel density
-    world const aspect = world(width) / height;
-    bool const high = (height > width);
+    world const aspect = world(args.width) / args.height;
+    bool const high = (args.height > args.width);
     world const fw = high ? aspect * 0.036 : 0.036;
     world const fh = high ? 0.036 : 0.036 / aspect;
 
@@ -86,7 +76,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
                         animray::ray<world>, animray::flat_jitter_camera<world>>>,
                 typename animray::with_frame<
                         animray::ray<world>, std::size_t>::type>
-                camera(fw, fh, width, height, 0.05);
+                camera(fw, fh, args.width, args.height, 0.05);
         camera(animray::rotate_x<world>(frame * 360_deg / frames));
         camera(animray::rotate_y<world>(frame * 720_deg / frames));
         camera(animray::translate<world>(0.0, 0.0, -6));
@@ -95,7 +85,7 @@ FSL_MAIN("animray", "AnimRay. Copyright 2010-2021 Kirit Saelensminde")
         using film_type = animray::film<animray::rgb<uint8_t>>;
 
         animray::cli_render_frame<film_type>(
-                output_filename, frame, threads, width, height,
+                args, frame, threads,
                 [samples, &scene, &camera](
                         const film_type::size_type x,
                         const film_type::size_type y) {
