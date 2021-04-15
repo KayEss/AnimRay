@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
 project(libanimray)
 
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    add_custom_target(check)
+    include(requirements.cmake)
+endif()
+
+
 find_package(Threads REQUIRED)
 
 add_library(animray INTERFACE)
