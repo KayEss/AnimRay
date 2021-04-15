@@ -40,7 +40,8 @@ namespace animray::cli {
         : output_filename{o}, width{w}, height{h} {
             std::optional<char> option;
             for (std::size_t arg{1}; arg < argc; ++arg) {
-                if (argv[arg][0] == '-') {
+                if (argv[arg][0] == '-'
+                    and (argv[arg][1] < '0' or argv[arg][1] > '9')) {
                     if (argv[arg][1] != 0) {
                         option = argv[arg][1];
                         switches[*option] = nullptr;
@@ -76,10 +77,52 @@ namespace animray::cli {
         std::map<char, char const *> switches;
 
         /// APIs to make things simpler
+        int switch_value(char const option, int const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::atoi(it->second);
+            } else {
+                return v;
+            }
+        }
+        unsigned int
+                switch_value(char const option, unsigned int const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::strtoul(it->second, &ends, 10);
+            } else {
+                return v;
+            }
+        }
+        std::size_t switch_value(char const option, std::size_t const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::strtoimax(it->second, &ends, 10);
+            } else {
+                return v;
+            }
+        }
+
+        float switch_value(char const option, float const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::strtof(it->second, &ends);
+            } else {
+                return v;
+            }
+        }
         double switch_value(char const option, double const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
                 char *ends;
                 return std::strtod(it->second, &ends);
+            } else {
+                return v;
+            }
+        }
+        long double switch_value(char const option, long double const v) const {
+            if (auto const it = switches.find(option); it != switches.end()) {
+                char *ends;
+                return std::strtold(it->second, &ends);
             } else {
                 return v;
             }

@@ -18,50 +18,44 @@
 */
 
 
+#include <animray/cli/main.hpp>
 #include <animray/color/hsl.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/mandelbrot.hpp>
-#include <fost/main>
-#include <fost/unicode>
+#include <iostream>
 
 
-FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2021 Kirit Saelensminde")
-(fostlib::ostream &out, fostlib::arguments &args) {
-    auto const output_filename =
-            fostlib::coerce<std::filesystem::path>(args[1].value_or("out.tga"));
-    int width = fostlib::coerce<int>(args[2].value_or("100"));
-    int height = fostlib::coerce<int>(args[3].value_or("100"));
-    out << "Creating image " << output_filename << ", size " << width << " x "
-        << height << std::endl;
+int main(int argc, char const *const argv[]) {
+    auto const args =
+            animray::cli::arguments{argc, argv, "mandelbrot.tga", 100, 100};
 
-    typedef double precision;
-    precision centre_x =
-            fostlib::coerce<precision>(args.commandSwitch("cx").value_or("0"));
-    precision centre_y =
-            fostlib::coerce<precision>(args.commandSwitch("cy").value_or("0"));
-    precision diameter =
-            fostlib::coerce<precision>(args.commandSwitch("d").value_or("2"));
-    std::size_t bits =
-            fostlib::coerce<int>(args.commandSwitch("bits").value_or("8"));
-    double hue =
-            fostlib::coerce<double>(args.commandSwitch("h").value_or("0.0"));
+    std::cout << "Creating image " << args.output_filename << ", size "
+              << args.width << " x " << args.height << std::endl;
 
-    out << "Centre image at " << centre_x << ", " << centre_y
-        << " with diameter of " << diameter << " to " << bits << " bits"
-        << std::endl;
+    using precision = long double;
+    auto const centre_x = args.switch_value('x', 0.0L);
+    auto const centre_y = args.switch_value('y', 0.0L);
+    auto const diameter = args.switch_value('d', 2.0L);
+    std::size_t const bits = args.switch_value('b', 8);
+    double const hue = args.switch_value('H', 0.0);
 
-    typedef animray::film<animray::rgb<uint8_t>> film_type;
+    std::cout << "Centre image at " << centre_x << ", " << centre_y
+              << " with diameter of " << diameter << " to " << bits << " bits"
+              << std::endl;
+
+    using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
-            width, height,
+            args.width, args.height,
             animray::mandelbrot::transformer<film_type, precision>(
-                    width, height, centre_x, centre_y, diameter, bits,
+                    args.width, args.height, centre_x, centre_y, diameter, bits,
                     [hue](unsigned int d, std::size_t b) {
                         if (d) {
                             unsigned int m = (1u << b) - 1u;
                             animray::hsl<double> h(
                                     int(hue + 360.0 * d / m) % 360, 1.0, 0.5);
                             animray::rgb<double> c(
-                                    fostlib::coerce<animray::rgb<double>>(h));
+                                    animray::convert_to<animray::rgb<double>>(
+                                            h));
                             return animray::rgb<uint8_t>(
                                     c.red() * 255, c.green() * 255,
                                     c.blue() * 255);
@@ -70,7 +64,7 @@ FSL_MAIN("mandelbrot", "Mandelbrot, Copyright 2010-2021 Kirit Saelensminde")
                         }
                     }));
 
-    animray::targa(output_filename, output);
+    animray::targa(args.output_filename, output);
 
     return 0;
 }
