@@ -21,9 +21,10 @@
 #pragma once
 
 
+#include <animray/cli/main.hpp>
 #include <animray/formats/targa.hpp>
 #include <animray/threading/sub-panel.hpp>
-#include <fost/progress-cli>
+#include <iostream>
 
 
 namespace animray {
@@ -31,50 +32,35 @@ namespace animray {
 
     template<typename film_type, typename P>
     inline film_type cli_render_frame(
-            std::filesystem::path filename,
+            cli::arguments const &args,
             std::optional<std::size_t> const frame,
             std::size_t const threads,
-            typename film_type::size_type const width,
-            typename film_type::size_type const height,
             P const pixels) {
+        threading::sub_panel_progress progress{args.width, args.height};
         std::promise<film_type> promise;
         auto result = promise.get_future();
-        std::thread{[threads, width, height, &pixels,
+        std::thread{[threads, &args, &pixels, &progress,
                      promise = std::move(promise)]() mutable {
             promise.set_value(animray::threading::sub_panel<film_type>(
-                    threads, width, height, pixels));
+                    progress, threads, args.width, args.height, pixels));
         }}.detach();
-        fostlib::cli::monitor(
-                std::cout, result,
-                [frame](fostlib::progress::reading const &current) {
-                    fostlib::stringstream out;
-                    out << ']';
-                    if (frame) out << " f" << *frame;
-                    if (current.done() && current.work()) {
-                        out << " " << current.done() << "/" << *current.work();
-                    }
-                    if (current.meta().size()
-                        && not current.meta()[0].isnull()) {
-                        fostlib::json meta(current.meta()[0]);
-                        out << " ("
-                            << fostlib::json::unparse(
-                                       meta["panels"]["x"], false)
-                            << "x"
-                            << fostlib::json::unparse(
-                                       meta["panels"]["y"], false)
-                            << " of size "
-                            << fostlib::json::unparse(meta["size"]["x"], false)
-                            << "x"
-                            << fostlib::json::unparse(meta["size"]["y"], false)
-                            << ")";
-                    }
-                    return out.str();
-                });
-        auto rendered = result.get();
+        auto filename = args.output_filename;
         if (frame) {
-            filename.replace_extension(fostlib::coerce<std::filesystem::path>(
-                    fostlib::coerce<fostlib::string>(*frame) + ".tga"));
+            filename.replace_extension(std::to_string(*frame) + ".tga");
         }
+        auto const print = [&]() {
+            std::cout << filename << ' ' << args.width << 'x' << args.height
+                      << ' ' << progress.count.load() << '/'
+                      << progress.count_limit << " (" << progress.panel_size_x
+                      << 'x' << progress.panel_size_y << ")\r" << std::flush;
+        };
+        do {
+            print();
+        } while (result.wait_for(std::chrono::milliseconds{100})
+                 != std::future_status::ready);
+        print();
+        std::cout << '\n';
+        auto rendered = result.get();
         animray::targa(filename, rendered);
         return rendered;
     }
@@ -82,13 +68,9 @@ namespace animray {
 
     template<typename film_type, typename P>
     inline film_type cli_render(
-            std::filesystem::path filename,
-            std::size_t const threads,
-            typename film_type::size_type const width,
-            typename film_type::size_type const height,
-            P pixels) {
+            cli::arguments const &args, std::size_t const threads, P pixels) {
         return cli_render_frame<film_type>(
-                filename, {}, threads, width, height, std::move(pixels));
+                args, {}, threads, std::move(pixels));
     }
 
 
