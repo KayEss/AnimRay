@@ -7,9 +7,20 @@ executors:
     environment:
       CC: clang
       CXX: clang++
+  clang-libcpp:
+    docker:
+    - image: fost/circleci
+    environment:
+      CC: clang
+      CXX: clang++
+      CXXFLAGS: "-stdlib=libc++"
+      LD_FLAGS: "-stdlib=libc++"
   gcc:
     docker:
     - image: fost/circleci
+    environment:
+      CC: gcc-10
+      CXX: g++-10
 
 jobs:
   build:
@@ -20,17 +31,20 @@ jobs:
         type: string
     executor: << parameters.compiler >>
     steps:
+      - checkout
+
       - run:
           name: cmake
-          command: |
-            mkdir build.tmp
-            cmake -S . -B build.tmp -G Ninja -DCMAKE_BUILD_TYPE=<< parameters.variant >> $CMAKE_EXTRA
+          environment:
+            CMAKE_BUILD_TYPE: << parameters.variant >>
+          command: cmake -G Ninja -S . -B build.tmp/
+
       - run:
           name: ninja
-          command: ninja -j1 -C build.tmp
+          command: ninja -C build.tmp/
       - run:
           name: check tests
-          command: ninja -j1 -C build.tmp check
+          command: ninja -C build.tmp/ check
 
 workflows:
   all-tests:
@@ -38,5 +52,7 @@ workflows:
       - build:
           matrix:
             parameters:
-              compiler: [gcc, clang]
+              compiler: [gcc, clang, clang-libcpp]
               variant: [Debug, Release]
+
+    ©
