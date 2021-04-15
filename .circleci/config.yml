@@ -55,4 +55,3 @@ workflows:
               compiler: [gcc, clang, clang-libcpp]
               variant: [Debug, Release]
 
-    ©
