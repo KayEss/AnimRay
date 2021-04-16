@@ -39,7 +39,7 @@ namespace animray::cli {
                 std::size_t const h)
         : output_filename{o}, width{w}, height{h} {
             std::optional<char> option;
-            for (std::size_t arg{1}; arg < argc; ++arg) {
+            for (int arg{1}; arg < argc; ++arg) {
                 if (argv[arg][0] == '-'
                     and (argv[arg][1] < '0' or argv[arg][1] > '9')) {
                     if (argv[arg][1] != 0) {

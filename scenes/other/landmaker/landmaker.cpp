@@ -68,7 +68,7 @@ int main(int argc, char const *const argv[]) {
     auto const args =
             animray::cli::arguments{argc, argv, "landmaker.tga", 150, 100};
 
-    auto const ccount = args.switch_value('c', 3);
+    auto const ccount = args.switch_value('c', 3u);
     auto const splits = args.switch_value('s', 3);
     auto const mag = args.switch_value('m', 1);
     auto const radius = args.switch_value('r', 4.0f);
