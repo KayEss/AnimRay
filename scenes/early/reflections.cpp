@@ -45,7 +45,6 @@ int main(int argc, char const *const argv[]) {
     std::size_t const threads =
             args.switch_value('t', std::thread::hardware_concurrency());
     std::size_t const samples = args.switch_value('s', 6);
-    std::size_t const spheres = args.switch_value('c', 20);
 
     using world = double;
     world const aspect = double(args.width) / args.height;
