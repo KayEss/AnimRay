@@ -60,11 +60,11 @@ namespace animray::cli {
                 output_filename = oi->second;
             }
             if (auto const wi = switches.find('w'); wi != switches.end()) {
-                char *ends = nullptr;
+                [[maybe_unused]] char *ends = nullptr;
                 width = std::strtoimax(wi->second, &ends, 10);
             }
             if (auto const hi = switches.find('h'); hi != switches.end()) {
-                char *ends = nullptr;
+                [[maybe_unused]] char *ends = nullptr;
                 height = std::strtoimax(hi->second, &ends, 10);
             }
         }
@@ -79,7 +79,7 @@ namespace animray::cli {
         /// APIs to make things simpler
         int switch_value(char const option, int const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::atoi(it->second);
             } else {
                 return v;
@@ -88,7 +88,7 @@ namespace animray::cli {
         unsigned int
                 switch_value(char const option, unsigned int const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::strtoul(it->second, &ends, 10);
             } else {
                 return v;
@@ -96,7 +96,7 @@ namespace animray::cli {
         }
         std::size_t switch_value(char const option, std::size_t const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::strtoimax(it->second, &ends, 10);
             } else {
                 return v;
@@ -105,7 +105,7 @@ namespace animray::cli {
 
         float switch_value(char const option, float const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::strtof(it->second, &ends);
             } else {
                 return v;
@@ -113,7 +113,7 @@ namespace animray::cli {
         }
         double switch_value(char const option, double const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::strtod(it->second, &ends);
             } else {
                 return v;
@@ -121,7 +121,7 @@ namespace animray::cli {
         }
         long double switch_value(char const option, long double const v) const {
             if (auto const it = switches.find(option); it != switches.end()) {
-                char *ends;
+                [[maybe_unused]] char *ends;
                 return std::strtold(it->second, &ends);
             } else {
                 return v;
