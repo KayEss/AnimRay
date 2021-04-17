@@ -51,6 +51,7 @@ int main(int argc, char const *const argv[]) {
     std::size_t const start_frame = args.switch_value('L', 0);
     std::size_t const depth = args.switch_value('d', 5);
     std::size_t const gloss = args.switch_value('g', 1000);
+    float const exposure = args.switch_value('e', 1.4f);
 
     /// ## Set up the geometry
     using world = float;
@@ -134,14 +135,13 @@ int main(int argc, char const *const argv[]) {
 
         animray::cli_render_frame<film_type>(
                 args, frame, threads,
-                [samples, &scene, &camera](
+                [samples, &scene, &camera, exposure](
                         const film_type::size_type x,
                         const film_type::size_type y) {
                     animray::rgb<float> photons;
                     for (std::size_t sample{}; sample != samples; ++sample) {
                         photons += scene(camera, x, y) /= samples;
                     }
-                    auto const exposure = 1.4f;
                     return animray::to_srgb(photons, exposure * 255);
                 });
     }
