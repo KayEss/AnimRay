@@ -103,9 +103,9 @@ int main(int argc, char const *const argv[]) {
             animray::rgb<float>>
             strips;
     for (auto const edge : edges) {
-        strips.push_back({edge.proportion_along(0.25), green});
-        strips.push_back({edge.proportion_along(0.5), red});
-        strips.push_back({edge.proportion_along(0.75), blue});
+        strips.push_back({edge.proportion_along(0.25) * 0.99, green});
+        strips.push_back({edge.proportion_along(0.5) * 0.99, red});
+        strips.push_back({edge.proportion_along(0.75) * 0.99, blue});
     }
     auto lights = animray::light{
             std::move(strips), animray::light{animray::luma{0.f}}};
