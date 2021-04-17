@@ -36,12 +36,18 @@ namespace animray {
     template<typename C>
     class reflective {
       public:
+        static bool const can_occlude = true;
+
         /// Default constructor
         reflective() = default;
-        reflective(C c) : attenuation{std::move(c)} {}
+        reflective(C c) : albedo{std::move(c)} {}
+        reflective(C c, std::size_t const md)
+        : albedo{std::move(c)}, max_depth{md} {}
 
         /// The absorption attenuation of the surface
-        C attenuation;
+        C albedo;
+        /// Maximum number of reflective rays
+        std::size_t max_depth = 5;
 
         /// Calculate the light coming from the reflected ray
         template<typename RI, typename I, typename CI, typename G>
@@ -58,11 +64,11 @@ namespace animray {
                     + intersection.direction * accuracy(2) * ci);
             typename animray::with_depth_count<RI>::type refray(observer);
             refray.add_count(observer);
-            refray.from = intersection.from;
-            refray.direction = ri;
-            if (refray.depth_count > 5) {
+            if (refray.depth_count > max_depth) {
                 return scene.background;
             } else {
+                refray.from = intersection.from;
+                refray.direction = ri;
                 return scene(refray);
             }
         }
@@ -82,7 +88,7 @@ namespace animray {
                 const RI &observer,
                 const I &intersection,
                 const G &scene) const {
-            return reflected(c, observer, intersection, scene) * attenuation;
+            return reflected(c, observer, intersection, scene) * albedo;
         }
     };
 

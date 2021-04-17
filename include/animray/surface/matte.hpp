@@ -33,6 +33,8 @@ namespace animray {
     template<typename C>
     class matte {
       public:
+        static bool const can_occlude = true;
+
         /// Default constructor
         matte() = default;
         matte(C c) : attenuation{std::move(c)} {}

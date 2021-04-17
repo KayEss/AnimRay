@@ -35,6 +35,8 @@ namespace animray {
     template<typename W>
     class gloss {
       public:
+        static bool const can_occlude = true;
+
         /// Default constructor
         gloss() = default;
         gloss(W w) : width{std::move(w)} {}

@@ -115,7 +115,7 @@ namespace animray {
         /// Calculate whether this object occludes the ray or not
         template<typename R>
         bool occludes(const R &by, const local_coord_type epsilon) const {
-            return geometry.occludes(by, epsilon);
+            return (... and S::can_occlude) and geometry.occludes(by, epsilon);
         }
     };
 
