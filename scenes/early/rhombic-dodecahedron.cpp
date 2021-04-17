@@ -26,11 +26,16 @@
 #include <animray/color/srgb.hpp>
 #include <animray/intersection.hpp>
 #include <animray/library/lights/block.hpp>
+#include <animray/line.hpp>
 #include <animray/maths/angles.hpp>
 #include <animray/movable.hpp>
 #include <animray/geometry/collection.hpp>
 #include <animray/geometry/planar/triangle.hpp>
 #include <animray/scene.hpp>
+#include <animray/surface.hpp>
+#include <animray/surface/gloss.hpp>
+#include <animray/surface/reflective.hpp>
+#include <animray/surface/transparent.hpp>
 
 
 int main(int argc, char const *const argv[]) {
@@ -43,6 +48,9 @@ int main(int argc, char const *const argv[]) {
             args.switch_value('t', std::thread::hardware_concurrency());
     std::size_t const samples = args.switch_value('s', 2);
     std::size_t const frames = args.switch_value('l', 2);
+    std::size_t const start_frame = args.switch_value('L', 0);
+    std::size_t const depth = args.switch_value('d', 5);
+    std::size_t const gloss = args.switch_value('g', 1000);
 
     /// ## Set up the geometry
     using world = float;
@@ -60,7 +68,7 @@ int main(int argc, char const *const argv[]) {
             bne(1, 1, -1), bse(1, -1, -1), bsw(-1, -1, -1), bnw(-1, 1, -1);
     /// Then put them together into the triangles we require
     using triangle = animray::triangle<animray::ray<world>>;
-    auto constexpr cube = animray::collection{animray::make_array(
+    auto constexpr geometry = animray::collection{animray::make_array(
             triangle{tne, tse, top}, triangle{tsw, tnw, top},
             triangle{tnw, tne, top}, triangle{tse, tsw, top},
             triangle{bne, bse, bottom}, triangle{bsw, bnw, bottom},
@@ -73,21 +81,42 @@ int main(int argc, char const *const argv[]) {
             triangle{tsw, tnw, west}, triangle{bsw, bnw, west},
             triangle{tnw, bnw, north}, triangle{tne, bne, north},
             triangle{tnw, tne, north}, triangle{bne, bnw, north})};
+    auto constexpr edges = animray::make_array(
+            animray::line{top, tne}, animray::line{top, tse},
+            animray::line{top, tnw}, animray::line{top, tsw},
+            animray::line{north, tne}, animray::line{north, tnw},
+            animray::line{north, bne}, animray::line{north, bnw},
+            animray::line{south, tse}, animray::line{south, tsw},
+            animray::line{south, bse}, animray::line{south, bsw},
+            animray::line{east, tne}, animray::line{east, tse},
+            animray::line{east, bne}, animray::line{east, bse},
+            animray::line{west, tnw}, animray::line{west, tsw},
+            animray::line{west, bnw}, animray::line{west, bsw},
+            animray::line{bottom, bne}, animray::line{bottom, bse},
+            animray::line{bottom, bnw}, animray::line{bottom, bsw});
 
-    auto constexpr lights = animray::light{
-            animray::light{animray::make_array(
-                    animray::library::lights::bulb<world>{
-                            {-3.0, 5.0, -4.0}, {0x40, 0xa0, 0x40}},
-                    animray::library::lights::bulb<world>{
-                            {-5.0, -3.0, -4.0}, {0xa0, 0x40, 0x40}},
-                    animray::library::lights::bulb<world>{
-                            {3.0, -3.0, 4.0}, {0x40, 0x40, 0xa0}})},
-            animray::light{animray::luma{50.f}}};
+    animray::rgb<float> constexpr red{0xa0, 0x40, 0x40},
+            green{0x40, 0xa0, 0x40}, blue{0x40, 0x40, 0xa0};
+    animray::light<
+            std::vector<animray::library::lights::bulb<world>>,
+            animray::rgb<float>>
+            strips;
+    for (auto const edge : edges) {
+        strips.push_back({edge.proportion_along(0.25), green});
+        strips.push_back({edge.proportion_along(0.5), red});
+        strips.push_back({edge.proportion_along(0.75), blue});
+    }
+    auto lights = animray::light{
+            std::move(strips), animray::light{animray::luma{0.f}}};
 
-    auto const scene =
-            animray::scene{cube, lights, animray::rgb<float>{5, 18, 25}};
+    auto const scene = animray::scene{
+            animray::surface{
+                    geometry, animray::transparent{world(0.5), depth},
+                    animray::reflective{world(0.5), depth},
+                    animray::gloss{gloss}},
+            lights, animray::rgb<float>{0, 0, 0}};
 
-    for (std::size_t frame{}; frame != frames; ++frame) {
+    for (auto frame{start_frame}; frame != frames; ++frame) {
         animray::movable<
                 animray::stacatto_movie<animray::pinhole_camera<
                         animray::ray<world>, animray::flat_jitter_camera<world>>>,
@@ -96,7 +125,9 @@ int main(int argc, char const *const argv[]) {
                 camera(fw, fh, args.width, args.height, 0.05);
         camera(animray::rotate_x<world>(frame * 360_deg / frames));
         camera(animray::rotate_y<world>(frame * 720_deg / frames));
-        camera(animray::translate<world>(0.0, 0.0, -10));
+        auto const orbit_position = std::acos(-1) * 2 * frame / frames;
+        camera(animray::translate<world>(
+                0.0, 0.0, -2.2 - (std::cos(orbit_position) + 1) * 3.9));
         camera.instance.frame = frame;
 
         using film_type = animray::film<animray::rgb<uint8_t>>;
