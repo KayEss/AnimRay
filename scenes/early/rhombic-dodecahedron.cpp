@@ -52,6 +52,7 @@ int main(int argc, char const *const argv[]) {
     std::size_t const depth = args.switch_value('d', 5);
     std::size_t const gloss = args.switch_value('g', 1000);
     float const exposure = args.switch_value('e', 1.4f);
+    // std::size_t const lights = args.switch_value('v', 2);
 
     /// ## Set up the geometry
     using world = float;
@@ -112,8 +113,8 @@ int main(int argc, char const *const argv[]) {
 
     auto const scene = animray::scene{
             animray::surface{
-                    geometry, animray::transparent{world(0.5), depth},
-                    animray::reflective{world(0.5), depth},
+                    geometry, animray::transparent{world(0.1), depth},
+                    animray::reflective{world(0.9), depth},
                     animray::gloss{gloss}},
             lights, animray::rgb<float>{0, 0, 0}};
 
