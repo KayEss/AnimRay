@@ -62,6 +62,11 @@ namespace animray {
                        dz = to.z() - from.z();
             return dx * dx + dy * dy + dz * dz;
         }
+
+        /// Returns a point a distance along the line as a proportion of its length
+        constexpr end_type proportion_along(D const proportion) const {
+            return from + (to - from) * proportion;
+        }
     };
 
 

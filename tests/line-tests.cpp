@@ -51,4 +51,14 @@ namespace {
     });
 
 
+    auto const p = suite.test("distance along", [](auto check) {
+        auto constexpr line = animray::line{
+                animray::point3d{0.0, 0.0, 0.0},
+                animray::point3d{2.0, 2.0, 2.0}};
+        check(line.proportion_along(1)) == animray::point3d{2.0, 2.0, 2.0};
+        check(line.proportion_along(0.5)) == animray::point3d{1.0, 1.0, 1.0};
+        check(line.proportion_along(3)) == animray::point3d{6.0, 6.0, 6.0};
+    });
+
+
 }
