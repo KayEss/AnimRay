@@ -39,9 +39,10 @@ namespace animray {
         using end_type = point3d<value_type>;
 
         /// Construct a null line
-        line() = default;
+        constexpr line() = default;
         /// Construct a line between two locations
-        line(const end_type &from, const end_type &to) : from(from), to(to) {}
+        constexpr line(const end_type &from, const end_type &to)
+        : from(from), to(to) {}
 
         /// The start of the line
         end_type from;

@@ -40,16 +40,17 @@ namespace animray {
         using value_type = D;
 
         /// Constructs a unit vector pointing along the x axis.
-        unit_vector() : superclass(0, 0, 1) {}
+        constexpr unit_vector() : superclass(0, 0, 1) {}
         /// Constructs a unit vector (already normalised)
-        unit_vector(
+        constexpr unit_vector(
                 value_type const x,
                 value_type const y,
                 value_type const z,
                 value_type const m = value_type{1})
         : superclass(x, y, z, m) {}
         /// Constructs a unit vector from a point relative to the origin
-        explicit unit_vector(point3d<D> const &p) : superclass(p.unit()) {}
+        explicit constexpr unit_vector(point3d<D> const &p)
+        : superclass(p.unit()) {}
 
         /// Multiply by a scalar
         point3d<value_type> operator*(value_type scalar) const;

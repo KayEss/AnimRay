@@ -43,18 +43,19 @@ namespace animray {
         using direction_type = V;
 
         /// Construct a null ray
-        ray() = default;
+        constexpr ray() = default;
         /// Construct a line between two locations
-        ray(const end_type &from, const end_type &to)
+        constexpr ray(const end_type &from, const end_type &to)
         : from(from), direction(to - from) {}
         /// Construct a line from a location in the specified direction
-        ray(const end_type &from, const direction_type &dir)
+        constexpr ray(const end_type &from, const direction_type &dir)
         : from(from), direction(dir) {}
         /// Construct a follow on ray between two locations
-        ray(const ray &, const end_type &from, const end_type &to)
+        constexpr ray(const ray &, const end_type &from, const end_type &to)
         : from(from), direction(to - from) {}
         /// Construct a follow on ray from a location in the specified direction
-        ray(const ray &, const end_type &from, const direction_type &dir)
+        constexpr ray(
+                const ray &, const end_type &from, const direction_type &dir)
         : from(from), direction(dir) {}
 
         /// The start of the ray
