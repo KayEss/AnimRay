@@ -52,7 +52,7 @@ int main(int argc, char const *const argv[]) {
     std::size_t const depth = args.switch_value('d', 5);
     std::size_t const gloss = args.switch_value('g', 1000);
     float const exposure = args.switch_value('e', 1.4f);
-    // std::size_t const lights = args.switch_value('v', 2);
+    std::size_t const strip_lights = args.switch_value('S', 3);
 
     /// ## Set up the geometry
     using world = float;
@@ -97,24 +97,25 @@ int main(int argc, char const *const argv[]) {
             animray::line{bottom, bne}, animray::line{bottom, bse},
             animray::line{bottom, bnw}, animray::line{bottom, bsw});
 
-    animray::rgb<float> constexpr red{0xa0, 0x40, 0x40},
-            green{0x40, 0xa0, 0x40}, blue{0x40, 0x40, 0xa0};
+    animray::rgb<float> constexpr colour{0xa0, 0xa0, 0xaf};
     animray::light<
             std::vector<animray::library::lights::bulb<world>>,
             animray::rgb<float>>
             strips;
     for (auto const edge : edges) {
-        strips.push_back({edge.proportion_along(0.25) * 0.9999, green});
-        strips.push_back({edge.proportion_along(0.5) * 0.9999, red});
-        strips.push_back({edge.proportion_along(0.75) * 0.9999, blue});
+        for (std::size_t l{}; l != strip_lights; ++l) {
+            strips.push_back(
+                    {edge.proportion_along(world(l + 1) / (strip_lights + 1)),
+                     colour});
+        }
     }
     auto lights = animray::light{
             std::move(strips), animray::light{animray::luma{0.f}}};
 
     auto const scene = animray::scene{
             animray::surface{
-                    geometry, animray::transparent{world(0.1), depth},
-                    animray::reflective{world(0.9), depth},
+                    geometry, animray::transparent{world(0.2), depth},
+                    animray::reflective{world(0.8), depth},
                     animray::gloss{gloss}},
             lights, animray::rgb<float>{0, 0, 0}};
 
