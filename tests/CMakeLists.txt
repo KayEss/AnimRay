@@ -1,3 +1,14 @@
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    add_compile_options(
+            -Werror
+            -fdiagnostics-show-option
+            -Wall -Wextra -Wpedantic
+
+            # Turn these off because they're safe and do exactly what we want
+            -Wno-missing-field-initializers
+        )
+endif()
+
 add_test_run(check animray TESTS
         animation-animate-tests.cpp
         animation-procedural-tests.cpp

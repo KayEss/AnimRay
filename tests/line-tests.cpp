@@ -34,7 +34,7 @@ namespace {
 
 
     auto const c = suite.test("constructor simple", [](auto) {
-        animray::line l1{animray::point3d{0, 0, 1}, animray::point3d{0, 0, 10}};
+        animray::line{animray::point3d{0, 0, 1}, animray::point3d{0, 0, 10}};
     });
 
 

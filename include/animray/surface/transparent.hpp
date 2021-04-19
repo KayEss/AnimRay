@@ -56,7 +56,7 @@ namespace animray {
         /// The light coming through is treated as emissive
         template<typename CI, typename RI, typename I, typename G>
         CI operator()(
-                CI const &c,
+                CI const &,
                 RI const &observer,
                 I const &intersection,
                 G const &scene) const {
