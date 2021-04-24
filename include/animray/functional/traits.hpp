@@ -18,7 +18,7 @@
 */
 
 
-#if __has_include(<concepts>)
+#if not defined(NO_CONCEPTS_HEADER) and __has_include(<concepts>)
 
 
 #include <concepts>

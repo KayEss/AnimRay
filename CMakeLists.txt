@@ -12,6 +12,7 @@ find_package(Threads REQUIRED)
 
 add_library(animray INTERFACE)
 target_include_directories(animray INTERFACE include)
+target_compile_definitions(animray INTERFACE NO_CONCEPTS_HEADER)
 target_compile_features(animray INTERFACE cxx_std_20)
 target_link_libraries(animray INTERFACE ${CMAKE_THREAD_LIBS_INIT} felspar-exceptions)
 
