@@ -36,8 +36,7 @@ namespace animray {
             D const, D const b, D const c, D const range) {
         D const discriminant = b * b - D(4) * c;
         bool has_solution = (discriminant >= D(0));
-        discriminant = std::abs(discriminant);
-        D const disc_root = std::sqrt(discriminant);
+        D const disc_root = std::sqrt(std::abs(discriminant));
         has_solution &= ((-b - disc_root >= range) | (-b + disc_root >= range));
         return has_solution;
     }
