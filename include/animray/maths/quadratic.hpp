@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2020, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -32,10 +32,11 @@ namespace animray {
 
     /// Returns true if the quadratic has real solutions within the provided range
     template<typename D>
-    bool quadratic_has_solution(D const, D const b, D const c, D const range) {
-        const D discriminant = b * b - D(4) * c;
+    inline bool quadratic_has_solution(
+            D const, D const b, D const c, D const range) {
+        D const discriminant = b * b - D(4) * c;
         if (discriminant < D(0)) return false;
-        const D disc_root = std::sqrt(discriminant);
+        D const disc_root = std::sqrt(discriminant);
         if (-b - disc_root >= range) return true;
         if (-b + disc_root >= range) return true;
         return false;
@@ -45,15 +46,15 @@ namespace animray {
     /// Returns the smallest real solution to the quadratic if it lies inside
     /// the range
     template<typename D>
-    std::optional<D> first_positive_quadratic_solution(
+    inline std::optional<D> first_positive_quadratic_solution(
             D const a, D const b, D const c, D const range) {
-        D const discrim = b * b - D{4} * a * c;
-        if (discrim < D{}) { return {}; }
-        using S = decltype(std::sqrt(discrim));
-        S const root_discrim(std::sqrt(discrim));
-        S const q(
+        D const discriminant = b * b - D{4} * a * c;
+        if (discriminant < D{}) { return {}; }
+        auto const root_discrim = std::sqrt(discriminant);
+        using S = std::remove_cv_t<decltype(root_discrim)>;
+        S const q{
                 -(S{1} / S{2})
-                * (b + (b < S(0) ? -root_discrim : +root_discrim)));
+                * (b + (b < S{0} ? -root_discrim : +root_discrim))};
         S t0 = q / a, t1 = c / q;
         if (t1 < t0) { std::swap(t0, t1); }
         S t = t0 < S(0) ? t1 : t0;
