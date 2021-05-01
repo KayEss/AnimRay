@@ -35,11 +35,11 @@ namespace animray {
     inline bool quadratic_has_solution(
             D const, D const b, D const c, D const range) {
         D const discriminant = b * b - D(4) * c;
-        if (discriminant < D(0)) return false;
+        bool has_solution = (discriminant >= D(0));
+        discriminant = std::abs(discriminant);
         D const disc_root = std::sqrt(discriminant);
-        if (-b - disc_root >= range) return true;
-        if (-b + disc_root >= range) return true;
-        return false;
+        has_solution &= ((-b - disc_root >= range) | (-b + disc_root >= range));
+        return has_solution;
     }
 
 
