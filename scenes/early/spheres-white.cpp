@@ -37,6 +37,8 @@
 
 
 int main(int argc, char const *const argv[]) {
+    using world = double;
+
     auto const args =
             animray::cli::arguments{argc, argv, "spheres-white.tga", 150, 100};
 
@@ -44,10 +46,9 @@ int main(int argc, char const *const argv[]) {
             args.switch_value('t', std::thread::hardware_concurrency());
     std::size_t const samples = args.switch_value('s', 6);
     std::size_t const spheres = args.switch_value('c', 10);
-    double const focal_length = args.switch_value('f', 0.05);
+    world const focal_length = args.switch_value('f', 0.05);
 
-    using world = double;
-    world const aspect = double(args.width) / args.height;
+    world const aspect = world(args.width) / args.height;
     world const fw = args.width > args.height ? aspect * 0.024 : 0.024;
     world const fh = args.width > args.height ? 0.024 : 0.024 / aspect;
 
