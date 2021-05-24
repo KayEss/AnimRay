@@ -35,7 +35,7 @@ namespace animray {
     inline bool quadratic_has_solution(
             D const, D const b, D const c, D const range) {
         D const discriminant = b * b - D(4) * c;
-        if (discriminant < D(0)) { return false; }
+        if (discriminant < D(0)) [[likely]] { return false; }
         D const disc_root = std::sqrt(discriminant);
         return ((-b - disc_root >= range) or (-b + disc_root >= range));
     }
@@ -56,7 +56,7 @@ namespace animray {
         S t0 = q / a, t1 = c / q;
         if (t1 < t0) { std::swap(t0, t1); }
         S t = t0 < S(0) ? t1 : t0;
-        if (t < range) {
+        if (t < range) [[likely]] {
             return {};
         } else {
             return t;
