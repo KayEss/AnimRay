@@ -65,11 +65,11 @@ namespace animray {
         extents2d(size_type sx, size_type sy, size_type ex, size_type ey)
         : lower_left(corner_type(sx, sy)), top_right(corner_type(ex, ey)) {
             if (lower_left.x > top_right.x)
-                throw felspar::overflow_error{
+                throw felspar::stdexcept::overflow_error{
                         "Top right for x is less than lower left for x",
                         lower_left.x, top_right.x};
             if (lower_left.y > top_right.y)
-                throw felspar::overflow_error{
+                throw felspar::stdexcept::overflow_error{
                         "Top right for y is less than lower left for y",
                         lower_left.y, top_right.y};
         }
@@ -117,21 +117,6 @@ namespace animray {
 
 
 }
-
-
-// namespace fostlib {
-//     /// Allow extents to be coerced between different numeric types
-//     template<typename T, typename F>
-//     struct coercer<animray::extents2d<T>, animray::extents2d<F>> {
-//         animray::extents2d<T> coerce(const animray::extents2d<F> &e) {
-//             return animray::extents2d<T>(
-//                     fostlib::coerce<T>(e.lower_left.x),
-//                     fostlib::coerce<T>(e.lower_left.y),
-//                     fostlib::coerce<T>(e.top_right.x),
-//                     fostlib::coerce<T>(e.top_right.y));
-//         }
-//     };
-// }
 
 
 #endif // ANIMRAY_EXTENTS2D_HPP

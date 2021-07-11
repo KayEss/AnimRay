@@ -83,7 +83,7 @@ namespace animray {
                 try {
                     return array.at(p);
                 } catch (std::out_of_range &) {
-                    throw felspar::overflow_error{
+                    throw felspar::stdexcept::overflow_error{
                             "Array index was out of bounds", p, c_array_size};
                 }
             }
@@ -92,7 +92,7 @@ namespace animray {
                 try {
                     return array.at(p);
                 } catch (std::out_of_range &) {
-                    throw felspar::overflow_error{
+                    throw felspar::stdexcept::overflow_error{
                             "Array index was out of bounds", p, c_array_size};
                 }
             }

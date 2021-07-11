@@ -118,11 +118,11 @@ namespace animray {
         columns_type columns;
         void static check_width_height(size_type width, size_type height) {
             if (width < 1) {
-                throw felspar::underflow_error{
+                throw felspar::stdexcept::underflow_error{
                         "Width can't be less than 1", width};
             }
             if (height < 1) {
-                throw felspar::underflow_error{
+                throw felspar::stdexcept::underflow_error{
                         "Height can't be less than 1", height};
             }
         }

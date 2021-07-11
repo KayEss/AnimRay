@@ -26,7 +26,7 @@
 namespace {
 
 
-    auto const suite = felspar::testsuite(__FILE__);
+    auto const suite = felspar::testsuite("film");
 
 
     static_assert(animray::Regular<animray::point2d<char>>);
@@ -39,25 +39,17 @@ namespace {
 
         check([]() {
             animray::film<std::uint8_t>{0, 10};
-        })
-                .throws(felspar::underflow_error<std::size_t>{
-                        "Width can't be less than 1"});
+        }).throws(std::underflow_error{"Width can't be less than 1"});
         check([]() {
             animray::film<std::uint8_t>{10, 0};
-        })
-                .throws(felspar::underflow_error<std::size_t>{
-                        "Height can't be less than 1"});
+        }).throws(std::underflow_error{"Height can't be less than 1"});
 
         check([]() {
             animray::film<std::uint8_t>{0, 10, white};
-        })
-                .throws(felspar::underflow_error<std::size_t>{
-                        "Width can't be less than 1"});
+        }).throws(std::underflow_error{"Width can't be less than 1"});
         check([]() {
             animray::film<std::uint8_t>{10, 0, white};
-        })
-                .throws(felspar::underflow_error<std::size_t>{
-                        "Height can't be less than 1"});
+        }).throws(std::underflow_error{"Height can't be less than 1"});
     });
 
 

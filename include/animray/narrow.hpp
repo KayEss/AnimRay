@@ -43,34 +43,34 @@ namespace animray {
         } else {
             if constexpr (limits_T::is_signed == limits_F::is_signed) {
                 if constexpr (sizeof(T) < sizeof(F)) {
-                    if (f < limits_T::min()) {
-                        throw felspar::underflow_error{
+                    if (f < limits_T::min()) [[unlikely]] {
+                        throw felspar::stdexcept::underflow_error{
                                 "Value is too large for target type", f,
                                 std::move(loc)};
                     }
-                    if (f > limits_T::max()) {
-                        throw felspar::overflow_error{
+                    if (f > limits_T::max()) [[unlikely]] {
+                        throw felspar::stdexcept::overflow_error{
                                 "Value is too small for the target type", f,
                                 std::move(loc)};
                     }
                 }
             } else if constexpr (limits_T::is_signed) {
                 if constexpr (sizeof(T) <= sizeof(F)) {
-                    if (f > limits_T::max()) {
-                        throw felspar::overflow_error{
+                    if (f > limits_T::max()) [[unlikely]] {
+                        throw felspar::stdexcept::overflow_error{
                                 "Value is too large for target type", f,
                                 std::move(loc)};
                     }
                 }
             } else if constexpr (limits_F::is_signed) {
-                if (f < 0) {
-                    throw felspar::underflow_error{
+                if (f < 0) [[unlikely]] {
+                    throw felspar::stdexcept::underflow_error{
                             "Value is negative going into an unsigned type", f,
                             std::move(loc)};
                 }
                 if constexpr (sizeof(T) < sizeof(F)) {
-                    if (f > F{limits_T::max()}) {
-                        throw felspar::overflow_error{
+                    if (f > F{limits_T::max()}) [[unlikely]] {
+                        throw felspar::stdexcept::overflow_error{
                                 "Value is too large for target type", f,
                                 std::move(loc)};
                     }
