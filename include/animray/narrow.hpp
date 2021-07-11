@@ -48,7 +48,7 @@ namespace animray {
                                 "Value is too large for target type", f,
                                 std::move(loc)};
                     }
-                    if (f > limits_T::max()) [[unlikely]] {
+                    if (f > limits_T::max()) /*[[unlikely]]*/ {
                         throw felspar::stdexcept::overflow_error{
                                 "Value is too small for the target type", f,
                                 std::move(loc)};
