@@ -12,6 +12,9 @@ time (
         # stdlib=libc++
         ninja -C ./build.tmp/clang-debug-libc++ all check &&
         ninja -C ./build.tmp/clang-release-libc++ all check &&
+        # CUDA
+        ninja -C ./build.tmp/clang-debug-cuda all check &&
+        ninja -C ./build.tmp/clang-release-cuda all check &&
         true
     ) && (
         find ./include/ ./scenes/ ./tests/ -name \*.\?pp -print | xargs clang-format -i

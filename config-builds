@@ -2,6 +2,7 @@
 cd $(dirname $0)
 mkdir -p build.tmp/{clang,gcc}-{debug,release}
 
+
 CMAKE="cmake -G Ninja ."
 
 
@@ -34,4 +35,16 @@ $CMAKE -B build.tmp/clang-debug-libc++ \
 
 $CMAKE -B build.tmp/clang-release-libc++ \
     -DCMAKE_INSTALL_PREFIX=dist/clang-release-libc++ \
+    -DCMAKE_BUILD_TYPE=Release
+
+
+CUDA_PATH=${CUDA_PATH:-/usr/lib/cuda}
+
+$CMAKE -B build.tmp/clang-debug-cuda \
+    -DCUDA_PATH=${CUDA_PATH} \
+    -DCMAKE_INSTALL_PREFIX=dist/clang-debug-cuda
+
+$CMAKE -B build.tmp/clang-release-cuda \
+    -DCMAKE_INSTALL_PREFIX=dist/clang-release-cuda \
+    -DCUDA_PATH=${CUDA_PATH} \
     -DCMAKE_BUILD_TYPE=Release
