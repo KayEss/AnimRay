@@ -40,7 +40,7 @@
 
 int main(int argc, char const *const argv[]) {
     auto const args =
-            animray::cli::arguments{argc, argv, "reflections.tga", 100, 1050};
+            animray::cli::arguments{argc, argv, "reflections.tga", 100, 150};
 
     std::size_t const threads =
             args.switch_value('t', std::thread::hardware_concurrency());
