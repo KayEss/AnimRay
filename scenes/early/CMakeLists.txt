@@ -5,7 +5,9 @@ macro(scene  name)
     install(TARGETS ${name} EXPORT ${name} RUNTIME DESTINATION bin)
     if(TARGET check)
         set(test-target test-${name}${ARGV1}.tga)
-        add_custom_command(OUTPUT ${test-target} COMMAND ${name} -o test-${name}.tga)
+        add_custom_command(OUTPUT ${test-target}
+                COMMAND ${name} -o test-${name}.tga
+                DEPENDS ${name})
         list(APPEND scenes-early ${test-target})
     endif()
 endmacro()
