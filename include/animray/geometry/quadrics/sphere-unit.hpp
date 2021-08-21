@@ -41,7 +41,7 @@ namespace animray {
 
       public:
         /// Position type
-        typedef P position_type;
+        using position_type = P;
         /// The type of the local coordinates used
         using local_coord_type = D;
         /// Type of intersection to return when the sphere is struck
