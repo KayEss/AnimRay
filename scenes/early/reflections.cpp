@@ -23,7 +23,7 @@
 #include <animray/camera/pinhole.hpp>
 #include <animray/cli/progress.hpp>
 #include <animray/compound.hpp>
-#include <animray/geometry/quadrics/sphere-unit-origin.hpp>
+#include <animray/geometry/quadrics/sphere.hpp>
 #include <animray/geometry/collection.hpp>
 #include <animray/intersection.hpp>
 #include <animray/light/ambient.hpp>
@@ -51,9 +51,9 @@ int main(int argc, char const *const argv[]) {
     world const fw = args.width > args.height ? aspect * 0.024 : 0.024;
     world const fh = args.width > args.height ? 0.024 : 0.024 / aspect;
 
-    using gloss_sphere_type = animray::movable<animray::surface<
-            animray::unit_sphere_at_origin<animray::ray<world>>,
-            animray::gloss<world>, animray::matte<animray::rgb<float>>>>;
+    using gloss_sphere_type = animray::surface<
+            animray::sphere<world, animray::point3d<world>>,
+            animray::gloss<world>, animray::matte<animray::rgb<float>>>;
     using reflective_sphere_type = animray::movable<animray::surface<
             animray::unit_sphere_at_origin<animray::ray<world>>,
             animray::reflective<float>, animray::matte<animray::rgb<float>>>>;
@@ -92,19 +92,19 @@ int main(int argc, char const *const argv[]) {
                     0, 0.9f, 0.9f)}(animray::translate<world>(-1.0, -1.0, 0.0));
     std::get<2>(scene.geometry.instances)
             .insert(gloss_sphere_type{
-                    animray::unit_sphere_at_origin<animray::ray<world>>{},
-                    10.0f, animray::rgb<float>(1.0, 0.25, 0.5)}(
-                    animray::translate<world>(1.0, -1.0, 0.0)));
+                    {{1.0, -1.0, 0.0}, 0.5},
+                    10.0f,
+                    animray::rgb<float>(1.0, 0.25, 0.5)});
     std::get<2>(scene.geometry.instances)
             .insert(gloss_sphere_type{
-                    animray::unit_sphere_at_origin<animray::ray<world>>{},
-                    20.0f, animray::rgb<float>(0.25, 1.0, 0.5)}(
-                    animray::translate<world>(-1.0, 1.0, 0.0)));
+                    {{-2.0, 2.0, 0.0}, 2.0},
+                    20.0f,
+                    animray::rgb<float>(0.25, 1.0, 0.5)});
     std::get<2>(scene.geometry.instances)
             .insert(gloss_sphere_type{
-                    animray::unit_sphere_at_origin<animray::ray<world>>{},
-                    50.0f, animray::rgb<float>(0.25, 0.5, 1.0)}(
-                    animray::translate<world>(1.0, 1.0, 0.0)));
+                    {{1.0, 1.0, 0.0}, 1.0},
+                    50.0f,
+                    animray::rgb<float>(0.25, 0.5, 1.0)});
 
     std::get<0>(scene.light).color = 50;
     std::get<1>(scene.light)
