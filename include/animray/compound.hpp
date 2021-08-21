@@ -148,6 +148,9 @@ namespace animray {
         }
     };
 
+    template<typename... Os>
+    compound(Os...) -> compound<Os...>;
+
 
     template<
             typename C,
