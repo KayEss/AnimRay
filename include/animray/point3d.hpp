@@ -110,6 +110,11 @@ namespace animray {
                     superclass::array[0], superclass::array[1],
                     superclass::array[2], superclass::array[3] / s);
         }
+        point3d operator/(value_type const s) const {
+            return point3d(
+                    superclass::array[0], superclass::array[1],
+                    superclass::array[2], superclass::array[3] * s);
+        }
         /// Multiply by another point
         point3d operator*(const point3d &r) const {
             return point3d(superclass::operator*(r));
