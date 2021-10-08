@@ -70,13 +70,13 @@ namespace animray {
     /// Specialisation for animating using a functor
     template<typename T, typename F>
     class animate<std::function<T(F)>> {
-        std::function<T(F)> function;
+        std::function<T(F)> lambda;
 
       public:
         /// Default construct return a default T
-        animate<std::function<T(F)>>() : function([](F) { return T(); }) {}
+        animate() : lambda{[](F) { return T(); }} {}
         /// Initialise with the lambda to use
-        animate<std::function<T(F)>>(std::function<T(F)> f) : function(f) {}
+        animate(std::function<T(F)> f) : lambda{std::move(f)} {}
 
         /// The type of the value of R
         /// TODO: We don't really want this here
@@ -88,7 +88,7 @@ namespace animray {
             return function(ray.frame());
         }
         /// We already have a frame number
-        auto operator()(const F f) const { return function(f); }
+        auto operator()(const F f) const { return lambda(f); }
     };
 
 
