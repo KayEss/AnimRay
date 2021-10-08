@@ -24,6 +24,7 @@
 #include <cinttypes>
 #include <filesystem>
 #include <map>
+#include <optional>
 
 
 namespace animray::cli {
