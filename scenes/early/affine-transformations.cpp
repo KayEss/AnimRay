@@ -78,10 +78,9 @@ int main(int argc, char const *const argv[]) {
             animray::pinhole_camera<animray::ray<world>>, animray::ray<world>>
             camera(fw, fh, args.width, args.height, 0.05);
     camera(animray::rotate_z<world>(25_deg))(animray::rotate_x<world>(-65_deg))(
-            animray::translate<world>(0.0, 0.0, -8.5))(animray::rotate_x<world>(
-            2_deg))(animray::
-                            rotate_y<world>(-1_deg))(animray::translate<world>(
-            0.0, 0.0, -1.5));
+            animray::translate<world>(0.0, 0.0, -8.5))(
+            animray::rotate_x<world>(2_deg))(animray::rotate_y<world>(-1_deg))(
+            animray::translate<world>(0.0, 0.0, -1.5));
     using film_type = animray::film<animray::rgb<uint8_t>>;
     film_type output(
             args.width, args.height,
