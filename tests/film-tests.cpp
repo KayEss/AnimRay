@@ -1,5 +1,5 @@
 /**
-    Copyright 2010-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2010-2024, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -21,6 +21,8 @@
 #include <animray/film.hpp>
 #include <animray/functional/traits.hpp>
 #include <felspar/test.hpp>
+
+#include <cstdint>
 
 
 namespace {

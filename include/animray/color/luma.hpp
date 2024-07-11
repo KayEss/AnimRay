@@ -1,5 +1,5 @@
 /**
-    Copyright 2018-2019, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2018-2024, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -21,12 +21,13 @@
 #pragma once
 
 #include <algorithm>
+#include <cstdint>
 
 
 namespace animray {
 
 
-    template<typename C = uint8_t>
+    template<typename C = std::uint8_t>
     class luma {
         C _luma{};
 
