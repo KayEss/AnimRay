@@ -45,9 +45,10 @@ namespace {
         animray::ray illumination(
                 animray::point3d<float>(0, 0, 1),
                 animray::point3d<float>(0, 0, 5));
-        animray::rgb<float> final(animray::shader(
-                animray::ray<float>(), illumination, hit,
-                animray::rgb<float>(255, 255, 255), red_ball));
+        animray::rgb<float> final(
+                animray::shader(
+                        animray::ray<float>(), illumination, hit,
+                        animray::rgb<float>(255, 255, 255), red_ball));
 
         animray::check_close(check, final.red(), 255.f, 0.001f);
         check(final.green()) == 0;
@@ -69,9 +70,10 @@ namespace {
         animray::ray<float> illumination(
                 animray::point3d<float>(0, 0, 1),
                 animray::point3d<float>(0, 0, 5));
-        animray::rgb<float> final(animray::shader(
-                animray::ray<float>(), illumination, hit,
-                animray::rgb<float>(10, 10, 10), gray_ball));
+        animray::rgb<float> final(
+                animray::shader(
+                        animray::ray<float>(), illumination, hit,
+                        animray::rgb<float>(10, 10, 10), gray_ball));
         animray::check_close(check, final.red(), 5.f, 0.0001f);
         animray::check_close(check, final.green(), 5.f, 0.0001f);
         animray::check_close(check, final.blue(), 5.f, 0.0001f);

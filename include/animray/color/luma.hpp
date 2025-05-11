@@ -39,9 +39,9 @@ namespace animray {
         template<typename V>
         explicit constexpr luma(V v)
         : _luma{C(std::clamp<V>(
-                v,
-                std::numeric_limits<C>::min(),
-                std::numeric_limits<C>::max()))} {}
+                  v,
+                  std::numeric_limits<C>::min(),
+                  std::numeric_limits<C>::max()))} {}
 
         operator C() const { return _luma; }
 

@@ -95,8 +95,9 @@ int main(int argc, char const *const argv[]) {
     for (std::size_t count{}; count != spheres; ++count) {
         animray::hsl<float> hsl_colour(hue(generator), 1.0f, 0.5f);
         auto colour(animray::convert_to<animray::rgb<float>>(hsl_colour));
-        auto location(animray::translate<world>(
-                x_position(generator), y_position(generator), 0.0));
+        auto location(
+                animray::translate<world>(
+                        x_position(generator), y_position(generator), 0.0));
         switch (surface(generator)) {
         case 1:
             std::get<1>(scene.geometry.instances)

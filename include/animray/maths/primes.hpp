@@ -50,8 +50,7 @@ namespace animray {
         /// A prime number generator with implicit state in a closure
         template<typename I>
         I next_prime(I &i) {
-            while (!is_prime(i++))
-                ;
+            while (!is_prime(i++));
             return i - 1;
         }
 

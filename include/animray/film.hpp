@@ -72,8 +72,9 @@ namespace animray {
         }
         film(size_type width,
              size_type height,
-             std::function<color_type(size_type, size_type)> fn) requires
-                std::is_copy_constructible_v<C> : film{width, height} {
+             std::function<color_type(size_type, size_type)> fn)
+            requires std::is_copy_constructible_v<C>
+        : film{width, height} {
             check_width_height(width, height);
             for (size_type c{}; c < width; ++c) {
                 column_type &col = columns[c];

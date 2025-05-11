@@ -27,9 +27,7 @@ namespace animray {
 
 
     template<typename I>
-    concept Integral = requires {
-        std::is_integral_v<I>;
-    };
+    concept Integral = requires { std::is_integral_v<I>; };
 
 
     template<Integral T, Integral F>

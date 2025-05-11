@@ -50,7 +50,9 @@ namespace animray {
         /// Construct an empty scene
         constexpr scene() = default;
         constexpr scene(G g, L l, C c)
-        : geometry{std::move(g)}, light{std::move(l)}, background{std::move(c)} {}
+        : geometry{std::move(g)},
+          light{std::move(l)},
+          background{std::move(c)} {}
 
         /// Store the geometry
         geometry_type geometry;

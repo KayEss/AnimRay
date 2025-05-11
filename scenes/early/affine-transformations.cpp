@@ -48,27 +48,32 @@ int main(int argc, char const *const argv[]) {
             animray::gloss<world>, animray::matte<animray::rgb<float>>>>;
     animray::collection<sphere_type> spheres;
     world const scale{200.0};
-    spheres.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 100.0f,
-            animray::rgb<float>(1.0, 1.0, 1.0)}(
-            animray::translate<world>(0.0, 0.0, scale + 1.0))(
-            animray::scale<world>(scale, scale, scale)));
-    spheres.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 200.0f,
-            animray::rgb<float>(0, 1.0, 1.0)}(
-            animray::translate<world>(-1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 10.0f,
-            animray::rgb<float>(1.0, 0.25, 0.5)}(
-            animray::translate<world>(1.0, -1.0, 0.0)));
-    spheres.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 20.0f,
-            animray::rgb<float>(0.25, 1.0, 0.5)}(
-            animray::translate<world>(-1.0, 1.0, 0.0)));
-    spheres.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 50.0f,
-            animray::rgb<float>(0.25, 0.5, 1.0)}(
-            animray::translate<world>(1.0, 1.0, 0.0)));
+    spheres.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    100.0f, animray::rgb<float>(1.0, 1.0, 1.0)}(
+                    animray::translate<world>(0.0, 0.0, scale + 1.0))(
+                    animray::scale<world>(scale, scale, scale)));
+    spheres.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    200.0f, animray::rgb<float>(0, 1.0, 1.0)}(
+                    animray::translate<world>(-1.0, -1.0, 0.0)));
+    spheres.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    10.0f, animray::rgb<float>(1.0, 0.25, 0.5)}(
+                    animray::translate<world>(1.0, -1.0, 0.0)));
+    spheres.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    20.0f, animray::rgb<float>(0.25, 1.0, 0.5)}(
+                    animray::translate<world>(-1.0, 1.0, 0.0)));
+    spheres.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    50.0f, animray::rgb<float>(0.25, 0.5, 1.0)}(
+                    animray::translate<world>(1.0, 1.0, 0.0)));
 
     auto const scene = animray::scene{
             std::move(spheres), animray::library::lights::narrow_block<world>,

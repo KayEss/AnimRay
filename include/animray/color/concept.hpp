@@ -29,14 +29,10 @@ namespace animray {
 
 
     template<typename C>
-    concept Spectrum = requires(C c) {
-        std::is_trivially_destructible_v<C>;
-    };
+    concept Spectrum = requires(C c) { std::is_trivially_destructible_v<C>; };
 
     template<typename C>
-    concept PixelValue = requires(C c) {
-        std::is_trivially_destructible_v<C>;
-    };
+    concept PixelValue = requires(C c) { std::is_trivially_destructible_v<C>; };
 
 
     namespace detail {

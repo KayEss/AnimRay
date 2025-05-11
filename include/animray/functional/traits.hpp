@@ -28,9 +28,7 @@ namespace animray {
 
 
     template<typename C>
-    concept Regular = requires {
-        std::regular<C>;
-    };
+    concept Regular = requires { std::regular<C>; };
 
 
 }
@@ -43,9 +41,7 @@ namespace animray {
 
 
     template<typename C>
-    concept Regular = requires {
-        true;
-    };
+    concept Regular = requires { true; };
 
 
 }

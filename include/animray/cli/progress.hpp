@@ -41,8 +41,9 @@ namespace animray {
         auto result = promise.get_future();
         std::thread{[threads, &args, &pixels, &progress,
                      promise = std::move(promise)]() mutable {
-            promise.set_value(animray::threading::sub_panel<film_type>(
-                    progress, threads, args.width, args.height, pixels));
+            promise.set_value(
+                    animray::threading::sub_panel<film_type>(
+                            progress, threads, args.width, args.height, pixels));
         }}.detach();
         auto filename = args.output_filename;
         if (frame) {

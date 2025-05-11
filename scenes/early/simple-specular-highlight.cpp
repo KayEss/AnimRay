@@ -62,26 +62,31 @@ int main(int argc, char const *const argv[]) {
     scene_type scene;
     scene.background = animray::rgb<float>(10, 50, 70);
 
-    scene.geometry.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 100.0f,
-            animray::rgb<float>(1.0, 1.0, 1.0)}(
-            animray::translate<world>(0.0, 0.0, 5.0)));
-    scene.geometry.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 200.0f,
-            animray::rgb<float>(0, 1.0, 1.0)}(
-            animray::translate<world>(-1.0, -1.0, 0.0)));
-    scene.geometry.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 10.0f,
-            animray::rgb<float>(1.0, 0.25, 0.5)}(
-            animray::translate<world>(1.0, -1.0, 0.0)));
-    scene.geometry.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 20.0f,
-            animray::rgb<float>(0.25, 1.0, 0.5)}(
-            animray::translate<world>(-1.0, 1.0, 0.0)));
-    scene.geometry.insert(sphere_type{
-            animray::unit_sphere_at_origin<animray::ray<world>>{}, 50.0f,
-            animray::rgb<float>(0.25, 0.5, 1.0)}(
-            animray::translate<world>(1.0, 1.0, 0.0)));
+    scene.geometry.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    100.0f, animray::rgb<float>(1.0, 1.0, 1.0)}(
+                    animray::translate<world>(0.0, 0.0, 5.0)));
+    scene.geometry.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    200.0f, animray::rgb<float>(0, 1.0, 1.0)}(
+                    animray::translate<world>(-1.0, -1.0, 0.0)));
+    scene.geometry.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    10.0f, animray::rgb<float>(1.0, 0.25, 0.5)}(
+                    animray::translate<world>(1.0, -1.0, 0.0)));
+    scene.geometry.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    20.0f, animray::rgb<float>(0.25, 1.0, 0.5)}(
+                    animray::translate<world>(-1.0, 1.0, 0.0)));
+    scene.geometry.insert(
+            sphere_type{
+                    animray::unit_sphere_at_origin<animray::ray<world>>{},
+                    50.0f, animray::rgb<float>(0.25, 0.5, 1.0)}(
+                    animray::translate<world>(1.0, 1.0, 0.0)));
 
     std::get<0>(scene.light).color = 50;
     std::get<1>(scene.light)

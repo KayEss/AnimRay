@@ -31,7 +31,8 @@ namespace {
 
 
     auto const bc = suite.test("basic color", [](auto check) {
-        using texture_type = animray::texture<std::uint8_t, animray::point2d<int>>;
+        using texture_type =
+                animray::texture<std::uint8_t, animray::point2d<int>>;
         texture_type t(123);
         check(t(texture_type::location_type()))
                 == texture_type::color_type(123);
