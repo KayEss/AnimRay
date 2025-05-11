@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2014-2025, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,8 +18,6 @@
 */
 
 
-#ifndef ANIMRAY_PLANAR_PLANE_HPP
-#define ANIMRAY_PLANAR_PLANE_HPP
 #pragma once
 
 
@@ -32,17 +30,19 @@ namespace animray {
 
     template<typename I, typename D = typename I::local_coord_type>
     struct plane {
-        /// The type of the local coordinates used
+        /// ### The type of the local coordinates used
         using local_coord_type = D;
-        /// Type of intersection to be returned
+        /// ### Type of intersection to be returned
         using intersection_type = I;
 
-        /// The centre of the plane
+
+        /// ### The centre of the plane
         point3d<local_coord_type> center;
-        /// Surface normal
+        /// ### Surface normal
         unit_vector<local_coord_type> normal;
 
-        /// Calculate the intersection point
+
+        /// ### Calculate the intersection point
         template<typename R, typename E>
         std::optional<intersection_type>
                 intersects(R by, const E epsilon) const {
@@ -61,15 +61,15 @@ namespace animray {
             }
         }
 
-        /// Returns true if the ray hits the sphere
+        /// ### Returns true if the ray hits the plane
         template<typename R, typename E>
         bool occludes(R by, const E epsilon) const {
             return intersects(by, epsilon).has_value();
         }
+
+        /// ### Comparison
+        friend bool operator==(plane const &, plane const &) = default;
     };
 
 
 }
-
-
-#endif // ANIMRAY_PLANAR_PLANE_HPP

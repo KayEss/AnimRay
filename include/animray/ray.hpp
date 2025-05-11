@@ -1,5 +1,5 @@
 /**
-    Copyright 1995-2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 1995-2025, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,8 +18,6 @@
 */
 
 
-#ifndef ANIMRAY_RAY_HPP
-#define ANIMRAY_RAY_HPP
 #pragma once
 
 
@@ -30,57 +28,58 @@
 namespace animray {
 
 
-    /// Represents a ray starting at a point and going to infinity along a given
-    /// vector
+    /// ## Ray
+    /**
+     * Represents a ray starting at a point and going to infinity along a given
+     * vector
+     */
     template<typename D, typename F = point3d<D>, typename V = unit_vector<D>>
     class ray {
       public:
-        /// The value type of the line
+        /// ### The value type of the line
         typedef D local_coord_type;
-        /// The type of the end point
+        /// ### The type of the end point
         using end_type = F;
-        /// Unit vector type describing the direction
+        /// ### Unit vector type describing the direction
         using direction_type = V;
 
-        /// Construct a null ray
+        /// ### Construct a null ray
         constexpr ray() = default;
-        /// Construct a line between two locations
+        /// ### Construct a line between two locations
         constexpr ray(const end_type &from, const end_type &to)
         : from(from), direction(to - from) {}
-        /// Construct a line from a location in the specified direction
+        /// ### Construct a line from a location in the specified direction
         constexpr ray(const end_type &from, const direction_type &dir)
         : from(from), direction(dir) {}
-        /// Construct a follow on ray between two locations
+        /// ### Construct a follow on ray between two locations
         constexpr ray(const ray &, const end_type &from, const end_type &to)
         : from(from), direction(to - from) {}
-        /// Construct a follow on ray from a location in the specified direction
+        /// ### Construct a follow on ray from a location in the specified
+        /// direction
         constexpr ray(
                 const ray &, const end_type &from, const direction_type &dir)
         : from(from), direction(dir) {}
 
-        /// The start of the ray
+
+        /// ### The start of the ray
         end_type from;
-        /// A unit direction vector
+        /// ### A unit direction vector
         direction_type direction;
 
-        /// Set a point the ray must go through
+
+        /// ### Set a point the ray must go through
         void to(const end_type &t) { direction = direction_type{t - from}; }
 
-        /// Return a point somewhere along the line
+        /// ### Return a point somewhere along the line
         end_type ends(local_coord_type distance = local_coord_type(1)) const {
             return from + direction * distance;
         }
 
-        /// Compare for equality
-        bool operator==(const ray &r) const {
-            return direction == r.direction && from == r.from;
-        }
-        /// Compare for inequality
-        bool operator!=(const ray &r) const {
-            return direction != r.direction || from != r.from;
-        }
 
-        /// Transform a ray by a matrix
+        /// ### Compare for equality
+        friend bool operator==(ray const &, ray const &) = default;
+
+        /// ### Transform a ray by a matrix
         template<typename MD>
         ray &operator*=(const matrix<MD> &right) {
             end_type f(right * from), e(right * ends());
@@ -89,7 +88,7 @@ namespace animray {
             return *this;
         }
 
-        /// Multiply
+        /// ### Multiply
         template<typename MD>
         ray operator*(const matrix<MD> &right) const {
             ray res(*this);
@@ -103,7 +102,7 @@ namespace animray {
     ray(point3d<V>, point3d<V>) -> ray<V, point3d<V>>;
 
 
-    /// Output to a stream
+    /// ### Output to a stream
     template<typename D>
     std::ostream &operator<<(std::ostream &o, animray::ray<D> const &r) {
         return o << r.from << " -> " << r.direction;
@@ -111,6 +110,3 @@ namespace animray {
 
 
 }
-
-
-#endif // ANIMRAY_RAY_HPP
