@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2019, [Kirit Saelensminde](https://kirit.com/AnimRay)
+    Copyright 2014-2025, [Kirit Saelensminde](https://kirit.com/AnimRay)
 
     This file is part of AnimRay.
 
@@ -33,7 +33,7 @@ namespace animray {
 }
 
 /// Define a way to use degree literals (converted to radians)
-constexpr long double operator"" _deg(long double d) {
+constexpr long double operator""_deg(long double d) {
     return animray::pi / (long double)(180.0) * d;
 }
 /// Define a way to use degree literals (converted to radians)
