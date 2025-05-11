@@ -1,5 +1,5 @@
 /**
-    Copyright 2021, [Kirit Saelensminde](https://kirit.com/AnimRay).
+    Copyright 2021-2025, [Kirit Saelensminde](https://kirit.com/AnimRay).
 
     This file is part of AnimRay.
 
@@ -18,6 +18,9 @@
 */
 
 
+#pragma once
+
+
 #if not defined(NO_CONCEPTS_HEADER) and __has_include(<concepts>)
 
 
@@ -28,7 +31,7 @@ namespace animray {
 
 
     template<typename C>
-    concept Regular = requires { std::regular<C>; };
+    concept Regular = requires { requires std::regular<C>; };
 
 
 }
